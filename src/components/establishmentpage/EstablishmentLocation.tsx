@@ -9,8 +9,12 @@ import {
   Instagram,
   Twitter,
 } from "@mui/icons-material";
-import { Business } from "../../types/business";
+import { Business, Price, Timings } from "../../types/business";
 import L from "leaflet";
+import Image from "next/image";
+import TimingsPopup from "./TimingsPopup";
+import SocialIcons from "../global/SocialIcons";
+import { Box } from "@mui/material";
 const markerIcon = require("leaflet/dist/images/marker-icon.png");
 const markerShadow = require("leaflet/dist/images/marker-shadow.png");
 
@@ -24,14 +28,13 @@ const defaultIcon = L.icon({
   shadowSize: [41, 41],
 });
 
-console.log(defaultIcon);
 interface EstablishmentLocationProps {
-  business: Business;
+  readonly business: Business;
 }
 
 export default function EstablishmentLocation({
   business,
-}: EstablishmentLocationProps) {
+}: Readonly<EstablishmentLocationProps>) {
   const { location, phone, website, timings, price, socials } = business;
 
   const coordinates: [number, number] = location?.geotag
@@ -39,7 +42,13 @@ export default function EstablishmentLocation({
     : [0, 0]; // Default coordinates if geotag is not provided
 
   return (
-    <div className="p-4 bg-purple-900 rounded-lg space-y-4">
+    <div
+      className="p-4  rounded-lg space-y-4"
+      style={{
+        background:
+          "linear-gradient(109.46deg, rgba(201, 201, 201, 0.8) 1.57%, rgba(196, 196, 196, 0.1) 100%)",
+      }}
+    >
       {/* Map */}
       {location?.geotag && (
         <MapContainer
@@ -55,68 +64,113 @@ export default function EstablishmentLocation({
       )}
 
       {/* Details */}
-      <div className="text-white space-y-2">
-        <p>{`${location?.city}, ${location?.state}, ${location?.country}`}</p>
-        <a
-          href={`https://www.google.com/maps/dir/?api=1&destination=${coordinates[0]},${coordinates[1]}`}
-          className="text-purple-300"
-        >
-          Get Directions
-        </a>
-        <div className="flex items-center space-x-2">
-          <Phone fontSize="small" />
-          <span>{phone}</span>
-        </div>
-        <div className="flex items-center space-x-2">
-          <Public fontSize="small" />
-          <a href={website} className="text-purple-300">
-            {website}
-          </a>
-        </div>
-        <div className="flex items-center space-x-2">
-          <AccessTime fontSize="small" />
-          <span>Today</span>
-          <button className="text-sm text-purple-300">See All</button>
-        </div>
-        <div className="flex items-center space-x-2">
-          <AttachMoney fontSize="small" />
-          <span>
-            {price?.category} {price?.min} - {price?.max}
-          </span>
-        </div>
+      <div className="text-white space-y-4 font-light">
+        {/* Basic Details */}
+        <BasicDetails
+          phone={phone}
+          website={website}
+          price={price || {}}
+          city={location?.city}
+          state={location?.state}
+          country={location?.country}
+          coordinates={coordinates}
+        />
+
+        {/* Timings */}
+        <TimingsPopup timings={timings || {}} />
+
         {/* Social Icons */}
-        <div className="flex space-x-3 mt-2">
-          {socials?.facebook && (
-            <a
-              href={socials.facebook}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Facebook className="text-white cursor-pointer" />
-            </a>
-          )}
-          {socials?.instagram && (
-            <a
-              href={socials.instagram}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Instagram className="text-white cursor-pointer" />
-            </a>
-          )}
-          {socials?.twitter && (
-            <a href={socials.twitter} target="_blank" rel="noopener noreferrer">
-              <Twitter className="text-white cursor-pointer" />
-            </a>
-          )}
-        </div>
+        <SocialIcons socials={socials || {}} />
+
         {/* Claim Now */}
-        <div className="mt-4">
-          <button className="bg-purple-700 text-white px-4 py-2 rounded-lg">
-            Claim Now
+        <div className="flex items-center space-x-2 mt-4">
+          <Image
+            src="/images/icons/claim.svg"
+            alt="Claim"
+            width={30}
+            height={30}
+          />
+          <button className=" text-white  rounded-lg">
+            Own or work here? <b> Claim Now</b>
           </button>
         </div>
       </div>
     </div>
   );
 }
+
+const BasicDetails = ({
+  phone,
+  website,
+  price,
+  state,
+  city,
+  country,
+  coordinates,
+}: {
+  phone?: string;
+  website?: string;
+  price?: Price;
+  city?: string;
+  state?: string;
+  country?: string;
+  coordinates: [number, number];
+}) => {
+  return (
+    <>
+      <Box>
+        <div className="flex items-center space-x-2">
+          <Image
+            src="/images/icons/location.svg"
+            alt="Phone"
+            width={30}
+            height={30}
+          />
+          <span>
+            {`${city} ${state !== null ? `, ${state}` : ""}, ${country}`}{" "}
+          </span>
+        </div>
+
+        <a
+          href={`https://www.google.com/maps/dir/?api=1&destination=${coordinates[0]},${coordinates[1]}`}
+          className="text-purple-300"
+        >
+          Get Directions
+        </a>
+      </Box>
+      <div className="flex mt-4 items-center space-x-2">
+        <Image
+          src="/images/icons/phone.svg"
+          alt="Phone"
+          width={30}
+          height={30}
+        />
+        <span>{phone}</span>
+      </div>
+      <div className="flex items-center space-x-2">
+        <Image
+          src="/images/icons/website.svg"
+          alt="Phone"
+          width={30}
+          height={30}
+        />
+        <a href={website} className="text-purple-300">
+          {website && website.length > 40
+            ? `${website.substring(0, 40)}...`
+            : website}
+        </a>
+      </div>
+      <div className="flex items-center space-x-2">
+        <Image
+          src="/images/icons/pricing.svg"
+          alt="Phone"
+          width={30}
+          height={30}
+        />
+        <span>
+          {price?.category} {price?.min} - {price?.max}
+        </span>
+      </div>
+    </>
+  );
+};

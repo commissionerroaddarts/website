@@ -5,21 +5,18 @@ import Image from "next/image";
 const coreValues = [
   {
     icon: "/images/icons/core-value-icon-1.svg",
-    title: "Lorem Ipsum Dolor",
-    description: `Short description about this value goes here.
-        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Facere tempore reprehenderit beatae ullam et voluptates? Animi inventore culpa iusto. Quod vel nihil voluptatum quas, accusamus ducimus corrupti eos, saepe alias eaque quo excepturi doloribus id hic! Libero, deserunt, saepe id asperiores nam perspiciatis quam odio, laudantium et sunt alias nobis.`,
+    title: "Our Core Values",
+    description: `We prioritize building trust by providing accurate and verified listings for businesses and individuals. Our platform is designed to ensure that you have access to the best services available, making your work seamless and efficient. We believe in transparency and integrity, ensuring that every interaction on our platform is trustworthy and reliable.`,
   },
   {
     icon: "/images/icons/core-value-icon-1.svg",
-    title: "Another Value",
-    description: `Short description about this value goes here.
-    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Facere tempore reprehenderit beatae ullam et voluptates? Animi inventore culpa iusto. Quod vel nihil voluptatum quas, accusamus ducimus corrupti eos, saepe alias eaque quo excepturi doloribus id hic! Libero, deserunt, saepe id asperiores nam perspiciatis quam odio, laudantium et sunt alias nobis.`,
+    title: "Innovation & Growth",
+    description: `We constantly evolve to bring better solutions and an improved user experience for our community. Our team is dedicated to researching and implementing the latest technologies to keep our platform ahead of the curve. We strive to foster a culture of continuous improvement and innovation, ensuring that we meet the needs of our users.`,
   },
   {
     icon: "/images/icons/core-value-icon-1.svg",
-    title: "Third Value",
-    description: `Short description about this value goes here.
-    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Facere tempore reprehenderit beatae ullam et voluptates? Animi inventore culpa iusto. Quod vel nihil voluptatum quas, accusamus ducimus corrupti eos, saepe alias eaque quo excepturi doloribus id hic! Libero, deserunt, saepe id asperiores nam perspiciatis quam odio, laudantium et sunt alias nobis.`,
+    title: "Customer-Centric Approach",
+    description: `Your satisfaction is our top priority, and we aim to connect you with the best opportunities available. We listen to your feedback and continuously work to enhance our services to better meet your needs. Our goal is to provide a seamless and enjoyable experience, ensuring that you find exactly what you're looking for with ease and confidence.`,
   },
 ];
 
@@ -27,10 +24,11 @@ const CoreValueSection = () => {
   return (
     <Box sx={{ textAlign: "center", py: 2, px: 8 }}>
       <Typography variant="h4" fontWeight="bold" color="white" gutterBottom>
-        Our Core Value
+        Our Core Values
       </Typography>
       <Typography variant="body1" mb={4}>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit.{" "}
+        Building trust, fostering innovation, and prioritizing your
+        satisfaction.
       </Typography>
       <Grid container spacing={3} justifyContent="center">
         {coreValues.map((item, index) => (

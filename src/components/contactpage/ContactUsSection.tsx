@@ -16,17 +16,17 @@ const contactValues = [
   {
     icon: "/images/icons/email.svg",
     title: "Email Address",
-    text: "Sample text for Email Address",
+    text: "info@roaddarts.com",
   },
   {
     icon: "/images/icons/email.svg",
     title: "Phone Number",
-    text: "Sample text for Phone Number",
+    text: "021-123-4567",
   },
   {
     icon: "/images/icons/email.svg",
     title: "Location",
-    text: "Sample text for Location",
+    text: "159 Algonquin Street, Brockton, MA 02302",
   },
 ];
 
@@ -38,9 +38,9 @@ const ContactUsSection = () => {
         Contact Us
       </Typography>
       <Typography variant="body1" align="center" paragraph>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum
-        dolor sit amet consectetur adipisicing elit. Tempora corporis molestias
-        ipsum culpa incidunt nam!
+        Whether you have inquiries about listings, partnerships, or support,
+        we're here to assist you. Fill out the form, and we’ll get back to you
+        as soon as possible.
       </Typography>
 
       <Grid container spacing={4} alignItems="center" mt={3}>

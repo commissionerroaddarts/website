@@ -63,19 +63,22 @@ function Navbar() {
       sx={{ zIndex: 10 }}
     >
       <Toolbar>
-        <Typography
-          variant="h6"
-          component="div"
-          sx={{ flexGrow: 1, color: "white" }}
-        >
-          <Image
-            src="/images/logos/road-darts-logo.png"
-            alt="Logo"
-            width={160}
-            height={160}
-            style={{ height: "120px", width: "auto" }}
-          />
-        </Typography>
+        <Link href="/" passHref style={{ flexGrow: 1 }}>
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{ color: "white", cursor: "pointer" }}
+          >
+            <Image
+              src="/images/logos/road-darts-logo.png"
+              alt="Logo"
+              width={160}
+              height={160}
+              style={{ height: "120px", width: "auto" }}
+            />
+          </Typography>
+        </Link>
+
         {isMobile ? (
           <>
             <IconButton

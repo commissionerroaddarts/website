@@ -1,4 +1,5 @@
 "use client";
+import { Grid } from "@mui/material";
 import Image from "next/image";
 
 interface GalleryProps {
@@ -7,28 +8,29 @@ interface GalleryProps {
 
 export default function EstablishmentGallery({ images }: GalleryProps) {
   return (
-    <div className="grid grid-cols-3 gap-2">
-      <div className="col-span-2">
+    <Grid container className="gap-0">
+      <Grid item xs={12} md={6}>
         <Image
           src={images[0]}
           alt="Main Image"
-          width={600}
-          height={400}
-          className="rounded-lg w-full h-full object-cover"
+          width={400}
+          height={200}
+          className="w-full object-cover h-[430px]"
         />
-      </div>
-      <div className="grid grid-rows-3 gap-2">
+      </Grid>
+      <Grid container md={6} className="gap-0">
         {images.slice(1, 5).map((img, index) => (
-          <Image
-            key={index}
-            src={img}
-            alt={`Gallery Image ${index + 1}`}
-            width={200}
-            height={120}
-            className="rounded-lg w-full h-full object-cover"
-          />
+          <Grid item xs={6} key={index}>
+            <Image
+              src={img}
+              alt="Gallery Image"
+              width={400}
+              height={100}
+              className="w-full h-[200px] object-cover"
+            />
+          </Grid>
         ))}
-      </div>
-    </div>
+      </Grid>
+    </Grid>
   );
 }

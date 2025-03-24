@@ -29,9 +29,14 @@ export default function EstablishmentPage() {
 
   return (
     <div className="p-6 min-h-screen">
-      {/* <EstablishmentGallery images={business?.media?.images || []} /> */}
-
       <Grid container spacing={2} sx={{ padding: "0 6rem" }}>
+        {/* Gallery */}
+        {business.media && (
+          <Grid item xs={12}>
+            <EstablishmentGallery images={business.media.images || []} />
+          </Grid>
+        )}
+
         <Grid item xs={12} md={6}>
           <Box>
             {/* Header Section */}

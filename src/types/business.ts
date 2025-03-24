@@ -1,4 +1,4 @@
-interface Location {
+export interface Location {
   geotag?: {
     lat: number;
     lng: number;
@@ -9,16 +9,21 @@ interface Location {
   zipcode?: string;
 }
 
-interface Timings {
-  open: string;
-  close: string;
+// Helper to convert "12:37 PM" to minutes since midnight
+export interface Timings {
+  [key: string]: {
+    open: string;
+    close: string;
+  };
 }
 
-interface Socials {
+export interface Socials {
   facebook?: string;
   instagram?: string;
   twitter?: string;
   linkedin?: string;
+  youtube?: string;
+  tiktok?: string;
 }
 
 export interface FAQ {
@@ -26,7 +31,7 @@ export interface FAQ {
   a: string;
 }
 
-interface Price {
+export interface Price {
   category?: "$" | "$$" | "$$$" | "$$$$";
   min?: number;
   max?: number;
@@ -50,15 +55,7 @@ export interface Business {
   location?: Location;
   phone?: string;
   website?: string;
-  timings?: {
-    mon?: Timings;
-    tue?: Timings;
-    wed?: Timings;
-    thu?: Timings;
-    fri?: Timings;
-    sat?: Timings;
-    sun?: Timings;
-  };
+  timings?: Timings;
   socials?: Socials;
   faqs?: FAQ[];
   price?: Price;

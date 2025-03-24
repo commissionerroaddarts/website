@@ -19,17 +19,34 @@ export default function EstablishmentFAQ({ faqs }: EstablishmentFAQProps) {
       </Typography>
       {faqs.map((faq, index) => (
         <Accordion
-          key={index}
-          className="bg-[#2B1330] text-white mb-2 rounded-lg"
+          key={faq.q}
+          sx={{
+            backgroundColor: "#2B1330",
+            color: "white",
+            mb: 2,
+            borderRadius: "8px",
+          }}
         >
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon className="text-white" />}
-            className="bg-[#C4C4C41A] rounded-lg"
+            expandIcon={<ExpandMoreIcon sx={{ color: "white" }} />}
+            sx={{ backgroundColor: "#C4C4C41A", borderRadius: "8px" }}
           >
-            <Typography className="font-semibold">{faq.q}</Typography>
+            <Typography sx={{ fontWeight: "bold" }}>{faq.q}</Typography>
           </AccordionSummary>
-          <AccordionDetails className="bg-white text-black rounded-b-lg">
-            <Typography>{faq.a}</Typography>
+          <AccordionDetails
+            sx={{
+              backgroundColor: "white",
+              borderBottomLeftRadius: "8px",
+              borderBottomRightRadius: "8px",
+            }}
+          >
+            <Typography
+              sx={{
+                color: "black",
+              }}
+            >
+              {faq.a}
+            </Typography>
           </AccordionDetails>
         </Accordion>
       ))}
