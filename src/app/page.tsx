@@ -1,22 +1,16 @@
 import React from "react";
-import { Container, Box, Typography, Grid } from "@mui/material";
+import { Container, Box, Typography } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import Navbar from "components/global/Navbar";
+import Navbar from "../components/global/Navbar";
 import Image from "next/image";
-import SearchComponent from "components/SearchingComponent";
-import ListingGrid from "components/listings/ListingGrid";
-import CategoryGrid from "components/listings/CategoryGrid";
-import ThemeOutlineButton from "components/buttons/ThemeOutlineButton";
-import EntertainmentSection from "components/EntertainmentSection";
+import SearchComponent from "../components/homepage/SearchingComponent";
+import ListingGrid from "../components/listings/ListingGrid";
+import CategoryGrid from "../components/listings/CategoryGrid";
+import EntertainmentSection from "../components/homepage/EntertainmentSection";
 
 export default function HomePage() {
   return (
-    <Box
-      sx={{
-        backgroundColor: "#2d0b4a",
-        color: "white",
-      }}
-    >
+    <Box>
       <HomeBanner />
 
       <Container maxWidth="lg" sx={{ mt: 10 }}>
@@ -51,7 +45,7 @@ function HomeBanner() {
           bottom: 0,
           background:
             "radial-gradient(circle, rgba(2,0,36,0) 0%, rgba(121,9,102,0.4066001400560224) 42%, rgba(201,0,255,0.41780462184873945) 100%);",
-          zIndex: 1,
+          zIndex: 0,
         },
       }}
     >
@@ -64,7 +58,7 @@ function HomeBanner() {
             position: "relative",
             width: "100%",
             height: "500px",
-            zIndex: 2,
+            zIndex: 0,
           }}
         >
           <Image

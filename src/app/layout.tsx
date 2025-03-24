@@ -1,4 +1,6 @@
-import Layout from "./components/layout";
+import Providers from "providers";
+import Layout from "../components/layout";
+import "../styles/globals.css";
 
 export const metadata = {
   title: "Next.js",
@@ -13,7 +15,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Layout>{children}</Layout>
+        <Providers>
+          <Layout>{children}</Layout>
+        </Providers>
       </body>
     </html>
   );
