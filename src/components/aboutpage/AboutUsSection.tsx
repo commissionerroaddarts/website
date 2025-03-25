@@ -47,8 +47,8 @@ export default function AboutUsSection() {
           <Typography variant="body1" paragraph>
             We are dedicated to providing a space where businesses and
             individuals can list, discover, and engage with the best services
-            available. Whether you're looking for new partnerships or expanding
-            your business reach, Road Darts is your trusted solution.
+            available. Whether you&#39;re looking for new partnerships or
+            expanding your business reach, Road Darts is your trusted solution.
           </Typography>
           <Typography variant="body1" paragraph>
             With a growing network of professionals and companies, we continue

@@ -17,7 +17,7 @@ export default function EstablishmentFAQ({ faqs }: EstablishmentFAQProps) {
       <Typography variant="h6" className="text-white mb-4">
         FAQs
       </Typography>
-      {faqs.map((faq, index) => (
+      {faqs.map((faq) => (
         <Accordion
           key={faq.q}
           sx={{

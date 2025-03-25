@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Box, Button, Grid, Typography } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import ThemeOutlineButton from "../buttons/ThemeOutlineButton";
 
 interface Category {

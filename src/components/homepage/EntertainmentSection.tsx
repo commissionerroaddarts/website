@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Box, Typography, Chip, Grid } from "@mui/material";
+import { Box, Typography, Chip } from "@mui/material";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";

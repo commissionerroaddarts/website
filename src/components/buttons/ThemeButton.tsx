@@ -1,8 +1,19 @@
-import { Button } from "@mui/material";
 import React from "react";
-import { ButtonProps } from "../../types/buttonProps";
+import { Button, ButtonProps as MuiButtonProps } from "@mui/material";
 
-const ThemeButton = ({ onClickEvent, icon, text }: ButtonProps) => {
+// Extend MUI's ButtonProps to make the component more reusable
+interface ThemeButtonProps extends MuiButtonProps {
+  onClickEvent?: () => void;
+  icon?: React.ReactNode;
+  text: string;
+}
+
+const ThemeButton: React.FC<ThemeButtonProps> = ({
+  onClickEvent,
+  icon,
+  text,
+  ...rest
+}) => {
   return (
     <Button
       onClick={onClickEvent}
@@ -13,26 +24,16 @@ const ThemeButton = ({ onClickEvent, icon, text }: ButtonProps) => {
         minWidth: "120px",
         padding: "0.8rem 2rem",
         textTransform: "capitalize",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        gap: icon ? "8px" : "0",
+        color: "white",
       }}
+      {...rest}
     >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <span
-          className="text-center"
-          style={{
-            fontSize: "16px",
-            color: "white",
-          }}
-        >
-          {text}
-        </span>
-        {icon && <span>{icon}</span>}
-      </div>
+      {text}
+      {icon && <span>{icon}</span>}
     </Button>
   );
 };

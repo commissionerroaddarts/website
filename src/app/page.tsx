@@ -1,6 +1,5 @@
 import React from "react";
 import { Container, Box, Typography } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
 import Navbar from "../components/global/Navbar";
 import Image from "next/image";
 import SearchComponent from "../components/homepage/SearchingComponent";
@@ -80,7 +79,8 @@ function HomeBanner() {
           gutterBottom
           sx={{ position: "relative", zIndex: 2, fontWeight: 200 }}
         >
-          Let's uncover the best places to eat, drink, and shop nearest to you.
+          Let&#39;s uncover the best places to eat, drink, and shop nearest to
+          you.
         </Typography>
       </Box>
 

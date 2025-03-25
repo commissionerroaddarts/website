@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  Box,
-  Typography,
-  TextField,
-  Button,
-  Rating,
-  IconButton,
-} from "@mui/material";
+import { Box, Typography, TextField, Button, Rating } from "@mui/material";
 import { PhotoCamera } from "@mui/icons-material";
 
 export default function EstablishmentReview() {

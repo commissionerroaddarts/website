@@ -3,7 +3,6 @@
 import React from "react";
 import { Box } from "@mui/material";
 import ThemeButton from "../buttons/ThemeButton";
-import SearchIcon from "@mui/icons-material/Search";
 import SelectSearchDropDown from "../global/SelectSearchDropDown";
 
 const categories = [

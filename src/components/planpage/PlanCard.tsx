@@ -61,7 +61,13 @@ const PlanCard = ({ plan }: PlanCardProps) => {
             {feature}
           </Typography>
         ))}
-        <Typography align="center" my={2}>
+        <Typography
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            mt: 2,
+          }}
+        >
           {plan.featured ? (
             <ThemeButton text="Get Started" onClickEvent={handleGetStarted} />
           ) : (

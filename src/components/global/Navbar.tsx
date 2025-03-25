@@ -23,13 +23,12 @@ function Navbar() {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const toggleDrawer =
-    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
-      setDrawerOpen(open);
-    };
+  const toggleDrawer = (open: boolean) => {
+    setDrawerOpen(open);
+  };
 
   const drawer = (
-    <Box sx={{ width: 250 }} onClick={toggleDrawer(false)}>
+    <Box sx={{ width: 250 }} onClick={() => toggleDrawer(false)}>
       <List>
         <Link href="/about" passHref>
           <ListItem component="a">
@@ -85,14 +84,14 @@ function Navbar() {
               edge="start"
               color="inherit"
               aria-label="menu"
-              onClick={toggleDrawer(true)}
+              onClick={() => toggleDrawer(true)}
             >
               <MenuIcon />
             </IconButton>
             <Drawer
               anchor="right"
               open={drawerOpen}
-              onClose={toggleDrawer(false)}
+              onClose={() => toggleDrawer(false)}
             >
               {drawer}
             </Drawer>

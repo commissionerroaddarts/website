@@ -1,17 +1,23 @@
 import { TextField } from "@mui/material";
+import { ComponentProps } from "react";
 
-interface CustomInputProps {
+interface CustomInputProps extends ComponentProps<typeof TextField> {
   label: string;
   multiline?: boolean;
   rows?: number;
+  error?: boolean;
+  helperText?: string;
 }
 
 // Reusable Input Component
-const CustomInput = ({
+const CustomInput: React.FC<CustomInputProps> = ({
   label,
   multiline = false,
   rows = 1,
-}: CustomInputProps) => {
+  error = false,
+  helperText = "",
+  ...rest
+}) => {
   return (
     <TextField
       fullWidth
@@ -19,17 +25,20 @@ const CustomInput = ({
       variant="outlined"
       multiline={multiline}
       rows={multiline ? rows : 1}
+      error={error}
+      helperText={error ? helperText : ""}
       sx={{
         "& .MuiOutlinedInput-root": {
-          backgroundColor: "rgba(255,255,255,0.3)",
+          backgroundColor: "rgba(255, 255, 255, 0.3)",
           borderRadius: multiline ? "25px" : "50px",
           border: "none",
           outline: "none",
-          // "& .MuiOutlinedInput-notchedOutline": {
-          //   borderColor: "white",
-          // },
+          "&.Mui-error .MuiOutlinedInput-notchedOutline": {
+            borderColor: "red",
+          },
         },
       }}
+      {...rest} // Spread remaining props (e.g., value, onChange, etc.)
     />
   );
 };

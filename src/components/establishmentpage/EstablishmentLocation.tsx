@@ -1,27 +1,15 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import {
-  Phone,
-  Public,
-  AccessTime,
-  AttachMoney,
-  Facebook,
-  Instagram,
-  Twitter,
-} from "@mui/icons-material";
-import { Business, Price, Timings } from "../../types/business";
-import L from "leaflet";
+import { Business, Price } from "../../types/business";
+import L, { marker } from "leaflet";
 import Image from "next/image";
 import TimingsPopup from "./TimingsPopup";
 import SocialIcons from "../global/SocialIcons";
 import { Box } from "@mui/material";
-const markerIcon = require("leaflet/dist/images/marker-icon.png");
-const markerShadow = require("leaflet/dist/images/marker-shadow.png");
-
 // Fix default marker icon path
 const defaultIcon = L.icon({
   iconUrl: "/images/icons/marker-icon.png",
-  shadowUrl: markerShadow,
+  shadowUrl: "/images/icons/marker-shadow.png",
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],

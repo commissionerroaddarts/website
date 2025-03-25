@@ -1,10 +1,6 @@
 "use client";
 
 import { createTheme } from "@mui/material/styles";
-import { Lexend } from "next/font/google";
-
-// If loading a variable font, you don't need to specify the font weight
-const lexand = Lexend({ subsets: ["latin"] });
 
 const theme = createTheme({
   palette: {

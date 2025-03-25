@@ -5,6 +5,7 @@ import { ButtonProps } from "../../types/buttonProps";
 const ThemeOutlineButton = ({ onClickEvent, icon, text }: ButtonProps) => {
   return (
     <Button
+      onClick={onClickEvent}
       variant="outlined"
       sx={{
         mt: 4,
@@ -16,6 +17,7 @@ const ThemeOutlineButton = ({ onClickEvent, icon, text }: ButtonProps) => {
       }}
     >
       {text}
+      {icon && <span>{icon}</span>}
     </Button>
   );
 };
