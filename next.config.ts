@@ -12,6 +12,11 @@ const nextConfig: NextConfig = {
       "images.pexels.com",
     ],
   },
+
+  webpack: (config) => {
+    config.resolve.fallback = { fs: false };
+    return config;
+  },
 };
 
 export default nextConfig;

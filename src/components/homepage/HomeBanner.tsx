@@ -4,7 +4,8 @@ import { motion } from "framer-motion";
 import Navbar from "../global/Navbar";
 import Image from "next/image";
 import SearchComponent from "./SearchingComponent";
-import AnimText from "../../animations/text/AnimText";
+import dynamic from "next/dynamic";
+const AnimText = dynamic(() => import("../../animations/text/AnimText"));
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },

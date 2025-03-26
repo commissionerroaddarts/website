@@ -6,6 +6,36 @@ import EntertainmentSection from "../components/homepage/EntertainmentSection";
 import HomeBanner from "../components/homepage/HomeBanner";
 import FadeInSection from "../animations/sections/FadeInSection";
 
+export const metadata = {
+  title: "Home - Road Darts",
+  description:
+    "Welcome to the Road Darts homepage, your ultimate destination for all things related to road darts.",
+  icon: "/images/logos/road-darts-logo.png",
+  openGraph: {
+    title: "Home - Road Darts",
+    description:
+      "Welcome to the Road Darts homepage, your ultimate destination for all things related to road darts.",
+    url: "https://www.roaddarts.com",
+    type: "website",
+    images: [
+      {
+        url: "/images/logos/road-darts-logo.png",
+        width: 800,
+        height: 600,
+        alt: "Road Darts Logo",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    site: "@roaddarts",
+    title: "Home - Road Darts",
+    description:
+      "Welcome to the Road Darts homepage, your ultimate destination for all things related to road darts.",
+    image: "/images/logos/road-darts-logo.png",
+  },
+};
+
 export default function HomePage() {
   return (
     <Box>

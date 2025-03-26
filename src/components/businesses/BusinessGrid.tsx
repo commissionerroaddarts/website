@@ -2,7 +2,10 @@
 import { Box, Grid, Typography } from "@mui/material";
 import useFetchBusinesses from "../../hooks/useFetchBusinesses";
 import BusinessSkeleton from "./BusinessSkeleton";
-import CardStaggerAnimation from "../../animations/sections/CardStaggerAnimation";
+import dynamic from "next/dynamic";
+const CardStaggerAnimation = dynamic(
+  () => import("../../animations/sections/CardStaggerAnimation")
+);
 import BusinessCard from "./BusinessCard";
 import ThemeOutlineButton from "../buttons/ThemeOutlineButton";
 

@@ -1,6 +1,36 @@
 import { Grid, Box, Typography } from "@mui/material";
 import React from "react";
 import PlanCard from "../../../components/planpage/PlanCard";
+export const metadata = {
+  title: "Plans - Road Darts",
+  description:
+    "Choose the best plan for your needs and get started with Road Darts.",
+  icon: "/images/logos/road-darts-logo.png",
+  openGraph: {
+    title: "Plans - Road Darts",
+    description:
+      "Choose the best plan for your needs and get started with Road Darts.",
+    url: "https://www.roaddarts.com/plans",
+    type: "website",
+    images: [
+      {
+        url: "/images/logos/road-darts-logo.png",
+        width: 800,
+        height: 600,
+        alt: "Road Darts Logo",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    site: "@roaddarts",
+    title: "Plans - Road Darts",
+    description:
+      "Choose the best plan for your needs and get started with Road Darts.",
+    image: "/images/logos/road-darts-logo.png",
+  },
+};
+
 const plans = [
   {
     id: "1",
