@@ -2,18 +2,26 @@ import { Button } from "@mui/material";
 import React from "react";
 import { ButtonProps } from "../../types/buttonProps";
 
-const ThemeOutlineButton = ({ onClickEvent, icon, text }: ButtonProps) => {
+const ThemeOutlineButton = ({
+  onClickEvent,
+  icon,
+  text,
+  applyMargin,
+}: ButtonProps) => {
   return (
     <Button
       onClick={onClickEvent}
       variant="outlined"
       sx={{
-        mt: 4,
+        mt: applyMargin ? 4 : 0,
         borderColor: "#fff",
         color: "#fff",
         borderRadius: "100px",
         minWidth: "120px",
-        padding: "0.5rem 1.2rem",
+        padding: "0.8rem 2rem",
+        display: "flex",
+        gap: "0.5rem",
+        alignItems: "center",
       }}
     >
       {text}

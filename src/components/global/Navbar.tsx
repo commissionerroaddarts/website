@@ -17,6 +17,12 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
+import { motion } from "framer-motion";
+
+const navbarVariants = {
+  hidden: { opacity: 0, y: -20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } },
+};
 
 function Navbar() {
   const theme = useTheme();
@@ -55,80 +61,87 @@ function Navbar() {
   );
 
   return (
-    <AppBar
-      position="static"
-      color="transparent"
-      elevation={0}
-      sx={{ zIndex: 10 }}
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      variants={navbarVariants}
+      className="relative z-[200]"
     >
-      <Toolbar>
-        <Link href="/" passHref style={{ flexGrow: 1 }}>
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{ color: "white", cursor: "pointer" }}
-          >
-            <Image
-              src="/images/logos/road-darts-logo.png"
-              alt="Logo"
-              width={160}
-              height={160}
-              style={{ height: "120px", width: "auto" }}
-            />
-          </Typography>
-        </Link>
+      <AppBar
+        position="static"
+        color="transparent"
+        elevation={0}
+        sx={{ zIndex: 10 }}
+      >
+        <Toolbar>
+          <Link href="/" passHref style={{ flexGrow: 1 }}>
+            <Typography
+              variant="h6"
+              component="div"
+              sx={{ color: "white", cursor: "pointer" }}
+            >
+              <Image
+                src="/images/logos/road-darts-logo.png"
+                alt="Logo"
+                width={160}
+                height={160}
+                style={{ height: "120px", width: "auto" }}
+              />
+            </Typography>
+          </Link>
 
-        {isMobile ? (
-          <>
-            <IconButton
-              edge="start"
-              color="inherit"
-              aria-label="menu"
-              onClick={() => toggleDrawer(true)}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Drawer
-              anchor="right"
-              open={drawerOpen}
-              onClose={() => toggleDrawer(false)}
-            >
-              {drawer}
-            </Drawer>
-          </>
-        ) : (
-          <Box
-            sx={{
-              display: "flex",
-              gap: "1rem",
-              alignItems: "center",
-            }}
-          >
-            <Link href="/about" passHref>
-              <Button sx={{ color: "white" }}>About</Button>
-            </Link>
-            <Link href="/contact-us" passHref>
-              <Button sx={{ color: "white" }}>Contact</Button>
-            </Link>
-            <Link href="/plans" passHref>
-              <Button
-                sx={{
-                  color: "white",
-                  background: "#64546766",
-                  borderRadius: "86px",
-                  padding: "1rem 1.5rem",
-                }}
+          {isMobile ? (
+            <>
+              <IconButton
+                edge="start"
+                color="inherit"
+                aria-label="menu"
+                onClick={() => toggleDrawer(true)}
               >
-                Add Listing
-              </Button>
-            </Link>
-            <Link href="/login" passHref>
-              <Button sx={{ color: "white" }}>Sign In</Button>
-            </Link>
-          </Box>
-        )}
-      </Toolbar>
-    </AppBar>
+                <MenuIcon />
+              </IconButton>
+              <Drawer
+                anchor="right"
+                open={drawerOpen}
+                onClose={() => toggleDrawer(false)}
+              >
+                {drawer}
+              </Drawer>
+            </>
+          ) : (
+            <Box
+              sx={{
+                display: "flex",
+                gap: "1rem",
+                alignItems: "center",
+              }}
+            >
+              <Link href="/about" passHref>
+                <Button sx={{ color: "white" }}>About</Button>
+              </Link>
+              <Link href="/contact-us" passHref>
+                <Button sx={{ color: "white" }}>Contact</Button>
+              </Link>
+              <Link href="/plans" passHref>
+                <Button
+                  sx={{
+                    color: "white",
+                    background: "#64546766",
+                    borderRadius: "86px",
+                    padding: "1rem 1.5rem",
+                  }}
+                >
+                  Add Listing
+                </Button>
+              </Link>
+              <Link href="/login" passHref>
+                <Button sx={{ color: "white" }}>Sign In</Button>
+              </Link>
+            </Box>
+          )}
+        </Toolbar>
+      </AppBar>
+    </motion.div>
   );
 }
 

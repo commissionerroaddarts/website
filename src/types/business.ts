@@ -43,6 +43,7 @@ interface Validation {
 }
 
 export interface Business {
+  _id: number | string;
   // userId: string;  // Uncomment if userId is needed
   name: string;
   tagline: string;
@@ -60,9 +61,17 @@ export interface Business {
   faqs?: FAQ[];
   price?: Price;
   agelimit?: number;
-  category?: string;
+  category: string;
   tags?: string[];
   status?: "Active" | "Closed Down" | "Coming Soon" | "Under Remodel";
   validation?: Validation;
   bordtype?: "Steel Tip" | "Plastic" | "Both";
+}
+
+export interface ApiResponse {
+  data: Business[];
+  totalItems: number;
+  totalPages: number;
+  page: number;
+  limit: number;
 }

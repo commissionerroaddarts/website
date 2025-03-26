@@ -2,10 +2,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux";
 import planReducer from "./slices/planSlice";
+import businessReducer from "./slices/businessSlice";
 
 export const store = configureStore({
   reducer: {
     plan: planReducer,
+    businesses: businessReducer,
   },
 });
 

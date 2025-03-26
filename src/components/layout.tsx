@@ -8,10 +8,90 @@ import Navbar from "./global/Navbar";
 import Footer from "./global/Footer";
 import { usePathname } from "next/navigation"; // Correct hook
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 interface LayoutProps {
   readonly children: ReactNode;
 }
+
+const floatAnimation = {
+  float: {
+    y: [0, -10, 0],
+    transition: {
+      duration: 3,
+      repeat: Infinity,
+      ease: "easeInOut",
+    },
+  },
+};
+
+const icons = [
+  {
+    name: "eclipse-small",
+    width: 346.089787721215,
+    height: 317.8461349689057,
+    top: "-8%",
+    left: "70%",
+    transform: "none",
+  },
+  {
+    name: "eclipse-medium",
+    width: 346.089787721215,
+    height: 317.8461349689057,
+    top: "-5%",
+    left: "7%",
+    transform: "none",
+  },
+  {
+    name: "eclipse-large",
+    width: 346.089787721215,
+    height: 317.8461349689057,
+    top: "15%",
+    left: "85%",
+    transform: "none",
+  },
+  {
+    name: "dart-icon",
+    width: "250px",
+    height: "150px",
+    top: "1%",
+    left: "35%",
+    transform: "translate(-35%,-1%)",
+  },
+  {
+    name: "coin-icon",
+    width: "50px",
+    height: "150px",
+    top: "35%",
+    left: "2%",
+    transform: "translate(-2%,-35%)",
+  },
+
+  {
+    name: "coin-icon",
+    width: "50px",
+    height: "150px",
+    top: "5%",
+    left: "95%",
+    transform: "translate(-5%,-95%)",
+  },
+  {
+    name: "card-icon",
+    width: "160px",
+    height: "160px",
+    top: "75%",
+    left: "95%",
+    transform: "translate(-95%,-75%)",
+  },
+  {
+    name: "casino-icon",
+    width: "150px",
+    height: "150px",
+    top: "85%",
+    left: "0",
+    transform: "translate(0,-85%)",
+  },
+];
 
 export default function Layout({ children }: LayoutProps) {
   const pathname = usePathname(); // Get the current path
@@ -20,111 +100,32 @@ export default function Layout({ children }: LayoutProps) {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Image
-        src="/images/shapes/eclipse-small.svg"
-        alt="Road Dart Shape 1"
-        width={300}
-        height={300}
-        style={{
-          position: "absolute",
-          width: 346.089787721215,
-          height: 317.8461349689057,
-          top: "-8%",
-          left: " 70%",
-        }}
-      />
-      <Image
-        src="/images/shapes/eclipse-medium.svg"
-        alt="Road Dart Shape 2"
-        width={400}
-        height={400}
-        style={{ position: "absolute", top: "-12%", left: "7%" }}
-      />
-      <Image
-        src="/images/shapes/eclipse-large.svg"
-        alt="Road Dart Shape 3"
-        width={500}
-        height={500}
-        style={{ position: "absolute", top: "15%", left: "65%", zIndex: -1 }}
-      />
-
-      <Image
-        src="/images/icons/dart-icon.svg"
-        alt="Dart Icon"
-        width={500}
-        height={500}
-        style={{
-          position: "absolute",
-          width: "250px",
-          height: "150px",
-          top: "2%",
-          left: "45%",
-          zIndex: -1,
-          transform: "translate(-45%,-2%)",
-        }}
-      />
-
-      <Image
-        src="/images/icons/coin-icon.svg"
-        alt="Coin Icon"
-        width={500}
-        height={500}
-        style={{
-          position: "absolute",
-          width: "50px",
-          height: "150px",
-          top: "35%",
-          left: "2%",
-          zIndex: -1,
-          transform: "translate(-2%,-35%)",
-        }}
-      />
-
-      <Image
-        src="/images/icons/coin-icon.svg"
-        alt="Coin Icon"
-        width={500}
-        height={500}
-        style={{
-          position: "absolute",
-          width: "50px",
-          height: "150px",
-          top: "15%",
-          left: "95%",
-          zIndex: -1,
-          transform: "translate(-95%,-15%)",
-        }}
-      />
-
-      <Image
-        src="/images/icons/card-icon.svg"
-        alt="Card Icon"
-        width={100}
-        height={100}
-        style={{
-          position: "absolute",
-          top: "75%",
-          left: "100%",
-          zIndex: -1,
-          transform: "translate(-95%,-15%)",
-        }}
-      />
-
-      <Image
-        src="/images/icons/casino-icon.svg"
-        alt="Casino Icon"
-        width={150}
-        height={150}
-        style={{
-          position: "absolute",
-          top: "95%",
-          left: "0",
-          zIndex: -1,
-          transform: "translate(0,-85%)",
-        }}
-      />
-      {!isHomePage && <Navbar />}
-      <main
+      {icons.map((icon, index) => (
+        <motion.div
+          key={index}
+          variants={floatAnimation}
+          animate="float"
+          style={{
+            position: "absolute",
+            zIndex: -1,
+            top: icon.top,
+            left: icon.left,
+            transform: icon.transform,
+          }}
+        >
+          <Image
+            src={`/images/shapes/${icon.name}.svg`}
+            alt={icon.name}
+            width={300}
+            height={300}
+            style={{
+              width: icon.width,
+              height: icon.height,
+            }}
+          />
+        </motion.div>
+      ))}
+      <div
         style={{
           minHeight: "100vh",
           display: "flex",
@@ -132,9 +133,10 @@ export default function Layout({ children }: LayoutProps) {
           justifyContent: "space-between",
         }}
       >
-        {children}
-      </main>
-      <Footer />
+        {!isHomePage && <Navbar />}
+        <main>{children}</main>
+        <Footer />
+      </div>
     </ThemeProvider>
   );
 }

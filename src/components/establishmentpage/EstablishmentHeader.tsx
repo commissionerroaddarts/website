@@ -26,7 +26,7 @@ export default function EstablishmentHeader({
             style={{
               background:
                 "linear-gradient(109.46deg, rgba(201, 201, 201, 0.8) 1.57%, rgba(196, 196, 196, 0.1) 100%)",
-              opacity: 0.5,
+              // opacity: 0.5,
             }}
           >
             <div className="text-white text-xl">{action.icon}</div>

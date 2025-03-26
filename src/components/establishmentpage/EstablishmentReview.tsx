@@ -1,6 +1,15 @@
 import React from "react";
-import { Box, Typography, TextField, Button, Rating } from "@mui/material";
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Rating,
+  Grid,
+} from "@mui/material";
 import { PhotoCamera } from "@mui/icons-material";
+import ThemeButton from "../buttons/ThemeButton";
+import ThemeOutlineButton from "../buttons/ThemeOutlineButton";
 
 export default function EstablishmentReview() {
   const [value, setValue] = React.useState<number | null>(null);
@@ -18,47 +27,45 @@ export default function EstablishmentReview() {
       <Typography variant="h6" gutterBottom>
         Write a review
       </Typography>
-      <Box display="flex" alignItems="center" gap={2}>
-        <Rating
-          name="rating"
-          value={value}
-          onChange={(_, newValue) => setValue(newValue)}
-          sx={{ color: "#FFD700" }}
-        />
-        <TextField
-          variant="outlined"
-          placeholder="Your rating"
-          InputProps={{
-            style: {
+      <Grid container spacing={2} alignItems="center">
+        <Grid item xs={12} sm={6} md={4}>
+          <Rating
+            name="rating"
+            value={value}
+            onChange={(_, newValue) => setValue(newValue)}
+            sx={{
               color: "white",
-              background:
-                "linear-gradient(109.46deg, rgba(201, 201, 201, 0.8) 1.57%, rgba(196, 196, 196, 0.1) 100%)",
-              opacity: 0.5,
-              borderRadius: 8,
-            },
-          }}
-          sx={{ flex: 1 }}
+              "& .MuiRating-iconEmpty": {
+                color: "rgba(255, 255, 255, 0.5)",
+              },
+            }}
+          />
+        </Grid>
+        <Grid item xs={12} sm={12} md={12}>
+          <TextField
+            variant="outlined"
+            placeholder="Your Rating"
+            fullWidth
+            InputProps={{
+              style: {
+                color: "white",
+                background: "#C4C4C41A", // opacity: 0.5,
+                borderRadius: 8,
+                border: "1px solid white",
+              },
+            }}
+          />
+        </Grid>
+      </Grid>
+
+      <Box className="flex items-center gap-4 mt-4">
+        <ThemeButton text="Post Your Review" />
+        <ThemeOutlineButton
+          text="Select Images"
+          icon={<PhotoCamera fontSize="small" />}
         />
-        <Button
-          variant="outlined"
-          component="label"
-          startIcon={<PhotoCamera />}
-          sx={{ color: "white", borderColor: "white", borderRadius: 8 }}
-        >
-          Select Images
-          <input hidden accept="image/*" multiple type="file" />
-        </Button>
-        <Button
-          variant="contained"
-          sx={{
-            background:
-              "linear-gradient(109.46deg, rgba(201, 201, 201, 0.8) 1.57%, rgba(196, 196, 196, 0.1) 100%)",
-            opacity: 0.5,
-            borderRadius: 8,
-          }}
-        >
-          Browse
-        </Button>
+        {/* Select Images <input hidden accept="image/*" multiple type="file" />
+        </Button> */}
       </Box>
     </Box>
   );

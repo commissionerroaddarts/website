@@ -83,8 +83,15 @@ const CategoryGrid: React.FC<CategoryGridProps> = ({
       Explore Our Locations
     </Typography>
     <Grid container spacing={2} justifyContent="center" mt={3}>
-      {categories.map((category) => (
-        <Grid item key={category.id} xs={12} sm={6} md={4} lg={4}>
+      {categories.map((category, index) => (
+        <Grid
+          item
+          key={category.id}
+          xs={12}
+          sm={index % 4 === 0 ? 6 : 3} // First item of each row is 6, others are 3
+          md={index % 4 === 0 ? 6 : 3}
+          lg={index % 4 === 0 ? 6 : 3}
+        >
           <CategoryCard
             category={category}
             onClick={() => onCategoryClick?.(category.id)}
@@ -93,7 +100,7 @@ const CategoryGrid: React.FC<CategoryGridProps> = ({
       ))}
     </Grid>
 
-    <ThemeOutlineButton text="View All Locations" />
+    <ThemeOutlineButton text="View All Locations" applyMargin={true} />
   </Box>
 );
 

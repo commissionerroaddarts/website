@@ -59,6 +59,7 @@ p,
 button,
 input,
 textarea,
+span,
 input::placeholder {
   color: var(--foreground);
   font-family: "Lexend", sans-serif !important; /* Apply Lexend font */
