@@ -122,6 +122,9 @@ const TimingsPopup: React.FC<TimingsPopupProps> = ({ timings }) => {
             <div
               key={day}
               className="flex justify-between text-black items-center py-1 border-b"
+              style={{
+                color: "black",
+              }}
             >
               <span className="capitalize ">{day}</span>
               <span>
