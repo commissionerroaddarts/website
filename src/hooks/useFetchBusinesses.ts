@@ -1,3 +1,4 @@
+"use client";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBusiness } from "../store/slices/businessSlice"; // Adjust the path if needed

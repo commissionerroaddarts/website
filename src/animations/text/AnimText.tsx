@@ -1,3 +1,4 @@
+"use client";
 import { useMotionValue, animate } from "framer-motion";
 import { useEffect } from "react";
 import RedoAnimText from "./RedoAnimEffect";

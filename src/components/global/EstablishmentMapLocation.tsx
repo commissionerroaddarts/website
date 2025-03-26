@@ -1,7 +1,8 @@
+"use client";
 import { Box, Button, Stack } from "@mui/material";
 import L from "leaflet";
 import "leaflet-routing-machine";
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import { Location } from "../../types/business";
 import "leaflet/dist/leaflet.css";
@@ -35,7 +36,7 @@ const RoutingMachine = ({
   const routingControlRef = useRef<L.Routing.Control | null>(null);
   const airRouteLayerRef = useRef<L.Polyline | null>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!showDirections) return;
 
     // Remove existing route
