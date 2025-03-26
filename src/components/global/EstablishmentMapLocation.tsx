@@ -2,7 +2,7 @@
 import { Box, Button, Stack } from "@mui/material";
 import L from "leaflet";
 import "leaflet-routing-machine";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import { Location } from "../../types/business";
 import "leaflet/dist/leaflet.css";
@@ -91,8 +91,8 @@ const RoutingMachine = ({
 const EstablishmentMapLocation = ({
   location,
 }: EstablishmentMapLocationProps) => {
-  const [showDirections, setShowDirections] = React.useState(false);
-  const [travelMode, setTravelMode] = React.useState<"road" | "air">("road");
+  const [showDirections, setShowDirections] = useState(false);
+  const [travelMode, setTravelMode] = useState<"road" | "air">("road");
 
   const coordinates: [number, number] = location?.geotag
     ? [location.geotag.lat, location.geotag.lng]

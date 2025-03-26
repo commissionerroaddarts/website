@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import {
   Box,
   Typography,
@@ -12,7 +13,7 @@ import ThemeButton from "../buttons/ThemeButton";
 import ThemeOutlineButton from "../buttons/ThemeOutlineButton";
 
 export default function EstablishmentReview() {
-  const [value, setValue] = React.useState<number | null>(null);
+  const [value, setValue] = useState<number | null>(null);
 
   return (
     <Box

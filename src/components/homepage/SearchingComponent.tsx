@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Box } from "@mui/material";
 import ThemeButton from "../buttons/ThemeButton";
 import SelectSearchDropDown from "../global/SelectSearchDropDown";
@@ -18,8 +18,8 @@ const cities = [
 ];
 
 const SearchComponent: React.FC = () => {
-  const [category, setCategory] = React.useState("");
-  const [city, setCity] = React.useState("");
+  const [category, setCategory] = useState("");
+  const [city, setCity] = useState("");
 
   const handleSearch = () => {
     console.log("Searching for:", { category, city });
