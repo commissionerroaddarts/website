@@ -137,8 +137,8 @@ const EstablishmentMapLocation = ({
               Get Air Route
             </Button>
             <Button
-              variant="outlined"
-              color="primary"
+              variant="contained"
+              color="success"
               onClick={handleOpenGoogleMaps}
             >
               Open in Google Maps

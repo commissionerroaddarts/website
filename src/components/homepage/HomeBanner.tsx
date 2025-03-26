@@ -4,8 +4,8 @@ import { motion } from "framer-motion";
 import Navbar from "../global/Navbar";
 import Image from "next/image";
 import SearchComponent from "./SearchingComponent";
-import dynamic from "next/dynamic";
-const AnimText = dynamic(() => import("../../animations/text/AnimText"));
+// import dynamic from "next/dynamic";
+// const AnimText = dynamic(() => import("../../animations/text/AnimText"));
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
@@ -81,9 +81,12 @@ function HomeBanner() {
         <Box className="flex flex-col gap-1 relative z-[200] -mt-10">
           <motion.div
             variants={itemVariants}
+            initial="hidden"
+            animate="visible"
             className="h-full w-full   mb-2  text-white font-bold text-5xl"
           >
-            <AnimText delay={20} />
+            {/* <AnimText delay={20} /> */}
+            Stay Sharp, Throw Anywhere
           </motion.div>
 
           <motion.div

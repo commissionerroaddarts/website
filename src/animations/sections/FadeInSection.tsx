@@ -38,7 +38,7 @@ const FadeInSection: React.FC<FadeInSectionProps> = ({
     <motion.div
       initial="hidden"
       whileInView="visible"
-      viewport={{ amount: threshold }}
+      viewport={{ amount: threshold, once: true }}
       variants={fadeInVariants}
     >
       {children}
