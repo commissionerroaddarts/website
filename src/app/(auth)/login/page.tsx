@@ -1,88 +1,171 @@
+"use client";
 import React from "react";
-import { TextField, Button, Box, Typography } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Container,
+  Paper,
+  Grid,
+  Divider,
+} from "@mui/material";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { loginUser } from "../../../services/authService"; // API Service
+import { LoginFormData } from "../../../types/auth";
+import CustomInput from "../../../components/global/CustomInput";
+import ThemeButton from "../../../components/buttons/ThemeButton";
 import { Google } from "@mui/icons-material";
+import Link from "next/link";
 
-export default function LoginForm() {
+// ✅ Validation Schema
+const schema = yup.object().shape({
+  identifier: yup.string().email("Invalid email").required("Email is required"),
+  password: yup
+    .string()
+    .min(4, "Password must be at least 4 characters")
+    .required("Password is required"),
+});
+
+const LoginForm = () => {
+  const {
+    handleSubmit,
+    control,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginFormData>({
+    resolver: yupResolver(schema),
+  });
+
+  // ✅ Form Submission Handler
+  const onSubmit = async (data: LoginFormData) => {
+    try {
+      const response = await loginUser(data);
+      toast.success(response.message || "Login successful!");
+      // Handle post-login actions here (e.g., redirect, store token)
+    } catch (error: Error | any) {
+      toast.error(
+        error.response?.data?.error || "Login failed. Please try again."
+      );
+    }
+  };
+
   return (
-    <Box
-      sx={{
-        background:
-          "linear-gradient(112.11deg, rgba(201, 201, 201, 0.8) 2.19%, rgba(196, 196, 196, 0.1) 95.99%)",
-        borderRadius: "12px",
-        padding: "32px",
-        display: "flex",
-        flexDirection: "column",
-        gap: "16px",
-        width: "100%",
-        maxWidth: "600px",
-        margin: " 0 auto",
-        boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
-      }}
-    >
-      <Typography variant="h5" align="center">
-        Sign In
-      </Typography>
-      <Typography variant="body2" align="center">
-        Set out participants and emails into master than
-      </Typography>
+    <Container maxWidth="sm">
+      <Paper
+        sx={{
+          p: 4,
+          borderRadius: "16px",
+          textAlign: "center",
+          background:
+            " linear-gradient(112.11deg, rgba(201, 201, 201, 0.8) 2.19%, rgba(196, 196, 196, 0.1) 95.99%)",
+        }}
+      >
+        <Box>
+          <Typography variant="h4" align="center" gutterBottom>
+            Login
+          </Typography>
+          <Typography
+            variant="body1"
+            align="center"
+            mb={3}
+            fontSize={13}
+            gutterBottom
+          >
+            Please enter your email and password to log in to your account. If
+            you don't have an account, you can register for one.
+          </Typography>
+        </Box>
 
-      <TextField
-        placeholder="Email"
-        variant="outlined"
-        InputProps={{ style: { color: "white", borderColor: "#575757" } }}
-        sx={{
-          "& .MuiOutlinedInput-root": {
-            "& fieldset": { borderColor: "#575757" },
-            "&:hover fieldset": { borderColor: "#969696" },
-          },
-        }}
-      />
-      <TextField
-        placeholder="Password"
-        type="password"
-        variant="outlined"
-        InputProps={{ style: { color: "white", borderColor: "#575757" } }}
-        sx={{
-          "& .MuiOutlinedInput-root": {
-            "& fieldset": { borderColor: "#575757" },
-            "&:hover fieldset": { borderColor: "#969696" },
-          },
-        }}
-      />
-      <Button
-        variant="contained"
-        fullWidth
-        sx={{
-          background: "#9B51E0",
-          color: "white",
-          padding: "10px 0",
-          borderRadius: "20px",
-        }}
-      >
-        Sign Up
-      </Button>
-      <Button
-        variant="outlined"
-        fullWidth
-        startIcon={<Google />}
-        sx={{
-          background: "white",
-          color: "#969696",
-          borderColor: "#575757",
-          padding: "10px 0",
-          borderRadius: "20px",
-        }}
-      >
-        Continue with Google
-      </Button>
-      <Typography variant="body2" align="center">
-        Already have an account?{" "}
-        <span
-          style={{ color: "#9B51E0", fontWeight: "bold", cursor: "pointer" }}
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Grid container spacing={2}>
+            {/* Email */}
+            <Grid item xs={12}>
+              <Controller
+                name="identifier"
+                control={control}
+                render={({ field }) => (
+                  <CustomInput
+                    label="Email Address"
+                    {...field}
+                    error={!!errors.identifier}
+                    helperText={errors.identifier?.message}
+                  />
+                )}
+              />
+            </Grid>
+
+            {/* Password */}
+            <Grid item xs={12}>
+              <Controller
+                name="password"
+                control={control}
+                render={({ field }) => (
+                  <CustomInput
+                    label="Password"
+                    type="password"
+                    {...field}
+                    error={!!errors.password}
+                    helperText={errors.password?.message}
+                  />
+                )}
+              />
+            </Grid>
+
+            {/* Submit Button */}
+            <Grid item xs={12} className="flex justify-center">
+              <ThemeButton
+                text={isSubmitting ? "Logging in..." : "Login"}
+                type="submit"
+                disabled={isSubmitting}
+                style={{ width: "100%" }}
+                // sx={{ width: "100%" }}
+              />
+            </Grid>
+          </Grid>
+        </form>
+        <Divider
+          sx={{ my: 3, "&::before, &::after": { borderColor: "white" } }}
         >
-          Sign In
-        </span>
-      </Typography>
-    </Box>
+          or
+        </Divider>
+
+        {/* Continue with Google Button */}
+        <Grid container spacing={2} className="w-full">
+          <Grid item xs={12} className="flex justify-center">
+            <ThemeButton
+              text="Continue with Google"
+              startIcon={<Google sx={{ color: "black" }} />}
+              onClick={() => {
+                // Handle Google login here
+              }}
+              sx={{
+                backgroundColor: "white",
+                color: "black",
+                borderRadius: "20px",
+                padding: "0.8rem 0",
+                width: "100%",
+              }}
+            />
+          </Grid>
+        </Grid>
+
+        <Box mt={2}>
+          <Typography variant="body2" align="center">
+            Don't Have An Account?{" "}
+            <Link
+              href="/signup"
+              style={{ fontWeight: "bold", textDecoration: "underline" }}
+              passHref
+            >
+              Sign up
+            </Link>
+          </Typography>
+        </Box>
+      </Paper>
+    </Container>
   );
-}
+};
+
+export default LoginForm;

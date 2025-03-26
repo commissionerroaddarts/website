@@ -29,13 +29,13 @@ const CustomInput: React.FC<CustomInputProps> = ({
       helperText={error ? helperText : ""}
       sx={{
         "& .MuiOutlinedInput-root": {
-          backgroundColor: "rgba(255, 255, 255, 0.3)",
+          // background: "#160C1866",
+          background: " rgba(22, 12, 24, 0.4)",
           borderRadius: multiline ? "25px" : "50px",
-          border: "none",
           outline: "none",
-          "&.Mui-error .MuiOutlinedInput-notchedOutline": {
-            borderColor: "red",
-          },
+        },
+        "& .MuiInputBase-input::placeholder": {
+          color: "background: rgba(150, 150, 150, 1)",
         },
       }}
       {...rest} // Spread remaining props (e.g., value, onChange, etc.)

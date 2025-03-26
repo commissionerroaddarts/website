@@ -1,9 +1,10 @@
 import React from "react";
 import { Container, Box } from "@mui/material";
-import BusinessGrid from "../components/listings/BusinessGrid";
-import CategoryGrid from "../components/listings/CategoryGrid";
+import BusinessGrid from "../components/businesses/BusinessGrid";
+import CategoryGrid from "../components/businesses/CategoryGrid";
 import EntertainmentSection from "../components/homepage/EntertainmentSection";
 import HomeBanner from "../components/homepage/HomeBanner";
+import FadeInSection from "../animations/sections/FadeInSection";
 
 export default function HomePage() {
   return (
@@ -11,14 +12,18 @@ export default function HomePage() {
       <HomeBanner />
 
       <Container maxWidth="lg" sx={{ mt: 10 }}>
-        {/* Explore Our Listings */}
-        <BusinessGrid />
+        <FadeInSection>
+          {/* Explore Our Listings */}
+          <BusinessGrid />
+        </FadeInSection>
 
         {/* Explore Our Category  */}
         <CategoryGrid categories={categories} />
 
-        {/* Explore Our Events */}
-        <EntertainmentSection />
+        <FadeInSection>
+          {/* Explore Our Events */}
+          <EntertainmentSection />
+        </FadeInSection>
       </Container>
     </Box>
   );

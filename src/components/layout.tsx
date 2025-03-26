@@ -87,9 +87,9 @@ const icons = [
     name: "casino-icon",
     width: "150px",
     height: "150px",
-    top: "85%",
+    top: "75%",
     left: "0",
-    transform: "translate(0,-85%)",
+    transform: "translate(0,-75%)",
   },
 ];
 

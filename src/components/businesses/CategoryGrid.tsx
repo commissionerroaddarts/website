@@ -78,7 +78,10 @@ const CategoryGrid: React.FC<CategoryGridProps> = ({
   categories,
   onCategoryClick,
 }) => (
-  <Box sx={{ textAlign: "center", py: 4 }}>
+  <Box
+    sx={{ textAlign: "center", py: 4 }}
+    className="flex flex-col items-center"
+  >
     <Typography variant="h4" gutterBottom>
       Explore Our Locations
     </Typography>

@@ -1,20 +1,10 @@
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { Business, Price } from "../../types/business";
-import L, { marker } from "leaflet";
 import Image from "next/image";
 import TimingsPopup from "./TimingsPopup";
 import SocialIcons from "../global/SocialIcons";
 import { Box } from "@mui/material";
-// Fix default marker icon path
-const defaultIcon = L.icon({
-  iconUrl: "/images/icons/marker-icon.png",
-  shadowUrl: "/images/icons/marker-shadow.png",
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41],
-});
+import EstablishmentMapLocation from "../global/EstablishmentMapLocation";
 
 interface EstablishmentLocationProps {
   readonly business: Business;
@@ -38,18 +28,7 @@ export default function EstablishmentLocation({
       }}
     >
       {/* Map */}
-      {location?.geotag && (
-        <MapContainer
-          center={coordinates}
-          zoom={13}
-          style={{ height: "200px", borderRadius: "8px" }}
-        >
-          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-          <Marker position={coordinates} icon={defaultIcon}>
-            <Popup>{`${location.city}, ${location.state}, ${location.country}`}</Popup>
-          </Marker>
-        </MapContainer>
-      )}
+      <EstablishmentMapLocation location={location || {}} />
 
       {/* Details */}
       <div className="text-white space-y-4 font-light">

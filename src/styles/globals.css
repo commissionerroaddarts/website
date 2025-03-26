@@ -99,3 +99,20 @@ body::-webkit-scrollbar-thumb {
 .slick-list {
   margin: 0 -10px;
 }
+
+/* custom-leaflet.css */
+.leaflet-control-zoom-in span,
+.leaflet-control-zoom-out span {
+  color: black !important; /* Change this to your desired icon color */
+}
+
+.MuiOutlinedInput-root,
+.MuiOutlinedInput-notchedOutline {
+  border: none !important ;
+}
+
+.MuiOutlinedInput-input:hover,
+.MuiOutlinedInput-notchedOutline:hover {
+  border: none !important ;
+  outline: none !important ;
+}
