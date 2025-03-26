@@ -84,6 +84,7 @@ function Navbar() {
                 src="/images/logos/road-darts-logo.png"
                 alt="Logo"
                 width={160}
+                placeholder="blur" // Apply blur effect
                 height={160}
                 style={{ height: "120px", width: "auto" }}
               />

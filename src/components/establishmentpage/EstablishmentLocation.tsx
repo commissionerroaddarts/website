@@ -56,6 +56,7 @@ export default function EstablishmentLocation({
             alt="Claim"
             width={30}
             height={30}
+            placeholder="blur" // Apply blur effect
           />
           <button className=" text-white  rounded-lg">
             Own or work here? <b> Claim Now</b>
@@ -92,6 +93,7 @@ const BasicDetails = ({
             alt="Phone"
             width={30}
             height={30}
+            placeholder="blur" // Apply blur effect
           />
           <span>
             {`${city} ${state !== null ? `, ${state}` : ""}, ${country}`}{" "}
@@ -111,6 +113,7 @@ const BasicDetails = ({
           alt="Phone"
           width={30}
           height={30}
+          placeholder="blur" // Apply blur effect
         />
         <span>{phone}</span>
       </div>
@@ -120,6 +123,7 @@ const BasicDetails = ({
           alt="Phone"
           width={30}
           height={30}
+          placeholder="blur" // Apply blur effect
         />
         <a href={website} className="text-purple-300">
           {website && website.length > 40
@@ -133,6 +137,7 @@ const BasicDetails = ({
           alt="Phone"
           width={30}
           height={30}
+          placeholder="blur" // Apply blur effect
         />
         <span>
           {price?.category} {price?.min} - {price?.max}

@@ -63,6 +63,7 @@ const CoreValueSection = () => {
                 >
                   <Image
                     src={item.icon}
+                    placeholder="blur" // Apply blur effect
                     alt={item.title}
                     width={50}
                     height={50}

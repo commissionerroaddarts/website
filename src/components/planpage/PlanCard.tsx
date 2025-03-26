@@ -49,7 +49,13 @@ const PlanCard = ({ plan }: PlanCardProps) => {
               alignItems: "center",
             }}
           >
-            <Image src={plan.icon} alt={plan.name} width={50} height={50} />
+            <Image
+              src={plan.icon}
+              alt={plan.name}
+              width={50}
+              height={50}
+              placeholder="blur" // Apply blur effect
+            />
             <Typography variant="h6" align="center" gutterBottom>
               {plan.name}
             </Typography>

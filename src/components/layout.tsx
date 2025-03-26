@@ -116,6 +116,7 @@ export default function Layout({ children }: LayoutProps) {
           <Image
             src={`/images/shapes/${icon.name}.svg`}
             alt={icon.name}
+            placeholder="blur" // Apply blur effect
             width={300}
             height={300}
             style={{

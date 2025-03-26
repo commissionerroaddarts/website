@@ -72,6 +72,7 @@ function HomeBanner() {
             <Image
               src="/images/banners/banner-icon.png"
               alt="Road Darts"
+              placeholder="blur" // Apply blur effect
               fill
               style={{ objectFit: "contain" }}
             />

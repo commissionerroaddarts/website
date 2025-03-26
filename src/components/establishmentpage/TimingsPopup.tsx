@@ -76,6 +76,7 @@ const TimingsPopup: React.FC<TimingsPopupProps> = ({ timings }) => {
             src="/images/icons/timings.svg"
             alt="Phone"
             width={30}
+            placeholder="blur" // Apply blur effect
             height={30}
           />
           <span>Today: {checkOpenStatus(todayKey)}</span>

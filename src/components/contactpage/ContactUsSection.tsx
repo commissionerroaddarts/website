@@ -98,7 +98,13 @@ const ContactUsSection = () => {
                     mr: 2,
                   }}
                 >
-                  <Image src={info.icon} alt="icon" width={30} height={30} />
+                  <Image
+                    src={info.icon}
+                    alt="icon"
+                    width={30}
+                    height={30}
+                    placeholder="blur" // Apply blur effect
+                  />
                 </Box>
                 <Box>
                   <Typography variant="h6">{info.title}</Typography>

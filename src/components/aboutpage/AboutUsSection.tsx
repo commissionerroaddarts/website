@@ -69,6 +69,7 @@ export default function AboutUsSection() {
               alt="About Us Image"
               width={400}
               height={200}
+              placeholder="blur" // Apply blur effect
               style={{ borderRadius: "8px", width: "100%", height: "auto" }}
             />
           </FadeInSection>
