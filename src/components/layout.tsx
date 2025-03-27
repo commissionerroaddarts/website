@@ -104,7 +104,7 @@ export default function Layout({ children }: LayoutProps) {
     }, 2000); // Adjust the delay as needed (2 seconds)
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [pathname]);
 
   return (
     <ThemeProvider theme={theme}>

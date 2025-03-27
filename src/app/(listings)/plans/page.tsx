@@ -3,6 +3,9 @@ import React from "react";
 import PlanCard from "../../../components/planpage/PlanCard";
 export const metadata = {
   title: "Plans - Road Darts",
+  icons: {
+    icon: "/images/favicons/favicon.ico", // ✅ Reference the dynamic icon (Next.js will resolve it)
+  },
   description:
     "Choose the best plan for your needs and get started with Road Darts.",
   icon: "/images/logos/road-darts-logo.png",

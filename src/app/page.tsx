@@ -10,7 +10,9 @@ export const metadata = {
   title: "Home - Road Darts",
   description:
     "Welcome to the Road Darts homepage, your ultimate destination for all things related to road darts.",
-  icon: "/images/logos/road-darts-logo.png",
+  icons: {
+    icon: "/images/favicons/favicon.ico", // ✅ Reference the dynamic icon (Next.js will resolve it)
+  },
   openGraph: {
     title: "Home - Road Darts",
     description:

@@ -12,6 +12,9 @@ export const generateMetadata = ({
 }) => ({
   title,
   description,
+  icons: {
+    icon: "/images/favicons/favicon.ico", // ✅ Reference the dynamic icon (Next.js will resolve it)
+  },
   icon: "/images/logos/road-darts-logo.png",
   openGraph: {
     title,

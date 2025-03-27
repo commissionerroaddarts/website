@@ -3,6 +3,9 @@ import ContactUsSection from "../../components/contactpage/ContactUsSection";
 
 export const metadata = {
   title: "Contact Us - Road Darts",
+  icons: {
+    icon: "/images/favicons/favicon.ico", // ✅ Reference the dynamic icon (Next.js will resolve it)
+  },
   description:
     "Get in touch with the Road Darts team for any inquiries, support, or feedback.",
   icon: "/images/logos/road-darts-logo.png",

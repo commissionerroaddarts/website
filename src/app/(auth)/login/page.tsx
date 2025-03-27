@@ -3,6 +3,9 @@ import LoginForm from "../../../components/authpages/LoginForm";
 
 export const metadata = {
   title: "Login - Road Darts",
+  icons: {
+    icon: "/images/favicons/favicon.ico", // ✅ Reference the dynamic icon (Next.js will resolve it)
+  },
   description: "Access your Road Darts account by logging in.",
   icon: "/images/logos/road-darts-logo.png",
   openGraph: {

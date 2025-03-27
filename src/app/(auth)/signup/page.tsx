@@ -2,6 +2,9 @@ import React from "react";
 import SignupForm from "../../../components/authpages/SignupForm";
 export const metadata = {
   title: "Sign Up - Road Darts",
+  icons: {
+    icon: "/images/favicons/favicon.ico", // ✅ Reference the dynamic icon (Next.js will resolve it)
+  },
   description: "Create an account to join the Road Darts community.",
   icon: "/images/logos/road-darts-logo.png",
   openGraph: {

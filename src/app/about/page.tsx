@@ -7,6 +7,9 @@ import StatsSection from "../../components/aboutpage/StatsSection";
 
 export const metadata = {
   title: "About Us - Road Darts",
+  icons: {
+    icon: "/images/favicons/favicon.ico", // ✅ Reference the dynamic icon (Next.js will resolve it)
+  },
   description:
     "Learn more about the Road Darts team, our mission, and our core values.",
   icon: "/images/logos/road-darts-logo.png",
