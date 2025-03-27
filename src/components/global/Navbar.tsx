@@ -53,7 +53,7 @@ const navLinks = [
     },
   },
   {
-    href: "/add-listing",
+    href: "/plans",
     label: "Add Listing",
     style: {
       background: "#64546766",
