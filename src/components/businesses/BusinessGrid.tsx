@@ -10,9 +10,13 @@ import BusinessCard from "./BusinessCard";
 import ThemeOutlineButton from "../buttons/ThemeOutlineButton";
 
 const BusinessGrid = () => {
-  const { businesses, status, error } = useFetchBusinesses(1, 3);
+  const { businesses, isLoading, error, refresh } = useFetchBusinesses(
+    1,
+    3,
+    5000
+  ); // 2-sec intentional loading
 
-  if (status === "loading") return <BusinessSkeleton count={3} />;
+  if (isLoading) return <BusinessSkeleton count={3} />;
   if (error) return <p>Error: {error}</p>;
 
   if (!businesses) return null;

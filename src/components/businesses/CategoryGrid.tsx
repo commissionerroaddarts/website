@@ -37,7 +37,7 @@ const CategoryCard: React.FC<{ category: Category; onClick?: () => void }> = ({
       src={category.imageUrl}
       alt={category.name}
       width={400}
-      placeholder="blur" // Apply blur effect
+      // Apply blur effect
       height={300}
       style={{ width: "100%", height: "300px", objectFit: "cover" }}
     />

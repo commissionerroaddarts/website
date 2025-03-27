@@ -25,7 +25,6 @@ const schema = yup.object().shape({
   firstname: yup.string().required("First name is required"),
   lastname: yup.string().required("Last name is required"),
   email: yup.string().email("Invalid email").required("Email is required"),
-  zipcode: yup.string().required("Zipcode is required"),
   phone: yup.string().required("Phone number is required"),
   password: yup
     .string()
@@ -63,7 +62,7 @@ const SignupForm = () => {
           borderRadius: "16px",
           textAlign: "center",
           background:
-            " linear-gradient(112.11deg, rgba(201, 201, 201, 0.8) 2.19%, rgba(196, 196, 196, 0.1) 95.99%)",
+            "linear-gradient(112.11deg, rgba(31, 0, 55, 0.82) 2.19%, rgba(75, 0, 130, 0.1) 95.99%)",
         }}
       >
         <Box>
@@ -126,22 +125,6 @@ const SignupForm = () => {
                     {...field}
                     error={!!errors.email}
                     helperText={errors.email?.message}
-                  />
-                )}
-              />
-            </Grid>
-
-            {/* Zipcode */}
-            <Grid item xs={12}>
-              <Controller
-                name="zipcode"
-                control={control}
-                render={({ field }) => (
-                  <CustomInput
-                    label="Zipcode"
-                    {...field}
-                    error={!!errors.zipcode}
-                    helperText={errors.zipcode?.message}
                   />
                 )}
               />

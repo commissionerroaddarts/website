@@ -9,7 +9,6 @@ export interface SignupFormData {
   email: string;
   password: string;
   phone: string;
-  zipcode: string;
 }
 
 export interface Address {

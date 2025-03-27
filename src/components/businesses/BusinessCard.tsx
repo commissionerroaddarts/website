@@ -41,7 +41,7 @@ function BusinessCard({ business }: { readonly business: Business }) {
         {/* Image Section */}
         <CardMedia
           component="img"
-          sx={{ width: 400, borderRadius: 2 }}
+          sx={{ width: 300, height: 300, borderRadius: 2 }}
           image={media?.images?.[0] ?? "/images/placeholder.png"}
           alt={name}
         />

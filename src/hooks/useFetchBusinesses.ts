@@ -1,24 +1,34 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchBusiness } from "../store/slices/businessSlice"; // Adjust the path if needed
-import type { AppDispatch, RootState } from "../store"; // Adjust the path if needed
+import { fetchBusiness } from "../store/slices/businessSlice"; // Adjust path if needed
+import type { AppDispatch, RootState } from "../store"; // Adjust path if needed
 
-const useFetchBusinesses = (page = 1, limit = 3) => {
+const useFetchBusinesses = (page = 1, limit = 3, loadingDelay = 1000) => {
   const dispatch = useDispatch<AppDispatch>();
-  const businesses = useSelector(
-    (state: RootState) => state.businesses.businesses
+  const { businesses, status, error } = useSelector(
+    (state: RootState) => state.businesses
   );
-  const status = useSelector((state: RootState) => state.businesses.status);
-  const error = useSelector((state: RootState) => state.businesses.error);
+
+  // Intentional loading state
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchData = useCallback(() => {
+    setIsLoading(true); // Start intentional loading
+    dispatch(fetchBusiness({ page, limit }));
+  }, [dispatch, page, limit]);
 
   useEffect(() => {
-    if (status === "idle") {
-      dispatch(fetchBusiness({ page, limit }));
-    }
-  }, [status, dispatch, page, limit]);
+    fetchData();
+  }, [fetchData]);
 
-  return { businesses, status, error };
+  useEffect(() => {
+    if (status === "succeeded") {
+      setTimeout(() => setIsLoading(false), loadingDelay);
+    }
+  }, [status, loadingDelay]);
+
+  return { businesses, isLoading, error, refresh: fetchData };
 };
 
 export default useFetchBusinesses;

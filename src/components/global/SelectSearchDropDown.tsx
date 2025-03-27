@@ -21,7 +21,10 @@ const theme = createTheme({
     MuiAutocomplete: {
       styleOverrides: {
         paper: {
-          backgroundColor: "#160C1866", // Change dropdown menu background color here
+          margin: "0.5rem 0",
+          background: " rgba(21, 5, 27, 1)",
+          borderRadius: "23px",
+          // background color here
         },
         listbox: {
           "& .MuiAutocomplete-option": {

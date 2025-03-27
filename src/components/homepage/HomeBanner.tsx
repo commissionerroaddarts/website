@@ -59,7 +59,7 @@ function HomeBanner() {
       }}
     >
       <Navbar />
-      <Box textAlign="center" sx={{ marginTop: -15 }}>
+      <Box textAlign="center" sx={{ marginTop: -10 }}>
         <motion.div initial="hidden" animate="visible" variants={scaleIn}>
           <div
             style={{
@@ -72,7 +72,7 @@ function HomeBanner() {
             <Image
               src="/images/banners/banner-icon.png"
               alt="Road Darts"
-              placeholder="blur" // Apply blur effect
+              // Apply blur effect
               fill
               style={{ objectFit: "contain" }}
             />

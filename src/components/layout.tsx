@@ -1,6 +1,6 @@
 "use client"; // ✅ Add this at the very top
 
-import { ReactNode } from "react";
+import { useState, useEffect, ReactNode } from "react";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import theme from "../theme/theme";
@@ -9,6 +9,7 @@ import Footer from "./global/Footer";
 import { usePathname } from "next/navigation"; // Correct hook
 import Image from "next/image";
 import { motion } from "framer-motion";
+import Preloader from "./global/Preloader"; // ✅ Import the Preloader component
 
 interface LayoutProps {
   readonly children: ReactNode;
@@ -66,7 +67,6 @@ const icons = [
     left: "2%",
     transform: "translate(-2%,-35%)",
   },
-
   {
     name: "coin-icon",
     width: "50px",
@@ -96,48 +96,65 @@ const icons = [
 export default function Layout({ children }: LayoutProps) {
   const pathname = usePathname(); // Get the current path
   const isHomePage = pathname === "/";
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoaded(true);
+    }, 2000); // Adjust the delay as needed (2 seconds)
+
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      {icons.map((icon, index) => (
-        <motion.div
-          key={index}
-          variants={floatAnimation}
-          animate="float"
-          style={{
-            position: "absolute",
-            zIndex: -1,
-            top: icon.top,
-            left: icon.left,
-            transform: icon.transform,
-          }}
-        >
-          <Image
-            src={`/images/shapes/${icon.name}.svg`}
-            alt={icon.name}
-            placeholder="blur" // Apply blur effect
-            width={300}
-            height={300}
+      {!isLoaded && (
+        <Preloader duration={3000} onFinish={() => setIsLoaded(true)} />
+      )}{" "}
+      {/* ✅ Show preloader before content loads */}
+      {isLoaded && (
+        <>
+          {icons.map((icon, index) => (
+            <motion.div
+              key={index}
+              variants={floatAnimation}
+              animate="float"
+              style={{
+                position: "absolute",
+                zIndex: -1,
+                top: icon.top,
+                left: icon.left,
+                transform: icon.transform,
+              }}
+            >
+              <Image
+                src={`/images/shapes/${icon.name}.svg`}
+                alt={icon.name}
+                width={300}
+                height={300}
+                style={{
+                  width: icon.width,
+                  height: icon.height,
+                }}
+              />
+            </motion.div>
+          ))}
+
+          <div
             style={{
-              width: icon.width,
-              height: icon.height,
+              minHeight: "100vh",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
             }}
-          />
-        </motion.div>
-      ))}
-      <div
-        style={{
-          minHeight: "100vh",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-        }}
-      >
-        {!isHomePage && <Navbar />}
-        <main>{children}</main>
-        <Footer />
-      </div>
+          >
+            {!isHomePage && <Navbar />}
+            <main>{children}</main>
+            <Footer />
+          </div>
+        </>
+      )}
     </ThemeProvider>
   );
 }

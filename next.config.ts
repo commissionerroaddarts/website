@@ -4,6 +4,7 @@ const nextConfig: NextConfig = {
   /* config options here */
   images: {
     domains: [
+      "fastly.4sqi.net",
       "res.cloudinary.com",
       "images.unsplash.com",
       "picsum.photos",

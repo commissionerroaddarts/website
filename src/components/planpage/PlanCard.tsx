@@ -54,7 +54,7 @@ const PlanCard = ({ plan }: PlanCardProps) => {
               alt={plan.name}
               width={50}
               height={50}
-              placeholder="blur" // Apply blur effect
+              // Apply blur effect
             />
             <Typography variant="h6" align="center" gutterBottom>
               {plan.name}

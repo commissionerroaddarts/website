@@ -87,7 +87,7 @@ const EntertainmentSection = () => {
               <Image
                 src={event.imageUrl}
                 alt={event.title}
-                placeholder="blur" // Apply blur effect
+                // Apply blur effect
                 width={400}
                 height={250}
                 style={{ width: "100%", height: "250px", objectFit: "cover" }}

@@ -1,5 +1,6 @@
 "use client";
 import { Box } from "@mui/material";
+import Image from "next/image";
 import React from "react";
 
 const loading = () => {
@@ -14,45 +15,18 @@ const loading = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "rgba(255, 255, 255, 1)",
+        background: " rgba(78, 28, 96, 1)",
         zIndex: 9999,
       }}
     >
       <div className="dart-loader">
-        <div className="dart"></div>
+        <Image
+          src="/images/logos/dart-loader.gif"
+          alt="Loading..."
+          width={100}
+          height={100}
+        />
       </div>
-      <style jsx>{`
-        .dart-loader {
-          width: 100px;
-          height: 100px;
-          position: relative;
-        }
-        .dart {
-          width: 20px;
-          height: 20px;
-          background: #00d1b2;
-          border-radius: 50%;
-          position: absolute;
-          animation: dartMove 1.2s linear infinite;
-        }
-        @keyframes dartMove {
-          0% {
-            transform: translate(0, 0);
-          }
-          25% {
-            transform: translate(50px, 0);
-          }
-          50% {
-            transform: translate(50px, 50px);
-          }
-          75% {
-            transform: translate(0, 50px);
-          }
-          100% {
-            transform: translate(0, 0);
-          }
-        }
-      `}</style>
     </Box>
   );
 };

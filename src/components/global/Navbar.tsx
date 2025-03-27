@@ -24,6 +24,52 @@ const navbarVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } },
 };
 
+const navLinks = [
+  {
+    href: "/",
+    label: "Home",
+    style: {
+      "&:hover": {
+        background: "#64546766",
+      },
+    },
+  },
+  {
+    href: "/about",
+    label: "About",
+    style: {
+      "&:hover": {
+        background: "#64546766",
+      },
+    },
+  },
+  {
+    href: "/contact-us",
+    label: "Contact",
+    style: {
+      "&:hover": {
+        background: "#64546766",
+      },
+    },
+  },
+  {
+    href: "/add-listing",
+    label: "Add Listing",
+    style: {
+      background: "#64546766",
+    },
+  },
+  {
+    href: "/login",
+    label: "Sign In",
+    style: {
+      "&:hover": {
+        background: "#64546766",
+      },
+    },
+  },
+];
+
 function Navbar() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -36,26 +82,13 @@ function Navbar() {
   const drawer = (
     <Box sx={{ width: 250 }} onClick={() => toggleDrawer(false)}>
       <List>
-        <Link href="/about" passHref>
-          <ListItem component="a">
-            <ListItemText primary="About" />
-          </ListItem>
-        </Link>
-        <Link href="/contact-us" passHref>
-          <ListItem component="a">
-            <ListItemText primary="Contact" />
-          </ListItem>
-        </Link>
-        <Link href="/add-listing" passHref>
-          <ListItem component="a">
-            <ListItemText primary="Add Listing" />
-          </ListItem>
-        </Link>
-        <Link href="/login" passHref>
-          <ListItem component="a">
-            <ListItemText primary="Sign In" />
-          </ListItem>
-        </Link>
+        {navLinks.map(({ href, label, style }) => (
+          <Link key={href} href={href} passHref>
+            <ListItem component="a" sx={style}>
+              <ListItemText primary={label} />
+            </ListItem>
+          </Link>
+        ))}
       </List>
     </Box>
   );
@@ -84,7 +117,7 @@ function Navbar() {
                 src="/images/logos/road-darts-logo.png"
                 alt="Logo"
                 width={160}
-                placeholder="blur" // Apply blur effect
+                // Apply blur effect
                 height={160}
                 style={{ height: "120px", width: "auto" }}
               />
@@ -113,31 +146,24 @@ function Navbar() {
             <Box
               sx={{
                 display: "flex",
-                gap: "1rem",
+                gap: "5px",
                 alignItems: "center",
               }}
             >
-              <Link href="/about" passHref>
-                <Button sx={{ color: "white" }}>About</Button>
-              </Link>
-              <Link href="/contact-us" passHref>
-                <Button sx={{ color: "white" }}>Contact</Button>
-              </Link>
-              <Link href="/plans" passHref>
-                <Button
-                  sx={{
-                    color: "white",
-                    background: "#64546766",
-                    borderRadius: "86px",
-                    padding: "1rem 1.5rem",
-                  }}
-                >
-                  Add Listing
-                </Button>
-              </Link>
-              <Link href="/login" passHref>
-                <Button sx={{ color: "white" }}>Sign In</Button>
-              </Link>
+              {navLinks.map(({ href, label, style }) => (
+                <Link key={href} href={href} passHref>
+                  <Button
+                    sx={{
+                      color: "white",
+                      padding: "1rem 1.5rem",
+                      borderRadius: "86px",
+                      ...style,
+                    }}
+                  >
+                    {label}
+                  </Button>
+                </Link>
+              ))}
             </Box>
           )}
         </Toolbar>
