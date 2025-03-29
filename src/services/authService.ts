@@ -1,12 +1,9 @@
-import axios from "axios";
+import axiosInstance from "../utils/axiosInstance";
 import { LoginFormData, SignupFormData } from "../types/auth";
-import { baseUrl } from "../constants/baseUrl";
-
-const API_URL = `${baseUrl}/auth`;
 
 export const loginUser = async (data: LoginFormData) => {
   try {
-    const response = await axios.post(`${API_URL}/login`, data);
+    const response = await axiosInstance.post("/auth/login", data);
     return response.data; // Expected { message: "Login successful!", token: "..." }
   } catch (error: any) {
     throw error;
@@ -15,8 +12,8 @@ export const loginUser = async (data: LoginFormData) => {
 
 export const registerUser = async (data: SignupFormData) => {
   try {
-    const response = await axios.post(`${API_URL}/signup`, data);
-    return response.data; // Expected { message: "Login successful!", token: "..." }
+    const response = await axiosInstance.post("/auth/signup", data);
+    return response.data; // Expected { message: "Signup successful!" }
   } catch (error: any) {
     throw error;
   }

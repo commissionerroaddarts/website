@@ -10,6 +10,7 @@ import { usePathname } from "next/navigation"; // Correct hook
 import Image from "next/image";
 import { motion } from "framer-motion";
 import Preloader from "./global/Preloader"; // ✅ Import the Preloader component
+import { getUserProfile } from "../services/userService";
 
 interface LayoutProps {
   readonly children: ReactNode;
@@ -102,6 +103,8 @@ export default function Layout({ children }: LayoutProps) {
     const timer = setTimeout(() => {
       setIsLoaded(true);
     }, 2000); // Adjust the delay as needed (2 seconds)
+
+    getUserProfile();
 
     return () => clearTimeout(timer);
   }, [pathname]);
