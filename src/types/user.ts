@@ -8,6 +8,7 @@ export interface Address {
 export interface User {
   firstname: string;
   lastname: string;
+  profileImage?: string;
   gender?: "Male" | "Female" | "Other";
   dob?: Date;
   email: string;

@@ -1,38 +1,16 @@
 import { Grid, Box, Typography } from "@mui/material";
 import React from "react";
-import PlanCard from "../../../components/planpage/PlanCard";
-export const metadata = {
+import PlanCard from "@/components/planpage/PlanCard";
+
+import { generateMetadata } from "@/utils/metaData";
+
+export const metadata = generateMetadata({
   title: "Plans - Road Darts",
-  icons: {
-    icon: "/images/favicons/favicon.ico", // ✅ Reference the dynamic icon (Next.js will resolve it)
-  },
   description:
     "Choose the best plan for your needs and get started with Road Darts.",
-  icon: "/images/logos/road-darts-logo.png",
-  openGraph: {
-    title: "Plans - Road Darts",
-    description:
-      "Choose the best plan for your needs and get started with Road Darts.",
-    url: "https://www.roaddarts.com/plans",
-    type: "website",
-    images: [
-      {
-        url: "/images/logos/road-darts-logo.png",
-        width: 800,
-        height: 600,
-        alt: "Road Darts Logo",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    site: "@roaddarts",
-    title: "Plans - Road Darts",
-    description:
-      "Choose the best plan for your needs and get started with Road Darts.",
-    image: "/images/logos/road-darts-logo.png",
-  },
-};
+  url: "/plans",
+  image: "/images/banners/banner-icon.png",
+});
 
 const plans = [
   {

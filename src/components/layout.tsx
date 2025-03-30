@@ -3,14 +3,13 @@
 import { useState, useEffect, ReactNode } from "react";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-import theme from "../theme/theme";
+import theme from "@/theme/theme";
 import Navbar from "./global/Navbar";
 import Footer from "./global/Footer";
 import { usePathname } from "next/navigation"; // Correct hook
 import Image from "next/image";
 import { motion } from "framer-motion";
 import Preloader from "./global/Preloader"; // ✅ Import the Preloader component
-import { getUserProfile } from "../services/userService";
 
 interface LayoutProps {
   readonly children: ReactNode;
@@ -104,8 +103,6 @@ export default function Layout({ children }: LayoutProps) {
       setIsLoaded(true);
     }, 2000); // Adjust the delay as needed (2 seconds)
 
-    getUserProfile();
-
     return () => clearTimeout(timer);
   }, [pathname]);
 
@@ -120,7 +117,7 @@ export default function Layout({ children }: LayoutProps) {
         <>
           {icons.map((icon, index) => (
             <motion.div
-              key={index}
+              key={icon.name + index}
               variants={floatAnimation}
               animate="float"
               style={{

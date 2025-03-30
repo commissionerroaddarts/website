@@ -2,13 +2,13 @@
 import React from "react";
 import { Box, Card, CardContent, Typography } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import ThemeButton from "../buttons/ThemeButton";
-import ThemeOutlineButton from "../buttons/ThemeOutlineButton";
+import ThemeButton from "@/components/buttons/ThemeButton";
+import ThemeOutlineButton from "@/components/buttons/ThemeOutlineButton";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useAppDispatch } from "../../store";
-import { selectPlan } from "../../store/slices/planSlice";
-import { PlanCardProps } from "../../types/plan";
+import { useAppDispatch } from "@/store";
+import { selectPlan } from "@/store/slices/planSlice";
+import { PlanCardProps } from "@/types/plan";
 import { motion } from "framer-motion";
 
 const PlanCard = ({ plan }: PlanCardProps) => {

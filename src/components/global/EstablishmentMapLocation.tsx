@@ -4,7 +4,7 @@ import L from "leaflet";
 import "leaflet-routing-machine";
 import React, { useEffect, useRef, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
-import { Location } from "../../types/business";
+import { Location } from "@/types/business";
 import "leaflet/dist/leaflet.css";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 

@@ -1,5 +1,5 @@
 "use client";
-import { useAppSelector } from "../../../store";
+import { useAppSelector } from "@/store";
 
 const AddListing = () => {
   const selectedPlan = useAppSelector((state) => state.plan.selectedPlan);

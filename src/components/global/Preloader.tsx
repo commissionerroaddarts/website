@@ -39,7 +39,7 @@ const Preloader = ({
       }}
     >
       <div className="dart-loader">
-        <Image
+        <img
           src="/images/logos/dart-loader.gif"
           alt="Loading..."
           width={120}

@@ -13,12 +13,17 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { loginUser } from "../../services/authService"; // API Service
-import { LoginFormData } from "../../types/auth";
-import CustomInput from "../global/CustomInput";
-import ThemeButton from "../buttons/ThemeButton";
+import { loginUser } from "@/services/authService"; // API Service
+import { LoginFormData } from "@/types/auth";
+import CustomInput from "@/components/global/CustomInput";
+import ThemeButton from "@/components/buttons/ThemeButton";
 import { Google } from "@mui/icons-material";
 import Link from "next/link";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/store";
+import { useRouter } from "next/navigation";
+import { useAppState } from "@/hooks/useAppState";
+import { log } from "console";
 
 // ✅ Validation Schema
 const schema = yup.object().shape({
@@ -37,12 +42,24 @@ const LoginForm = () => {
   } = useForm<LoginFormData>({
     resolver: yupResolver(schema),
   });
+  const { user } = useAppState(); // Assuming you have a custom hook to get user state
+  const { isLoggedIn } = user; // Assuming userDetails contains the user data
+  const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter(); // Assuming you're using Next.js router
+
+  if (isLoggedIn) {
+    router.push("/profile");
+    return null;
+  }
 
   // ✅ Form Submission Handler
   const onSubmit = async (data: LoginFormData) => {
     try {
-      const response = await loginUser(data);
+      const response = await loginUser(data, dispatch);
       toast.success(response.message || "Login successful!");
+      //redirect to dashboard or home page using router.push("/dashboard");
+      router.push("/"); // Uncomment if using Next.js router
+
       // Handle post-login actions here (e.g., redirect, store token)
     } catch (error: Error | any) {
       toast.error(

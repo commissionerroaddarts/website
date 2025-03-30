@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { fetchBusinesses } from "../../services/businessService";
-import { ApiResponse } from "../../types/business";
+import { fetchBusinesses } from "@/services/businessService";
+import { ApiResponse } from "@/types/business";
 
 interface BusinessState {
   businesses: ApiResponse | null;

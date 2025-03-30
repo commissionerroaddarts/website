@@ -1,10 +1,10 @@
 import "leaflet/dist/leaflet.css";
-import { Business, Price } from "../../types/business";
+import { Business, Price } from "@/types/business";
 import Image from "next/image";
 import TimingsPopup from "./TimingsPopup";
-import SocialIcons from "../global/SocialIcons";
+import SocialIcons from "@/components/global/SocialIcons";
 import { Box } from "@mui/material";
-import EstablishmentMapLocation from "../global/EstablishmentMapLocation";
+import EstablishmentMapLocation from "@/components/global/EstablishmentMapLocation";
 
 interface EstablishmentLocationProps {
   readonly business: Business;

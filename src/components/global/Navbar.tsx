@@ -18,6 +18,10 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import { useAppState } from "@/hooks/useAppState";
+import { logoutUser } from "@/services/authService";
+import { useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
 
 const navbarVariants = {
   hidden: { opacity: 0, y: -20 },
@@ -74,6 +78,8 @@ function Navbar() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const { user } = useAppState();
+  const { userDetails, isLoggedIn } = user || {};
 
   const toggleDrawer = (open: boolean) => {
     setDrawerOpen(open);
@@ -102,7 +108,7 @@ function Navbar() {
     >
       <AppBar
         position="static"
-        color="transparent"
+        color={"transparent"}
         elevation={0}
         sx={{ zIndex: 10 }}
       >
@@ -150,20 +156,8 @@ function Navbar() {
                 alignItems: "center",
               }}
             >
-              {navLinks.map(({ href, label, style }) => (
-                <Link key={href} href={href} passHref>
-                  <Button
-                    sx={{
-                      color: "white",
-                      padding: "1rem 1.5rem",
-                      borderRadius: "86px",
-                      ...style,
-                    }}
-                  >
-                    {label}
-                  </Button>
-                </Link>
-              ))}
+              <NavLinks isLoggedIn={isLoggedIn} />
+              {isLoggedIn && <ProfileLink />}
             </Box>
           )}
         </Toolbar>
@@ -171,5 +165,61 @@ function Navbar() {
     </motion.div>
   );
 }
+
+const NavLinks = ({ isLoggedIn }: { isLoggedIn: boolean | null }) => {
+  return (
+    <>
+      {navLinks.map(({ href, label, style }) => {
+        if (label === "Sign In" && isLoggedIn) {
+          return null; // Skip rsendering "Sign In" if user is logged in
+        }
+        return (
+          <Link key={href} href={href} passHref>
+            <Button
+              sx={{
+                color: "white",
+                padding: "1rem 1.5rem",
+                borderRadius: "86px",
+                ...style,
+              }}
+            >
+              {label}
+            </Button>
+          </Link>
+        );
+      })}
+    </>
+  );
+};
+
+const ProfileLink = () => {
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const logoutHandler = async () => {
+    try {
+      //call the logout function from your auth service
+      await logoutUser(dispatch);
+      console.log("Logout clicked");
+      // Redirect to the login page or home page after logout
+      router.push("/login");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+
+  return (
+    <Button
+      sx={{
+        color: "white",
+        padding: "1rem 1.5rem",
+        borderRadius: "86px",
+        // ...style,
+      }}
+      onClick={logoutHandler}
+    >
+      Logout
+    </Button>
+  );
+};
 
 export default Navbar;

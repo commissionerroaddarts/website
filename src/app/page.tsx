@@ -1,42 +1,19 @@
 import React from "react";
 import { Container, Box } from "@mui/material";
-import BusinessGrid from "../components/businesses/BusinessGrid";
-import CategoryGrid from "../components/businesses/CategoryGrid";
-import EntertainmentSection from "../components/homepage/EntertainmentSection";
-import HomeBanner from "../components/homepage/HomeBanner";
-import FadeInSection from "../animations/sections/FadeInSection";
+import BusinessGrid from "@/components/businesses/BusinessGrid";
+import CategoryGrid from "@/components/businesses/CategoryGrid";
+import EntertainmentSection from "@/components/homepage/EntertainmentSection";
+import HomeBanner from "@/components/homepage/HomeBanner";
+import FadeInSection from "@/animations/sections/FadeInSection";
+import { generateMetadata } from "@/utils/metaData";
 
-export const metadata = {
+export const metadata = generateMetadata({
   title: "Home - Road Darts",
   description:
     "Welcome to the Road Darts homepage, your ultimate destination for all things related to road darts.",
-  icons: {
-    icon: "/images/favicons/favicon.ico", // ✅ Reference the dynamic icon (Next.js will resolve it)
-  },
-  openGraph: {
-    title: "Home - Road Darts",
-    description:
-      "Welcome to the Road Darts homepage, your ultimate destination for all things related to road darts.",
-    url: "https://www.roaddarts.com",
-    type: "website",
-    images: [
-      {
-        url: "/images/logos/road-darts-logo.png",
-        width: 800,
-        height: 600,
-        alt: "Road Darts Logo",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    site: "@roaddarts",
-    title: "Home - Road Darts",
-    description:
-      "Welcome to the Road Darts homepage, your ultimate destination for all things related to road darts.",
-    image: "/images/logos/road-darts-logo.png",
-  },
-};
+  url: "/",
+  image: "/images/banners/banner-icon.png",
+});
 
 export default function HomePage() {
   return (

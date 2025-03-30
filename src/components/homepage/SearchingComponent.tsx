@@ -2,8 +2,8 @@
 
 import React, { useState } from "react";
 import { Box } from "@mui/material";
-import ThemeButton from "../buttons/ThemeButton";
-import SelectSearchDropDown from "../global/SelectSearchDropDown";
+import ThemeButton from "@/components/buttons/ThemeButton";
+import SelectSearchDropDown from "@/components/global/SelectSearchDropDown";
 
 const categories = [
   { value: "food", label: "Food" },

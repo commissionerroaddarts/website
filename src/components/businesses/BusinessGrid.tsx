@@ -1,13 +1,13 @@
 "use client";
 import { Box, Grid, Typography } from "@mui/material";
-import useFetchBusinesses from "../../hooks/useFetchBusinesses";
+import useFetchBusinesses from "@/hooks/useFetchBusinesses";
 import BusinessSkeleton from "./BusinessSkeleton";
 import dynamic from "next/dynamic";
 const CardStaggerAnimation = dynamic(
-  () => import("../../animations/sections/CardStaggerAnimation")
+  () => import("@/animations/sections/CardStaggerAnimation")
 );
 import BusinessCard from "./BusinessCard";
-import ThemeOutlineButton from "../buttons/ThemeOutlineButton";
+import ThemeOutlineButton from "@/components/buttons/ThemeOutlineButton";
 
 const BusinessGrid = () => {
   const { businesses, isLoading, error, refresh } = useFetchBusinesses(

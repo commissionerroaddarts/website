@@ -2,11 +2,11 @@
 import React from "react";
 import dynamic from "next/dynamic";
 const EstablishmentMapLocation = dynamic(
-  () => import("../../components/global/EstablishmentMapLocation")
+  () => import("@/components/global/EstablishmentMapLocation")
 );
 const CloseIcon = React.lazy(() => import("@mui/icons-material/Close"));
 import { Box, Dialog, DialogContent, IconButton } from "@mui/material";
-import { Location } from "../../types/business";
+import { Location } from "@/types/business";
 
 interface BusinessMapPopupProps {
   handleMapClose: () => void;

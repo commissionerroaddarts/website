@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Plan } from "../../types/plan";
+import { Plan } from "@/types/plan";
 
 interface PlanState {
   selectedPlan: Plan | null;

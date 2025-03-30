@@ -1,5 +1,5 @@
 import React from "react";
-import { Socials } from "../../types/business";
+import { Socials } from "@/types/business";
 import Image from "next/image";
 
 const SocialIcons = ({ socials }: { socials: Socials }) => {

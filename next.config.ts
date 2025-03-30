@@ -1,16 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   images: {
-    domains: [
-      "fastly.4sqi.net",
-      "res.cloudinary.com",
-      "images.unsplash.com",
-      "picsum.photos",
-      "media.istockphoto.com",
-      "media.gettyimages.com",
-      "images.pexels.com",
+    remotePatterns: [
+      { hostname: "fastly.4sqi.net" },
+      { hostname: "res.cloudinary.com" },
+      { hostname: "images.unsplash.com" },
+      { hostname: "picsum.photos" },
+      { hostname: "media.istockphoto.com" },
+      { hostname: "media.gettyimages.com" },
+      { hostname: "images.pexels.com" },
     ],
   },
 

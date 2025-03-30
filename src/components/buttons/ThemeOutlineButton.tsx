@@ -1,6 +1,6 @@
 import { Button } from "@mui/material";
 import React from "react";
-import { ButtonProps } from "../../types/buttonProps";
+import { ButtonProps } from "@/types/buttonProps";
 
 const ThemeOutlineButton = ({
   onClickEvent,

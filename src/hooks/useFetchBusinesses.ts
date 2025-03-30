@@ -1,14 +1,14 @@
 "use client";
 import { useEffect, useCallback, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchBusiness } from "../store/slices/businessSlice"; // Adjust path if needed
-import type { AppDispatch, RootState } from "../store"; // Adjust path if needed
+import { useDispatch } from "react-redux";
+import { fetchBusiness } from "@/store/slices/businessSlice"; // Adjust path if needed
+import type { AppDispatch } from "@/store"; // Adjust path if needed
+import { useAppState } from "./useAppState";
 
 const useFetchBusinesses = (page = 1, limit = 3, loadingDelay = 1000) => {
   const dispatch = useDispatch<AppDispatch>();
-  const { businesses, status, error } = useSelector(
-    (state: RootState) => state.businesses
-  );
+  const { business } = useAppState();
+  const { businesses, status, error } = business; // Destructure from business slice
 
   // Intentional loading state
   const [isLoading, setIsLoading] = useState(true);

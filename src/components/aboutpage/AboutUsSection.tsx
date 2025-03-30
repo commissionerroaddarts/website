@@ -1,7 +1,7 @@
 "use client";
 import { Box, Typography, Grid, Card, CardContent } from "@mui/material";
 import Image from "next/image";
-import FadeInSection from "../../animations/sections/FadeInSection";
+import FadeInSection from "@/animations/sections/FadeInSection";
 
 export default function AboutUsSection() {
   return (

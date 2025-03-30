@@ -1,38 +1,14 @@
 import React from "react";
-import ContactUsSection from "../../components/contactpage/ContactUsSection";
+import ContactUsSection from "@/components/contactpage/ContactUsSection";
+import { generateMetadata } from "@/utils/metaData";
 
-export const metadata = {
+export const metadata = generateMetadata({
   title: "Contact Us - Road Darts",
-  icons: {
-    icon: "/images/favicons/favicon.ico", // ✅ Reference the dynamic icon (Next.js will resolve it)
-  },
   description:
     "Get in touch with the Road Darts team for any inquiries, support, or feedback.",
-  icon: "/images/logos/road-darts-logo.png",
-  openGraph: {
-    title: "Contact Us - Road Darts",
-    description:
-      "Get in touch with the Road Darts team for any inquiries, support, or feedback.",
-    url: "https://www.roaddarts.com/contact-us",
-    type: "website",
-    images: [
-      {
-        url: "/images/logos/road-darts-logo.png",
-        width: 800,
-        height: 600,
-        alt: "Road Darts Logo",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    site: "@roaddarts",
-    title: "Contact Us - Road Darts",
-    description:
-      "Get in touch with the Road Darts team for any inquiries, support, or feedback.",
-    image: "/images/logos/road-darts-logo.png",
-  },
-};
+  url: "/login",
+  image: "/images/banners/banner-icon.png",
+});
 
 const page = () => {
   return <ContactUsSection />;

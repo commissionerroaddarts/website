@@ -9,8 +9,8 @@ import {
   Grid,
 } from "@mui/material";
 import { PhotoCamera } from "@mui/icons-material";
-import ThemeButton from "../buttons/ThemeButton";
-import ThemeOutlineButton from "../buttons/ThemeOutlineButton";
+import ThemeButton from "@/components/buttons/ThemeButton";
+import ThemeOutlineButton from "@/components/buttons/ThemeOutlineButton";
 
 export default function EstablishmentReview() {
   const [value, setValue] = useState<number | null>(null);

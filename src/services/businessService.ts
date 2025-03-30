@@ -1,7 +1,6 @@
-import axios from "axios";
-import { ApiResponse } from "../types/business";
-import { baseUrl } from "../constants/baseUrl";
-import axiosInstance from "../utils/axiosInstance";
+import { ApiResponse } from "@/types/business";
+import { baseUrl } from "@/constants/baseUrl";
+import axiosInstance from "@/utils/axiosInstance";
 
 const API_URL = `${baseUrl}/businesses`;
 

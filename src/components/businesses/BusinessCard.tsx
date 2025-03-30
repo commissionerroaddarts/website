@@ -12,7 +12,7 @@ import {
 import RoomIcon from "@mui/icons-material/Room";
 import CallIcon from "@mui/icons-material/Call";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { Business } from "../../types/business";
+import { Business } from "@/types/business";
 import { Stars } from "@mui/icons-material";
 import BusinessMapPopup from "./BusinessMapPopup";
 

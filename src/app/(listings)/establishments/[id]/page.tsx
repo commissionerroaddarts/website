@@ -2,14 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { Business } from "../../../../types/business";
-import { baseUrl } from "../../../../constants/baseUrl";
-import EstablishmentGallery from "../../../../components/establishmentpage/EstablishmentGallery";
-import EstablishmentHeader from "../../../../components/establishmentpage/EstablishmentHeader";
+import { Business } from "@/types/business";
+import { baseUrl } from "@/constants/baseUrl";
+import EstablishmentGallery from "@/components/establishmentpage/EstablishmentGallery";
+import EstablishmentHeader from "@/components/establishmentpage/EstablishmentHeader";
 import { Box, Grid } from "@mui/material";
-import EstablishmentFAQ from "../../../../components/establishmentpage/EstablishmentFAQ";
-import EstablishmentReview from "../../../../components/establishmentpage/EstablishmentReview";
-import EstablishmentLocation from "../../../../components/establishmentpage/EstablishmentLocation";
+import EstablishmentFAQ from "@/components/establishmentpage/EstablishmentFAQ";
+import EstablishmentReview from "@/components/establishmentpage/EstablishmentReview";
+import EstablishmentLocation from "@/components/establishmentpage/EstablishmentLocation";
 
 export default function EstablishmentPage() {
   const { id } = useParams();

@@ -1,11 +1,11 @@
 "use client";
 import { Box, Typography } from "@mui/material";
 import { motion } from "framer-motion";
-import Navbar from "../global/Navbar";
+import Navbar from "@/components/global/Navbar";
 import Image from "next/image";
 import SearchComponent from "./SearchingComponent";
 // import dynamic from "next/dynamic";
-// const AnimText = dynamic(() => import("../../animations/text/AnimText"));
+// const AnimText = dynamic(() => import("@/animations/text/AnimText"));
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
@@ -53,7 +53,7 @@ function HomeBanner() {
           right: 0,
           bottom: 0,
           background:
-            "radial-gradient(circle, rgba(2,0,36,0) 0%, rgba(121,9,102,0.4066001400560224) 42%, rgba(201,0,255,0.41780462184873945) 100%);",
+            "radial-gradient(circle, rgba(2,0,36,0) 0%, rgba(121,9,102,0.3066001400560224) 42%, rgba(201,0,255,0.31780462184873945) 100%);",
           zIndex: 0,
         },
       }}

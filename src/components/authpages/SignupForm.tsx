@@ -13,10 +13,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { registerUser } from "../../services/authService"; // API Service
-import { SignupFormData } from "../../types/auth";
-import CustomInput from "../../components/global/CustomInput";
-import ThemeButton from "../../components/buttons/ThemeButton";
+import { registerUser } from "@/services/authService"; // API Service
+import { SignupFormData } from "@/types/auth";
+import CustomInput from "@/components/global/CustomInput";
+import ThemeButton from "@/components/buttons/ThemeButton";
 import Link from "next/link";
 import { Google } from "@mui/icons-material";
 

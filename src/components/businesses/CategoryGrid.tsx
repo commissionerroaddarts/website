@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { Box, Grid, Typography } from "@mui/material";
-import ThemeOutlineButton from "../buttons/ThemeOutlineButton";
+import ThemeOutlineButton from "@/components/buttons/ThemeOutlineButton";
 
 interface Category {
   id: number;

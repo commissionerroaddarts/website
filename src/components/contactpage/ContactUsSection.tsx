@@ -7,11 +7,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import CustomInput from "../global/CustomInput";
-import ThemeButton from "../buttons/ThemeButton";
-import { submitContactForm } from "../../services/contactService";
-import { Inquiry } from "../../types/contactUs";
-import FadeInSection from "../../animations/sections/FadeInSection";
+import CustomInput from "@/components/global/CustomInput";
+import ThemeButton from "@/components/buttons/ThemeButton";
+import { submitContactForm } from "@/services/contactService";
+import { Inquiry } from "@/types/contactUs";
+import FadeInSection from "@/animations/sections/FadeInSection";
 
 // ✅ Initialize toast notifications
 // toast.configure();
