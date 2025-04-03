@@ -16,7 +16,7 @@ const ThankYouMessage = () => {
     if (!inquiryData) {
       router.push("/"); // Redirect if no form data found
     } else {
-      setTimeout(() => dispatch(clearInquiryData()), 5000); // Clear after 5 seconds
+      setTimeout(() => dispatch(clearInquiryData()), 8000); // Clear after 8 seconds
     }
   }, [inquiryData, router, dispatch]);
 
@@ -44,7 +44,12 @@ const ThankYouMessage = () => {
           p: 4,
         }}
       >
-        <Typography variant="h3" fontWeight="bold" gutterBottom>
+        <Typography
+          variant="h3"
+          fontWeight="bold"
+          gutterBottom
+          textTransform={"capitalize"}
+        >
           Thank You, {inquiryData?.firstname + " " + inquiryData?.lastname}!
         </Typography>
         <Typography variant="h6" mb={3}>

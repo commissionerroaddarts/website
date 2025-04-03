@@ -63,8 +63,8 @@ const icons = [
     width: "90px",
     height: "auto",
     top: "35%",
-    left: "2%",
-    transform: "translate(-2%,-35%)",
+    left: "0%",
+    transform: "translate(-0%,-35%)",
   },
   {
     name: "dart-board-2.png",
