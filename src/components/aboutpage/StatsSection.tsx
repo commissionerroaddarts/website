@@ -1,5 +1,5 @@
 "use client";
-import { Card, CardContent, Grid, Typography } from "@mui/material";
+import { Card, CardContent, Grid2, Typography } from "@mui/material";
 import React from "react";
 import CountUp from "react-countup";
 import { useInView } from "react-intersection-observer";
@@ -17,7 +17,7 @@ const StatsSection = () => {
   });
 
   return (
-    <Grid
+    <Grid2
       ref={ref}
       sx={{
         my: 4,
@@ -29,12 +29,13 @@ const StatsSection = () => {
       }}
     >
       {stats.map((stat, index) => (
-        <Grid
-          item
-          key={index}
-          xs={4}
-          sm={3}
-          md={2}
+        <Grid2
+          key={stat.label}
+          size={{
+            xs: 4,
+            sm: 3,
+            md: 2,
+          }}
           sx={{
             display: "flex",
             justifyContent: "center",
@@ -61,9 +62,9 @@ const StatsSection = () => {
               </Typography>
             </CardContent>
           </Card>
-        </Grid>
+        </Grid2>
       ))}
-    </Grid>
+    </Grid2>
   );
 };
 

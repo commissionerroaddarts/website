@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Box, Grid, Skeleton, Typography } from "@mui/material";
+import { Box, Grid2, Skeleton, Typography } from "@mui/material";
 
 const BusinessSkeleton = ({ count = 3 }) => (
   <Box
@@ -15,13 +15,13 @@ const BusinessSkeleton = ({ count = 3 }) => (
       <Skeleton width={250} height={40} />
     </Typography>
 
-    <Grid
+    <Grid2
       container
       spacing={4}
       sx={{ mt: 2, justifyContent: "center", width: "100%" }}
     >
       {Array.from({ length: count }).map((_, index) => (
-        <Grid item xs={12} key={index}>
+        <Grid2 size={{ xs: 12 }} key={index}>
           <Box
             sx={{
               width: "100%",
@@ -33,9 +33,9 @@ const BusinessSkeleton = ({ count = 3 }) => (
           >
             <Skeleton variant="rectangular" width="100%" height="100%" />
           </Box>
-        </Grid>
+        </Grid2>
       ))}
-    </Grid>
+    </Grid2>
   </Box>
 );
 

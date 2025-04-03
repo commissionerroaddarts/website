@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Grid2, Typography } from "@mui/material";
 import ThemeOutlineButton from "@/components/buttons/ThemeOutlineButton";
 
 interface Category {
@@ -75,7 +75,7 @@ const CategoryCard: React.FC<{ category: Category; onClick?: () => void }> = ({
   </Box>
 );
 
-const CategoryGrid: React.FC<CategoryGridProps> = ({
+const CategoryGrid2: React.FC<CategoryGridProps> = ({
   categories,
   onCategoryClick,
 }) => (
@@ -86,26 +86,27 @@ const CategoryGrid: React.FC<CategoryGridProps> = ({
     <Typography variant="h4" gutterBottom>
       Explore Our Locations
     </Typography>
-    <Grid container spacing={2} justifyContent="center" mt={3}>
+    <Grid2 container spacing={2} justifyContent="center" mt={3}>
       {categories.map((category, index) => (
-        <Grid
-          item
+        <Grid2
+          size={{
+            xs: 12,
+            sm: index % 4 === 0 ? 6 : 3, // First item of each row is 6, others are 3
+            md: index % 4 === 0 ? 6 : 3,
+            lg: index % 4 === 0 ? 6 : 3,
+          }}
           key={category.id}
-          xs={12}
-          sm={index % 4 === 0 ? 6 : 3} // First item of each row is 6, others are 3
-          md={index % 4 === 0 ? 6 : 3}
-          lg={index % 4 === 0 ? 6 : 3}
         >
           <CategoryCard
             category={category}
             onClick={() => onCategoryClick?.(category.id)}
           />
-        </Grid>
+        </Grid2>
       ))}
-    </Grid>
+    </Grid2>
 
     <ThemeOutlineButton text="View All Locations" applyMargin={true} />
   </Box>
 );
 
-export default CategoryGrid;
+export default CategoryGrid2;

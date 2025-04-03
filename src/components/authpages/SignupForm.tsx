@@ -5,7 +5,7 @@ import {
   Typography,
   Container,
   Paper,
-  Grid,
+  Grid2,
   Divider,
 } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
@@ -47,7 +47,7 @@ const SignupForm = () => {
       const response = await registerUser(data);
       toast.success(response.message || "Signup successful!");
       // Handle post-signup actions here (e.g., redirect, store token)
-    } catch (error: Error | any) {
+    } catch (error: any) {
       toast.error(
         error.response?.data?.error || "Signup failed. Please try again."
       );
@@ -81,9 +81,9 @@ const SignupForm = () => {
         </Box>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Grid container spacing={2}>
+          <Grid2 container spacing={2}>
             {/* First Name */}
-            <Grid item xs={12} sm={6}>
+            <Grid2 size={{ xs: 12, sm: 6 }}>
               <Controller
                 name="firstname"
                 control={control}
@@ -96,10 +96,10 @@ const SignupForm = () => {
                   />
                 )}
               />
-            </Grid>
+            </Grid2>
 
             {/* Last Name */}
-            <Grid item xs={12} sm={6}>
+            <Grid2 size={{ xs: 12, sm: 6 }}>
               <Controller
                 name="lastname"
                 control={control}
@@ -112,10 +112,10 @@ const SignupForm = () => {
                   />
                 )}
               />
-            </Grid>
+            </Grid2>
 
             {/* Email */}
-            <Grid item xs={12}>
+            <Grid2 size={{ xs: 12 }}>
               <Controller
                 name="email"
                 control={control}
@@ -128,10 +128,10 @@ const SignupForm = () => {
                   />
                 )}
               />
-            </Grid>
+            </Grid2>
 
             {/* Phone */}
-            <Grid item xs={12}>
+            <Grid2 size={{ xs: 12 }}>
               <Controller
                 name="phone"
                 control={control}
@@ -144,10 +144,10 @@ const SignupForm = () => {
                   />
                 )}
               />
-            </Grid>
+            </Grid2>
 
             {/* Password */}
-            <Grid item xs={12}>
+            <Grid2 size={{ xs: 12 }}>
               <Controller
                 name="password"
                 control={control}
@@ -161,18 +161,18 @@ const SignupForm = () => {
                   />
                 )}
               />
-            </Grid>
+            </Grid2>
 
             {/* Submit Button */}
-            <Grid item xs={12} className="flex justify-center">
+            <Grid2 size={{ xs: 12 }} className="flex justify-center">
               <ThemeButton
                 text={isSubmitting ? "Signing up..." : "Sign Up"}
                 type="submit"
                 disabled={isSubmitting}
                 style={{ width: "100%" }}
               />
-            </Grid>
-          </Grid>
+            </Grid2>
+          </Grid2>
 
           <Divider
             sx={{ my: 3, "&::before, &::after": { borderColor: "white" } }}
@@ -181,8 +181,8 @@ const SignupForm = () => {
           </Divider>
 
           {/* Continue with Google Button */}
-          <Grid container spacing={2} className="w-full">
-            <Grid item xs={12} className="flex justify-center">
+          <Grid2 container spacing={2} className="w-full">
+            <Grid2 size={{ xs: 12 }} className="flex justify-center">
               <ThemeButton
                 text="Continue with Google"
                 startIcon={<Google sx={{ color: "black" }} />}
@@ -197,8 +197,8 @@ const SignupForm = () => {
                   width: "100%",
                 }}
               />
-            </Grid>
-          </Grid>
+            </Grid2>
+          </Grid2>
 
           <Box mt={2}>
             <Typography variant="body2" align="center">
@@ -207,6 +207,7 @@ const SignupForm = () => {
                 href="/login"
                 style={{ fontWeight: "bold", textDecoration: "underline" }}
                 passHref
+                prefetch
               >
                 Sign in
               </Link>

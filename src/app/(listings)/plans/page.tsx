@@ -1,4 +1,4 @@
-import { Grid, Box, Typography } from "@mui/material";
+import { Grid2, Box, Typography } from "@mui/material";
 import React from "react";
 import PlanCard from "@/components/planpage/PlanCard";
 
@@ -26,7 +26,7 @@ const plans = [
       "Basic safety gear",
     ],
     bgColor:
-      "linear-gradient(111.5deg, rgba(201, 201, 201, 0.8) 1.53%, rgba(196, 196, 196, 0.1) 97.09%)",
+      "linear-gradient(112.11deg, rgba(31, 0, 55, 0.82) 2.19%, rgba(75, 0, 130, 0.1) 95.99%)",
   },
   {
     id: "2",
@@ -58,7 +58,7 @@ const plans = [
       "Premium safety gear",
     ],
     bgColor:
-      "linear-gradient(111.5deg, rgba(201, 201, 201, 0.8) 1.53%, rgba(196, 196, 196, 0.1) 97.09%)",
+      "linear-gradient(112.11deg, rgba(31, 0, 55, 0.82) 2.19%, rgba(75, 0, 130, 0.1) 95.99%)",
   },
 ];
 
@@ -84,10 +84,10 @@ const page = () => {
           flexWrap: "wrap",
         }}
       >
-        {plans.map((plan, index) => (
-          <Grid item xs={12} sm={6} md={4} key={index}>
+        {plans.map((plan) => (
+          <Grid2 size={{ xs: 12, sm: 6, md: 4 }} key={plan.id}>
             <PlanCard plan={plan} />
-          </Grid>
+          </Grid2>
         ))}
       </div>
     </Box>

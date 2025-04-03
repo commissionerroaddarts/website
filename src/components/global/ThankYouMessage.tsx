@@ -1,50 +1,48 @@
 "use client";
 import React from "react";
-import { Box, Typography, Button, Container, Paper } from "@mui/material";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
+import { Box, Typography, Container } from "@mui/material";
 
 const ThankYouMessage = () => {
-  const router = useRouter();
-
   return (
     <Container
-      maxWidth="sm"
+      maxWidth="lg"
       sx={{
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        height: "100vh",
+        height: "60vh",
       }}
     >
-      <Paper
+      <Box
         sx={{
           textAlign: "center",
-          background: "linear-gradient(135deg, #2a004f, #3e005f)",
-          color: "white",
+          background: "transparent",
           borderRadius: "16px",
+          display: "flex",
+          justifyContent: "center",
+          flexDirection: "column",
           p: 4,
         }}
       >
-        <Typography variant="h4" fontWeight="bold" gutterBottom>
+        {/* Success Icon */}
+        {/* <Box sx={{ mb: 3, display: "flex", justifyContent: "center" }}>
+          <Image
+            src="/images/icons/submission.gif"
+            alt="Success Icon"
+            width={200}
+            height={200}
+          />
+        </Box> */}
+
+        <Typography variant="h3" fontWeight="bold" gutterBottom>
           Submission Successful!
         </Typography>
-        <Typography variant="body1" mb={3}>
+        <Typography variant="h6" mb={3}>
           We've received your request and will get back to you soon.
         </Typography>
 
-        {/* Success Icon */}
-        <Box sx={{ mb: 3 }}>
-          <Image
-            src="/success-icon.png"
-            alt="Success Icon"
-            width={120}
-            height={120}
-          />
-        </Box>
-
         {/* Back to Home Button */}
-        <Button
+        {/* <Button
           variant="contained"
           sx={{
             backgroundColor: "#8226e3",
@@ -53,8 +51,8 @@ const ThankYouMessage = () => {
           onClick={() => router.push("/")}
         >
           Back to Home
-        </Button>
-      </Paper>
+        </Button> */}
+      </Box>
     </Container>
   );
 };

@@ -1,5 +1,5 @@
 "use client";
-import { Box, Typography, Grid, Card, CardContent } from "@mui/material";
+import { Box, Typography, Grid2, Card, CardContent } from "@mui/material";
 import Image from "next/image";
 
 const coreValues = [
@@ -30,13 +30,13 @@ const CoreValueSection = () => {
         Building trust, fostering innovation, and prioritizing your
         satisfaction.
       </Typography>
-      <Grid container spacing={3} justifyContent="center">
+      <Grid2 container spacing={3} justifyContent="center">
         {coreValues.map((item, index) => (
-          <Grid item key={index} xs={12} sm={6} md={4}>
+          <Grid2 key={item.title} size={{ xs: 12, sm: 6, md: 4 }}>
             <Card
               sx={{
                 background:
-                  "linear-gradient(112.31deg, rgba(201, 201, 201, 0.8) 2.19%, rgba(196, 196, 196, 0.1) 95.72%)",
+                  "linear-gradient(112.11deg, rgba(31, 0, 55, 0.82) 2.19%, rgba(75, 0, 130, 0.1) 95.99%)",
                 borderRadius: 2,
               }}
             >
@@ -82,9 +82,9 @@ const CoreValueSection = () => {
                 </Typography>
               </CardContent>
             </Card>
-          </Grid>
+          </Grid2>
         ))}
-      </Grid>
+      </Grid2>
     </Box>
   );
 };

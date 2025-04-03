@@ -89,7 +89,7 @@ function Navbar() {
     <Box sx={{ width: 250 }} onClick={() => toggleDrawer(false)}>
       <List>
         {navLinks.map(({ href, label, style }) => (
-          <Link key={href} href={href} passHref>
+          <Link key={href} href={href} passHref prefetch>
             <ListItem component="a" sx={style}>
               <ListItemText primary={label} />
             </ListItem>
@@ -113,7 +113,7 @@ function Navbar() {
         sx={{ zIndex: 10 }}
       >
         <Toolbar>
-          <Link href="/" passHref style={{ flexGrow: 1 }}>
+          <Link href="/" passHref style={{ flexGrow: 1 }} prefetch>
             <Typography
               variant="h6"
               component="div"
@@ -174,7 +174,7 @@ const NavLinks = ({ isLoggedIn }: { isLoggedIn: boolean | null }) => {
           return null; // Skip rsendering "Sign In" if user is logged in
         }
         return (
-          <Link key={href} href={href} passHref>
+          <Link key={href} href={href} passHref prefetch>
             <Button
               sx={{
                 color: "white",

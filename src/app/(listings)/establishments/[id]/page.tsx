@@ -6,7 +6,7 @@ import { Business } from "@/types/business";
 import { baseUrl } from "@/constants/baseUrl";
 import EstablishmentGallery from "@/components/establishmentpage/EstablishmentGallery";
 import EstablishmentHeader from "@/components/establishmentpage/EstablishmentHeader";
-import { Box, Grid } from "@mui/material";
+import { Box, Grid2 } from "@mui/material";
 import EstablishmentFAQ from "@/components/establishmentpage/EstablishmentFAQ";
 import EstablishmentReview from "@/components/establishmentpage/EstablishmentReview";
 import EstablishmentLocation from "@/components/establishmentpage/EstablishmentLocation";
@@ -29,15 +29,15 @@ export default function EstablishmentPage() {
 
   return (
     <div className="p-6 min-h-screen">
-      <Grid container spacing={2} sx={{ padding: "0 6rem" }}>
+      <Grid2 container spacing={2} sx={{ padding: "0 6rem" }}>
         {/* Gallery */}
         {business.media && (
-          <Grid item xs={12}>
+          <Grid2 size={{ xs: 12 }}>
             <EstablishmentGallery images={business.media.images || []} />
-          </Grid>
+          </Grid2>
         )}
 
-        <Grid item xs={12} md={6}>
+        <Grid2 size={{ xs: 12, md: 6 }}>
           <Box>
             {/* Header Section */}
             <EstablishmentHeader
@@ -52,14 +52,14 @@ export default function EstablishmentPage() {
             {/* Reviews */}
             <EstablishmentReview />
           </Box>
-        </Grid>
+        </Grid2>
 
-        <Grid item xs={12} md={6}>
+        <Grid2 size={{ xs: 12, md: 6 }}>
           <Box>
             {business.location && <EstablishmentLocation business={business} />}
           </Box>
-        </Grid>
-      </Grid>
+        </Grid2>
+      </Grid2>
     </div>
   );
 }

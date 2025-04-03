@@ -5,7 +5,7 @@ import {
   Typography,
   Container,
   Paper,
-  Grid,
+  Grid2,
   Divider,
 } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
@@ -23,7 +23,6 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
 import { useRouter } from "next/navigation";
 import { useAppState } from "@/hooks/useAppState";
-import { log } from "console";
 
 // ✅ Validation Schema
 const schema = yup.object().shape({
@@ -61,7 +60,7 @@ const LoginForm = () => {
       router.push("/"); // Uncomment if using Next.js router
 
       // Handle post-login actions here (e.g., redirect, store token)
-    } catch (error: Error | any) {
+    } catch (error: any) {
       toast.error(
         error.response?.data?.error || "Login failed. Please try again."
       );
@@ -96,9 +95,9 @@ const LoginForm = () => {
         </Box>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Grid container spacing={2}>
+          <Grid2 container spacing={2}>
             {/* Email */}
-            <Grid item xs={12}>
+            <Grid2 size={{ xs: 12 }}>
               <Controller
                 name="identifier"
                 control={control}
@@ -111,10 +110,10 @@ const LoginForm = () => {
                   />
                 )}
               />
-            </Grid>
+            </Grid2>
 
             {/* Password */}
-            <Grid item xs={12}>
+            <Grid2 size={{ xs: 12 }}>
               <Controller
                 name="password"
                 control={control}
@@ -128,10 +127,10 @@ const LoginForm = () => {
                   />
                 )}
               />
-            </Grid>
+            </Grid2>
 
             {/* Submit Button */}
-            <Grid item xs={12} className="flex justify-center">
+            <Grid2 size={{ xs: 12 }} className="flex justify-center">
               <ThemeButton
                 text={isSubmitting ? "Logging in..." : "Login"}
                 type="submit"
@@ -139,8 +138,8 @@ const LoginForm = () => {
                 style={{ width: "100%" }}
                 // sx={{ width: "100%" }}
               />
-            </Grid>
-          </Grid>
+            </Grid2>
+          </Grid2>
         </form>
         <Divider
           sx={{ my: 3, "&::before, &::after": { borderColor: "white" } }}
@@ -149,8 +148,8 @@ const LoginForm = () => {
         </Divider>
 
         {/* Continue with Google Button */}
-        <Grid container spacing={2} className="w-full">
-          <Grid item xs={12} className="flex justify-center">
+        <Grid2 container spacing={2} className="w-full">
+          <Grid2 size={{ xs: 12 }} className="flex justify-center">
             <ThemeButton
               text="Continue with Google"
               startIcon={<Google sx={{ color: "black" }} />}
@@ -165,8 +164,8 @@ const LoginForm = () => {
                 width: "100%",
               }}
             />
-          </Grid>
-        </Grid>
+          </Grid2>
+        </Grid2>
 
         <Box mt={2}>
           <Typography variant="body2" align="center">
@@ -175,6 +174,7 @@ const LoginForm = () => {
               href="/signup"
               style={{ fontWeight: "bold", textDecoration: "underline" }}
               passHref
+              prefetch
             >
               Sign up
             </Link>

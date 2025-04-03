@@ -1,11 +1,11 @@
 "use client";
-import { Box, Typography, Grid, Card, CardContent } from "@mui/material";
+import { Box, Typography, Grid2 } from "@mui/material";
 import Image from "next/image";
 import FadeInSection from "@/animations/sections/FadeInSection";
 
 export default function AboutUsSection() {
   return (
-    <Box sx={{ py: 4 }}>
+    <Box sx={{ my: 4 }}>
       {/* Title and Description */}
       <FadeInSection>
         <Typography
@@ -23,8 +23,8 @@ export default function AboutUsSection() {
           variant="body1"
           align="center"
           maxWidth="md"
-          margin="0 auto"
-          paragraph
+          margin="1rem auto 2rem"
+          component="p"
         >
           We bridge the gap between professionals and opportunities, fostering
           growth and innovation in every interaction.
@@ -32,37 +32,37 @@ export default function AboutUsSection() {
       </FadeInSection>
       {/* Content Section */}
 
-      <Grid
+      <Grid2
         container
         spacing={4}
         alignItems="center"
         maxWidth="lg"
         margin="0 auto"
       >
-        <Grid item xs={12} md={6}>
+        <Grid2 size={{ xs: 12, md: 6 }}>
           <FadeInSection delay={0.5} xOffset={-20}>
-            <Typography variant="body1" paragraph>
+            <Typography variant="body1" component="p" gutterBottom>
               At Road Darts, we believe in creating opportunities that bring
               excitement and efficiency to your work. Our platform connects
               professionals with top-tier listings, ensuring seamless
               collaboration and unmatched results.
             </Typography>
 
-            <Typography variant="body1" paragraph>
+            <Typography variant="body1" component="p" gutterBottom>
               We are dedicated to providing a space where businesses and
               individuals can list, discover, and engage with the best services
               available. Whether you&#39;re looking for new partnerships or
               expanding your business reach, Road Darts is your trusted
               solution.
             </Typography>
-            <Typography variant="body1" paragraph>
+            <Typography variant="body1" component="p" gutterBottom>
               With a growing network of professionals and companies, we continue
               to innovate and redefine how listings work in today’s fast-paced
               digital world.
             </Typography>
           </FadeInSection>
-        </Grid>
-        <Grid item xs={12} md={6}>
+        </Grid2>
+        <Grid2 size={{ xs: 12, md: 6 }}>
           <FadeInSection delay={0.5} xOffset={20}>
             <Image
               src="/images/banners/about-road-dart.svg"
@@ -73,8 +73,8 @@ export default function AboutUsSection() {
               style={{ borderRadius: "8px", width: "100%", height: "auto" }}
             />
           </FadeInSection>
-        </Grid>
-      </Grid>
+        </Grid2>
+      </Grid2>
     </Box>
   );
 }
