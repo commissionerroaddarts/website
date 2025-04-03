@@ -1,8 +1,29 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { Box, Typography, Container } from "@mui/material";
+import { clearInquiryData } from "@/store/slices/inquirySlice";
+import { useAppState } from "@/hooks/useAppState";
+import { useAppDispatch } from "@/store";
+import { useRouter } from "next/navigation";
 
 const ThankYouMessage = () => {
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  const { inquiry } = useAppState();
+  const { inquiryData } = inquiry;
+
+  useEffect(() => {
+    if (!inquiryData) {
+      router.push("/"); // Redirect if no form data found
+    } else {
+      setTimeout(() => dispatch(clearInquiryData()), 5000); // Clear after 5 seconds
+    }
+  }, [inquiryData, router, dispatch]);
+
+  if (!inquiryData) {
+    return null;
+  } // Prevent flash before redirect
+
   return (
     <Container
       maxWidth="lg"
@@ -16,7 +37,6 @@ const ThankYouMessage = () => {
       <Box
         sx={{
           textAlign: "center",
-          background: "transparent",
           borderRadius: "16px",
           display: "flex",
           justifyContent: "center",
@@ -24,34 +44,15 @@ const ThankYouMessage = () => {
           p: 4,
         }}
       >
-        {/* Success Icon */}
-        {/* <Box sx={{ mb: 3, display: "flex", justifyContent: "center" }}>
-          <Image
-            src="/images/icons/submission.gif"
-            alt="Success Icon"
-            width={200}
-            height={200}
-          />
-        </Box> */}
-
         <Typography variant="h3" fontWeight="bold" gutterBottom>
-          Submission Successful!
+          Thank You, {inquiryData?.firstname + " " + inquiryData?.lastname}!
         </Typography>
         <Typography variant="h6" mb={3}>
-          We've received your request and will get back to you soon.
+          We received your message: "{inquiryData?.message}".
         </Typography>
-
-        {/* Back to Home Button */}
-        {/* <Button
-          variant="contained"
-          sx={{
-            backgroundColor: "#8226e3",
-            "&:hover": { backgroundColor: "#6a1cb6" },
-          }}
-          onClick={() => router.push("/")}
-        >
-          Back to Home
-        </Button> */}
+        <Typography variant="h6">
+          We'll contact you at {inquiryData?.email} soon.
+        </Typography>
       </Box>
     </Container>
   );

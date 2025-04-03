@@ -11,6 +11,8 @@ import { submitContactForm } from "@/services/contactService";
 import { Inquiry } from "@/types/contactUs";
 import FadeInSection from "@/animations/sections/FadeInSection";
 import { useRouter } from "next/navigation";
+import { setInquiryData } from "@/store/slices/inquirySlice";
+import { useAppDispatch } from "@/store";
 
 // ✅ Form Validation Schema
 const schema = yup.object().shape({
@@ -35,12 +37,15 @@ const ContactForm = () => {
   });
 
   const router = useRouter();
+  const dispatch = useAppDispatch(); // Assuming you have a custom hook to get user state
 
   // ✅ Form Submit Handler
   const onSubmit = async (data: Inquiry) => {
     try {
       const response = await submitContactForm(data);
       toast.success(response.message || "Form submitted successfully!");
+      dispatch(setInquiryData(data)); // Store data in Redux
+
       router.push("/thank-you");
       reset();
     } catch (error: any) {

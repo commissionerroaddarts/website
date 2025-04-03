@@ -1,12 +1,11 @@
 "use client";
 import { useEffect, useCallback, useState } from "react";
-import { useDispatch } from "react-redux";
 import { fetchBusiness } from "@/store/slices/businessSlice"; // Adjust path if needed
-import type { AppDispatch } from "@/store"; // Adjust path if needed
 import { useAppState } from "./useAppState";
+import { useAppDispatch } from "@/store";
 
 const useFetchBusinesses = (page = 1, limit = 3, loadingDelay = 1000) => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const { business } = useAppState();
   const { businesses, status, error } = business; // Destructure from business slice
 

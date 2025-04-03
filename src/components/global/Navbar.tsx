@@ -20,8 +20,8 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useAppState } from "@/hooks/useAppState";
 import { logoutUser } from "@/services/authService";
-import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
+import { useAppDispatch } from "@/store";
 
 const navbarVariants = {
   hidden: { opacity: 0, y: -20 },
@@ -194,7 +194,7 @@ const NavLinks = ({ isLoggedIn }: { isLoggedIn: boolean | null }) => {
 
 const ProfileLink = () => {
   const router = useRouter();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const logoutHandler = async () => {
     try {
       //call the logout function from your auth service

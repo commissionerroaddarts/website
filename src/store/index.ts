@@ -3,6 +3,7 @@ import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux";
 import planReducer from "./slices/planSlice";
 import businessReducer from "./slices/businessSlice";
 import userReducer from "./slices/userSlice";
+import inquiryReducer from "./slices/inquirySlice";
 import { persistStore, persistReducer } from "redux-persist";
 import createWebStorage from "redux-persist/lib/storage/createWebStorage";
 
@@ -36,6 +37,7 @@ const rootReducer = combineReducers({
   plan: planReducer,
   business: businessReducer,
   user: userReducer,
+  inquiry: inquiryReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

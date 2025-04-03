@@ -19,8 +19,7 @@ import CustomInput from "@/components/global/CustomInput";
 import ThemeButton from "@/components/buttons/ThemeButton";
 import { Google } from "@mui/icons-material";
 import Link from "next/link";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/store";
+import { AppDispatch, useAppDispatch } from "@/store";
 import { useRouter } from "next/navigation";
 import { useAppState } from "@/hooks/useAppState";
 
@@ -43,7 +42,7 @@ const LoginForm = () => {
   });
   const { user } = useAppState(); // Assuming you have a custom hook to get user state
   const { isLoggedIn } = user; // Assuming userDetails contains the user data
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const router = useRouter(); // Assuming you're using Next.js router
 
   if (isLoggedIn) {
