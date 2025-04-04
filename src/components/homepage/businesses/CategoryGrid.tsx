@@ -75,7 +75,7 @@ const CategoryCard: React.FC<{ category: Category; onClick?: () => void }> = ({
   </Box>
 );
 
-const CategoryGrid2: React.FC<CategoryGridProps> = ({
+const CategoryGrid: React.FC<CategoryGridProps> = ({
   categories,
   onCategoryClick,
 }) => (
@@ -109,4 +109,4 @@ const CategoryGrid2: React.FC<CategoryGridProps> = ({
   </Box>
 );
 
-export default CategoryGrid2;
+export default CategoryGrid;
