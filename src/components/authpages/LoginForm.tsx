@@ -156,6 +156,7 @@ const LoginForm = () => {
               startIcon={<Google sx={{ color: "black" }} />}
               onClick={() => {
                 // Handle Google login here
+                  window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`
               }}
               sx={{
                 backgroundColor: "white",
