@@ -81,7 +81,7 @@ function HomeBanner() {
           </div>
         </motion.div>
 
-        <Box className="flex flex-col gap-1 relative z-[200] -mt-20">
+        <Box className="flex flex-col gap-1 relative z-[200] -mt-10">
           <motion.div
             variants={itemVariants}
             initial="hidden"
