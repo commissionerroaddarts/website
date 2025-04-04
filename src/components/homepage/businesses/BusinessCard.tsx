@@ -71,7 +71,7 @@ function BusinessCard({ business }: { readonly business: Business }) {
           {/* Title */}
           <Typography variant="h6" sx={{ mt: 1 }}>
             <a
-              href={`/establishments/${business._id}`}
+              href={`/establishments/${business?._id}`}
               style={{ color: "#fff", textDecoration: "none" }}
             >
               {name ?? "Unnamed Business"}
@@ -88,7 +88,7 @@ function BusinessCard({ business }: { readonly business: Business }) {
           {/* Price and Location */}
           <Typography sx={{ color: "#9b59b6", fontWeight: "bold", mt: 1 }}>
             {price
-              ? `${price.category} ${price.min} - ${price.max}`
+              ? `${price?.category} ${price?.min} - ${price?.max}`
               : "No Price Info"}
           </Typography>
           <Box
@@ -101,7 +101,7 @@ function BusinessCard({ business }: { readonly business: Business }) {
           >
             <RoomIcon sx={{ fontSize: 16, mr: 0.5 }} />
             {location
-              ? `${location.city}, ${location.state}, ${location.country}`
+              ? `${location?.city}, ${location?.state}, ${location?.country}`
               : "No Location Info"}
           </Box>
 

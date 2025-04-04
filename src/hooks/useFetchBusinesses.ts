@@ -4,16 +4,12 @@ import { fetchBusiness } from "@/store/slices/businessSlice"; // Adjust path if 
 import { useAppState } from "./useAppState";
 import { useAppDispatch } from "@/store";
 
-const useFetchBusinesses = (page = 1, limit = 3, loadingDelay = 1000) => {
+const useFetchBusinesses = (page = 1, limit = 3) => {
   const dispatch = useAppDispatch();
   const { business } = useAppState();
   const { businesses, status, error } = business; // Destructure from business slice
 
-  // Intentional loading state
-  const [isLoading, setIsLoading] = useState(true);
-
   const fetchData = useCallback(() => {
-    setIsLoading(true); // Start intentional loading
     dispatch(fetchBusiness({ page, limit }));
   }, [dispatch, page, limit]);
 
@@ -21,13 +17,7 @@ const useFetchBusinesses = (page = 1, limit = 3, loadingDelay = 1000) => {
     fetchData();
   }, [fetchData]);
 
-  useEffect(() => {
-    if (status === "succeeded") {
-      setTimeout(() => setIsLoading(false), loadingDelay);
-    }
-  }, [status, loadingDelay]);
-
-  return { businesses, isLoading, error, refresh: fetchData };
+  return { businesses, status, error, refresh: fetchData };
 };
 
 export default useFetchBusinesses;
