@@ -53,22 +53,35 @@ function HomeBanner() {
           right: 0,
           bottom: 0,
           background:
-            "radial-gradient(circle, rgba(2,0,36,0) 0%, rgba(121,9,102,0.3066001400560224) 42%, rgba(201,0,255,0.31780462184873945) 100%);",
+            "radial-gradient(circle, rgba(2,0,36,0) 0%, rgba(121,9,102,0.1) 22%, rgba(201,0,255,0.1) 100%);",
           zIndex: 0,
         },
       }}
     >
       <Navbar />
-      <Box textAlign="center" sx={{ marginTop: -10 }}>
+      <Box textAlign="center" sx={{ marginTop: -17 }}>
         <motion.div initial="hidden" animate="visible" variants={scaleIn}>
-          <div
-            style={{
+          <Box
+            sx={{
               position: "relative",
               width: "100%",
               height: "500px",
               zIndex: 0,
               display: "flex",
               justifyContent: "center",
+              "&:before": {
+                content: '""',
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                opacity: 0.5,
+                background:
+                  "url('/images/banners/banner-icon-rays.svg') no-repeat center center",
+                backgroundSize: "cover",
+                zIndex: 23,
+              },
             }}
           >
             <Image
@@ -78,7 +91,7 @@ function HomeBanner() {
               fill
               style={{ objectFit: "contain" }}
             />
-          </div>
+          </Box>
         </motion.div>
 
         <Box className="flex flex-col gap-1 relative z-[200] -mt-10">
