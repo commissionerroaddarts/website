@@ -81,7 +81,7 @@ function BusinessCard({ business }: { readonly business: Business }) {
           {/* show ratings stars icons */}
           <Box sx={{ display: "flex", mt: 1 }}>
             {Array.from({ length: 5 }).map((_, index) => (
-              <Stars key={index} sx={{ color: "#f1c40f" }} />
+              <Stars key={`star-${index}`} sx={{ color: "#f1c40f" }} />
             ))}
           </Box>
 

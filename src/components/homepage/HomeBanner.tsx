@@ -4,9 +4,6 @@ import { motion } from "framer-motion";
 import Navbar from "@/components/global/Navbar";
 import Image from "next/image";
 import SearchComponent from "./SearchingComponent";
-// import dynamic from "next/dynamic";
-// const AnimText = dynamic(() => import("@/animations/text/AnimText"));
-
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },

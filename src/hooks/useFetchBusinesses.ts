@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useCallback, useState } from "react";
+import { useEffect, useCallback } from "react";
 import { fetchBusiness } from "@/store/slices/businessSlice"; // Adjust path if needed
 import { useAppState } from "./useAppState";
 import { useAppDispatch } from "@/store";
