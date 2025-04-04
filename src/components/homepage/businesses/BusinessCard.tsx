@@ -42,7 +42,7 @@ function BusinessCard({ business }: { readonly business: Business }) {
         <CardMedia
           component="img"
           sx={{ width: 300, height: 300, borderRadius: 2 }}
-          image={media?.images?.[0] ?? "/images/placeholder.png"}
+          image={media?.logo ?? "/images/placeholder.png"}
           alt={name}
         />
 
