@@ -54,8 +54,10 @@ const LoginForm = () => {
   const onSubmit = async (data: LoginFormData) => {
     try {
       const response = await loginUser(data, dispatch);
-      toast.success(response.message || "Login successful!");
-      //redirect to dashboard or home page using router.push("/dashboard");
+      if (response.error) {
+        toast.error(response.error);
+        return;
+      }
       router.push("/"); // Uncomment if using Next.js router
 
       // Handle post-login actions here (e.g., redirect, store token)

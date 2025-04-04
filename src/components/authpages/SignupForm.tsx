@@ -19,6 +19,7 @@ import CustomInput from "@/components/global/CustomInput";
 import ThemeButton from "@/components/buttons/ThemeButton";
 import Link from "next/link";
 import { Google } from "@mui/icons-material";
+import { useRouter } from "next/navigation";
 
 // ✅ Validation Schema
 const schema = yup.object().shape({
@@ -40,12 +41,18 @@ const SignupForm = () => {
   } = useForm<SignupFormData>({
     resolver: yupResolver(schema),
   });
+  const router = useRouter();
 
   // ✅ Form Submission Handler
   const onSubmit = async (data: SignupFormData) => {
     try {
       const response = await registerUser(data);
+      if (response.error) {
+        toast.error(response.error);
+        return;
+      }
       toast.success(response.message || "Signup successful!");
+      router.push("/login"); // Redirect to login page after successful signup
       // Handle post-signup actions here (e.g., redirect, store token)
     } catch (error: any) {
       toast.error(

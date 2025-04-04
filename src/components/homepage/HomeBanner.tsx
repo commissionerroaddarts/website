@@ -67,6 +67,8 @@ function HomeBanner() {
               width: "100%",
               height: "500px",
               zIndex: 0,
+              display: "flex",
+              justifyContent: "center",
             }}
           >
             <Image
@@ -79,7 +81,7 @@ function HomeBanner() {
           </div>
         </motion.div>
 
-        <Box className="flex flex-col gap-1 relative z-[200] -mt-10">
+        <Box className="flex flex-col gap-1 relative z-[200] -mt-20">
           <motion.div
             variants={itemVariants}
             initial="hidden"

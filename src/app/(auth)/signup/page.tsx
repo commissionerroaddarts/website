@@ -9,8 +9,8 @@ export const metadata = generateMetadata({
   image: "/images/banners/banner-icon.png",
 });
 
-const page = () => {
+const SignupPage = () => {
   return <SignupForm />;
 };
 
-export default page;
+export default SignupPage;
