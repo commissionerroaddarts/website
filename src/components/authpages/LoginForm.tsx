@@ -68,6 +68,11 @@ const LoginForm = () => {
     }
   };
 
+  const handleGoogleLogin = () => {
+    // Handle Google login here
+    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
+  };
+
   return (
     <Container maxWidth="sm">
       <Paper
@@ -154,10 +159,7 @@ const LoginForm = () => {
             <ThemeButton
               text="Continue with Google"
               startIcon={<Google sx={{ color: "black" }} />}
-              onClick={() => {
-                // Handle Google login here
-                  window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`
-              }}
+              onClick={handleGoogleLogin}
               sx={{
                 backgroundColor: "white",
                 color: "black",

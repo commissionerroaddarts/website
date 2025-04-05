@@ -9,6 +9,9 @@ import Footer from "./global/Footer";
 import { usePathname } from "next/navigation"; // Correct hook
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { useEffect } from "react";
+import { getUserDetails } from "@/services/authService";
+import { useAppDispatch } from "@/store";
 
 interface LayoutProps {
   readonly children: ReactNode;
@@ -95,6 +98,20 @@ const icons = [
 export default function Layout({ children }: LayoutProps) {
   const pathname = usePathname(); // Get the current path
   const isHomePage = pathname === "/";
+  const dispatch = useAppDispatch(); // Get the dispatch function from Redux store
+
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const userDetails = await getUserDetails(dispatch);
+        console.log("User Details:", userDetails);
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+      }
+    };
+
+    fetchUserDetails();
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>
