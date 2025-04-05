@@ -15,11 +15,12 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { Business } from "@/types/business";
 import { Stars } from "@mui/icons-material";
 import BusinessMapPopup from "./BusinessMapPopup";
+import Link from "next/link";
 
 function BusinessCard({ business }: { readonly business: Business }) {
   const { media, category, status, name, price, location } = business;
   const [openMap, setOpenMap] = useState(false);
-
+  console.log(media);
   const handleMapOpen = () => setOpenMap(true);
   const handleMapClose = () => setOpenMap(false);
 
@@ -42,7 +43,7 @@ function BusinessCard({ business }: { readonly business: Business }) {
         <CardMedia
           component="img"
           sx={{ width: 300, height: 300, borderRadius: 2 }}
-          image={media?.logo ?? "/images/placeholder.png"}
+          image={media?.images?.[0] ?? "/images/placeholder.png"}
           alt={name}
         />
 
@@ -70,12 +71,14 @@ function BusinessCard({ business }: { readonly business: Business }) {
 
           {/* Title */}
           <Typography variant="h6" sx={{ mt: 1 }}>
-            <a
+            <Link
               href={`/establishments/${business?._id}`}
               style={{ color: "#fff", textDecoration: "none" }}
+              passHref
+              prefetch
             >
               {name ?? "Unnamed Business"}
-            </a>
+            </Link>
           </Typography>
 
           {/* show ratings stars icons */}

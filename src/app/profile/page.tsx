@@ -24,8 +24,8 @@ const UserProfilePage = () => {
   const metadata = generateMetadata({
     title: `${name}'s Profile - Road Darts`,
     description: `View ${name}'s profile details and activity.`,
-    url: `/profile/${user?.username || fallbackDetails.id}`,
-    image: user?.profileImage || fallbackDetails.profileImage,
+    url: `/profile/${user?.username ?? fallbackDetails.id}`,
+    image: user?.profileImage ?? fallbackDetails.profileImage,
   });
 
   const router = useRouter();
