@@ -19,9 +19,10 @@ import CustomInput from "@/components/global/CustomInput";
 import ThemeButton from "@/components/buttons/ThemeButton";
 import { Google } from "@mui/icons-material";
 import Link from "next/link";
-import { AppDispatch, useAppDispatch } from "@/store";
+import { useAppDispatch } from "@/store";
 import { useRouter } from "next/navigation";
 import { useAppState } from "@/hooks/useAppState";
+import { checkoutService } from "@/services/checkoutService";
 
 // ✅ Validation Schema
 const schema = yup.object().shape({
@@ -40,8 +41,9 @@ const LoginForm = () => {
   } = useForm<LoginFormData>({
     resolver: yupResolver(schema),
   });
-  const { user } = useAppState(); // Assuming you have a custom hook to get user state
+  const { user, plan } = useAppState(); // Assuming you have a custom hook to get user state
   const { isLoggedIn } = user; // Assuming userDetails contains the user data
+  const { selectedPlan } = plan; // Assuming you have a custom hook to get user state
   const dispatch = useAppDispatch();
   const router = useRouter(); // Assuming you're using Next.js router
 
@@ -54,16 +56,25 @@ const LoginForm = () => {
   const onSubmit = async (data: LoginFormData) => {
     try {
       const response = await loginUser(data, dispatch);
+
       if (response.error) {
         toast.error(response.error);
         return;
       }
-      router.push("/"); // Uncomment if using Next.js router
+
+      if (selectedPlan) {
+        await checkoutService(selectedPlan.name); // Call the checkout service
+      } else {
+        router.push("/"); // Uncomment if using Next.js router
+      }
 
       // Handle post-login actions here (e.g., redirect, store token)
     } catch (error: any) {
+      console.error(error);
       toast.error(
-        error.response?.data?.error || "Login failed. Please try again."
+        error.response?.data?.error ??
+          error.response?.data?.message ??
+          "Login failed. Please try again."
       );
     }
   };

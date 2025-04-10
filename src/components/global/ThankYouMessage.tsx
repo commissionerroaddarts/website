@@ -4,16 +4,18 @@ import { Box, Typography, Container } from "@mui/material";
 import { clearInquiryData } from "@/store/slices/inquirySlice";
 import { useAppState } from "@/hooks/useAppState";
 import { useAppDispatch } from "@/store";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const ThankYouMessage = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { inquiry } = useAppState();
   const { inquiryData } = inquiry;
+  const searchParams = useSearchParams();
+  const sessionId = searchParams.get("session_id");
 
   useEffect(() => {
-    if (!inquiryData) {
+    if (!inquiryData && !sessionId) {
       router.push("/"); // Redirect if no form data found
     } else {
       setTimeout(() => dispatch(clearInquiryData()), 8000); // Clear after 8 seconds

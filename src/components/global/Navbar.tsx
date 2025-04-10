@@ -199,7 +199,6 @@ const ProfileLink = () => {
     try {
       //call the logout function from your auth service
       await logoutUser(dispatch);
-      console.log("Logout clicked");
       // Redirect to the login page or home page after logout
       router.push("/login");
     } catch (error) {

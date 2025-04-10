@@ -10,14 +10,24 @@ import { useAppDispatch } from "@/store";
 import { selectPlan } from "@/store/slices/planSlice";
 import { PlanCardProps } from "@/types/plan";
 import { motion } from "framer-motion";
+import { useAppState } from "@/hooks/useAppState";
+import { checkoutService } from "@/services/checkoutService";
 
 const PlanCard = ({ plan }: PlanCardProps) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const { user } = useAppState(); // Assuming you have a user object in your Redux store
+  const { isLoggedIn } = user; // Check if user is logged in
 
-  const handleGetStarted = () => {
+  const handleGetStarted = async (planName: string) => {
     dispatch(selectPlan(plan)); // Save to Redux
-    router.push("/checkout"); // Redirect to checkout page
+
+    if (isLoggedIn) {
+      await checkoutService(planName); // Call the checkout service
+      router.push("/checkout"); // Redirect to checkout page
+    } else {
+      router.push("/login"); // Redirect to login page
+    }
   };
 
   return (
@@ -101,11 +111,14 @@ const PlanCard = ({ plan }: PlanCardProps) => {
           </motion.div>
           <Typography className=" flex justify-center mt-4">
             {plan.featured ? (
-              <ThemeButton text="Get Started" onClickEvent={handleGetStarted} />
+              <ThemeButton
+                text="Get Started"
+                onClickEvent={() => handleGetStarted(plan.name)}
+              />
             ) : (
               <ThemeOutlineButton
                 text="Get Started"
-                onClickEvent={handleGetStarted}
+                onClickEvent={() => handleGetStarted(plan.name)}
               />
             )}
           </Typography>

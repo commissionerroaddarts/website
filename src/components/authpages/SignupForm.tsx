@@ -20,6 +20,8 @@ import ThemeButton from "@/components/buttons/ThemeButton";
 import Link from "next/link";
 import { Google } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
+import { useAppState } from "@/hooks/useAppState";
+import { checkoutService } from "@/services/checkoutService";
 
 // ✅ Validation Schema
 const schema = yup.object().shape({
@@ -42,6 +44,8 @@ const SignupForm = () => {
     resolver: yupResolver(schema),
   });
   const router = useRouter();
+  const { plan } = useAppState(); // Assuming you have a custom hook to get user state
+  const { selectedPlan } = plan; // Assuming you have a custom hook to get user state
 
   // ✅ Form Submission Handler
   const onSubmit = async (data: SignupFormData) => {
@@ -52,7 +56,11 @@ const SignupForm = () => {
         return;
       }
       toast.success(response.message || "Signup successful!");
-      router.push("/login"); // Redirect to login page after successful signup
+      if (selectedPlan) {
+        await checkoutService(selectedPlan.name); // Call the checkout service
+      } else {
+        router.push("/login"); // Redirect to login page after successful signup
+      }
       // Handle post-signup actions here (e.g., redirect, store token)
     } catch (error: any) {
       toast.error(
@@ -195,7 +203,7 @@ const SignupForm = () => {
                 startIcon={<Google sx={{ color: "black" }} />}
                 onClick={() => {
                   // Handle Google login here
-                  window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`
+                  window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
                 }}
                 sx={{
                   backgroundColor: "white",

@@ -34,8 +34,6 @@ const UserProfilePage = () => {
     router.push("/login");
     return null;
   }
-
-  console.log(metadata);
   return (
     <>
       <Head>

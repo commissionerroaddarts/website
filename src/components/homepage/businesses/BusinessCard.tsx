@@ -20,7 +20,6 @@ import Link from "next/link";
 function BusinessCard({ business }: { readonly business: Business }) {
   const { media, category, status, name, price, location } = business;
   const [openMap, setOpenMap] = useState(false);
-  console.log(media);
   const handleMapOpen = () => setOpenMap(true);
   const handleMapClose = () => setOpenMap(false);
 

@@ -1,6 +1,6 @@
 "use client"; // ✅ Add this at the very top
 
-import { ReactNode, useEffect } from "react";
+import { useState, ReactNode, useEffect } from "react";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import theme from "@/theme/theme";
@@ -11,8 +11,11 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { getUserDetails } from "@/services/authService";
 import { useAppDispatch } from "@/store";
-import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
+// import { Elements } from "@stripe/react-stripe-js";
+// import { loadStripe } from "@stripe/stripe-js";
+import Modal from "@mui/material/Modal";
+import Box from "@mui/material/Box";
+import Link from "next/link";
 
 interface LayoutProps {
   readonly children: ReactNode;
@@ -96,10 +99,10 @@ const icons = [
   },
 ];
 
-// Load your Stripe public key
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? ""
-);
+// // Load your Stripe public key
+// const stripePromise = loadStripe(
+//   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? ""
+// );
 
 export default function Layout({ children }: LayoutProps) {
   const pathname = usePathname(); // Get the current path
@@ -110,7 +113,6 @@ export default function Layout({ children }: LayoutProps) {
     const fetchUserDetails = async () => {
       try {
         const userDetails = await getUserDetails(dispatch);
-        console.log("User Details:", userDetails);
       } catch (error) {
         console.error("Error fetching user details:", error);
       }
@@ -125,6 +127,7 @@ export default function Layout({ children }: LayoutProps) {
       {/* ✅ Always include metadata */}
 
       <IconsComponent />
+      {isHomePage && <PromoCodePopupComponent />}
       <div
         style={{
           minHeight: "100vh",
@@ -134,14 +137,52 @@ export default function Layout({ children }: LayoutProps) {
         }}
       >
         {!isHomePage && <Navbar />}
-        <Elements stripe={stripePromise}>
-          <main>{children}</main>
-        </Elements>
+        {/* <Elements stripe={stripePromise}> */}
+        <main>{children}</main>
+        {/* </Elements> */}
         <Footer />
       </div>
     </ThemeProvider>
   );
 }
+const PromoCodePopupComponent = () => {
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    setOpen(true); // Open the modal when the component mounts
+  }, []);
+
+  const handleClose = () => setOpen(false);
+
+  return (
+    <Modal
+      open={open}
+      onClose={handleClose}
+      sx={{
+        backdropFilter: "blur(8px)", // Add blur effect to the overlay background
+      }}
+    >
+      <Box
+        sx={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          outline: "none",
+        }}
+      >
+        <Link href="/plans" passHref>
+          <Image
+            src="/images/banners/promo.svg" // Replace with your image path
+            alt="Promo"
+            width={500} // Adjust width as needed
+            height={500} // Adjust height as needed
+          />
+        </Link>
+      </Box>
+    </Modal>
+  );
+};
 
 const IconsComponent = () => {
   const isFullHeight =
