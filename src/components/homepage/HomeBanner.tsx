@@ -49,8 +49,8 @@ function HomeBanner() {
           left: 0,
           right: 0,
           bottom: 0,
-          background:
-            "radial-gradient(circle, rgba(2,0,36,0) 0%, rgba(121,9,102,0.1) 22%, rgba(201,0,255,0.1) 100%);",
+          // background:
+          //   "radial-gradient(circle, rgba(2,0,36,0) 0%, rgba(121,9,102,0.1) 22%, rgba(201,0,255,0.1) 100%);",
           zIndex: 0,
         },
       }}
@@ -66,26 +66,27 @@ function HomeBanner() {
               zIndex: 0,
               display: "flex",
               justifyContent: "center",
-              "&:before": {
-                content: '""',
-                position: "absolute",
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                opacity: 0.5,
-                background:
-                  "url('/images/banners/banner-icon-rays.svg') no-repeat center center",
-                backgroundSize: "cover",
-                zIndex: 23,
-              },
+              // "&:before": {
+              //   content: '""',
+              //   position: "absolute",
+              //   top: 0,
+              //   left: 0,
+              //   right: 0,
+              //   bottom: 0,
+              //   opacity: 0.5,
+              //   background:
+              //     "url('/images/banners/banner-icon-rays.svg') no-repeat center center",
+              //   backgroundSize: "cover",
+              //   zIndex: 23,
+              // },
             }}
           >
             <Image
               src="/images/banners/banner-icon.png"
               alt="Road Darts"
               // Apply blur effect
-              fill
+              width={950}
+              height={950}
               style={{ objectFit: "contain" }}
             />
           </Box>

@@ -17,7 +17,7 @@ const PlanCard = ({ plan }: PlanCardProps) => {
 
   const handleGetStarted = () => {
     dispatch(selectPlan(plan)); // Save to Redux
-    router.push("/add-listing");
+    router.push("/checkout"); // Redirect to checkout page
   };
 
   return (

@@ -1,6 +1,6 @@
 "use client"; // ✅ Add this at the very top
 
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import theme from "@/theme/theme";
@@ -9,9 +9,10 @@ import Footer from "./global/Footer";
 import { usePathname } from "next/navigation"; // Correct hook
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { useEffect } from "react";
 import { getUserDetails } from "@/services/authService";
 import { useAppDispatch } from "@/store";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 
 interface LayoutProps {
   readonly children: ReactNode;
@@ -95,6 +96,11 @@ const icons = [
   },
 ];
 
+// Load your Stripe public key
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? ""
+);
+
 export default function Layout({ children }: LayoutProps) {
   const pathname = usePathname(); // Get the current path
   const isHomePage = pathname === "/";
@@ -128,7 +134,9 @@ export default function Layout({ children }: LayoutProps) {
         }}
       >
         {!isHomePage && <Navbar />}
-        <main>{children}</main>
+        <Elements stripe={stripePromise}>
+          <main>{children}</main>
+        </Elements>
         <Footer />
       </div>
     </ThemeProvider>
