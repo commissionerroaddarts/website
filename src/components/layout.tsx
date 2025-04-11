@@ -11,8 +11,6 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { getUserDetails } from "@/services/authService";
 import { useAppDispatch } from "@/store";
-// import { Elements } from "@stripe/react-stripe-js";
-// import { loadStripe } from "@stripe/stripe-js";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Link from "next/link";
@@ -99,11 +97,6 @@ const icons = [
   },
 ];
 
-// // Load your Stripe public key
-// const stripePromise = loadStripe(
-//   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? ""
-// );
-
 export default function Layout({ children }: LayoutProps) {
   const pathname = usePathname(); // Get the current path
   const isHomePage = pathname === "/";
@@ -112,14 +105,14 @@ export default function Layout({ children }: LayoutProps) {
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
-        const userDetails = await getUserDetails(dispatch);
+        await getUserDetails(dispatch);
       } catch (error) {
         console.error("Error fetching user details:", error);
       }
     };
 
     fetchUserDetails();
-  }, []);
+  }, [dispatch]);
 
   return (
     <ThemeProvider theme={theme}>

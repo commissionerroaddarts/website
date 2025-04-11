@@ -81,6 +81,7 @@ function Navbar() {
   const { user } = useAppState();
   const { userDetails, isLoggedIn } = user || {};
 
+  console.log(userDetails);
   const toggleDrawer = (open: boolean) => {
     setDrawerOpen(open);
   };

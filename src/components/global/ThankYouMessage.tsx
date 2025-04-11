@@ -1,30 +1,33 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Typography, Container } from "@mui/material";
 import { clearInquiryData } from "@/store/slices/inquirySlice";
 import { useAppState } from "@/hooks/useAppState";
 import { useAppDispatch } from "@/store";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const ThankYouMessage = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { inquiry } = useAppState();
   const { inquiryData } = inquiry;
-  const searchParams = useSearchParams();
-  const sessionId = searchParams.get("session_id");
-
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  console.log(sessionId);
+  // ✅ Use useEffect to get query params
   useEffect(() => {
-    if (!inquiryData && !sessionId) {
+    const urlParams = new URLSearchParams(window.location.search);
+    setSessionId(urlParams.get("session_id"));
+
+    if (!inquiryData && !urlParams.get("session_id")) {
       router.push("/"); // Redirect if no form data found
     } else {
-      setTimeout(() => dispatch(clearInquiryData()), 8000); // Clear after 8 seconds
+      setTimeout(() => dispatch(clearInquiryData()), 8000);
     }
   }, [inquiryData, router, dispatch]);
 
   if (!inquiryData) {
     return null;
-  } // Prevent flash before redirect
+  }
 
   return (
     <Container
