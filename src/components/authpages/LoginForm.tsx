@@ -22,7 +22,6 @@ import Link from "next/link";
 import { useAppDispatch } from "@/store";
 import { useRouter } from "next/navigation";
 import { useAppState } from "@/hooks/useAppState";
-import { checkoutService } from "@/services/checkoutService";
 
 // ✅ Validation Schema
 const schema = yup.object().shape({
@@ -63,7 +62,7 @@ const LoginForm = () => {
       }
 
       if (selectedPlan) {
-        await checkoutService(selectedPlan.name); // Call the checkout service
+        router.push("/checkout"); // Call the checkout service
       } else {
         router.push("/"); // Uncomment if using Next.js router
       }

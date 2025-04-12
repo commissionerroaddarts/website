@@ -11,7 +11,6 @@ import { selectPlan } from "@/store/slices/planSlice";
 import { PlanCardProps } from "@/types/plan";
 import { motion } from "framer-motion";
 import { useAppState } from "@/hooks/useAppState";
-import { checkoutService } from "@/services/checkoutService";
 
 const PlanCard = ({ plan }: PlanCardProps) => {
   const dispatch = useAppDispatch();
@@ -23,7 +22,6 @@ const PlanCard = ({ plan }: PlanCardProps) => {
     dispatch(selectPlan(plan)); // Save to Redux
 
     if (isLoggedIn) {
-      await checkoutService(planName); // Call the checkout service
       router.push("/checkout"); // Redirect to checkout page
     } else {
       router.push("/login"); // Redirect to login page

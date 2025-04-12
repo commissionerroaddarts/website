@@ -21,7 +21,6 @@ import Link from "next/link";
 import { Google } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import { useAppState } from "@/hooks/useAppState";
-import { checkoutService } from "@/services/checkoutService";
 
 // ✅ Validation Schema
 const schema = yup.object().shape({
@@ -57,7 +56,7 @@ const SignupForm = () => {
       }
       toast.success(response.message || "Signup successful!");
       if (selectedPlan) {
-        await checkoutService(selectedPlan.name); // Call the checkout service
+        router.push("/checkout"); // Redirect to login page after successful signup
       } else {
         router.push("/login"); // Redirect to login page after successful signup
       }

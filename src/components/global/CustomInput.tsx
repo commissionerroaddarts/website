@@ -1,5 +1,5 @@
-import { TextField } from "@mui/material";
-import { ComponentProps } from "react";
+import { TextField, InputAdornment } from "@mui/material";
+import { ComponentProps, ReactNode } from "react";
 
 interface CustomInputProps extends ComponentProps<typeof TextField> {
   label: string;
@@ -7,38 +7,58 @@ interface CustomInputProps extends ComponentProps<typeof TextField> {
   rows?: number;
   error?: boolean;
   helperText?: string;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  icon?: ReactNode; // Optional icon
+  iconPosition?: "start" | "end"; // Icon position
+  border?: string; // Optional custom border style
+  borderRadiusPixels?: string; // Optional custom border radius
 }
 
-// Reusable Input Component
 const CustomInput: React.FC<CustomInputProps> = ({
   label,
   multiline = false,
   rows = 1,
   error = false,
   helperText = "",
+  icon,
+  iconPosition = "start",
+  border,
+  borderRadiusPixels,
+  onChange,
   ...rest
 }) => {
   return (
     <TextField
       fullWidth
+      onChange={onChange}
       placeholder={label}
       variant="outlined"
       multiline={multiline}
       rows={multiline ? rows : 1}
       error={error}
       helperText={error ? helperText : ""}
-      sx={{
-        "& .MuiOutlinedInput-root": {
-          // background: "#160C1866",
-          background: " rgba(22, 12, 24, 0.4)",
-          borderRadius: multiline ? "25px" : "50px",
-          outline: "none",
-        },
-        "& .MuiInputBase-input::placeholder": {
-          color: "background: rgba(150, 150, 150, 1)",
+      slotProps={{
+        input: {
+          [iconPosition === "start" ? "startAdornment" : "endAdornment"]:
+            icon ? (
+              <InputAdornment position={iconPosition}>{icon}</InputAdornment>
+            ) : undefined,
         },
       }}
-      {...rest} // Spread remaining props (e.g., value, onChange, etc.)
+      sx={{
+        "& .MuiOutlinedInput-root": {
+          background: "rgba(22, 12, 24, 0.4)",
+          borderRadius: multiline
+            ? borderRadiusPixels ?? "25px"
+            : borderRadiusPixels ?? "50px",
+          outline: "none",
+          border: border ?? "none",
+        },
+        "& .MuiInputBase-input::placeholder": {
+          color: "rgba(150, 150, 150, 1)",
+        },
+      }}
+      {...rest}
     />
   );
 };

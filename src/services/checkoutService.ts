@@ -7,12 +7,8 @@ const stripePromise = loadStripe(
 );
 export const checkoutService = async (planName: string) => {
   try {
-    const planNameSmallCase = planName.toLowerCase();
-    const planNameRemovePlanWord = planNameSmallCase
-      ?.replace(" plan", "")
-      ?.trim();
     const response = await axiosInstance.post("/subscription/checkout", {
-      plan: planNameRemovePlanWord,
+      plan: planName,
     });
 
     const { id } = response.data;
