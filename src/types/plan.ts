@@ -4,7 +4,9 @@ export interface Plan {
   description?: string;
   icon: string;
   price: string;
-  features: string[];
+  priceId: string;
+  currency: string;
+  features: { name: string }[];
   bgColor: string;
   featured?: boolean;
 }

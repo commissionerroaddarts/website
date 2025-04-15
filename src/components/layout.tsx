@@ -15,14 +15,6 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Link from "next/link";
 
-import { loadStripe } from "@stripe/stripe-js";
-import { Elements } from "@stripe/react-stripe-js";
-
-// Load your Stripe public key
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? ""
-);
-
 interface LayoutProps {
   readonly children: ReactNode;
 }
@@ -138,9 +130,7 @@ export default function Layout({ children }: LayoutProps) {
         }}
       >
         {!isHomePage && <Navbar />}
-        <Elements stripe={stripePromise}>
-          <main>{children}</main>
-        </Elements>
+        <main>{children}</main>
         <Footer />
       </div>
     </ThemeProvider>

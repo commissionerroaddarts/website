@@ -2,8 +2,11 @@
 import React from "react";
 import { Box, Typography, Divider } from "@mui/material";
 import Image from "next/image";
+import { useAppState } from "@/hooks/useAppState";
 
 const CheckoutSummary = () => {
+  const { plan } = useAppState(); // Assuming you have a plan object in your Redux store
+  const { selectedPlan, promoCode } = plan; // Get the selected plan from Redux store
   return (
     <Box
       className="w-full bg-[#1f0b2e] relative text-white rounded-2xl p-4 space-y-5 shadow-lg mx-auto"
@@ -104,25 +107,25 @@ const CheckoutSummary = () => {
       </Box>
 
       {/* Order Info */}
-      <Box className="space-y-4 text-md px-4 mb-11">
+      <Box className="space-y-4 text-md px-4 mb-5">
         <Box className="flex justify-between">
           <Typography className="text-gray-400">Plan</Typography>
-          <Typography className="font-semibold">Business Plan</Typography>
+          <Typography className="font-semibold capitalize">
+            {selectedPlan?.name}
+          </Typography>
         </Box>
-        {/* <Box className="flex justify-between">
-          <Typography className="text-gray-400">Order no</Typography>
-          <Typography className="font-semibold">03847456</Typography>
-        </Box> */}
-        <Box className="flex justify-between">
-          <Typography className="text-gray-400">Promo Code</Typography>
-          <Typography className="font-semibold">Road123</Typography>
-        </Box>
+        {promoCode !== "" && (
+          <Box className="flex justify-between">
+            <Typography className="text-gray-400">Promo Code</Typography>
+            <Typography className="font-semibold">{promoCode}</Typography>
+          </Box>
+        )}
       </Box>
 
       <Divider sx={{ borderColor: "white", borderStyle: "dashed" }} />
 
       {/* Payment Info */}
-      <Box className="flex pt-6 pb-2 mt-4 justify-between items-center">
+      <Box className="flex pt-6 pb-2 mt-6 justify-between items-center">
         <Box>
           <Typography className="text-sm text-gray-400">
             You have to pay
@@ -131,7 +134,15 @@ const CheckoutSummary = () => {
             className=" font-bold tracking-wide"
             sx={{ fontSize: "2rem", color: "white" }}
           >
-            799.99 <span className="font-normal">USD</span>
+            {selectedPlan?.price
+              ? parseInt(selectedPlan.price).toFixed(2)
+              : "0.00"}{" "}
+            <span
+              className="font-normal uppercase"
+              style={{ fontSize: "1rem", textTransform: "uppercase" }}
+            >
+              {selectedPlan?.currency}
+            </span>
           </Typography>
         </Box>
         <Image

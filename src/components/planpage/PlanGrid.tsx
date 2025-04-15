@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Box, Card, CardContent, Typography } from "@mui/material";
+import { Box, Card, CardContent, Grid2, Typography } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ThemeButton from "@/components/buttons/ThemeButton";
 import ThemeOutlineButton from "@/components/buttons/ThemeOutlineButton";
@@ -8,9 +8,41 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/store";
 import { selectPlan } from "@/store/slices/planSlice";
-import { PlanCardProps } from "@/types/plan";
+import { Plan, PlanCardProps } from "@/types/plan";
 import { motion } from "framer-motion";
 import { useAppState } from "@/hooks/useAppState";
+
+const PlanGrid = ({ plans }: { plans: Plan[] }) => {
+  return (
+    <Box
+      sx={{
+        textAlign: "center",
+        mt: 5,
+      }}
+    >
+      <Typography variant="h4" color="white" gutterBottom>
+        Select Your Plan
+      </Typography>
+      <Typography color="white" mb={4}>
+        Find the perfect plan to showcase your listings and grow your audience.
+      </Typography>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          gap: "20px",
+          flexWrap: "wrap",
+        }}
+      >
+        {plans.map((plan: Plan) => (
+          <Grid2 size={{ xs: 12, sm: 6, md: 4 }} key={plan.id}>
+            <PlanCard key={plan.id} plan={plan} />
+          </Grid2>
+        ))}
+      </div>
+    </Box>
+  );
+};
 
 const PlanCard = ({ plan }: PlanCardProps) => {
   const dispatch = useAppDispatch();
@@ -68,11 +100,11 @@ const PlanCard = ({ plan }: PlanCardProps) => {
               {plan.name}
             </Typography>
             <Typography variant="h3" align="center">
-              {plan.price}
+              ${plan.price}
               <span style={{ fontSize: "1rem" }}>/month</span>
             </Typography>
             <Typography align="center" sx={{ opacity: 0.8 }}>
-              Billed annually.
+              Billed annually
             </Typography>
           </Box>
           <motion.div
@@ -89,7 +121,7 @@ const PlanCard = ({ plan }: PlanCardProps) => {
           >
             {plan.features.map((feature, index) => (
               <motion.div
-                key={feature}
+                key={feature.name}
                 variants={{
                   hidden: { opacity: 0, x: 20 },
                   visible: { opacity: 1, x: 0 },
@@ -102,7 +134,7 @@ const PlanCard = ({ plan }: PlanCardProps) => {
                       marginRight: "8px",
                     }}
                   />{" "}
-                  {feature}
+                  {feature?.name}
                 </Typography>
               </motion.div>
             ))}
@@ -126,4 +158,4 @@ const PlanCard = ({ plan }: PlanCardProps) => {
   );
 };
 
-export default PlanCard;
+export default PlanGrid;

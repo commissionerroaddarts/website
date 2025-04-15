@@ -32,14 +32,19 @@ export const checkoutService = async (planName: string) => {
   }
 };
 
-
-export const createCheckoutSession = async (priceId: string, promoCode:string) => {
+export const createCheckoutSession = async (
+  priceId: string,
+  promoCode: string
+) => {
   try {
-    const response = await axiosInstance.post("/subscription/create-payment-intent", {
-    // const response = await axiosInstance.post("/subscription/checkout", {
-      priceId,
-      promoCode,
-    });
+    const response = await axiosInstance.post(
+      "/subscription/create-payment-intent",
+      {
+        // const response = await axiosInstance.post("/subscription/checkout", {
+        priceId,
+        promoCode,
+      }
+    );
     return response.data; // { id } or { clientSecret }
   } catch (error) {
     console.error("Error creating checkout session:", error);

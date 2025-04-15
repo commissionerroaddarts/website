@@ -1,24 +1,23 @@
-// pages/checkout.js
 "use client";
-
-import React, { useEffect, useState } from "react";
-import { loadStripe, StripeElementsOptions } from "@stripe/stripe-js";
-import {
-  EmbeddedCheckoutProvider,
-  EmbeddedCheckout,
-} from "@stripe/react-stripe-js";
+import { StripeElementsOptions, loadStripe } from "@stripe/stripe-js";
 import { createCheckoutSession } from "@/services/checkoutService";
+import { useEffect, useState } from "react";
+import {
+  EmbeddedCheckout,
+  EmbeddedCheckoutProvider,
+} from "@stripe/react-stripe-js";
+import { useAppState } from "@/hooks/useAppState";
 
+// Load your Stripe public key
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? ""
 );
 
-const CheckoutPage = () => {
-  const priceId = "price_1RBudDFPgpuDm99R5rM1lpr4"; // Replace with your price ID
-
+export default function CheckoutFormWrapper() {
+  const { plan } = useAppState(); // Assuming you have a plan object in your Redux store
+  const { selectedPlan, promoCode } = plan; // Get the selected plan from Redux store
+  const priceId = selectedPlan?.priceId; // Get the price ID from the selected plan
   const [clientSecret, setClientSecret] = useState("");
-
-  const [promocode, setPromocode] = useState("");
 
   useEffect(() => {
     if (!priceId) return;
@@ -27,7 +26,7 @@ const CheckoutPage = () => {
       try {
         const { clientSecret } = await createCheckoutSession(
           priceId,
-          promocode
+          promoCode
         );
         setClientSecret(clientSecret);
       } catch (error) {
@@ -38,25 +37,23 @@ const CheckoutPage = () => {
     initCheckout();
   }, [priceId]);
 
-  const options: any = {
+  const options: StripeElementsOptions = {
     clientSecret,
-    // appearance: {
-    //     theme: "flat",
-    //     variables: {
-    //         colorPrimaryText: "#262626",
-    //     },
-    // }
+    appearance: {
+      theme: "flat",
+      variables: {
+        colorPrimaryText: "#262626",
+      },
+    },
   };
 
   return (
-    <div>
+    <>
       {clientSecret && (
         <EmbeddedCheckoutProvider stripe={stripePromise} options={options}>
           <EmbeddedCheckout />
         </EmbeddedCheckoutProvider>
       )}
-    </div>
+    </>
   );
-};
-
-export default CheckoutPage;
+}

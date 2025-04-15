@@ -3,10 +3,12 @@ import { Plan } from "@/types/plan";
 
 interface PlanState {
   selectedPlan: Plan | null;
+  promoCode: string;
 }
 
 const initialState: PlanState = {
   selectedPlan: null,
+  promoCode: "",
 };
 
 const planSlice = createSlice({
@@ -18,6 +20,12 @@ const planSlice = createSlice({
     },
     clearPlan: (state) => {
       state.selectedPlan = null;
+    },
+    setPromoCode: (state, action: PayloadAction<string>) => {
+      state.promoCode = action.payload;
+    },
+    clearPromoCode: (state) => {
+      state.promoCode = "";
     },
   },
 });
