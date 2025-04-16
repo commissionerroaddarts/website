@@ -8,6 +8,7 @@ const CardStaggerAnimation = dynamic(
 );
 import BusinessCard from "./BusinessCard";
 import ThemeOutlineButton from "@/components/buttons/ThemeOutlineButton";
+import Link from "next/link";
 
 const BusinessGrid = () => {
   const { businesses, status, error } = useFetchBusinesses(1, 3); // 2-sec intentional loading
@@ -44,7 +45,9 @@ const BusinessGrid = () => {
         </CardStaggerAnimation>
       </Grid2>
 
-      <ThemeOutlineButton text="View All Businesses" applyMargin={true} />
+      <Link href="/establishments" passHref>
+        <ThemeOutlineButton text="View All Establishments" applyMargin={true} />
+      </Link>
     </Box>
   );
 };

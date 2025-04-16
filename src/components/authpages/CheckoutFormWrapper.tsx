@@ -39,12 +39,12 @@ export default function CheckoutFormWrapper() {
 
   const options: StripeElementsOptions = {
     clientSecret,
-    appearance: {
-      theme: "flat",
-      variables: {
-        colorPrimaryText: "#262626",
-      },
-    },
+    // appearance: {
+    //   theme: "flat",
+    //   variables: {
+    //     colorPrimaryText: "#262626",
+    //   },
+    // },
   };
 
   return (

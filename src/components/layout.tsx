@@ -100,6 +100,7 @@ const icons = [
 export default function Layout({ children }: LayoutProps) {
   const pathname = usePathname(); // Get the current path
   const isHomePage = pathname === "/";
+  const isCheckoutPage = pathname === "/checkout";
   const dispatch = useAppDispatch(); // Get the dispatch function from Redux store
 
   useEffect(() => {
@@ -129,7 +130,7 @@ export default function Layout({ children }: LayoutProps) {
           justifyContent: "space-between",
         }}
       >
-        {!isHomePage && <Navbar />}
+        {!isHomePage && !isCheckoutPage && <Navbar />}
         <main>{children}</main>
         <Footer />
       </div>

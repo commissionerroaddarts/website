@@ -12,8 +12,10 @@ import Preloader from "@/components/global/Preloader";
 
 export default function RootLayout({
   children,
+  modal,
 }: {
   readonly children: React.ReactNode;
+  readonly modal: React.ReactNode;
 }) {
   return (
     <html lang="en">
@@ -37,7 +39,10 @@ export default function RootLayout({
             <PersistGate loading={null} persistor={persistor}>
               <ToastContainer />
             </PersistGate>
-            <Layout>{children}</Layout>
+            <Layout>
+              {modal}
+              {children}
+            </Layout>
           </Providers>
         </Preloader>
       </body>
