@@ -4,7 +4,7 @@ import { Box } from "@mui/material";
 
 interface PreloaderProps {
   duration?: number;
-  children: ReactNode; // ✅ Accept children to wrap content
+  children?: ReactNode; // ✅ Accept children to wrap content
 }
 
 const Preloader = ({ duration = 2000, children }: PreloaderProps) => {

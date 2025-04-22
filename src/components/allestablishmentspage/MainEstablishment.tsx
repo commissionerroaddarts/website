@@ -2,7 +2,6 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-// import { useDebounce } from "use-debounce";
 import { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import MapSection from "./MapSection";
@@ -11,6 +10,7 @@ import BusinessGrid from "./EstablishmentPageGrid";
 import { fetchBusinesses } from "@/services/businessService";
 import { Business, FilterValues } from "@/types/business";
 import { SearchX } from "lucide-react";
+import useDebounce from "@/hooks/useDebounce";
 
 export default function MainEstablishment() {
   const searchParams = useSearchParams();
@@ -37,6 +37,12 @@ export default function MainEstablishment() {
     ageLimit,
   });
 
+  const debouncedSearch = useDebounce(filterParams.search, 500);
+  useEffect(() => {
+    setFilterParams((prev) => ({ ...prev, search: debouncedSearch }));
+    getBusinesses();
+  }, [debouncedSearch]);
+
   const [loading, setLoading] = useState<boolean>(false);
   const [businesses, setBusinesses] = useState<Business[]>([]); // Single object state for all filters
   const getBusinesses = async () => {
@@ -46,9 +52,6 @@ export default function MainEstablishment() {
     setLoading(false);
   };
 
-  useEffect(() => {
-    getBusinesses();
-  }, [filterParams?.search]);
   // Update filter params state and query params in the URL
   const updateQuery = () => {
     const params = new URLSearchParams();
