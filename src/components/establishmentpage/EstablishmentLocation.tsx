@@ -95,9 +95,7 @@ const BasicDetails = ({
             height={30}
             // Apply blur effect
           />
-          <span>
-            {`${city} ${state !== null ? `, ${state}` : ""}, ${country}`}{" "}
-          </span>
+          <span>{`${city}${state ? `, ${state}` : ""}, ${country}`} </span>
         </div>
 
         <a

@@ -1,67 +1,182 @@
 "use client";
 
-import type React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
+import { Box, IconButton, TextField, Typography } from "@mui/material";
 import { StarIcon } from "lucide-react";
-import Image from "next/image";
+import ThemeButton from "../buttons/ThemeButton";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import * as yup from "yup";
 
-export default function RatingForm({ id }: { id?: string }) {
-  const [rating, setRating] = useState(1);
-  const [review, setReview] = useState("");
+import { Rating, SubmittedUserReview } from "@/types/ratings";
+import {
+  postReview,
+  updateReview,
+  deleteReview,
+} from "@/services/ratingService";
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log({ id, rating, review });
-    // Here you would typically send the data to your backend
-    setRating(1);
-    setReview("");
+const schema = yup.object({
+  review: yup
+    .string()
+    .required("Review is required")
+    .min(10, "Review must be at least 10 characters"),
+});
+
+interface RatingFormProps {
+  readonly id: string;
+  readonly selectedRating?: number;
+  readonly establishmentName?: string;
+  readonly submittedReview?: SubmittedUserReview | null;
+}
+
+export default function RatingForm({
+  id: businessId,
+  selectedRating = 1,
+  establishmentName = "this place",
+  submittedReview,
+}: RatingFormProps) {
+  const router = useRouter();
+  const [rating, setRating] = useState<number>(
+    submittedReview?.rating ?? selectedRating
+  );
+  const [hoveredStar, setHoveredStar] = useState<number | null>(null);
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<{ review: string }>({
+    resolver: yupResolver(schema),
+    defaultValues: {
+      review: submittedReview?.text ?? "",
+    },
+  });
+
+  const resetUI = () => {
+    setRating(0);
+    setHoveredStar(null);
+    router.back();
+  };
+
+  const handlePost = async (data: { review: string }) => {
+    const payload: Rating = {
+      business: businessId,
+      rating,
+      text: data.review,
+      img: "",
+    };
+    const res = await postReview(payload);
+    if (res.error)
+      return toast.error(res.error.message ?? "Error posting review");
+    toast.success("Review posted successfully!");
+    resetUI();
+  };
+
+  const handleUpdate = async (data: { review: string }) => {
+    const payload: Rating = {
+      business: businessId,
+      rating,
+      text: data.review,
+      img: "",
+    };
+    const res = await updateReview(businessId, payload);
+    if (res.error)
+      return toast.error(res.error.message ?? "Error updating review");
+    toast.success("Review updated successfully!");
+    resetUI();
+  };
+
+  const handleDelete = async () => {
+    const res = await deleteReview(businessId);
+    if (res.error)
+      return toast.error(res.error.message ?? "Error deleting review");
+    toast.success("Review deleted successfully!");
+    resetUI();
+  };
+
+  const onSubmit = submittedReview ? handleUpdate : handlePost;
+
+  const renderStars = () =>
+    [...Array(5)].map((_, i) => {
+      const star = i + 1;
+      return (
+        <IconButton
+          key={star}
+          onClick={() => setRating(star)}
+          onMouseEnter={() => setHoveredStar(star)}
+          onMouseLeave={() => setHoveredStar(null)}
+          sx={{
+            padding: 0,
+            color: star <= (hoveredStar ?? rating) ? "#ffc341" : "white",
+          }}
+        >
+          <StarIcon
+            size={20}
+            fill={star <= (hoveredStar ?? rating) ? "#ffc341" : "white"}
+            stroke={star <= (hoveredStar ?? rating) ? "#ffc341" : "white"}
+          />
+        </IconButton>
+      );
+    });
+
+  const handleGetButtonText = () => {
+    if (submittedReview) {
+      return isSubmitting ? "Updating..." : "Update Review";
+    } else {
+      return isSubmitting ? "Posting..." : "Post Review";
+    }
   };
 
   return (
-    <div className="relative mb-16">
-      <div className="absolute left-0 top-0">
-        <Image src="/road_darts.png" alt="Target" width={120} height={120} />
-      </div>
+    <Box sx={{ position: "relative", mb: 4 }}>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Typography variant="h5" fontWeight="bold" gutterBottom>
+          {submittedReview ? "Edit Your Review for" : "Rate"}{" "}
+          <span className="capitalize">{establishmentName}</span>
+        </Typography>
 
-      <div className="pl-32 pt-8">
-        <h1 className="text-4xl font-bold mb-6">Rate the Establishment</h1>
+        <Box sx={{ display: "flex", gap: 0, mb: 2 }}>{renderStars()}</Box>
 
-        <div className="flex space-x-2 mb-8">
-          {[1, 2, 3, 4, 5].map((star) => (
-            <button
-              key={star}
-              onClick={() => setRating(star)}
-              className="focus:outline-none"
-            >
-              <StarIcon
-                size={48}
-                fill={star <= rating ? "#ffc341" : "white"}
-                stroke={star <= rating ? "#ffc341" : "white"}
-                className="cursor-pointer"
+        <Box sx={{ mb: 2 }}>
+          <Controller
+            name="review"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                fullWidth
+                multiline
+                defaultValue={submittedReview?.text ?? field.value}
+                placeholder="Tell us about your experience..."
+                variant="standard"
+                error={!!errors.review}
+                helperText={errors.review?.message}
+                slotProps={{
+                  input: { style: { fontSize: "1rem" } },
+                }}
               />
-            </button>
-          ))}
-        </div>
+            )}
+          />
+        </Box>
 
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <input
-              type="text"
-              value={review}
-              onChange={(e) => setReview(e.target.value)}
-              placeholder="Tell us about your experience..."
-              className="w-full bg-transparent border-b border-white/50 pb-2 focus:outline-none text-xl"
-            />
-          </div>
-
-          <button
+        <Box sx={{ display: "flex", gap: 2 }}>
+          <ThemeButton
             type="submit"
-            className="bg-purple-400 hover:bg-purple-500 text-white font-bold py-3 px-12 rounded-md text-xl transition-colors"
-          >
-            Submit
-          </button>
-        </form>
-      </div>
-    </div>
+            text={handleGetButtonText()}
+            disabled={isSubmitting}
+          />
+          {submittedReview && (
+            <ThemeButton
+              text={"Delete Review"}
+              type="button"
+              onClick={handleDelete}
+              disabled={isSubmitting}
+            />
+          )}
+        </Box>
+      </form>
+    </Box>
   );
 }

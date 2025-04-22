@@ -6,6 +6,7 @@ export interface Address {
 }
 
 export interface User {
+  _id: string;
   firstname: string;
   lastname: string;
   profileImage?: string;
@@ -18,4 +19,6 @@ export interface User {
   socials?: Record<string, string>; // Using a Record to represent a Map
   status?: "verified" | "unverified" | "deleted";
   role?: "admin" | "user" | "owner";
+  createdAt?: Date;
+  updatedAt?: Date;
 }

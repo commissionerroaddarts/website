@@ -30,6 +30,7 @@ export const getPlans = async () => {
       );
       return {
         ...plan,
+        price: (plan.price / 100).toFixed(2),
         icon: matchingPlan?.icon ?? null,
         featured: matchingPlan?.featured ?? false,
         bgColor: matchingPlan?.bgColor ?? null,

@@ -14,6 +14,7 @@ interface Props {
   label: string;
   value: string | number;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  name?: string;
 }
 
 const theme = createTheme({
@@ -58,7 +59,14 @@ const theme = createTheme({
   },
 });
 
-const SelectSearchDropDown = ({ options, label, value, onChange }: Props) => {
+const SelectSearchDropDown = ({
+  options,
+  label,
+  value,
+  onChange,
+  name,
+  ...rest
+}: Props) => {
   return (
     <ThemeProvider theme={theme}>
       <Autocomplete
@@ -66,11 +74,22 @@ const SelectSearchDropDown = ({ options, label, value, onChange }: Props) => {
         id="combo-box-demo"
         options={options}
         sx={{ width: "100%", "::placeholder": { color: "white" } }}
+        onChange={(event, newValue) => {
+          if (newValue) {
+            onChange({
+              target: {
+                name: name ?? "",
+                value: newValue.value,
+              },
+            } as React.ChangeEvent<HTMLInputElement>);
+          }
+        }}
         renderInput={(params) => (
           <TextField
+            name={name}
             variant="outlined"
             value={value}
-            onChange={onChange}
+            {...rest}
             sx={{
               background: "#160C1866",
               color: "white",

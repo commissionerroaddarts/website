@@ -1,4 +1,4 @@
-import { ApiResponse } from "@/types/business";
+import { ApiResponse, FilterValues } from "@/types/business";
 import { baseUrl } from "@/constants/baseUrl";
 import axiosInstance from "@/utils/axiosInstance";
 
@@ -6,12 +6,34 @@ const API_URL = `${baseUrl}/businesses`;
 
 export const fetchBusinesses = async (
   page = 1,
-  limit = 10
+  limit = 10,
+  filters: FilterValues = {}
 ): Promise<ApiResponse> => {
   try {
-    const response = await axiosInstance.get<ApiResponse>(
-      `${API_URL}?page=${page}&limit=${limit}`
-    );
+    // Start building the query string
+    const params = new URLSearchParams();
+
+    // Add static params
+    params.set("page", page.toString());
+    params.set("limit", limit.toString());
+
+    // Add dynamic filters
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value) {
+        if (Array.isArray(value)) {
+          // If the value is an array, join it with commas (or use another separator)
+          params.set(key, value.join(","));
+        } else {
+          params.set(key, value.toString());
+        }
+      }
+    });
+
+    // Build the final URL with the query parameters
+    const url = `${API_URL}?${params.toString()}`;
+
+    // Make the API request
+    const response = await axiosInstance.get<ApiResponse>(url);
     return response.data;
   } catch (error) {
     console.error("Error fetching businesses:", error);

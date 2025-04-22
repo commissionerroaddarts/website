@@ -10,11 +10,7 @@ export const metadata = generateMetadata({
   image: "/images/banners/banner-icon.png",
 });
 
-export const revalidate = 300; // Cache the page for 60 seconds
-
-export const PlanPage = async () => {
+export default async function PlanPage() {
   const plans = await getPlans(); // Fetch plans from your service
   return <PlanGrid plans={plans} />;
-};
-
-export default PlanPage;
+}

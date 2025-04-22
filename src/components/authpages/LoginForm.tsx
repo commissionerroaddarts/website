@@ -20,7 +20,7 @@ import ThemeButton from "@/components/buttons/ThemeButton";
 import { Google } from "@mui/icons-material";
 import Link from "next/link";
 import { useAppDispatch } from "@/store";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAppState } from "@/hooks/useAppState";
 
 // ✅ Validation Schema
@@ -45,6 +45,8 @@ const LoginForm = () => {
   const { selectedPlan } = plan; // Assuming you have a custom hook to get user state
   const dispatch = useAppDispatch();
   const router = useRouter(); // Assuming you're using Next.js router
+  const search = useSearchParams(); // Assuming you're using Next.js router
+  const businessId = search.get("business"); // Get the business ID from the URL
 
   if (isLoggedIn) {
     router.push("/profile");
@@ -63,6 +65,8 @@ const LoginForm = () => {
 
       if (selectedPlan) {
         router.push("/checkout"); // Call the checkout service
+      } else if (businessId) {
+        router.push(`/rate/${businessId}`); // Redirect to the business page
       } else {
         router.push("/"); // Uncomment if using Next.js router
       }

@@ -8,12 +8,14 @@ import Navbar from "./global/Navbar";
 import Footer from "./global/Footer";
 import { usePathname } from "next/navigation"; // Correct hook
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { getUserDetails } from "@/services/authService";
 import { useAppDispatch } from "@/store";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Link from "next/link";
+import CloseIcon from "@mui/icons-material/Close";
+import { IconButton } from "@mui/material";
 
 interface LayoutProps {
   readonly children: ReactNode;
@@ -102,6 +104,16 @@ export default function Layout({ children }: LayoutProps) {
   const isHomePage = pathname === "/";
   const isCheckoutPage = pathname === "/checkout";
   const dispatch = useAppDispatch(); // Get the dispatch function from Redux store
+  const [isVisible, setIsVisible] = useState(false);
+
+  const duration = 3500; // Duration in milliseconds (3 seconds)
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, duration);
+    return () => clearTimeout(timer);
+  }, [duration]);
 
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -121,7 +133,11 @@ export default function Layout({ children }: LayoutProps) {
       {/* ✅ Always include metadata */}
 
       <IconsComponent />
-      {isHomePage && <PromoCodePopupComponent />}
+      {isHomePage && isVisible && (
+        <AnimatePresence mode="wait">
+          <PromoCodePopupComponent />
+        </AnimatePresence>
+      )}
       <div
         style={{
           minHeight: "100vh",
@@ -145,33 +161,57 @@ const PromoCodePopupComponent = () => {
   }, []);
 
   const handleClose = () => setOpen(false);
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    border: "none!important",
+    outline: "none!important",
+    p: 4,
+  };
 
   return (
     <Modal
+      keepMounted
       open={open}
       onClose={handleClose}
       sx={{
         backdropFilter: "blur(8px)", // Add blur effect to the overlay background
       }}
+      aria-labelledby="keep-mounted-modal-title"
+      aria-describedby="keep-mounted-modal-description"
     >
-      <Box
-        sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          outline: "none",
-        }}
+      <motion.div
+        initial={{ opacity: 0, y: -100 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 100 }}
+        transition={{ duration: 0.5, ease: "linear" }}
       >
-        <Link href="/plans" passHref>
-          <Image
-            src="/images/banners/promo.svg" // Replace with your image path
-            alt="Promo"
-            width={500} // Adjust width as needed
-            height={500} // Adjust height as needed
-          />
-        </Link>
-      </Box>
+        <Box sx={style}>
+          <IconButton
+            onClick={handleClose}
+            style={{
+              position: "absolute",
+              top: "30px",
+              right: "10px",
+              color: "white",
+              zIndex: 1,
+              fontWeight: "bolder",
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+          <Link href="/plans" passHref>
+            <Image
+              src="/images/banners/promo.svg" // Replace with your image path
+              alt="Promo"
+              width={500} // Adjust width as needed
+              height={500} // Adjust height as needed
+            />
+          </Link>
+        </Box>
+      </motion.div>
     </Modal>
   );
 };

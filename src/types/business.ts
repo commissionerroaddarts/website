@@ -66,6 +66,10 @@ export interface Business {
   status?: "Active" | "Closed Down" | "Coming Soon" | "Under Remodel";
   validation?: Validation;
   bordtype?: "Steel Tip" | "Plastic" | "Both";
+  averageRating?: number;
+  totalReviews?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface ApiResponse {
@@ -74,4 +78,14 @@ export interface ApiResponse {
   totalPages: number;
   page: number;
   limit: number;
+}
+
+export interface FilterValues {
+  search?: string;
+  category?: string;
+  boardType?: string;
+  city?: string;
+  state?: string;
+  zipcode?: string;
+  ageLimit?: number[];
 }
