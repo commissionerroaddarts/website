@@ -13,6 +13,14 @@ export const TabsComponent = () => {
       router.push(`/profile/${newValue}`);
     }
   };
+
+  const tabs = [
+    { label: "Edit Profile", value: "profile" },
+    { label: "Upgrade Plan", value: "upgrade-plan" },
+    { label: "Settings", value: "settings" },
+    { label: "My Reviews", value: "my-reviews" },
+  ];
+
   return (
     <Box
       sx={{
@@ -29,24 +37,39 @@ export const TabsComponent = () => {
         value={pathname.split("/")[2] || "profile"}
         onChange={handleTabChange}
         variant="fullWidth"
-        textColor="primary"
-        indicatorColor="primary"
+        slotProps={{
+          indicator: {
+            style: { display: "none" },
+          },
+        }}
       >
-        <Tab
-          label="Edit Profile"
-          value="profile"
-          sx={{
-            "&.Mui-selected": {
-              background: "rgba(130, 36, 227, 1)",
+        {tabs.map((tab) => (
+          <Tab
+            key={tab.value}
+            label={tab.label}
+            value={tab.value}
+            disabled={
+              pathname.split("/")[2] === tab.value ||
+              (pathname.split("/")[2] === undefined && tab.value === "profile")
+            }
+            sx={{
               borderRadius: "50px",
-              color: "white",
-              border: "none",
-            },
-          }}
-        />
-        <Tab label="Upgrade Plan" value="upgrade-plan" />
-        <Tab label="Settings" value="settings" />
-        <Tab label="My Reviews" value="my-reviews" />
+              "&.Mui-selected": {
+                background: "purple",
+                color: "white",
+                pointerEvents: "none", // Prevent click on active tab
+              },
+              "&:hover": {
+                background:
+                  pathname.split("/")[2] === tab.value ||
+                  (pathname.split("/")[2] === undefined &&
+                    tab.value === "profile")
+                    ? "inherit"
+                    : "#64546766",
+              },
+            }}
+          />
+        ))}
       </Tabs>
     </Box>
   );

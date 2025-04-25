@@ -8,6 +8,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { updateUserPassword } from "@/services/userService";
 import { PasswordChange } from "@/types/user";
 import { TabsComponent } from "../TabsComponent";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 const schema = yup.object().shape({
   password: yup
     .string()
@@ -33,14 +35,19 @@ const AccountSettings = () => {
   } = useForm({
     resolver: yupResolver(schema),
   });
+  const router = useRouter();
 
-  const onSubmit = (data: any) => {
+  const onSubmit = async (data: any) => {
     try {
       const updatedPassword: PasswordChange = {
         newPassword: data.password,
       };
 
-      const response = updateUserPassword(updatedPassword);
+      const response = await updateUserPassword(updatedPassword);
+      if (response.status === 200) {
+        toast.success(response.data.message);
+        router.refresh();
+      }
       console.log("Profile updated successfully:", response);
     } catch (error) {
       console.error("Error updating profile:", error);
@@ -51,7 +58,6 @@ const AccountSettings = () => {
     <Box
       sx={{
         minHeight: "100vh",
-        bgcolor: "background.default",
         display: "flex",
         flexDirection: "column",
       }}
@@ -102,6 +108,7 @@ const AccountSettings = () => {
                     <CustomInput
                       label="Your New Password"
                       fullWidth
+                      type="password"
                       variant="outlined"
                       error={!!errors.password}
                       helperText={errors.password?.message}
@@ -116,6 +123,7 @@ const AccountSettings = () => {
                     <CustomInput
                       label="Confirm New Password"
                       fullWidth
+                      type="password"
                       variant="outlined"
                       error={!!errors.confirmPassword}
                       helperText={errors.confirmPassword?.message}

@@ -21,8 +21,8 @@ export const updateUserProfile = async (data: Partial<User>): Promise<User> => {
 
 export const updateUserPassword = async (data: PasswordChange) => {
   try {
-    const response = await axiosInstance.put("/auth/change-password", data);
-    return response.data; // Expected { message: "Password updated successfully!" }
+    const response = await axiosInstance.post("/auth/change-password", data);
+    return response; // Expected { message: "Password updated successfully!" }
   } catch (error: any) {
     throw error;
   }

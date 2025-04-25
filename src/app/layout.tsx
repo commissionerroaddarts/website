@@ -5,6 +5,14 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Head from "next/head";
 import Preloader from "@/components/global/Preloader";
+import { generateMetadata } from "@/utils/metaData";
+
+export const metadata = generateMetadata({
+  title: "Road Darts - The Ultimate Game",
+  description: "Play and enjoy Road Darts with friends!",
+  url: "/",
+  image: "/images/og-image.png",
+});
 
 export default function RootLayout({
   children,

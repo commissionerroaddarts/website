@@ -6,14 +6,14 @@ import React from "react";
 
 const NotFoundPage = () => {
   return (
-    <div className="flex flex-col gap-3 justify-center items-center">
+    <div className="flex flex-col gap-3 justify-center items-center max-w-[40%] mx-auto">
       <Image
         src="/images/icons/404.png"
         alt="Dart Icon"
-        width={350}
-        height={350}
+        width={550}
+        height={550}
       />
-      <Box className="flex flex-col gap-1 justify-center items-center">
+      <Box className="flex flex-col gap-3 justify-center items-center max-w-[90%] mx-auto">
         <Typography className="text-xl font-bold text-center">
           The page you're looking for might have been removed, had its name
           changed, or is temporarily unavailable

@@ -1,4 +1,5 @@
 "use client";
+import AddEstablishmentForm from "@/components/addestablishment/AddEstablishmentForm";
 import { useAppSelector } from "@/store";
 
 const AddListing = () => {
@@ -8,11 +9,7 @@ const AddListing = () => {
     return <p>No plan selected.</p>;
   }
 
-  return (
-    <div>
-      <h1>Selected Plan ID: {selectedPlan.name}</h1>
-    </div>
-  );
+  return <AddEstablishmentForm />;
 };
 
 export default AddListing;

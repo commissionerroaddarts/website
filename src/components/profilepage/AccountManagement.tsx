@@ -19,7 +19,6 @@ export default function AccountManagementPage() {
     <Box
       sx={{
         minHeight: "100vh",
-        bgcolor: "background.default",
         display: "flex",
         flexDirection: "column",
       }}
