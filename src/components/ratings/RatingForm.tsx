@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Box, Grid2, IconButton, TextField, Typography } from "@mui/material";
 import { StarIcon } from "lucide-react";
 import ThemeButton from "../buttons/ThemeButton";
-import { useForm, Controller, set } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
@@ -12,7 +12,6 @@ import * as yup from "yup";
 
 import {
   PostRatingFormData,
-  Rating,
   RatingsObject,
   SubmittedUserReview,
 } from "@/types/ratings";
@@ -69,7 +68,7 @@ export default function RatingForm({
       spaceAllocated: spaceAllocated ?? 0,
       gamingAmbience: gamingAmbience ?? 0,
     });
-  }, [submittedReview?.ratings]);
+  }, [submittedReview]);
 
   const [hoveredStar, setHoveredStar] = useState<{
     [key in keyof RatingsObject]: number | null;

@@ -1,4 +1,3 @@
-import "leaflet/dist/leaflet.css";
 import { Business, Price } from "@/types/business";
 import Image from "next/image";
 import TimingsPopup from "./TimingsPopup";

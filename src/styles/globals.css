@@ -19,9 +19,6 @@
   --background: #200c27;
   --foreground: white;
   --secondary: #15051b;
-}
-
-@theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
@@ -99,12 +96,6 @@ body::-webkit-scrollbar-thumb {
 
 .slick-list {
   margin: 0 -10px;
-}
-
-/* custom-leaflet.css */
-.leaflet-control-zoom-in span,
-.leaflet-control-zoom-out span {
-  color: black !important; /* Change this to your desired icon color */
 }
 
 .MuiOutlinedInput-root,
