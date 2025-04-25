@@ -1,16 +1,21 @@
 "use client";
 
-import React, { useState } from "react";
-import { Box, IconButton, TextField, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Box, Grid2, IconButton, TextField, Typography } from "@mui/material";
 import { StarIcon } from "lucide-react";
 import ThemeButton from "../buttons/ThemeButton";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, set } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import * as yup from "yup";
 
-import { Rating, SubmittedUserReview } from "@/types/ratings";
+import {
+  PostRatingFormData,
+  Rating,
+  RatingsObject,
+  SubmittedUserReview,
+} from "@/types/ratings";
 import {
   postReview,
   updateReview,
@@ -38,14 +43,48 @@ export default function RatingForm({
   submittedReview,
 }: RatingFormProps) {
   const router = useRouter();
-  const [rating, setRating] = useState<number>(
-    submittedReview?.rating ?? selectedRating
-  );
-  const [hoveredStar, setHoveredStar] = useState<number | null>(null);
+  console.log({ selectedRating });
+  const [rating, setRating] = useState<RatingsObject>({
+    boardCondition: selectedRating ?? 0,
+    throwingLaneConditions: selectedRating ?? 0,
+    lightingConditions: selectedRating ?? 0,
+    spaceAllocated: selectedRating ?? 0,
+    gamingAmbience: selectedRating ?? 0,
+  });
+
+  useEffect(() => {
+    const {
+      boardCondition,
+      throwingLaneConditions,
+      lightingConditions,
+      spaceAllocated,
+      gamingAmbience,
+    } = submittedReview?.ratings ?? {};
+
+    if (!submittedReview) return;
+    setRating({
+      boardCondition: boardCondition ?? 0,
+      throwingLaneConditions: throwingLaneConditions ?? 0,
+      lightingConditions: lightingConditions ?? 0,
+      spaceAllocated: spaceAllocated ?? 0,
+      gamingAmbience: gamingAmbience ?? 0,
+    });
+  }, [submittedReview?.ratings]);
+
+  const [hoveredStar, setHoveredStar] = useState<{
+    [key in keyof RatingsObject]: number | null;
+  }>({
+    boardCondition: null,
+    throwingLaneConditions: null,
+    lightingConditions: null,
+    spaceAllocated: null,
+    gamingAmbience: null,
+  });
 
   const {
     control,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<{ review: string }>({
     resolver: yupResolver(schema),
@@ -54,34 +93,55 @@ export default function RatingForm({
     },
   });
 
+  // Set value when `submittedReview.text` is loaded
+  useEffect(() => {
+    if (submittedReview?.text) {
+      setValue("review", submittedReview.text);
+    }
+  }, [submittedReview, setValue]);
+
   const resetUI = () => {
-    setRating(0);
-    setHoveredStar(null);
+    setRating({
+      boardCondition: 0,
+      throwingLaneConditions: 0,
+      lightingConditions: 0,
+      spaceAllocated: 0,
+      gamingAmbience: 0,
+    });
+    setHoveredStar({
+      boardCondition: null,
+      throwingLaneConditions: null,
+      lightingConditions: null,
+      spaceAllocated: null,
+      gamingAmbience: null,
+    });
     router.back();
   };
 
   const handlePost = async (data: { review: string }) => {
-    const payload: Rating = {
+    const payload: PostRatingFormData = {
       business: businessId,
-      rating,
+      ...rating,
       text: data.review,
       img: "",
     };
     const res = await postReview(payload);
-    if (res.error)
-      return toast.error(res.error.message ?? "Error posting review");
+    if (res.error) toast.error(res.error.message ?? "Error posting review");
     toast.success("Review posted successfully!");
     resetUI();
   };
 
   const handleUpdate = async (data: { review: string }) => {
-    const payload: Rating = {
-      business: businessId,
-      rating,
+    const payload: PostRatingFormData = {
+      ...rating,
       text: data.review,
-      img: "",
+      // img: "",
     };
-    const res = await updateReview(businessId, payload);
+    if (!submittedReview?._id) {
+      toast.error("Review ID is missing. Unable to update review.");
+      return;
+    }
+    const res = await updateReview(submittedReview._id, payload);
     if (res.error)
       return toast.error(res.error.message ?? "Error updating review");
     toast.success("Review updated successfully!");
@@ -89,7 +149,11 @@ export default function RatingForm({
   };
 
   const handleDelete = async () => {
-    const res = await deleteReview(businessId);
+    if (!submittedReview?._id) {
+      toast.error("Review ID is missing. Unable to delete review.");
+      return;
+    }
+    const res = await deleteReview(submittedReview?._id);
     if (res.error)
       return toast.error(res.error.message ?? "Error deleting review");
     toast.success("Review deleted successfully!");
@@ -98,28 +162,74 @@ export default function RatingForm({
 
   const onSubmit = submittedReview ? handleUpdate : handlePost;
 
-  const renderStars = () =>
+  const renderStars = (category: keyof RatingsObject) =>
     [...Array(5)].map((_, i) => {
       const star = i + 1;
+      const isActive = star <= (hoveredStar[category] ?? rating[category] ?? 0);
+
       return (
         <IconButton
-          key={star}
-          onClick={() => setRating(star)}
-          onMouseEnter={() => setHoveredStar(star)}
-          onMouseLeave={() => setHoveredStar(null)}
+          key={`${category}-${star}`}
+          onClick={() => {
+            setRating((prev) => ({
+              ...prev,
+              [category]: star,
+            }));
+            // Apply validation for minimum rating
+            if (star < 1) {
+              toast.error(`${category} rating must be at least 1 star.`);
+            }
+          }}
+          onMouseEnter={() =>
+            setHoveredStar((prev) => ({
+              ...prev,
+              [category]: star, // ✅ dynamic key usage
+            }))
+          }
+          onMouseLeave={() =>
+            setHoveredStar((prev) => ({
+              ...prev,
+              [category]: null, // ✅ dynamic key usage
+            }))
+          }
           sx={{
             padding: 0,
-            color: star <= (hoveredStar ?? rating) ? "#ffc341" : "white",
+            color: isActive ? "#ffc341" : "white",
           }}
         >
           <StarIcon
             size={20}
-            fill={star <= (hoveredStar ?? rating) ? "#ffc341" : "white"}
-            stroke={star <= (hoveredStar ?? rating) ? "#ffc341" : "white"}
+            fill={isActive ? "#ffc341" : "white"}
+            stroke={isActive ? "#ffc341" : "white"}
           />
         </IconButton>
       );
     });
+
+  const renderRatingCategories = () => {
+    const categories = [
+      { key: "boardCondition", label: "Board Condition" },
+      { key: "throwingLaneConditions", label: "Throwing Lane Conditions" },
+      { key: "lightingConditions", label: "Lighting Conditions" },
+      { key: "spaceAllocated", label: "Space Allocated" },
+      { key: "gamingAmbience", label: "Gaming Ambience" },
+    ];
+
+    return (
+      <Grid2 container spacing={2}>
+        {categories.map(({ key, label }) => (
+          <Grid2 size={{ sm: 12, md: 6 }} key={key} sx={{ mb: 2 }}>
+            <Typography variant="subtitle1" gutterBottom>
+              {label}
+            </Typography>
+            <Box sx={{ display: "flex", gap: 0 }}>
+              {renderStars(key as keyof RatingsObject)}
+            </Box>
+          </Grid2>
+        ))}
+      </Grid2>
+    );
+  };
 
   const handleGetButtonText = () => {
     if (submittedReview) {
@@ -137,18 +247,22 @@ export default function RatingForm({
           <span className="capitalize">{establishmentName}</span>
         </Typography>
 
-        <Box sx={{ display: "flex", gap: 0, mb: 2 }}>{renderStars()}</Box>
+        <Box sx={{ display: "flex", gap: 0, mb: 2 }}>
+          {renderRatingCategories()}
+        </Box>
 
         <Box sx={{ mb: 2 }}>
           <Controller
             name="review"
             control={control}
+            defaultValue={submittedReview?.text ?? ""}
             render={({ field }) => (
               <TextField
                 {...field}
                 fullWidth
                 multiline
-                defaultValue={submittedReview?.text ?? field.value}
+                value={field.value} // controlled value
+                onChange={field.onChange} // must handle changes
                 placeholder="Tell us about your experience..."
                 variant="standard"
                 error={!!errors.review}

@@ -1,5 +1,5 @@
 import { BusinessReview } from "@/types/ratings";
-import { Avatar, Box, Typography, Grid2, Divider } from "@mui/material";
+import { Avatar, Box, Typography, Grid2 } from "@mui/material";
 
 interface PastReviewsProps {
   readonly reviews: BusinessReview[];
@@ -30,62 +30,69 @@ export default function PastReviews({
         </Box>
       </Grid2>
 
-      {reviews.length > 0 && (
-        <Grid2 container size={{ xs: 12, sm: 12, md: 8 }} spacing={4}>
-          {reviews.map((review: BusinessReview) => (
-            <Grid2 size={{ xs: 12 }} key={review._id}>
-              <Box display="flex" alignItems="flex-start">
-                <Avatar
-                  src={review.user?.profileImage ?? "/placeholder.svg"}
-                  alt={review.user?.username}
-                  sx={{
-                    width: 40,
-                    height: 40,
-                    mr: 1,
-                    backgroundColor: "rgb(130, 36, 227)",
-                    color: "white",
-                  }}
-                />
-                <Box flex={1}>
-                  <Box
-                    display="flex"
-                    justifyContent="space-between"
-                    alignItems="center"
-                    mb={1}
-                  >
-                    <Box>
-                      <Typography
-                        variant="h6"
-                        fontWeight="bold"
-                        sx={{ fontSize: "1rem" }}
-                      >
-                        {review.user?.username}
-                      </Typography>
-                      <Box display="flex" alignItems="center">
-                        <StarRating rating={review.rating} size="size-4" />
-                        <Typography variant="body2" sx={{ ml: 1 }}>
-                          {review.rating.toFixed(1)}
-                        </Typography>
-                      </Box>
-                    </Box>
-                    <Typography variant="body2" color="textSecondary">
-                      {review.createdAt
-                        ? new Date(review.createdAt).toLocaleDateString()
-                        : "Unknown"}
+      <Grid2 container size={{ xs: 12, sm: 12, md: 8 }} spacing={4}>
+        {reviews.map((review: BusinessReview) => (
+          <Grid2 size={{ xs: 12 }} key={review._id}>
+            <Box display="flex" alignItems="flex-start">
+              <Avatar
+                src={review.user?.profileImage ?? "/placeholder.svg"}
+                alt={review.user?.username}
+                sx={{
+                  width: 40,
+                  height: 40,
+                  mr: 1,
+                  backgroundColor: "rgb(130, 36, 227)",
+                  color: "white",
+                }}
+              />
+              <Box flex={1}>
+                <Box
+                  display="flex"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  mb={1}
+                >
+                  <Box>
+                    <Typography
+                      variant="h6"
+                      fontWeight="bold"
+                      sx={{ fontSize: "1rem" }}
+                    >
+                      {review.user?.username}
                     </Typography>
+                    <Box display="flex" alignItems="center">
+                      <StarRating
+                        rating={review.ratings?.overallRating}
+                        size="size-4"
+                      />
+                      <Typography variant="body2" sx={{ ml: 1 }}>
+                        {review.ratings?.overallRating}
+                      </Typography>
+                    </Box>
                   </Box>
-                  <Typography variant="body2">{review.text}</Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    {review.createdAt
+                      ? new Date(review.createdAt).toLocaleDateString()
+                      : "Unknown"}
+                  </Typography>
                 </Box>
+                <Typography variant="body2">{review.text}</Typography>
               </Box>
-            </Grid2>
-          ))}
-        </Grid2>
-      )}
+            </Box>
+          </Grid2>
+        ))}
+      </Grid2>
     </Grid2>
   );
 }
 
-const StarRating = ({ rating, size }: { rating: number; size: string }) => {
+const StarRating = ({
+  rating,
+  size,
+}: {
+  rating: number | undefined;
+  size: string;
+}) => {
   return (
     <div className="flex">
       {[1, 2, 3, 4, 5].map((star) => (

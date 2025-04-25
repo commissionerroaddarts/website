@@ -13,6 +13,7 @@ export interface User {
   gender?: "Male" | "Female" | "Other";
   dob?: Date;
   email: string;
+  phone: string;
   password: string;
   username?: string;
   address?: Address;
@@ -21,4 +22,8 @@ export interface User {
   role?: "admin" | "user" | "owner";
   createdAt?: Date;
   updatedAt?: Date;
+}
+
+export interface PasswordChange {
+  newPassword: string;
 }

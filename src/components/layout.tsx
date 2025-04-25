@@ -16,6 +16,7 @@ import Box from "@mui/material/Box";
 import Link from "next/link";
 import CloseIcon from "@mui/icons-material/Close";
 import { IconButton } from "@mui/material";
+import { useAppState } from "@/hooks/useAppState";
 
 interface LayoutProps {
   readonly children: ReactNode;
@@ -105,7 +106,8 @@ export default function Layout({ children }: LayoutProps) {
   const isCheckoutPage = pathname === "/checkout";
   const dispatch = useAppDispatch(); // Get the dispatch function from Redux store
   const [isVisible, setIsVisible] = useState(false);
-
+  const { user } = useAppState();
+  const { isLoggedIn } = user;
   const duration = 3500; // Duration in milliseconds (3 seconds)
 
   useEffect(() => {
@@ -123,9 +125,8 @@ export default function Layout({ children }: LayoutProps) {
         console.error("Error fetching user details:", error);
       }
     };
-
     fetchUserDetails();
-  }, [dispatch]);
+  }, [dispatch, isLoggedIn]);
 
   return (
     <ThemeProvider theme={theme}>

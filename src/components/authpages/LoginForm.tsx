@@ -66,7 +66,7 @@ const LoginForm = () => {
       if (selectedPlan) {
         router.push("/checkout"); // Call the checkout service
       } else if (businessId) {
-        router.push(`/rate/${businessId}`); // Redirect to the business page
+        router.back(); // Redirect to the business page
       } else {
         router.push("/"); // Uncomment if using Next.js router
       }

@@ -36,7 +36,12 @@ export default function RatingModal({ id }: { readonly id: string }) {
   }, [id]);
 
   const handleClose = () => {
-    router.back();
+    const previousUrl = document.referrer;
+    if (previousUrl.includes("/login")) {
+      router.push("/establishments");
+    } else {
+      router.back();
+    }
   };
 
   return (
@@ -75,11 +80,13 @@ export default function RatingModal({ id }: { readonly id: string }) {
           submittedReview={submittedReview}
           establishmentName={reviews[0]?.business?.name ?? "The Establishment"}
         />
-        <PastReviews
-          reviews={reviews}
-          averageRating={averageRating}
-          totalReviews={totalReviews}
-        />
+        {reviews.length > 0 && (
+          <PastReviews
+            reviews={reviews}
+            averageRating={averageRating}
+            totalReviews={totalReviews}
+          />
+        )}
       </DialogContent>
     </Dialog>
   );

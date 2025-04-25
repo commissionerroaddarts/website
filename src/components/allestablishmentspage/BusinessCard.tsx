@@ -147,7 +147,7 @@ const RatingStars = ({
 
   const handleStarClick = (star: number) => {
     if (!isLoggedIn) {
-      router.push("/login");
+      router.push(`/login?business=${id}`);
     } else {
       router.push(`/rate/${id}?rating=${star}`);
     }
@@ -186,7 +186,15 @@ const RatingStars = ({
             </svg>
           ))}
         </div>
-        <span className="text-gray text-xs ml-2">Be the first to review!</span>
+        {averageRating > 0 ? (
+          <span className="text-gray text-xs ml-2">
+            {averageRating?.toFixed(1)}
+          </span>
+        ) : (
+          <span className="text-gray text-xs ml-2">
+            Be the first to review!
+          </span>
+        )}
       </div>
     </>
   );

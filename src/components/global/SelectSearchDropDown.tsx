@@ -14,6 +14,7 @@ interface Props {
   label: string;
   value: string | number;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onScroll?: (e: React.UIEvent<HTMLDivElement>) => void;
   name?: string;
 }
 
@@ -64,6 +65,7 @@ const SelectSearchDropDown = ({
   label,
   value,
   onChange,
+  onScroll,
   name,
   ...rest
 }: Props) => {
@@ -74,6 +76,7 @@ const SelectSearchDropDown = ({
         id="combo-box-demo"
         options={options}
         sx={{ width: "100%", "::placeholder": { color: "white" } }}
+        onScroll={onScroll}
         onChange={(event, newValue) => {
           if (newValue) {
             onChange({

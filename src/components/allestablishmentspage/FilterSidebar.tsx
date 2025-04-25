@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Box, Drawer, IconButton, Slider } from "@mui/material";
 import { motion } from "framer-motion";
 import ThemeButton from "@/components/buttons/ThemeButton";
@@ -8,6 +8,8 @@ import SelectSearchDropDown from "@/components/global/SelectSearchDropDown";
 import CustomInput from "@/components/global/CustomInput";
 import { FilterValues } from "@/types/business";
 import { Close } from "@mui/icons-material";
+import { useMemo } from "react";
+import { cities_states } from "@/utils/cities_states"; // Assume this is a JSON file with all US cities
 
 interface SidebarProps {
   open: boolean;
@@ -22,6 +24,9 @@ const FilterSidebar: React.FC<SidebarProps> = ({
   filters,
   setFilters,
 }) => {
+  const [visibleCities, setVisibleCities] = useState(10);
+  const [visibleStates, setVisiblesStates] = useState(10);
+
   const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFilters({
@@ -31,24 +36,44 @@ const FilterSidebar: React.FC<SidebarProps> = ({
   };
 
   const categoryOptions = [
-    { label: "Category 1", value: "category1" },
-    { label: "Category 2", value: "category2" },
+    { label: "Bar & Grill", value: "Bar & Grill" },
+    { label: "Restaurant", value: "Restaurant" },
+    { label: "Gaming Hall", value: "Gaming Hall" },
   ];
 
   const boardTypeOptions = [
-    { label: "Type 1", value: "type1" },
-    { label: "Type 2", value: "type2" },
+    { label: "Steel Tip", value: "Steel Tip" },
+    { label: "Plastic", value: "Plastic" },
+    { label: "Both", value: "Both" },
   ];
 
-  const cityOptions = [
-    { label: "City 1", value: "city1" },
-    { label: "City 2", value: "city2" },
-  ];
+  const cityOptions = useMemo(() => {
+    return cities_states.slice(0, visibleCities).map((cs) => ({
+      label: cs.city + ", " + cs.state,
+      value: cs.city,
+    }));
+  }, [visibleCities]);
 
-  const stateOptions = [
-    { label: "State 1", value: "state1" },
-    { label: "State 2", value: "state2" },
-  ];
+  const stateOptions = useMemo(() => {
+    return cities_states.slice(0, visibleStates).map((cs) => ({
+      label: cs.state,
+      value: cs.state,
+    }));
+  }, []);
+
+  const handleScrollCities = (e: React.UIEvent<HTMLDivElement>) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+    if (scrollTop + clientHeight >= scrollHeight - 10) {
+      setVisibleCities((prev) => Math.min(prev + 10, cities_states.length));
+    }
+  };
+
+  const handleScrollStates = (e: React.UIEvent<HTMLDivElement>) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+    if (scrollTop + clientHeight >= scrollHeight - 10) {
+      setVisiblesStates((prev) => Math.min(prev + 10, cities_states.length));
+    }
+  };
 
   const handleRemoveFilters = () => {
     setFilters({
@@ -94,7 +119,7 @@ const FilterSidebar: React.FC<SidebarProps> = ({
         {/* Category */}
         <Box mb={3}>
           <SelectSearchDropDown
-            label="category"
+            label="Category"
             name="category"
             options={categoryOptions}
             value={filters.category ?? ""}
@@ -142,6 +167,7 @@ const FilterSidebar: React.FC<SidebarProps> = ({
           <SelectSearchDropDown
             label="City"
             name="city"
+            onScroll={handleScrollCities}
             options={cityOptions}
             value={filters.city ?? ""}
             onChange={handleFilterChange}
@@ -153,6 +179,7 @@ const FilterSidebar: React.FC<SidebarProps> = ({
           <SelectSearchDropDown
             label="State"
             name="state"
+            onScroll={handleScrollStates}
             options={stateOptions}
             value={filters.state ?? ""}
             onChange={handleFilterChange}
@@ -170,11 +197,21 @@ const FilterSidebar: React.FC<SidebarProps> = ({
           />
         </Box>
         <div className="flex flex-col justify-center">
+          {/* Apply Button */}
+          <Box display="flex" justifyContent="flex-end">
+            <ThemeButton
+              text="Apply Filters"
+              className="w-full"
+              onClick={onClose}
+              type="submit"
+            />
+          </Box>
+
           {/* Remove Filters Button */}
           {Object.values(filters).some((filter) => filter !== "") && (
             <Box mb={3}>
               <ThemeButton
-                text="Remove Filters"
+                text="Clear Filters"
                 onClick={handleRemoveFilters}
                 variant="outlined"
                 color="secondary"
@@ -192,16 +229,6 @@ const FilterSidebar: React.FC<SidebarProps> = ({
               />
             </Box>
           )}
-
-          {/* Apply Button */}
-          <Box display="flex" justifyContent="flex-end">
-            <ThemeButton
-              text="Apply Filters"
-              className="w-full"
-              onClick={onClose}
-              type="submit"
-            />
-          </Box>
         </div>
       </motion.form>
     </Drawer>

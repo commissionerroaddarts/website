@@ -1,4 +1,5 @@
 import {
+  PostRatingFormData,
   PostReviewResponse,
   Rating,
   RatingResponse,
@@ -27,7 +28,7 @@ export const getAReview = async (id: string): Promise<RatingResponse> => {
 };
 
 export const postReview = async (
-  review: Rating
+  review: PostRatingFormData
 ): Promise<PostReviewResponse> => {
   try {
     const response = await axiosInstance.post(`/reviews`, review);
@@ -50,10 +51,10 @@ export const deleteReview = async (id: string): Promise<PostReviewResponse> => {
 
 export const updateReview = async (
   id: string,
-  review: Rating
+  review: Partial<PostRatingFormData>
 ): Promise<PostReviewResponse> => {
   try {
-    const response = await axiosInstance.put(`/reviews/${id}`, review);
+    const response = await axiosInstance.patch(`/reviews/${id}`, review);
     return response.data;
   } catch (error: any) {
     console.error("Error updating review:", error);
@@ -69,7 +70,7 @@ export const getBusinessReviews = async (
 ): Promise<ReviewApiResponse> => {
   try {
     const response = await axiosInstance.get(
-      `/reviews/${id}?sort=${params}&page=${pageNum}&limit=${limit}`
+      `/reviews?business=${id}&ssort=${params}&page=${pageNum}&limit=${limit}`
     );
     return response.data;
   } catch (error: any) {

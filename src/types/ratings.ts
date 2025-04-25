@@ -1,11 +1,31 @@
 export interface Rating {
   _id?: string;
   business: string;
-  rating: number;
-  img: string;
+  rating: RatingsObject;
+  img?: string;
   text: string;
   createdAt?: Date;
   updatedAt?: Date;
+}
+
+export interface PostRatingFormData {
+  boardCondition: number;
+  throwingLaneConditions: number;
+  lightingConditions: number;
+  spaceAllocated: number;
+  gamingAmbience: number;
+  business?: string;
+  text: string;
+  img?: string;
+}
+
+export interface RatingsObject {
+  boardCondition: number;
+  throwingLaneConditions: number;
+  lightingConditions: number;
+  spaceAllocated: number;
+  gamingAmbience: number;
+  overallRating?: number;
 }
 
 export interface RatingResponse {
@@ -26,7 +46,7 @@ export interface BusinessReview {
     _id: string;
     name: string;
   };
-  rating: number;
+  ratings: RatingsObject;
   text: string;
   createdAt?: string; // ISO Date string
   updatedAt?: string; // ISO Date string
@@ -34,7 +54,7 @@ export interface BusinessReview {
 
 export interface SubmittedUserReview {
   _id: string;
-  rating: number;
+  ratings: RatingsObject;
   text: string;
   createdAt?: Date;
   updatedAt?: Date;

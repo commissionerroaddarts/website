@@ -12,6 +12,9 @@ import {
   ListItemText,
   useMediaQuery,
   useTheme,
+  Avatar,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import Image from "next/image";
@@ -20,8 +23,12 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useAppState } from "@/hooks/useAppState";
 import { logoutUser } from "@/services/authService";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useAppDispatch } from "@/store";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import RateReviewIcon from "@mui/icons-material/RateReview";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { User } from "@/types/user";
 
 const navbarVariants = {
   hidden: { opacity: 0, y: -20 },
@@ -60,7 +67,9 @@ const navLinks = [
     href: "/plans",
     label: "Add Listing",
     style: {
-      background: "#64546766",
+      "&:hover": {
+        background: "#64546766",
+      },
     },
   },
   {
@@ -157,7 +166,9 @@ function Navbar() {
               }}
             >
               <NavLinks isLoggedIn={isLoggedIn} />
-              {isLoggedIn && <ProfileLink />}
+              {isLoggedIn && userDetails && (
+                <ProfileLink userDetails={userDetails} />
+              )}
             </Box>
           )}
         </Toolbar>
@@ -167,19 +178,23 @@ function Navbar() {
 }
 
 const NavLinks = ({ isLoggedIn }: { isLoggedIn: boolean | null }) => {
+  const pathname = usePathname();
+
   return (
     <>
       {navLinks.map(({ href, label, style }) => {
-        if (label === "Sign In" && isLoggedIn) {
-          return null; // Skip rsendering "Sign In" if user is logged in
-        }
+        if (label === "Sign In" && isLoggedIn) return null;
+
+        const isActive = pathname === href;
+
         return (
-          <Link key={href} href={href} passHref prefetch>
+          <Link key={href} href={href}>
             <Button
               sx={{
                 color: "white",
                 padding: "1rem 1.5rem",
                 borderRadius: "86px",
+                backgroundColor: isActive ? "#645467" : "transparent",
                 ...style,
               }}
             >
@@ -192,7 +207,7 @@ const NavLinks = ({ isLoggedIn }: { isLoggedIn: boolean | null }) => {
   );
 };
 
-const ProfileLink = () => {
+const ProfileLink = ({ userDetails }: { userDetails: User }) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const logoutHandler = async () => {
@@ -206,18 +221,63 @@ const ProfileLink = () => {
     }
   };
 
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
-    <Button
-      sx={{
-        color: "white",
-        padding: "1rem 1.5rem",
-        borderRadius: "86px",
-        // ...style,
-      }}
-      onClick={logoutHandler}
-    >
-      Logout
-    </Button>
+    <>
+      <Button
+        sx={{
+          color: "white",
+          padding: "1rem 1.5rem",
+          borderRadius: "86px",
+        }}
+        onClick={handleMenuOpen}
+      >
+        {userDetails?.firstname} {userDetails?.lastname}
+        <Avatar
+          src={userDetails?.profileImage ?? "/images/default-avatar.png"}
+          style={{ borderRadius: "50%", marginLeft: "8px" }}
+        />
+      </Button>
+      <Menu
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleMenuClose}
+        slotProps={{
+          paper: {
+            style: {
+              background:
+                "linear-gradient(152.76deg, #3F0F50 21.4%, #5D1178 54.49%, #200C27 85.73%)",
+              color: "white",
+            },
+          },
+        }}
+      >
+        <MenuItem onClick={() => router.push("/profile")}>
+          <AccountCircleIcon
+            sx={{ marginRight: "8px", paddingBlock: "1rem" }}
+          />
+          View Profile
+        </MenuItem>
+        <MenuItem onClick={() => router.push("/profile/my-reviews")}>
+          <RateReviewIcon sx={{ marginRight: "8px", paddingBlock: "1rem" }} />
+          View Your Reviews
+        </MenuItem>
+        <MenuItem onClick={logoutHandler}>
+          <LogoutIcon sx={{ marginRight: "8px" }} />
+          Logout
+        </MenuItem>
+      </Menu>
+    </>
   );
 };
 

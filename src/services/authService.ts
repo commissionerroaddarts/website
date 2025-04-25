@@ -2,6 +2,7 @@ import axiosInstance from "@/utils/axiosInstance";
 import { LoginFormData, SignupFormData } from "@/types/auth";
 import { clearUserDetails, setUserDetails } from "@/store/slices/userSlice";
 import { AppDispatch } from "@/store";
+import { User } from "@/types/user";
 
 export const loginUser = async (data: LoginFormData, dispatch: AppDispatch) => {
   try {

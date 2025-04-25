@@ -1,29 +1,40 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Box } from "@mui/material";
 import ThemeButton from "@/components/buttons/ThemeButton";
 import SelectSearchDropDown from "@/components/global/SelectSearchDropDown";
+import { cities_states } from "@/utils/cities_states";
+import { useRouter } from "next/navigation";
 
-const categories = [
-  { value: "food", label: "Food" },
-  { value: "service", label: "Service" },
-  { value: "restaurant", label: "Restaurant" },
-];
-
-const cities = [
-  { value: "new-york", label: "New York" },
-  { value: "los-angeles", label: "Los Angeles" },
-  { value: "chicago", label: "Chicago" },
+const categoryOptions = [
+  { label: "Bar & Grill", value: "Bar & Grill" },
+  { label: "Restaurant", value: "Restaurant" },
+  { label: "Gaming Hall", value: "Gaming Hall" },
 ];
 
 const SearchComponent: React.FC = () => {
   const [category, setCategory] = useState("");
   const [city, setCity] = useState("");
+  const router = useRouter();
 
   const handleSearch = () => {
-    console.log("Searching for:", { category, city });
-    // Implement search logic here
+    router.push(`/establishments?category=${category}&city=${city}`); // Implement search logic here
+  };
+  const [visibleCities, setVisibleCities] = useState(10);
+
+  const cityOptions = useMemo(() => {
+    return cities_states.slice(0, visibleCities).map((cs) => ({
+      label: cs.city + ", " + cs.state,
+      value: cs.city,
+    }));
+  }, [visibleCities]);
+
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+    if (scrollTop + clientHeight >= scrollHeight - 10) {
+      setVisibleCities((prev) => Math.min(prev + 10, cities_states.length));
+    }
   };
 
   return (
@@ -55,7 +66,7 @@ const SearchComponent: React.FC = () => {
       }}
     >
       <SelectSearchDropDown
-        options={categories}
+        options={categoryOptions}
         label="What are you looking for?"
         value={category}
         onChange={(e) => setCategory(e.target.value)}
@@ -63,7 +74,8 @@ const SearchComponent: React.FC = () => {
 
       {/* City Dropdown */}
       <SelectSearchDropDown
-        options={cities}
+        options={cityOptions}
+        onScroll={handleScroll}
         label="City"
         value={city}
         onChange={(e) => setCity(e.target.value)}

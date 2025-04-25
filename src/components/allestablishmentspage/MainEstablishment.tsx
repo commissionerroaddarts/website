@@ -56,7 +56,14 @@ export default function MainEstablishment() {
   const updateQuery = () => {
     const params = new URLSearchParams();
     Object.entries(filterParams).forEach(([key, value]) => {
-      if (value) params.set(key, value.toString());
+      console.log(key, value);
+      if (Array.isArray(value)) {
+        if (value.some((v) => v !== null && v !== undefined)) {
+          value.forEach((v) => params.append(key, v.toString()));
+        }
+      } else if (value && value !== "") {
+        params.set(key, value.toString());
+      }
     });
     getBusinesses();
     router.push(`/establishments?${params.toString()}`);
@@ -74,26 +81,36 @@ export default function MainEstablishment() {
       {businesses.length > 0 ? (
         <BusinessGrid businesses={businesses} isLoading={loading} />
       ) : (
-        <div
-          style={{
-            background:
-              "linear-gradient(152.76deg, #3F0F50 21.4%, #5D1178 54.49%, #200C27 85.73%)",
-          }}
-          className="flex justify-center items-center flex-col py-4 gap-3  rounded-lg shadow-md"
-        >
-          <SearchX size={50} color="white" strokeWidth={2} />
-          <h1 className="text-4xl font-bold capitalize ">No results found!</h1>
-          <p>
-            Try searching:{" "}
-            <button
-              className="underline"
-              onClick={(e) => setFilterParams({ search: "Darts" })}
-            >
-              Darts
-            </button>
-          </p>
-        </div>
+        <NoBusinessesFound setFilterParams={setFilterParams} />
       )}
     </Box>
   );
 }
+
+const NoBusinessesFound = ({
+  setFilterParams,
+}: {
+  setFilterParams: (params: FilterValues) => void;
+}) => {
+  return (
+    <div
+      style={{
+        background:
+          "linear-gradient(152.76deg, #3F0F50 21.4%, #5D1178 54.49%, #200C27 85.73%)",
+      }}
+      className="flex justify-center items-center flex-col py-4 gap-3  rounded-lg shadow-md"
+    >
+      <SearchX size={50} color="white" strokeWidth={2} />
+      <h1 className="text-4xl font-bold capitalize ">No results found!</h1>
+      <p>
+        Try searching:{" "}
+        <button
+          className="underline"
+          onClick={(e) => setFilterParams({ search: "Darts" })}
+        >
+          Darts
+        </button>
+      </p>
+    </div>
+  );
+};
