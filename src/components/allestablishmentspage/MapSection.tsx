@@ -57,7 +57,6 @@ const MapSection = ({ businesses, isLoading }: Props) => {
                   <InfoWindow
                     position={loc.position}
                     onCloseClick={() => setActiveMarker(null)}
-                    // pixelOffset={new window.google.maps.Size(0, -30)}
                   >
                     <div className="!text-black">
                       <h3 className="font-bold">{loc.name}</h3>

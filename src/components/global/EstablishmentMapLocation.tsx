@@ -11,25 +11,33 @@ import {
 } from "@vis.gl/react-google-maps";
 import { Location } from "@/types/business";
 
-interface Props {
+interface EstablishmentMapLocationProps {
   location: Location | null;
 }
+
 interface DirectionsProps {
-  destination: google.maps.LatLngLiteral;
-  travelMode: google.maps.TravelMode;
+  destination: { lat: number; lng: number };
+  travelMode: string;
 }
 
-const EstablishmentMapLocation = ({ location }: Props) => {
-  const [infoWindowOpen, setInfoWindowOpen] = useState(false);
-  const [directionsOn, setDirectionsOn] = useState<boolean>(false);
+const EstablishmentMapLocation = ({
+  location,
+}: EstablishmentMapLocationProps) => {
+  const [showDirections, setShowDirections] = useState(false);
+  const [isMapsReady, setIsMapsReady] = useState(false);
 
   const coordinates = location?.geotag
     ? { lat: location.geotag.lat, lng: location.geotag.lng }
     : null;
 
-  const getDirections = async () => {
-    if (!coordinates) return;
-    setDirectionsOn(true);
+  const handleGetDirections = () => {
+    if (coordinates) {
+      setShowDirections(true);
+    }
+  };
+
+  const handleMapLoad = () => {
+    setIsMapsReady(true); // Google Maps API is now ready
   };
 
   if (!coordinates) return <Typography>Loading Map...</Typography>;
@@ -41,35 +49,29 @@ const EstablishmentMapLocation = ({ location }: Props) => {
           <Button
             variant="contained"
             color="primary"
-            onClick={() => getDirections()}
+            onClick={handleGetDirections}
           >
             Get Directions
           </Button>
         </Stack>
+
         <Map
           center={coordinates}
           zoom={14}
           style={{ height: "70vh", borderRadius: "8px" }}
-          zoomControl={true} // ✅ Show zoom in/out buttons
-          zoomControlOptions={{
-            position: google.maps.ControlPosition.RIGHT_BOTTOM, // You can change position
-          }}
-          gestureHandling="greedy" // ✅ Allow map to be movable
-          mapTypeControl={false} // Optional: hide map type buttons
-          streetViewControl={false} // Optional: hide Street View button
-          fullscreenControl={false} // Optional: hide fullscreen button
-          keyboardShortcuts={true}
-          scrollwheel={true}
+          onIdle={handleMapLoad} // <-- ✅ replace onLoad with onIdle
+          gestureHandling="greedy"
+          mapTypeControl={false}
+          streetViewControl={false}
+          fullscreenControl={false}
+          keyboardShortcuts
+          scrollwheel
+          zoomControl={isMapsReady} // only add options when ready
+          zoomControlOptions={{ position: 18 }}
         >
-          <Marker
-            position={coordinates}
-            onClick={() => setInfoWindowOpen((prev) => !prev)}
-          />
-          {directionsOn && (
-            <Directions
-              destination={coordinates}
-              travelMode={google.maps.TravelMode.DRIVING}
-            />
+          <Marker position={coordinates} />
+          {showDirections && (
+            <Directions destination={coordinates} travelMode={"DRIVING"} />
           )}
         </Map>
       </Box>
@@ -85,17 +87,20 @@ const Directions = ({ destination, travelMode }: DirectionsProps) => {
   const [directionsRenderer, setDirectionsRenderer] =
     useState<google.maps.DirectionsRenderer | null>(null);
   const [routes, setRoutes] = useState<google.maps.DirectionsRoute[]>([]);
-  const [routeIndex, setRouteIndex] = useState<number>(0);
+  const [routeIndex, setRouteIndex] = useState(0);
   const [polyline, setPolyline] = useState<google.maps.Polyline | null>(null);
-  const selected = routes[routeIndex];
-  const legs = selected?.legs[0] || [];
+
+  const selectedRoute = routes[routeIndex];
+  const legs = selectedRoute?.legs[0];
 
   useEffect(() => {
     if (!map || !routesLibrary) return;
+
     const service = new routesLibrary.DirectionsService();
-    setDirectionsService(service);
     const renderer = new routesLibrary.DirectionsRenderer();
     renderer.setMap(map);
+
+    setDirectionsService(service);
     setDirectionsRenderer(renderer);
   }, [map, routesLibrary]);
 
@@ -123,25 +128,20 @@ const Directions = ({ destination, travelMode }: DirectionsProps) => {
         const response = await directionsService.route({
           origin,
           destination,
-          travelMode,
+          travelMode: google.maps.TravelMode.DRIVING,
           provideRouteAlternatives: true,
         });
 
         if (response.routes.length > 0) {
           directionsRenderer.setDirections(response);
           setRoutes(response.routes);
-          // Remove any fallback polyline
-          polyline?.setMap(null);
+          polyline?.setMap(null); // Remove fallback polyline if any
         } else {
           throw new Error("No route found");
         }
       } catch (error) {
-        console.warn("Falling back to polyline:", error);
+        console.warn("Falling back to simple polyline:", error);
 
-        // Remove previous directions from renderer if any
-        // directionsRenderer.setDirections({ routes: [] });
-
-        // Get current location again
         const pos = await new Promise<GeolocationPosition>((resolve, reject) =>
           navigator.geolocation.getCurrentPosition(resolve, reject)
         );
@@ -151,7 +151,6 @@ const Directions = ({ destination, travelMode }: DirectionsProps) => {
           lng: pos.coords.longitude,
         };
 
-        // Fallback polyline path
         const line = new google.maps.Polyline({
           path: [origin, destination],
           geodesic: true,
@@ -169,32 +168,37 @@ const Directions = ({ destination, travelMode }: DirectionsProps) => {
     fetchDirections();
   }, [directionsService, directionsRenderer, destination, travelMode, map]);
 
-  if (!legs || !selected) return null;
+  if (!legs) return null;
 
   return (
-    <div className="bg-slate-500 p-3">
-      <h2>{selected.summary}</h2>
-      <p>
-        {legs.start_address.split(",")[0]} to {legs.end_address.split(",")[0]}
-      </p>
-      <p>Distance: {legs.distance?.text}</p>
-      <p>Duration: {legs.duration?.text}</p>
-      <h3>Other Routes:</h3>
-      <ul>
-        {routes.map((route, index) => (
-          <li
-            key={route.summary}
-            className={`cursor-pointer ${
-              index === routeIndex ? "font-bold" : ""
-            }`}
-          >
-            <button onClick={() => setRouteIndex(index)}>
-              {route.summary}
-            </button>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <Box sx={{ mt: 2, p: 2, bgcolor: "grey.200", borderRadius: 2 }}>
+      <Typography variant="h6">{selectedRoute.summary}</Typography>
+      <Typography>
+        {legs.start_address.split(",")[0]} → {legs.end_address.split(",")[0]}
+      </Typography>
+      <Typography>Distance: {legs.distance?.text}</Typography>
+      <Typography>Duration: {legs.duration?.text}</Typography>
+
+      {routes.length > 1 && (
+        <>
+          <Typography variant="subtitle1" sx={{ mt: 2 }}>
+            Other Routes:
+          </Typography>
+          <Stack spacing={1}>
+            {routes.map((route, idx) => (
+              <Button
+                key={route.summary}
+                variant={idx === routeIndex ? "contained" : "outlined"}
+                size="small"
+                onClick={() => setRouteIndex(idx)}
+              >
+                {route.summary}
+              </Button>
+            ))}
+          </Stack>
+        </>
+      )}
+    </Box>
   );
 };
 
