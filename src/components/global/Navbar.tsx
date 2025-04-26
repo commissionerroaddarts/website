@@ -263,13 +263,11 @@ const ProfileLink = ({ userDetails }: { userDetails: User }) => {
         }}
       >
         <MenuItem onClick={() => router.push("/profile")}>
-          <AccountCircleIcon
-            sx={{ marginRight: "8px", paddingBlock: "1rem" }}
-          />
+          <AccountCircleIcon sx={{ marginRight: "8px" }} />
           View Profile
         </MenuItem>
         <MenuItem onClick={() => router.push("/profile/my-reviews")}>
-          <RateReviewIcon sx={{ marginRight: "8px", paddingBlock: "1rem" }} />
+          <RateReviewIcon sx={{ marginRight: "8px" }} />
           View Your Reviews
         </MenuItem>
         <MenuItem onClick={logoutHandler}>
