@@ -12,6 +12,7 @@ interface Props {
   setFilters: (filters: FilterValues) => void;
   updateQuery: () => void;
   isLoading: boolean;
+  isFilteration?: boolean;
 }
 
 const FilterSection = ({
@@ -19,6 +20,7 @@ const FilterSection = ({
   setFilters,
   updateQuery,
   isLoading,
+  isFilteration = true,
 }: Props) => {
   const [openSidebar, setOpenSidebar] = useState(false);
   const closeSidebar = () => {
@@ -58,18 +60,22 @@ const FilterSection = ({
   return (
     <div className="bg-[#3a2a3e] bg-opacity-50 rounded-lg p-4 mb-8">
       <div className="flex gap-4">
-        <ThemeButton
-          text="Filter"
-          startIcon={handleFilterIcon()}
-          onClick={() => setOpenSidebar(true)}
-        />
+        {isFilteration && (
+          <>
+            <ThemeButton
+              text="Filter"
+              startIcon={handleFilterIcon()}
+              onClick={() => setOpenSidebar(true)}
+            />
 
-        <FilterSidebar
-          filters={filters}
-          setFilters={setFilters}
-          open={openSidebar}
-          onClose={closeSidebar}
-        />
+            <FilterSidebar
+              filters={filters}
+              setFilters={setFilters}
+              open={openSidebar}
+              onClose={closeSidebar}
+            />
+          </>
+        )}
         <form onSubmit={updateQuery} className="flex gap-4 w-full">
           <div className="flex-grow">
             <CustomInput

@@ -15,7 +15,8 @@ import useDebounce from "@/hooks/useDebounce";
 export default function MainEstablishment() {
   const searchParams = useSearchParams();
   const router = useRouter();
-
+  const [loading, setLoading] = useState<boolean>(false);
+  const [businesses, setBusinesses] = useState<Business[]>([]); // Single object state for all filters
   const search = searchParams.get("search") ?? "";
   const category = searchParams.get("category") ?? "";
   const boardType = searchParams.get("boardType") ?? "";
@@ -43,8 +44,6 @@ export default function MainEstablishment() {
     getBusinesses();
   }, [debouncedSearch]);
 
-  const [loading, setLoading] = useState<boolean>(false);
-  const [businesses, setBusinesses] = useState<Business[]>([]); // Single object state for all filters
   const getBusinesses = async () => {
     setLoading(true);
     const { data } = await fetchBusinesses(1, 10, filterParams);

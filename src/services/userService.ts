@@ -28,9 +28,19 @@ export const updateUserPassword = async (data: PasswordChange) => {
   }
 };
 
-export const getUserRatings = async (id: string) => {
+export const getUserRatings = async (
+  id: string,
+  filters: {},
+  page = 1,
+  limit = 10
+) => {
   try {
-    const response = await axiosInstance.get(`/reviews?user=${id}`);
+    const response = await axiosInstance.get(
+      `/reviews?user=${id}&page=${page}&limit=${limit}`,
+      {
+        params: filters,
+      }
+    );
     return response.data; // Expected { message: "Ratings fetched successfully!", ratings: [...] }
   } catch (error: any) {
     throw error;

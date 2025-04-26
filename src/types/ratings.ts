@@ -45,7 +45,11 @@ export interface BusinessReview {
   business: {
     _id: string;
     name: string;
+    media?: {
+      logo: "";
+    };
   };
+  img?: string;
   ratings: RatingsObject;
   text: string;
   createdAt?: string; // ISO Date string
