@@ -9,7 +9,7 @@ export interface User {
   _id: string;
   firstname: string;
   lastname: string;
-  profileImage?: string;
+  profileImg?: string;
   gender?: "Male" | "Female" | "Other";
   dob?: Date;
   email: string;
@@ -20,8 +20,17 @@ export interface User {
   socials?: Record<string, string>; // Using a Record to represent a Map
   status?: "verified" | "unverified" | "deleted";
   role?: "admin" | "user" | "owner";
+  subscription?: UserSubscription;
+  subscriptionId?: string;
   createdAt?: Date;
   updatedAt?: Date;
+}
+
+export interface UserSubscription {
+  plan: string;
+  currentPeriodEnd: number; // assuming it's a UNIX timestamp
+  isAutoRenew: boolean;
+  status: string;
 }
 
 export interface PasswordChange {

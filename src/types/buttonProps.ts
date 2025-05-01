@@ -3,4 +3,5 @@ export interface ButtonProps {
   icon?: React.ReactNode;
   text: string;
   applyMargin?: boolean;
+  [key: string]: any; // Allow any other props to be passed
 }

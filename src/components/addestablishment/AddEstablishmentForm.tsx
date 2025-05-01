@@ -1,233 +1,240 @@
 "use client";
 
 import { useState } from "react";
-import { useForm, Controller } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
+import { FormProvider, useForm } from "react-hook-form";
 import * as yup from "yup";
-import { Upload, X } from "lucide-react";
-import CustomInput from "../global/CustomInput";
-import { Box, Dialog, Grid2, IconButton } from "@mui/material";
-import ThemeButton from "../buttons/ThemeButton";
-import StepsIndicator from "./StepsIndicator";
-import LogoUploaderPopup from "./MediaUploader/LogoUploaderPopup";
+import AddEstablishmentLayout from "./Layout/AddEstablishmentLayout";
+import Step1Form from "./Steps/Step1Form";
+import Step4Form from "./Steps/Step4Form";
+import Step3Form from "./Steps/Step3Form";
+import Step2Form from "./Steps/Step2Form";
+import Step5Form from "./Steps/Step5Form";
+import { insertBusiness } from "@/services/businessService";
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
+const SUPPORTED_FORMATS = ["image/jpeg", "image/png", "image/webp"];
 
-// Validation schema using yup
-const schema = yup.object().shape({
-  businessName: yup.string().required("Business Name is required"),
-  businessTagline: yup.string().required("Business Tagline is required"),
-  businessPhoneNumber: yup
-    .string()
-    .matches(/^\d+$/, "Phone Number must be numeric")
-    .required("Business Phone Number is required"),
-  businessWebsite: yup
-    .string()
-    .url("Must be a valid URL")
-    .required("Business Website is required"),
-  shortDescription: yup
-    .string()
-    .required("Short Description is required")
-    .max(500, "Description cannot exceed 500 characters"),
-});
+const stepSchemas = [
+  yup.object().shape({
+    name: yup.string().required("Business Name is required"),
+    tagline: yup.string().required("Business Tagline is required"),
+    phone: yup
+      .string()
+      .matches(/^\d+$/, "Phone Number must be numeric")
+      .required("Business Phone Number is required"),
+    website: yup
+      .string()
+      .url("Must be a valid URL")
+      .required("Website URL is required"),
+    shortDis: yup.string().required("Short Description is required").max(500),
+    tags: yup.array().of(yup.string()).min(1, "At least one tag is required"),
+    category: yup.string().required("Category is required"),
+    boardType: yup.string().required("Board Type is required"),
+    ageLimit: yup
+      .number()
+      .typeError("Age Limit must be a number")
+      .min(0, "Age Limit cannot be negative")
+      .nullable()
+      .required("Age Limit is required"),
+    price: yup.object().shape({
+      category: yup.string().required("Price Category is required"),
+      min: yup.number().required("Minimum Price is required"),
+      max: yup.number().required("Maximum Price is required"),
+    }),
+    businessLogo: yup
+      .mixed()
+      .required("Business Logo is required")
+      .test("fileType", "Unsupported file format", (value) => {
+        const file = value as File;
+        return file && SUPPORTED_FORMATS.includes(file.type);
+      })
+      .test("fileSize", "Max allowed size is 100KB", (value) => {
+        const file = value as File;
+        return file && file.size <= MAX_FILE_SIZE;
+      }),
 
-export default function AddEstablishmentForm() {
-  const [currentStep, setCurrentStep] = useState(1);
-  const totalSteps = 5;
+    images: yup
+      .array()
+      .of(
+        yup
+          .mixed()
+          .required()
+          .test("fileType", "Only JPG/PNG/WEBP images allowed", (value) => {
+            const file = value as File;
+            return file && SUPPORTED_FORMATS.includes(file.type);
+          })
+          .test("fileSize", "Each image must be under 100KB", (value) => {
+            const file = value as File;
+            return file && file.size <= MAX_FILE_SIZE;
+          })
+      )
+      .min(1, "At least one image is required"),
+  }),
+  yup.object().shape({
+    location: yup.object().shape({
+      country: yup.string().required("Country is required"),
+      state: yup.string().required("State is required"),
+      city: yup.string().required("City is required"),
+      zipcode: yup.string().required("Zipcode is required"),
+      geotag: yup.object().shape({
+        lat: yup.number().required(),
+        lng: yup.number().required(),
+      }),
+    }),
+  }),
+  yup.object().shape({
+    timings: yup.object().shape({
+      Monday: yup.object().shape({
+        open: yup.string().required("Open time is required"),
+        close: yup.string().required("Close time is required"),
+      }),
+      Tuesday: yup.object().shape({
+        open: yup.string().required("Open time is required"),
+        close: yup.string().required("Close time is required"),
+      }),
+      Wednesday: yup.object().shape({
+        open: yup.string().required("Open time is required"),
+        close: yup.string().required("Close time is required"),
+      }),
+      Thursday: yup.object().shape({
+        open: yup.string().required("Open time is required"),
+        close: yup.string().required("Close time is required"),
+      }),
+      Friday: yup.object().shape({
+        open: yup.string().required("Open time is required"),
+        close: yup.string().required("Close time is required"),
+      }),
+      Saturday: yup.object().shape({
+        open: yup.string().required("Open time is required"),
+        close: yup.string().required("Close time is required"),
+      }),
+      Sunday: yup.object().shape({
+        open: yup.string().required("Open time is required"),
+        close: yup.string().required("Close time is required"),
+      }),
+    }),
+  }),
+  yup.object().shape({
+    socials: yup.object().shape({
+      facebook: yup.string().url("Invalid Facebook URL").nullable(),
+      instagram: yup.string().url("Invalid Instagram URL").nullable(),
+      twitter: yup.string().url("Invalid Twitter URL").nullable(),
+      linkedin: yup.string().url("Invalid LinkedIn URL").nullable(),
+      youtube: yup.string().url("Invalid YouTube URL").nullable(),
+      tiktok: yup.string().url("Invalid TikTok URL").nullable(),
+    }),
+  }),
+  yup.object().shape({
+    faqs: yup.array().of(
+      yup.object({
+        q: yup.string().required("Question is required"),
+        a: yup.string().required("Answer is required"),
+      })
+    ),
+  }),
+  // more steps schemas if needed
+];
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(schema),
+export default function AddEstablishment() {
+  const methods = useForm({
+    mode: "onBlur",
     defaultValues: {
-      businessName: "",
-      businessTagline: "",
-      businessPhoneNumber: "",
-      businessWebsite: "",
-      shortDescription: "",
+      name: "",
+      tagline: "",
+      phone: "",
+      website: "",
+      shortDis: "",
+      location: {
+        geotag: {
+          lat: 0,
+          lng: 0,
+        },
+        state: "",
+        city: "",
+        country: "",
+        zipcode: "",
+      },
+      price: {
+        category: "$" as "$" | "$$" | "$$$" | "$$$$",
+        min: 0,
+        max: 0,
+      },
+      bordtype: "Both" as "Steel Tip" | "Plastic" | "Both",
+      timings: {},
+      socials: {
+        facebook: "",
+        instagram: "",
+        twitter: "",
+        linkedin: "",
+        youtube: "",
+        tiktok: "",
+      },
+      faqs: [{ q: "", a: "" }],
+      ageLimit: 0,
+      category: "",
+      tags: [],
+      images: [],
+      businessLogo: "",
+      status: "Active" as
+        | "Active"
+        | "Closed Down"
+        | "Coming Soon"
+        | "Under Remodel",
     },
   });
 
-  const onSubmit = (data: any) => {
-    console.log("Form Data:", data);
-    setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+  const [currentStep, setCurrentStep] = useState(1);
+  const totalSteps = 5;
+  const handleStepSubmit = async (direction: "next" | "prev") => {
+    const currentSchema = stepSchemas[currentStep - 1]; // currentStep is 1-based
+    if (direction === "next" && currentStep === totalSteps) {
+      try {
+        const values = methods.getValues();
+        await currentSchema.validate(values, { abortEarly: false });
+
+        // Call the API service method to insert business
+        const response = await insertBusiness(values);
+        console.log("Business successfully added:", response);
+
+        // Optionally reset the form or navigate to a success page
+        methods.reset();
+      } catch (apiError) {
+        console.error("Failed to add business:", apiError);
+      }
+      return;
+    }
+    try {
+      if (direction === "next") {
+        const values = methods.getValues();
+        await currentSchema.validate(values, { abortEarly: false });
+
+        setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+        console.log("Form data:", values);
+      } else {
+        setCurrentStep((prev) => Math.max(prev - 1, 1));
+      }
+    } catch (validationError: any) {
+      if (validationError?.inner) {
+        validationError?.inner.forEach((err: any) => {
+          methods.setError(err.path, { type: "manual", message: err.message });
+        });
+      }
+      console.error("Validation failed!", validationError);
+    }
   };
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold mb-2">Add New Establishments</h1>
-        <p className="text-gray-300">
-          Fill in the details to add a new listing to the platform
-        </p>
-      </div>
-
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className=" rounded-3xl p-8 backdrop-blur-sm"
-        style={{
-          background:
-            "linear-gradient(148.71deg, #200C27 2.12%, #6D3880 98.73%)",
-        }}
+    <FormProvider {...methods}>
+      <AddEstablishmentLayout
+        totalSteps={totalSteps}
+        currentStep={currentStep}
+        onStepSubmit={handleStepSubmit}
       >
-        <StepsIndicator currentStep={currentStep} totalSteps={totalSteps} />
-        {/* Form Content */}
-        <Box>
-          <h2 className="text-2xl font-semibold text-center mb-8">
-            Basic Information
-          </h2>
-
-          <UploadButtons />
-
-          {/* Form Fields */}
-          <Grid2 container spacing={2} className="mb-8">
-            <Grid2 size={{ xs: 12, sm: 6 }}>
-              <Controller
-                name="businessName"
-                control={control}
-                render={({ field }) => (
-                  <CustomInput
-                    {...field}
-                    label="Business Name"
-                    type="text"
-                    placeholder="Business Name"
-                    className="bg-transparent border-gray-600 rounded-xl py-6 text-white placeholder:text-gray-400"
-                    error={!!errors.businessName?.message}
-                  />
-                )}
-              />
-            </Grid2>
-            <Grid2 size={{ xs: 12, sm: 6 }}>
-              <Controller
-                name="businessTagline"
-                control={control}
-                render={({ field }) => (
-                  <CustomInput
-                    {...field}
-                    label="Business Tagline"
-                    type="text"
-                    placeholder="Tagline"
-                    className="bg-transparent border-gray-600 rounded-xl py-6 text-white placeholder:text-gray-400"
-                    error={!!errors.businessTagline?.message}
-                  />
-                )}
-              />
-            </Grid2>
-            <Grid2 size={{ xs: 12, sm: 6 }}>
-              <Controller
-                name="businessPhoneNumber"
-                control={control}
-                render={({ field }) => (
-                  <CustomInput
-                    {...field}
-                    label="Business Phone Number"
-                    type="tel"
-                    placeholder="Phone Number"
-                    className="bg-transparent border-gray-600 rounded-xl py-6 text-white placeholder:text-gray-400"
-                    error={!!errors.businessPhoneNumber?.message}
-                  />
-                )}
-              />
-            </Grid2>
-            <Grid2 size={{ xs: 12, sm: 6 }}>
-              <Controller
-                name="businessWebsite"
-                control={control}
-                render={({ field }) => (
-                  <CustomInput
-                    {...field}
-                    label="Business Website"
-                    type="url"
-                    placeholder="Website"
-                    className="bg-transparent border-gray-600 rounded-xl py-6 text-white placeholder:text-gray-400"
-                    error={!!errors.businessWebsite?.message}
-                  />
-                )}
-              />
-            </Grid2>
-            <Grid2 size={{ xs: 12, sm: 12 }}>
-              <Controller
-                name="shortDescription"
-                control={control}
-                render={({ field }) => (
-                  <CustomInput
-                    {...field}
-                    label="Short Description"
-                    multiline
-                    rows={4}
-                    placeholder="Short Description"
-                    className="bg-transparent border-gray-600 rounded-xl min-h-[120px] text-white placeholder:text-gray-400"
-                    error={!!errors.shortDescription?.message}
-                  />
-                )}
-              />
-            </Grid2>
-          </Grid2>
-        </Box>
-
-        {/* Next Button */}
-        <div className="flex justify-center">
-          <ThemeButton text="Next" type="submit" />
-        </div>
-      </form>
-    </div>
+        {currentStep === 1 && <Step1Form />}
+        {currentStep === 2 && <Step2Form />}
+        {currentStep === 3 && <Step3Form />}
+        {currentStep === 4 && <Step4Form />}
+        {currentStep === 5 && <Step5Form />}
+      </AddEstablishmentLayout>
+    </FormProvider>
   );
 }
-
-const UploadButtons = () => {
-  const [uploadLogo, setUploadLogo] = useState(false);
-  const [uploadMedia, setUploadMedia] = useState(false);
-  const [uploadVideo, setUploadVideo] = useState(false);
-
-  return (
-    <div className="flex flex-wrap gap-4 justify-center mb-8">
-      <ThemeButton
-        text="Upload Logo"
-        type="button"
-        icon={<Upload className="w-5 h-5" />}
-        onClickEvent={() => setUploadLogo(true)}
-      />
-      {uploadLogo && (
-        <Dialog
-          maxWidth="sm"
-          fullWidth
-          open={uploadLogo}
-          onClose={() => setUploadLogo(false)}
-          className=" rounded-3xl backdrop-blur-sm relative"
-        >
-          <IconButton
-            sx={{
-              position: "absolute",
-              top: "20px",
-              right: "20px",
-              color: "white",
-              zIndex: 1,
-              background: "#ec6dff",
-              borderRadius: "50%",
-              padding: "0.5rem",
-              "&:hover": {
-                opacity: 0.8,
-              },
-            }}
-            onClick={() => setUploadLogo(false)}
-            aria-label="Close"
-          >
-            <X className="h-5 w-5 text-white" />
-          </IconButton>
-
-          <LogoUploaderPopup />
-        </Dialog>
-      )}
-      <ThemeButton
-        text="Upload Media"
-        type="button"
-        icon={<Upload className="w-5 h-5" />}
-      />
-      <ThemeButton
-        text="Upload Video"
-        type="button"
-        icon={<Upload className="w-5 h-5" />}
-      />
-    </div>
-  );
-};

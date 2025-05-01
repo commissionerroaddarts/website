@@ -37,7 +37,7 @@ export interface Price {
   max?: number;
 }
 
-interface Validation {
+export interface Validation {
   date?: Date;
   status?: "Accredited" | "Validated" | "Not Validated";
 }

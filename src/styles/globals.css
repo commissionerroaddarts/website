@@ -58,7 +58,10 @@ input,
 textarea,
 span,
 li,
-input::placeholder {
+input::placeholder,
+legend,
+fieldset,
+label {
   color: var(--foreground);
   font-family: "Lexend", sans-serif !important; /* Apply Lexend font */
 }

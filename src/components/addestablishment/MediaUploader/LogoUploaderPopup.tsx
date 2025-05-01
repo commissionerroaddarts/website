@@ -1,38 +1,71 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import ThemeButton from "../../buttons/ThemeButton";
 import LogoDropzone from "./FileDropzone";
 import LogoPreviewCropper from "./LogoPreview";
+import { Box, Dialog, IconButton } from "@mui/material";
+import { X } from "lucide-react";
 
-interface FormData {
-  file: File | null;
-}
+const LogoUploaderPopup = ({
+  open,
+  setOpen,
+}: {
+  open: boolean;
+  setOpen: (arg: boolean) => void;
+}) => {
+  return (
+    <Dialog
+      maxWidth="sm"
+      fullWidth
+      open={open}
+      onClose={() => setOpen(false)}
+      className=" rounded-3xl backdrop-blur-sm relative"
+    >
+      <IconButton
+        sx={{
+          position: "absolute",
+          top: "20px",
+          right: "20px",
+          color: "white",
+          zIndex: 1,
+          background: "#ec6dff",
+          borderRadius: "50%",
+          padding: "0.5rem",
+          "&:hover": {
+            opacity: 0.8,
+          },
+        }}
+        onClick={() => setOpen(false)}
+        aria-label="Close"
+      >
+        <X className="h-5 w-5 text-white" />
+      </IconButton>
 
-const LogoUploaderPopup: React.FC = () => {
-  const {
-    handleSubmit,
-    control,
-    setValue,
-    watch,
-    formState: { isSubmitting },
-  } = useForm<FormData>({
-    defaultValues: { file: null },
-  });
-  const file = watch("file");
+      <LogoUploader setOpen={setOpen} />
+    </Dialog>
+  );
+};
+
+const LogoUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
+  const { control, setValue } = useFormContext();
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
+  const [file, setFile] = useState<File | null>(null);
 
   const handleFileChange = (selectedFile: File) => {
-    if (selectedFile) {
-      const reader = new FileReader();
-      reader.onload = () => setImageSrc(reader.result as string);
-      reader.readAsDataURL(selectedFile);
-    }
-    setValue("file", selectedFile);
+    if (!selectedFile) return;
+
+    const reader = new FileReader();
+    reader.onload = () => setImageSrc(reader.result as string);
+    reader.readAsDataURL(selectedFile);
+
+    setFile(selectedFile); // <-- Local state
+    setValue("businessLogo", selectedFile); // <-- Sync with RHF
+
     const fileUrl = URL.createObjectURL(selectedFile);
     setPreviewUrl(fileUrl);
     simulateUpload();
@@ -52,7 +85,7 @@ const LogoUploaderPopup: React.FC = () => {
   };
 
   const handleRemove = () => {
-    setValue("file", null);
+    setValue("businessLogo", null);
     setPreviewUrl(null);
     setUploadProgress(0);
     if (fileInputRef.current) {
@@ -73,19 +106,8 @@ const LogoUploaderPopup: React.FC = () => {
     setPreviewUrl(croppedFileUrl);
   };
 
-  const onSubmit = (data: FormData) => {
-    if (data.file) {
-      simulateUpload(); // Simulate upload progress
-      // Handle the file upload logic here
-      console.log("File ready for upload:", data.file);
-    } else {
-      console.error("No file selected for upload.");
-    }
-  };
-
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
+    <Box
       className="flex flex-col items-center justify-center py-10 p-4"
       style={{
         background: "linear-gradient(148.71deg, #200C27 2.12%, #6D3880 98.73%)",
@@ -96,7 +118,8 @@ const LogoUploaderPopup: React.FC = () => {
       </h1>
 
       <Controller
-        name="file"
+        name="businessLogo"
+        defaultValue={null}
         control={control}
         render={() =>
           !file ? (
@@ -119,13 +142,12 @@ const LogoUploaderPopup: React.FC = () => {
 
       <div className="flex justify-center">
         <ThemeButton
-          text={isSubmitting ? "Uploading..." : "Upload"}
-          type="submit"
+          text={"Upload"}
+          onClick={() => setOpen(false)}
           className="w-full"
-          disabled={isSubmitting}
         />
       </div>
-    </form>
+    </Box>
   );
 };
 

@@ -8,6 +8,8 @@ import { User } from "@/types/user";
 import { useState } from "react";
 import ProfileImageEditor from "./tabs/ProfileImageEditor";
 import Preloader from "@/components/global/Preloader";
+import { toast } from "react-toastify";
+import { updateUserProfileImage } from "@/services/userService";
 
 export default function AccountManagementPage() {
   const { user } = useAppState();
@@ -18,26 +20,11 @@ export default function AccountManagementPage() {
   return (
     <Box
       sx={{
-        minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
       }}
     >
-      <Container sx={{ flex: 1, py: 8 }}>
-        <Box textAlign="center" mb={4}>
-          <Typography
-            variant="h4"
-            fontWeight="bold"
-            color="text.primary"
-            gutterBottom
-          >
-            Manage Your Account
-          </Typography>
-          <Typography color="text.secondary">
-            Shape your profile, aim your journey
-          </Typography>
-        </Box>
-
+      <Container sx={{ flex: 1, py: 2 }}>
         <TabsComponent />
 
         <Box
@@ -71,11 +58,29 @@ export default function AccountManagementPage() {
 
 const ProfileImage = ({ userDetails }: { userDetails: User }) => {
   const [openEditor, setOpenEditor] = useState(false);
-  const [profileImage, setProfileImage] = useState<string>("/placeholder.svg");
+  const [profileImage, setProfileImage] = useState<string>(
+    userDetails?.profileImg ?? "/placeholder.svg"
+  );
 
-  const handleSave = (blob: Blob, fileUrl: string) => {
+  const handleSave = async (blob: Blob, fileUrl: string) => {
     setProfileImage(fileUrl);
     // You can also send `blob` to backend via FormData
+
+    try {
+      // Convert Blob to File
+      const file = new File([blob], "profile-image.jpg", { type: blob.type });
+
+      const formData = new FormData();
+      formData.append("profileImg", file); // Now sending as a File
+      const response = await updateUserProfileImage(formData);
+      if (response.success) {
+        toast.success("Profile image updated successfully!");
+        return;
+      }
+      toast.error("Failed to update profile image.");
+    } catch (error) {
+      console.error("Error saving image:", error);
+    }
   };
 
   return (

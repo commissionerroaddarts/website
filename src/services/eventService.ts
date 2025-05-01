@@ -1,10 +1,10 @@
-import { ApiResponse, Business, FilterValues } from "@/types/business";
+import { ApiResponse, FilterValues } from "@/types/business";
 import { baseUrl } from "@/constants/baseUrl";
 import axiosInstance from "@/utils/axiosInstance";
 
-const API_URL = `${baseUrl}/businesses`;
+const API_URL = `${baseUrl}/events`;
 
-export const fetchBusinesses = async (
+export const fetchEvents = async (
   page = 1,
   limit = 10,
   filters: FilterValues = {}
@@ -36,17 +36,7 @@ export const fetchBusinesses = async (
     const response = await axiosInstance.get<ApiResponse>(url);
     return response.data;
   } catch (error) {
-    console.error("Error fetching businesses:", error);
-    throw error; // Rethrow the error for further handling if needed
-  }
-};
-
-export const insertBusiness = async (data: Partial<Business>) => {
-  try {
-    const response = await axiosInstance.post(`${API_URL}`, data);
-    return response.data;
-  } catch (error) {
-    console.error("Error inserting business:", error);
+    console.error("Error fetching events:", error);
     throw error; // Rethrow the error for further handling if needed
   }
 };

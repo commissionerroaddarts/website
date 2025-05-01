@@ -16,7 +16,7 @@ export const TabsComponent = () => {
 
   const tabs = [
     { label: "Edit Profile", value: "profile" },
-    { label: "Upgrade Plan", value: "upgrade-plan" },
+    // { label: "Upgrade Plan", value: "upgrade-plan" },
     { label: "Settings", value: "settings" },
     { label: "My Reviews", value: "my-reviews" },
   ];

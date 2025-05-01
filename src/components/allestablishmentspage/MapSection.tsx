@@ -8,9 +8,10 @@ import {
   Marker,
   InfoWindow,
 } from "@vis.gl/react-google-maps";
+import { Event } from "@/types/event";
 
 interface Props {
-  businesses: Business[];
+  businesses: Business[] | Event[];
   isLoading: boolean;
 }
 

@@ -6,26 +6,11 @@ const UpgradePlan = () => {
   return (
     <Box
       sx={{
-        minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
       }}
     >
-      <Container sx={{ flex: 1, py: 8 }}>
-        <Box textAlign="center" mb={4}>
-          <Typography
-            variant="h4"
-            fontWeight="bold"
-            color="text.primary"
-            gutterBottom
-          >
-            Manage Your Account
-          </Typography>
-          <Typography color="text.secondary">
-            Shape your profile, aim your journey
-          </Typography>
-        </Box>
-
+      <Container sx={{ flex: 1 }}>
         <TabsComponent />
 
         <Box

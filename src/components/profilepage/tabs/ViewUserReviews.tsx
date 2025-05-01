@@ -11,24 +11,22 @@ import Preloader from "@/components/global/Preloader";
 import FilterSection from "@/components/allestablishmentspage/FilterSection";
 
 import {
-  Avatar,
   Box,
-  Button,
   Card,
   CardContent,
   CardMedia,
-  Chip,
   Container,
   Stack,
   Typography,
 } from "@mui/material";
-import { Star, Edit, Delete } from "@mui/icons-material";
+import { Edit, Delete } from "@mui/icons-material";
 
 import { FilterValues } from "@/types/business";
-import { BusinessReview, Rating } from "@/types/ratings";
+import { BusinessReview } from "@/types/ratings";
 import { toast } from "react-toastify";
-import { deleteReview, updateReview } from "@/services/ratingService";
+import { deleteReview } from "@/services/ratingService";
 import ThemeButton from "@/components/buttons/ThemeButton";
+import Link from "next/link";
 
 const ViewUserReviews = () => {
   const { user } = useAppState();
@@ -41,7 +39,6 @@ const ViewUserReviews = () => {
 
   const [userReviews, setUserReviews] = useState<BusinessReview[] | []>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   const [filterParams, setFilterParams] = useState<FilterValues>({
     search: initialSearch,
@@ -66,9 +63,9 @@ const ViewUserReviews = () => {
         throw new Error("Failed to fetch reviews");
       }
       setUserReviews(response.data ?? []);
-      setError(null);
     } catch (err: any) {
-      setError(err.message);
+      console.error("Error fetching user reviews:", err);
+      toast.error("Failed to fetch reviews. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -107,28 +104,12 @@ const ViewUserReviews = () => {
   return (
     <Box
       sx={{
-        minHeight: "100vh",
         bgcolor: "transparent",
         display: "flex",
         flexDirection: "column",
       }}
     >
-      <Container sx={{ flex: 1, py: 8 }}>
-        {/* Page Title */}
-        <Box textAlign="center" mb={4}>
-          <Typography
-            variant="h4"
-            fontWeight="bold"
-            color="text.primary"
-            gutterBottom
-          >
-            Manage Your Account
-          </Typography>
-          <Typography color="text.secondary">
-            Shape your profile, aim your journey
-          </Typography>
-        </Box>
-
+      <Container sx={{ flex: 1 }}>
         {/* Tabs */}
         <TabsComponent />
 
@@ -143,43 +124,57 @@ const ViewUserReviews = () => {
             mx: "auto",
           }}
         >
-          <Typography
-            variant="h5"
-            fontWeight="bold"
-            color="text.primary"
-            textAlign="center"
-            mb={4}
-          >
-            My Reviews
-          </Typography>
-
-          <FilterSection
-            isLoading={loading}
-            filters={filterParams}
-            setFilters={setFilterParams}
-            updateQuery={updateQuery}
-            isFilteration={false}
-          />
-
-          {/* Reviews list */}
-          <div className="space-y-6 mt-6">
-            {userReviews.length > 0 ? (
-              userReviews.map((review: any) => (
-                <ReviewCard key={review._id} review={review} />
-              ))
-            ) : (
-              <Typography color="text.secondary" align="center">
-                No reviews found.
+          {userReviews.length > 0 ? (
+            <>
+              <Typography
+                variant="h5"
+                fontWeight="bold"
+                color="text.primary"
+                textAlign="center"
+                mb={4}
+              >
+                My Reviews
               </Typography>
-            )}
-          </div>
+
+              <FilterSection
+                isLoading={loading}
+                filters={filterParams}
+                setFilters={setFilterParams}
+                updateQuery={updateQuery}
+                isFilteration={false}
+              />
+              {/* Reviews list */}
+              <div className="space-y-6 mt-6">
+                {userReviews.map((review: any) => (
+                  <ReviewCard
+                    key={review._id}
+                    review={review}
+                    fetchUserReviews={fetchUserReviews}
+                  />
+                ))}
+              </div>
+            </>
+          ) : (
+            <Typography
+              variant="h1"
+              color="text.secondary"
+              fontSize={"2rem"}
+              align="center"
+              textTransform={"capitalize"}
+            >
+              No reviews found
+            </Typography>
+          )}
         </Box>
       </Container>
     </Box>
   );
 };
 
-function ReviewCard({ review }: Readonly<{ review: BusinessReview }>) {
+function ReviewCard({
+  review,
+  fetchUserReviews,
+}: Readonly<{ review: BusinessReview; fetchUserReviews: () => void }>) {
   return (
     <Card sx={{ backgroundColor: "#2a1e2d", borderRadius: "16px", p: 2 }}>
       <Stack
@@ -222,55 +217,43 @@ function ReviewCard({ review }: Readonly<{ review: BusinessReview }>) {
               {new Date(review.createdAt ?? "").toLocaleDateString()}
             </Typography>
           </Stack>
-          <ReviewActions reviewId={review._id} />
+          <ReviewActions
+            reviewId={review._id}
+            businessId={review?.business?._id}
+            fetchUserReviews={fetchUserReviews}
+          />
         </CardContent>
       </Stack>
     </Card>
   );
 }
 
-const ReviewActions = ({ reviewId }: { reviewId: string }) => {
-  const handleEdit = async () => {
-    if (!reviewId) return;
-    try {
-      const updatedReview: Rating = {
-        _id: reviewId,
-        text: "Updated review text",
-        rating: {
-          overallRating: 4,
-          boardCondition: 4,
-          throwingLaneConditions: 4,
-          lightingConditions: 4,
-          spaceAllocated: 4,
-          gamingAmbience: 4,
-        },
-        img: "updated_image_url",
-        business: "business_id",
-      };
-      const response = await updateReview(reviewId, updatedReview);
-      if (response.success) {
-        toast.success("Review updated successfully!");
-      } else {
-        toast.error("Failed to update review.");
-      }
-    } catch (error) {
-      toast.error("Error editing review. Please try again.");
-      console.error("Error editing review:", error);
-    }
-    // Handle edit action
-    console.log("Edit review with ID:", reviewId);
-  };
+const ReviewActions = ({
+  reviewId,
+  businessId,
+  fetchUserReviews,
+}: {
+  reviewId: string;
+  businessId: string;
+  fetchUserReviews: () => void;
+}) => {
+  const [loading, setLoading] = useState(false);
 
   const handleDelete = async () => {
     if (!reviewId) return;
+
+    setLoading(true);
     try {
       const response = await deleteReview(reviewId);
       if (response.success) {
+        setLoading(false);
+        fetchUserReviews(); // Refetch reviews after deletions
         toast.success("Review deleted successfully!");
       } else {
         toast.error("Failed to delete review.");
       }
     } catch (error) {
+      setLoading(false);
       toast.error("Error deleting review. Please try again.");
       console.error("Error deleting review:", error);
     }
@@ -280,14 +263,13 @@ const ReviewActions = ({ reviewId }: { reviewId: string }) => {
 
   return (
     <Stack direction="row" spacing={1}>
-      <ThemeButton
-        icon={<Edit fontSize="small" />}
-        text="Edit"
-        onClickEvent={handleEdit}
-      />
+      <Link href={`/rate/${businessId}`} passHref>
+        <ThemeButton icon={<Edit fontSize="small" />} text={"Edit"} />
+      </Link>
       <ThemeButton
         icon={<Delete fontSize="small" />}
-        text="Delete"
+        text={loading ? "Deleting..." : "Delete"}
+        disabled={loading}
         onClickEvent={handleDelete}
       />
     </Stack>

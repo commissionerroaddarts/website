@@ -7,6 +7,7 @@ const ThemeOutlineButton = ({
   icon,
   text,
   applyMargin,
+  ...rest
 }: ButtonProps) => {
   return (
     <Button
@@ -23,6 +24,7 @@ const ThemeOutlineButton = ({
         gap: "0.5rem",
         alignItems: "center",
       }}
+      {...rest}
     >
       {text}
       {icon && <span>{icon}</span>}

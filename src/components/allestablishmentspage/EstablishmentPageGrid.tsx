@@ -1,8 +1,10 @@
 import BusinessCard from "@/components/allestablishmentspage/BusinessCard";
+import { Business } from "@/types/business";
+import { Event } from "@/types/event";
 import { Skeleton } from "@mui/material";
 
 interface Props {
-  businesses: any[]; // Replace with your type
+  businesses: Business[] | Event[]; // Replace with your type
   isLoading: boolean; // Add a loading state prop
 }
 

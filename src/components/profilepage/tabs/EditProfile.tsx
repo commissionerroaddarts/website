@@ -7,6 +7,9 @@ import { useForm, Controller } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { updateUserProfile } from "@/services/userService";
+import VerificationFormPopup from "@/components/global/VerificationForm";
+import { toast } from "react-toastify";
+import { useState } from "react";
 
 const phoneRegex = /^(\+?\d{1,4}[\s-])?(?!0+\s+,?$)\d{10,14}$/; // Handles intl formats
 const nameRegex = /^[A-Za-z\s\-']+$/; // Allows letters, spaces, hyphens, apostrophes
@@ -96,6 +99,7 @@ const EditProfile = ({ user }: { user: User }) => {
   const {
     control,
     handleSubmit,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm({
     defaultValues: {
@@ -115,7 +119,24 @@ const EditProfile = ({ user }: { user: User }) => {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = (data: any) => {
+  const [showVerification, setShowVerification] = useState(false);
+  const originalEmail = user.email;
+  //store updated email to a state
+  const [pendingData, setPendingData] = useState<any>(null); // to hold form data temporarily
+
+  const onSubmit = async (data: any) => {
+    const emailChanged = data.email !== originalEmail;
+
+    if (emailChanged) {
+      setShowVerification(true);
+      setPendingData(data); // Store the updated email
+      return; // Optionally delay submission until verification
+    }
+
+    handleEditProfile(data);
+  };
+
+  const handleEditProfile = async (data: any) => {
     try {
       const updatedUser = {
         ...user,
@@ -137,8 +158,13 @@ const EditProfile = ({ user }: { user: User }) => {
         },
       };
 
-      const response = updateUserProfile(updatedUser);
-      console.log("Profile updated successfully:", response);
+      const response = await updateUserProfile(updatedUser);
+      if (!response) {
+        toast.error("Failed to update profile. Please try again.");
+        return;
+      }
+      toast.success("Profile updated successfully!");
+      reset(updatedUser); // Optional
     } catch (error) {
       console.error("Error updating profile:", error);
     }
@@ -146,6 +172,16 @@ const EditProfile = ({ user }: { user: User }) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
+      {/* {showVerification && ( */}
+      <VerificationFormPopup
+        email={pendingData?.email} // Use the updated email for verification
+        open={showVerification}
+        onVerified={() => {
+          setShowVerification(false);
+          handleEditProfile(pendingData); // Trigger form submission again
+        }}
+      />
+      {/* )} */}
       <Box mb={4}>
         <Typography
           variant="subtitle1"
@@ -378,7 +414,11 @@ const EditProfile = ({ user }: { user: User }) => {
       </Box>
 
       <Box display="flex" justifyContent="center" mt={4}>
-        <ThemeButton text={isSubmitting ? "Saving..." : "Save"} type="submit" />
+        <ThemeButton
+          text={isSubmitting ? "Saving..." : "Save"}
+          type="submit"
+          disabled={isSubmitting}
+        />
       </Box>
     </form>
   );

@@ -4,13 +4,13 @@ import { Suspense } from "react";
 import Preloader from "@/components/global/Preloader";
 
 export const metadata = generateMetadata({
-  title: "Road Darts - Find the Best Establishments",
-  description: "Discover top establishments near you with Road Darts",
+  title: "Road Darts - Find the Best Events",
+  description: "Discover top events near you with Road Darts",
   url: "/establishments",
   image: "/images/road-darts.png",
 });
 
-export default async function AllEstablishmentsPage() {
+export default async function AllEventsPage() {
   return (
     <Suspense fallback={<Preloader />}>
       <MainEstablishment />

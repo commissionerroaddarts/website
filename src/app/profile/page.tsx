@@ -36,7 +36,7 @@ import AccountManagementPage from "@/components/profilepage/AccountManagement";
 
 //   const title = `${name}'s Profile - Road Darts`;
 //   const description = `View ${name}'s profile details and activity.`;
-//   const imgUrl = user?.profileImage ?? fallbackDetails.profileImage;
+//   const imgUrl = user?.profileImg ?? fallbackDetails.profileImage;
 
 //   return {
 //     title,

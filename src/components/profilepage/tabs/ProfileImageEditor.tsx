@@ -47,6 +47,7 @@ const ProfileImageEditor: React.FC<Props> = ({ open, onClose, onSave }) => {
         croppedAreaPixels
       );
       onSave(blob, fileUrl);
+
       onClose();
     }
   };

@@ -9,10 +9,16 @@ import { useRouter } from "next/navigation";
 const ThankYouMessage = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const { inquiry } = useAppState();
+  const { inquiry, user } = useAppState();
   const { inquiryData } = inquiry;
+  const { userDetails } = user;
+  const name: string | null =
+    inquiryData?.firstname ?? userDetails?.firstname ?? "";
+
+  const email: string | null = inquiryData?.email ?? userDetails?.email ?? "";
+
+  // ✅ Use useState to manage sessionId
   const [sessionId, setSessionId] = useState<string | null>(null);
-  console.log(sessionId);
   // ✅ Use useEffect to get query params
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -25,7 +31,7 @@ const ThankYouMessage = () => {
     }
   }, [inquiryData, router, dispatch]);
 
-  if (!inquiryData) {
+  if (!inquiryData && !sessionId) {
     return null;
   }
 
@@ -47,6 +53,8 @@ const ThankYouMessage = () => {
           justifyContent: "center",
           flexDirection: "column",
           p: 4,
+          maxWidth: "800px",
+          mx: "auto",
         }}
       >
         <Typography
@@ -55,14 +63,28 @@ const ThankYouMessage = () => {
           gutterBottom
           textTransform={"capitalize"}
         >
-          Thank You, {inquiryData?.firstname + " " + inquiryData?.lastname}!
+          Thank You, {name}!
         </Typography>
-        <Typography variant="h6" mb={3}>
-          We received your message: "{inquiryData?.message}".
-        </Typography>
-        <Typography variant="h6">
-          We'll contact you at {inquiryData?.email} soon.
-        </Typography>
+        {sessionId ? (
+          <>
+            <Typography variant="h6" mb={3}>
+              Your payment was successful!
+            </Typography>
+            <Typography variant="h6">
+              We have sent you a confirmation email at {email}. Please check
+              your inbox for the receipt.
+            </Typography>
+          </>
+        ) : (
+          <>
+            <Typography variant="h6" mb={3}>
+              We received your message: "{inquiryData?.message}".
+            </Typography>
+            <Typography variant="h6">
+              We'll contact you at {email} soon.
+            </Typography>
+          </>
+        )}
       </Box>
     </Container>
   );

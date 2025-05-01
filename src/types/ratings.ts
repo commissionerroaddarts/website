@@ -40,7 +40,7 @@ export interface BusinessReview {
     _id: string;
     email: string;
     username: string;
-    profileImage?: string;
+    profileImg?: string;
   };
   business: {
     _id: string;

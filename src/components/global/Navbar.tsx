@@ -15,6 +15,7 @@ import {
   Avatar,
   Menu,
   MenuItem,
+  Tooltip,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import Image from "next/image";
@@ -165,7 +166,10 @@ function Navbar() {
                 alignItems: "center",
               }}
             >
-              <NavLinks isLoggedIn={isLoggedIn} />
+              <NavLinks
+                isLoggedIn={isLoggedIn}
+                subscriptionStatus={userDetails?.subscription?.status ?? ""}
+              />
               {isLoggedIn && userDetails && (
                 <ProfileLink userDetails={userDetails} />
               )}
@@ -177,14 +181,22 @@ function Navbar() {
   );
 }
 
-const NavLinks = ({ isLoggedIn }: { isLoggedIn: boolean | null }) => {
+const NavLinks = ({
+  isLoggedIn,
+  subscriptionStatus,
+}: {
+  isLoggedIn: boolean | null;
+  subscriptionStatus: string | null;
+}) => {
   const pathname = usePathname();
 
   return (
     <>
       {navLinks.map(({ href, label, style }) => {
         if (label === "Sign In" && isLoggedIn) return null;
-
+        if (href === "/plans" && subscriptionStatus === "active") {
+          href = "/add-listing";
+        }
         const isActive = pathname === href;
 
         return (
@@ -231,51 +243,94 @@ const ProfileLink = ({ userDetails }: { userDetails: User }) => {
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
+  const menuItems = [
+    {
+      label: "View Profile",
+      icon: <AccountCircleIcon sx={{ marginRight: "8px" }} />,
+      action: () => router.push("/profile"),
+    },
+    {
+      label: "View Your Reviews",
+      icon: <RateReviewIcon sx={{ marginRight: "8px" }} />,
+      action: () => router.push("/profile/my-reviews"),
+    },
+    {
+      label: "Logout",
+      icon: <LogoutIcon sx={{ marginRight: "8px" }} />,
+      action: logoutHandler,
+    },
+  ];
 
   return (
-    <>
-      <Button
-        sx={{
-          color: "white",
-          padding: "1rem 1.5rem",
-          borderRadius: "86px",
-        }}
-        onClick={handleMenuOpen}
-      >
-        {userDetails?.firstname} {userDetails?.lastname}
-        <Avatar
-          src={userDetails?.profileImage ?? "/images/default-avatar.png"}
-          style={{ borderRadius: "50%", marginLeft: "8px" }}
-        />
-      </Button>
+    <div className="relative z-[200]">
+      <Tooltip title="Account settings">
+        <Button
+          aria-controls={open ? "account-menu" : undefined}
+          aria-haspopup="true"
+          aria-expanded={open ? "true" : undefined}
+          sx={{
+            color: "white",
+            padding: "1rem 1.5rem",
+            borderRadius: "86px",
+          }}
+          onClick={handleMenuOpen}
+        >
+          {userDetails?.firstname} {userDetails?.lastname}
+          <Avatar
+            src={userDetails.profileImg ?? "/images/default-avatar.png"}
+            style={{ borderRadius: "50%", marginLeft: "8px" }}
+          />
+        </Button>
+      </Tooltip>
       <Menu
+        id="account-menu"
         anchorEl={anchorEl}
         open={open}
         onClose={handleMenuClose}
         slotProps={{
           paper: {
-            style: {
-              background:
-                "linear-gradient(152.76deg, #3F0F50 21.4%, #5D1178 54.49%, #200C27 85.73%)",
+            elevation: 0,
+            sx: {
+              overflow: "visible",
+              filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+              "& .MuiAvatar-root": {
+                width: 32,
+                height: 32,
+                ml: -0.5,
+                mr: 1,
+              },
+
+              background: "#160C1866",
               color: "white",
+              borderRadius: "16px",
+              padding: "8px",
+              boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.2)",
+              backdropFilter: "blur(10px)",
             },
           },
         }}
+        transformOrigin={{ horizontal: "center", vertical: "top" }}
+        anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
       >
-        <MenuItem onClick={() => router.push("/profile")}>
-          <AccountCircleIcon sx={{ marginRight: "8px" }} />
-          View Profile
-        </MenuItem>
-        <MenuItem onClick={() => router.push("/profile/my-reviews")}>
-          <RateReviewIcon sx={{ marginRight: "8px" }} />
-          View Your Reviews
-        </MenuItem>
-        <MenuItem onClick={logoutHandler}>
-          <LogoutIcon sx={{ marginRight: "8px" }} />
-          Logout
-        </MenuItem>
+        {menuItems.map(({ label, icon, action }, index) => (
+          <MenuItem
+            key={label}
+            onClick={action}
+            sx={{
+              borderRadius: "16px",
+              padding: "8px 16px",
+              marginBottom: index < 2 ? "8px" : 0, // Add spacing between items except the last one
+              "&:hover": {
+                backgroundColor: "#64546766", // Add hover effect
+              },
+            }}
+          >
+            {icon}
+            {label}
+          </MenuItem>
+        ))}
       </Menu>
-    </>
+    </div>
   );
 };
 

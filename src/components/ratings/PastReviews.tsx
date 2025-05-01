@@ -35,7 +35,7 @@ export default function PastReviews({
           <Grid2 size={{ xs: 12 }} key={review._id}>
             <Box display="flex" alignItems="flex-start">
               <Avatar
-                src={review.user?.profileImage ?? "/placeholder.svg"}
+                src={review.user?.profileImg ?? "/placeholder.svg"}
                 alt={review.user?.username}
                 sx={{
                   width: 40,

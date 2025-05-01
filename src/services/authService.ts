@@ -11,7 +11,6 @@ export const loginUser = async (data: LoginFormData, dispatch: AppDispatch) => {
     return response.data; // Return the full response if needed
   } catch (error: any) {
     console.error("Login error:", error);
-    throw error;
   }
 };
 
@@ -19,11 +18,15 @@ export const getUserDetails = async (dispatch: AppDispatch) => {
   try {
     const response = await axiosInstance.get("/auth/me");
     const userDetails = response.data.data.user; // Assuming the user details are in `response.data.user`
+    const subscription = response.data.data?.subscription; // Assuming the subscription details are in `response.data.subscription`
+    if (subscription) {
+      userDetails["subscription"] = subscription; // Add subscription details to userDetails
+    }
+    console.log(userDetails);
     dispatch(setUserDetails(userDetails)); // Store user details in Redux
     // return response.data; // Return the full response if needed
   } catch (error: any) {
     console.error("Get user details error:", error);
-    throw error;
   }
 };
 
@@ -33,7 +36,6 @@ export const registerUser = async (data: SignupFormData) => {
     return response.data; // Expected { message: "Signup successful!" }
   } catch (error: any) {
     console.error("Signup error:", error);
-    throw error;
   }
 };
 
@@ -45,6 +47,5 @@ export const logoutUser = async (dispatch: AppDispatch) => {
     return response.data; // Expected { message: "Logout successful!" }
   } catch (error: any) {
     console.error("Logout error:", error);
-    throw error;
   }
 };

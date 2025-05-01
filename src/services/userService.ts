@@ -1,3 +1,4 @@
+import { PostReviewResponse } from "@/types/ratings";
 import { PasswordChange, User } from "@/types/user";
 import axiosInstance from "@/utils/axiosInstance";
 
@@ -43,6 +44,26 @@ export const getUserRatings = async (
     );
     return response.data; // Expected { message: "Ratings fetched successfully!", ratings: [...] }
   } catch (error: any) {
+    throw error;
+  }
+};
+
+export const updateUserProfileImage = async (
+  formData: FormData
+): Promise<PostReviewResponse> => {
+  try {
+    const response = await axiosInstance.patch<PostReviewResponse>(
+      `/users/update-profile-img`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return response.data; // Expected { message: "Profile image updated successfully!", user: {...} }
+  } catch (error: any) {
+    console.error("Error updating profile image:", error);
     throw error;
   }
 };
