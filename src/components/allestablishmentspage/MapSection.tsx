@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
-import { Business } from "@/types/business";
+import { useRef, useState } from "react";
 import {
-  APIProvider,
-  Map,
+  GoogleMap,
   Marker,
   InfoWindow,
-} from "@vis.gl/react-google-maps";
+  useJsApiLoader,
+} from "@react-google-maps/api";
+import { Business } from "@/types/business";
 import { Event } from "@/types/event";
 
 interface Props {
@@ -15,65 +15,75 @@ interface Props {
   isLoading: boolean;
 }
 
-const MapSection = ({ businesses, isLoading }: Props) => {
+const containerStyle = {
+  width: "100%",
+  height: "50vh",
+};
+
+const MapSection = ({ businesses }: Props) => {
   const [activeMarker, setActiveMarker] = useState<string | null>(null);
+  const mapRef = useRef<google.maps.Map | null>(null);
 
   const businessLocations = businesses
     .filter((b) => b.location?.geotag)
     .map((b) => ({
-      id: String(b._id),
+      id: String(b._id), // use _id for uniqueness
       name: b.name,
       city: b.location?.city,
       state: b.location?.state,
       description: b.shortDis,
       position: {
-        lat: b.location!.geotag!.lat,
-        lng: b.location!.geotag!.lng,
+        lat: Number(b.location!.geotag!.lat),
+        lng: Number(b.location!.geotag!.lng),
       },
     }));
 
-  // Set default map center to first business location if available
-  const defaultCenter = businessLocations[0]
-    ? businessLocations[0].position
-    : { lat: 37.7749, lng: -122.4194 }; // Default fallback if no business
+  const handleLoad = (map: google.maps.Map) => {
+    mapRef.current = map;
+    if (businessLocations.length > 0) {
+      const bounds = new window.google.maps.LatLngBounds();
+      businessLocations.forEach((loc) => bounds.extend(loc.position));
+      map.fitBounds(bounds);
+    }
+  };
+
+  const { isLoaded, loadError } = useJsApiLoader({
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? "",
+  });
+
+  if (loadError) return <div>Map cannot be loaded right now, sorry.</div>;
+  if (!isLoaded) return <div>Loading Map...</div>;
 
   return (
-    <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? ""}>
-      <section className="container mx-auto my-4">
-        <div className="bg-white rounded-lg overflow-hidden h-[50vh]">
-          {/* Replace GoogleMap from @react-google-maps/api with @vis.gl/react-google-maps */}
-          <Map
-            center={defaultCenter}
-            zoom={12}
-            onClick={() => setActiveMarker(null)} // Close info window on map click
-          >
-            {businessLocations.map((loc) => (
-              <>
-                <Marker
-                  key={loc.id}
-                  position={loc.position}
-                  onClick={() => setActiveMarker(loc.id)}
-                />
-                {activeMarker === loc.id && (
-                  <InfoWindow
-                    position={loc.position}
-                    onCloseClick={() => setActiveMarker(null)}
-                  >
-                    <div className="!text-black">
-                      <h3 className="font-bold">{loc.name}</h3>
-                      <p>
-                        {loc.city}, {loc.state}
-                      </p>
-                      <p className="text-sm text-gray-500">{loc.description}</p>
-                    </div>
-                  </InfoWindow>
-                )}
-              </>
-            ))}
-          </Map>
-        </div>
-      </section>
-    </APIProvider>
+    <section className="container mx-auto my-4">
+      <div className="bg-white rounded-lg overflow-hidden">
+        <GoogleMap
+          mapContainerStyle={containerStyle}
+          onLoad={handleLoad}
+          onClick={() => setActiveMarker(null)}
+        >
+          {businessLocations.map((loc) => (
+            <Marker
+              key={loc.id}
+              position={loc.position}
+              onClick={() => setActiveMarker(loc.id)}
+            >
+              {activeMarker === loc.id && (
+                <InfoWindow onCloseClick={() => setActiveMarker(null)}>
+                  <div className="!text-black">
+                    <h3 className="font-bold">{loc.name}</h3>
+                    <p>
+                      {loc.city}, {loc.state}
+                    </p>
+                    <p className="text-sm text-gray-500">{loc.description}</p>
+                  </div>
+                </InfoWindow>
+              )}
+            </Marker>
+          ))}
+        </GoogleMap>
+      </div>
+    </section>
   );
 };
 

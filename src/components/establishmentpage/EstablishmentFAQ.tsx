@@ -21,7 +21,8 @@ export default function EstablishmentFAQ({ faqs }: EstablishmentFAQProps) {
         <Accordion
           key={faq.q}
           sx={{
-            backgroundColor: "#2B1330",
+            background:
+              "linear-gradient(152.76deg, #3F0F50 21.4%, #5D1178 54.49%, #200C27 85.73%)",
             color: "white",
             mb: 2,
             borderRadius: "8px",

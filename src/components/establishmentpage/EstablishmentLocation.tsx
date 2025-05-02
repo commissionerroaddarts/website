@@ -23,7 +23,7 @@ export default function EstablishmentLocation({
       className="p-4  rounded-lg space-y-4"
       style={{
         background:
-          "linear-gradient(112.11deg, rgba(31, 0, 55, 0.82) 2.19%, rgba(75, 0, 130, 0.1) 95.99%)",
+          "linear-gradient(152.76deg, #3F0F50 21.4%, #5D1178 54.49%, #200C27 85.73%)",
       }}
     >
       {/* Map */}
@@ -96,13 +96,6 @@ const BasicDetails = ({
           />
           <span>{`${city}${state ? `, ${state}` : ""}, ${country}`} </span>
         </div>
-
-        <a
-          href={`https://www.google.com/maps/dir/?api=1&destination=${coordinates[0]},${coordinates[1]}`}
-          className="text-purple-300"
-        >
-          Get Directions
-        </a>
       </Box>
       <div className="flex mt-4 items-center space-x-2">
         <Image

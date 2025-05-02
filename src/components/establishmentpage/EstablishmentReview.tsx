@@ -1,68 +1,60 @@
 "use client";
-import React, { useState } from "react";
-import { Box, Typography, TextField, Rating, Grid2 } from "@mui/material";
-import { PhotoCamera } from "@mui/icons-material";
-import ThemeButton from "@/components/buttons/ThemeButton";
-import ThemeOutlineButton from "@/components/buttons/ThemeOutlineButton";
 
-export default function EstablishmentReview() {
-  const [value, setValue] = useState<number | null>(null);
+import { useSearchParams } from "next/navigation";
+import RatingForm from "@/components/ratings/RatingForm";
+import PastReviews from "@/components/ratings/PastReviews";
+import { Box } from "@mui/material";
+import { getBusinessReviews } from "@/services/ratingService";
+import { useEffect, useState } from "react";
+import { BusinessReview, SubmittedUserReview } from "@/types/ratings";
+
+export default function EstablishmentReview({ id }: { readonly id: string }) {
+  const search = useSearchParams();
+  const rating = search.get("rating") ?? "1"; // Use the ID from the URL or default to "1"
+  const [reviews, setReviews] = useState<BusinessReview[]>([]);
+  const [averageRating, setAverageRating] = useState<number>(0);
+  const [totalReviews, setTotalReviews] = useState<number>(0);
+  const [submittedReview, setSubmittedReview] =
+    useState<SubmittedUserReview | null>(null);
+
+  useEffect(() => {
+    if (!id) return;
+    const fetchReviews = async () => {
+      try {
+        const response = await getBusinessReviews(id, "rating");
+        setReviews(response.data);
+        setAverageRating(response.averageRating);
+        setTotalReviews(response.totalReviews);
+        setSubmittedReview(response.submittedReview);
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
+      }
+    };
+    fetchReviews();
+  }, [id]);
 
   return (
     <Box
-      sx={{
-        backgroundColor: "#1A0120",
-        p: 2,
-        borderRadius: 2,
-        color: "white",
-        mt: 4,
+      style={{
+        padding: "2rem",
+        borderRadius: "1rem",
+        background:
+          "linear-gradient(152.76deg, #3F0F50 21.4%, #5D1178 54.49%, #200C27 85.73%)",
       }}
     >
-      <Typography variant="h6" gutterBottom>
-        Write a review
-      </Typography>
-      <Grid2 container spacing={2} alignItems="center">
-        <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
-          <Rating
-            name="rating"
-            value={value}
-            onChange={(_, newValue) => setValue(newValue)}
-            sx={{
-              color: "white",
-              "& .MuiRating-iconEmpty": {
-                color: "rgba(255, 255, 255, 0.5)",
-              },
-            }}
-          />
-        </Grid2>
-        <Grid2 size={{ xs: 12 }}>
-          <TextField
-            variant="outlined"
-            placeholder="Your Rating"
-            fullWidth
-            slotProps={{
-              input: {
-                style: {
-                  color: "white",
-                  background: "#C4C4C41A", // opacity: 0.5,
-                  borderRadius: 8,
-                  border: "1px solid white",
-                },
-              },
-            }}
-          />
-        </Grid2>
-      </Grid2>
-
-      <Box className="flex items-center gap-4 mt-4">
-        <ThemeButton text="Post Your Review" />
-        <ThemeOutlineButton
-          text="Select Images"
-          icon={<PhotoCamera fontSize="small" />}
+      <RatingForm
+        id={id}
+        selectedRating={parseInt(rating)}
+        submittedReview={submittedReview}
+        establishmentName={reviews[0]?.business?.name ?? "The Establishment"}
+      />
+      {reviews.length > 0 && (
+        <PastReviews
+          reviews={reviews}
+          averageRating={averageRating}
+          totalReviews={totalReviews}
         />
-        {/* Select Images <input hidden accept="image/*" multiple type="file" />
-        </Button> */}
-      </Box>
+      )}
     </Box>
   );
 }

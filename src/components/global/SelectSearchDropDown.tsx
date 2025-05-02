@@ -74,61 +74,59 @@ const SelectSearchDropDown = ({
 }: Props) => {
   return (
     <ThemeProvider theme={theme}>
-      <div className="w-full">
-        <Autocomplete
-          disablePortal
-          id="combo-box-demo"
-          options={options}
-          sx={{ width: "100%", "::placeholder": { color: "white" } }}
-          onScroll={onScroll}
-          onChange={(event, newValue) => {
-            if (newValue) {
-              onChange({
-                target: {
-                  name: name ?? "",
-                  value: newValue.value,
-                },
-              } as React.ChangeEvent<HTMLInputElement>);
-            }
-          }}
-          renderInput={(params) => (
-            <TextField
-              name={name}
-              variant="outlined"
-              value={value}
-              {...rest}
-              error={error}
-              sx={{
-                background: "#160C1866",
-                color: "white",
-                borderRadius: "100px",
-                width: "100%",
-                "& .MuiOutlinedInput-notchedOutline": { border: "none" },
-                "& .MuiInputLabel-root": { color: "white" },
-                "& .MuiInputBase-input": { color: "white", width: "100%" },
-                "& .MuiInputBase-input::placeholder": { fontFamily: "Lexend" },
-              }}
-              {...params}
-              label={label}
-            />
-          )}
-        />
-        {helperText && (
-          <p
-            style={{
-              marginTop: "3px",
-              color: error ? "#d32f2f" : "white",
-              fontFamily: "Lexend",
-              fontSize: "0.75rem",
-              fontWeight: 400,
-              lineHeight: "1.5rem",
-              marginInline: "14px",
+      <Autocomplete
+        disablePortal
+        id="combo-box-demo"
+        options={options}
+        sx={{ width: "100%", "::placeholder": { color: "white" } }}
+        onScroll={onScroll}
+        onChange={(event, newValue) => {
+          if (newValue) {
+            onChange({
+              target: {
+                name: name ?? "",
+                value: newValue.value,
+              },
+            } as React.ChangeEvent<HTMLInputElement>);
+          }
+        }}
+        renderInput={(params) => (
+          <TextField
+            name={name}
+            variant="outlined"
+            value={value}
+            {...rest}
+            error={error}
+            sx={{
+              background: "#160C1866",
+              color: "white",
+              borderRadius: "100px",
+              width: "100%",
+              "& .MuiOutlinedInput-notchedOutline": { border: "none" },
+              "& .MuiInputLabel-root": { color: "white" },
+              "& .MuiInputBase-input": { color: "white", width: "100%" },
+              "& .MuiInputBase-input::placeholder": { fontFamily: "Lexend" },
             }}
-          >
-            {helperText}
-          </p>
+            {...params}
+            label={label}
+          />
         )}
-      </div>
+      />
+      {helperText && (
+        <p
+          style={{
+            marginTop: "3px",
+            color: error ? "#d32f2f" : "white",
+            fontFamily: "Lexend",
+            fontSize: "0.75rem",
+            fontWeight: 400,
+            lineHeight: "1.5rem",
+            marginInline: "14px",
+          }}
+        >
+          {helperText}
+        </p>
+      )}
     </ThemeProvider>
   );
 };

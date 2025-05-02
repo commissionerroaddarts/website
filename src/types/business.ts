@@ -43,7 +43,7 @@ export interface Validation {
 }
 
 export interface Business {
-  _id: number | string;
+  _id: string;
   // userId: string;  // Uncomment if userId is needed
   name: string;
   tagline: string;

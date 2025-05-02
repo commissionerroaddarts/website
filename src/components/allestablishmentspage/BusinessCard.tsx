@@ -112,7 +112,6 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
             <Link
               href={{
                 pathname: `/establishments/${_id}`,
-                query: { from: "businessCard", numberState: 42 },
               }}
               passHref
             >

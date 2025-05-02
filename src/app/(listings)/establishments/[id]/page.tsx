@@ -29,7 +29,7 @@ export default function EstablishmentPage() {
 
   return (
     <div className="p-6 min-h-screen">
-      <Grid2 container spacing={2} sx={{ padding: "0 6rem" }}>
+      <Grid2 container spacing={6} sx={{ padding: "0 6rem" }}>
         {/* Gallery */}
         {business.media && (
           <Grid2 size={{ xs: 12 }}>
@@ -50,7 +50,7 @@ export default function EstablishmentPage() {
             {business.faqs && <EstablishmentFAQ faqs={business.faqs} />}
 
             {/* Reviews */}
-            <EstablishmentReview />
+            <EstablishmentReview id={business._id} />
           </Box>
         </Grid2>
 

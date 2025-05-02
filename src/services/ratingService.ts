@@ -1,7 +1,6 @@
 import {
   PostRatingFormData,
   PostReviewResponse,
-  Rating,
   RatingResponse,
   ReviewApiResponse,
 } from "@/types/ratings";
