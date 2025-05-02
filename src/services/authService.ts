@@ -22,7 +22,6 @@ export const getUserDetails = async (dispatch: AppDispatch) => {
     if (subscription) {
       userDetails["subscription"] = subscription; // Add subscription details to userDetails
     }
-    console.log(userDetails);
     dispatch(setUserDetails(userDetails)); // Store user details in Redux
     // return response.data; // Return the full response if needed
   } catch (error: any) {

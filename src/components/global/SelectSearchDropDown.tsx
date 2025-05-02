@@ -74,7 +74,7 @@ const SelectSearchDropDown = ({
 }: Props) => {
   return (
     <ThemeProvider theme={theme}>
-      <div>
+      <div className="w-full">
         <Autocomplete
           disablePortal
           id="combo-box-demo"

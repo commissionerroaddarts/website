@@ -87,5 +87,5 @@ export interface FilterValues {
   city?: string;
   state?: string;
   zipcode?: string;
-  ageLimit?: number[];
+  ageLimit?: number[] | null;
 }

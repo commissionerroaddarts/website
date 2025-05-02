@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Box, Drawer, IconButton, Slider } from "@mui/material";
 import { motion } from "framer-motion";
 import ThemeButton from "@/components/buttons/ThemeButton";
@@ -8,7 +8,6 @@ import SelectSearchDropDown from "@/components/global/SelectSearchDropDown";
 import CustomInput from "@/components/global/CustomInput";
 import { FilterValues } from "@/types/business";
 import { Close } from "@mui/icons-material";
-import { useMemo } from "react";
 import { cities_states } from "@/utils/cities_states"; // Assume this is a JSON file with all US cities
 import { boardTypeOptions, categoryOptions } from "@/utils/dropdowns";
 
@@ -26,7 +25,7 @@ const FilterSidebar: React.FC<SidebarProps> = ({
   setFilters,
 }) => {
   const [visibleCities, setVisibleCities] = useState(10);
-  const [visibleStates, setVisiblesStates] = useState(10);
+  const [visibleStates, setVisibleStates] = useState(10);
 
   const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -60,7 +59,7 @@ const FilterSidebar: React.FC<SidebarProps> = ({
   const handleScrollStates = (e: React.UIEvent<HTMLDivElement>) => {
     const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
     if (scrollTop + clientHeight >= scrollHeight - 10) {
-      setVisiblesStates((prev) => Math.min(prev + 10, cities_states.length));
+      setVisibleStates((prev) => Math.min(prev + 10, cities_states.length));
     }
   };
 
@@ -84,7 +83,7 @@ const FilterSidebar: React.FC<SidebarProps> = ({
         animate={{ x: 0 }}
         exit={{ x: -300 }}
         transition={{ duration: 0.3 }}
-        className="w-72 p-5 h-full overflow-y-auto"
+        className="w-72 p-5 h-full overflow-y-auto overflow-x-hidden"
         style={{
           background:
             "linear-gradient(152.76deg, #3F0F50 21.4%, #5D1178 54.49%, #200C27 85.73%)",
@@ -198,7 +197,7 @@ const FilterSidebar: React.FC<SidebarProps> = ({
 
           {/* Remove Filters Button */}
           {Object.values(filters).some((filter) => filter !== "") && (
-            <Box mb={3}>
+            <Box mt={2}>
               <ThemeButton
                 text="Clear Filters"
                 onClick={handleRemoveFilters}

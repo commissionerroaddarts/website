@@ -10,7 +10,7 @@ import Step3Form from "./Steps/Step3Form";
 import Step2Form from "./Steps/Step2Form";
 import Step5Form from "./Steps/Step5Form";
 import { insertBusiness } from "@/services/businessService";
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
+const MAX_FILE_SIZE = 1 * 1024 * 1024; // 1 MB
 const SUPPORTED_FORMATS = ["image/jpeg", "image/png", "image/webp"];
 
 const stepSchemas = [
@@ -45,7 +45,7 @@ const stepSchemas = [
         const file = value as File;
         return file && SUPPORTED_FORMATS.includes(file.type);
       })
-      .test("fileSize", "Max allowed size is 5Mb", (value) => {
+      .test("fileSize", "Max allowed size is 1MB", (value) => {
         const file = value as File;
         return file && file.size <= MAX_FILE_SIZE;
       }),
@@ -60,7 +60,7 @@ const stepSchemas = [
             const file = value as File;
             return file && SUPPORTED_FORMATS.includes(file.type);
           })
-          .test("fileSize", "Each image must be under 5Mb", (value) => {
+          .test("fileSize", "Each image must be under 1MB", (value) => {
             const file = value as File;
             return file && file.size <= MAX_FILE_SIZE;
           })

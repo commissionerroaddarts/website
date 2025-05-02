@@ -40,6 +40,7 @@ export const fetchBusinesses = async (
     throw error; // Rethrow the error for further handling if needed
   }
 };
+
 export const insertBusiness = async (data: Partial<Business>) => {
   try {
     const formData = new FormData();
@@ -56,10 +57,11 @@ export const insertBusiness = async (data: Partial<Business>) => {
             }
           });
         } else {
-          formData.append(key, value.toString());
+          formData.append(key, value?.toString());
         }
       }
     }
+    console.log(formData);
 
     const response = await axiosInstance.post(`${API_URL}`, formData, {
       headers: {

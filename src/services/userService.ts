@@ -1,3 +1,4 @@
+import { FilterValues } from "@/types/business";
 import { PostReviewResponse } from "@/types/ratings";
 import { PasswordChange, User } from "@/types/user";
 import axiosInstance from "@/utils/axiosInstance";
@@ -31,7 +32,7 @@ export const updateUserPassword = async (data: PasswordChange) => {
 
 export const getUserRatings = async (
   id: string,
-  filters: {},
+  filters: FilterValues = {},
   page = 1,
   limit = 10
 ) => {

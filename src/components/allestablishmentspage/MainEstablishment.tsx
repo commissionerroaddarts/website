@@ -23,10 +23,7 @@ export default function MainEstablishment() {
   const city = searchParams.get("city") ?? "";
   const state = searchParams.get("state") ?? "";
   const zipcode = searchParams.get("zipcode") ?? "";
-  const ageLimit = searchParams.get("ageLimit")?.split(",").map(Number) ?? [
-    0,
-    100, // Default age limit range
-  ];
+  const ageLimit = searchParams.get("ageLimit")?.split(",").map(Number) ?? null;
 
   const [filterParams, setFilterParams] = useState<FilterValues>({
     search,
@@ -46,26 +43,51 @@ export default function MainEstablishment() {
 
   const getBusinesses = async () => {
     setLoading(true);
-    const { data } = await fetchBusinesses(1, 10, filterParams);
-    setBusinesses(data);
-    setLoading(false);
+
+    // Create a cleaned version of filterParams
+    const validFilterParams = Object.fromEntries(
+      Object.entries(filterParams).filter(([_, value]) => {
+        if (Array.isArray(value)) {
+          return value.some((v) => v !== null && v !== undefined && v !== "");
+        }
+        return (
+          value !== null && value !== undefined && value !== "" && value !== 0
+        );
+      })
+    );
+
+    try {
+      const { data } = await fetchBusinesses(1, 10, validFilterParams);
+      setBusinesses(data);
+    } catch (error) {
+      console.error("Failed to fetch businesses:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Update filter params state and query params in the URL
   const updateQuery = () => {
-    const params = new URLSearchParams();
-    Object.entries(filterParams).forEach(([key, value]) => {
-      console.log(key, value);
-      if (Array.isArray(value)) {
-        if (value.some((v) => v !== null && v !== undefined)) {
-          value.forEach((v) => params.append(key, v.toString()));
-        }
-      } else if (value && value !== "") {
-        params.set(key, value.toString());
-      }
-    });
+    // const params = new URLSearchParams();
+    // Object.entries(filterParams).forEach(([key, value]) => {
+    //   if (Array.isArray(value)) {
+    //     const validValues = value.filter(
+    //       (v) => v !== null && v !== undefined && v !== ""
+    //     );
+    //     if (validValues.length > 0) {
+    //       validValues.forEach((v) => params.append(key, v.toString()));
+    //     }
+    //   } else if (
+    //     value !== null &&
+    //     value !== undefined &&
+    //     value !== "" &&
+    //     value !== 0
+    //   ) {
+    //     params.set(key, value.toString());
+    //   }
+    // });
+
     getBusinesses();
-    router.push(`/establishments?${params.toString()}`);
   };
 
   return (
