@@ -40,13 +40,36 @@ export const fetchBusinesses = async (
     throw error; // Rethrow the error for further handling if needed
   }
 };
-
 export const insertBusiness = async (data: Partial<Business>) => {
   try {
-    const response = await axiosInstance.post(`${API_URL}`, data);
+    const formData = new FormData();
+
+    for (const key in data) {
+      const value = data[key as keyof Business];
+      if (value !== undefined && value !== null) {
+        if (key === "businessLogo" && value instanceof File) {
+          formData.append(key, value, value.name);
+        } else if (key === "images" && Array.isArray(value)) {
+          value.forEach((file) => {
+            if (file instanceof File) {
+              formData.append(key, file, file.name);
+            }
+          });
+        } else {
+          formData.append(key, value.toString());
+        }
+      }
+    }
+
+    const response = await axiosInstance.post(`${API_URL}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
     return response.data;
   } catch (error) {
     console.error("Error inserting business:", error);
-    throw error; // Rethrow the error for further handling if needed
+    throw error;
   }
 };

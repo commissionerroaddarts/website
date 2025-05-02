@@ -11,13 +11,13 @@ import dayjs from "dayjs";
 import ThemeButton from "@/components/buttons/ThemeButton";
 
 const daysOfWeek = [
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-  "Sunday",
+  { label: "Monday", value: "mon" },
+  { label: "Tuesday", value: "tue" },
+  { label: "Wednesday", value: "wed" },
+  { label: "Thursday", value: "thu" },
+  { label: "Friday", value: "fri" },
+  { label: "Saturday", value: "sat" },
+  { label: "Sunday", value: "sun" },
 ];
 
 const timePickerStyles = {
@@ -41,20 +41,22 @@ const timePickerStyles = {
 export default function Step3Form() {
   const { control, setValue, getValues } = useFormContext();
 
+  const timings = getValues("timings");
+  console.log(timings);
   const [sameHours, setSameHours] = useState(false);
   const [allDaysHours, setAllDaysHours] = useState({ open: "", close: "" });
   const handleSameHoursApply = () => {
     daysOfWeek.forEach((day) => {
-      setValue(`timings.${day}.open`, allDaysHours.open);
-      setValue(`timings.${day}.close`, allDaysHours.close);
+      setValue(`timings.${day.value}.open`, allDaysHours.open);
+      setValue(`timings.${day.value}.close`, allDaysHours.close);
     });
   };
 
   useEffect(() => {
     if (sameHours) {
       daysOfWeek.forEach((day) => {
-        setValue(`timings.${day}.open`, allDaysHours.open);
-        setValue(`timings.${day}.close`, allDaysHours.close);
+        setValue(`timings.${day.value}.open`, allDaysHours.open);
+        setValue(`timings.${day.value}.close`, allDaysHours.close);
       });
     }
   }, [sameHours, allDaysHours]);
@@ -129,13 +131,13 @@ export default function Step3Form() {
           ) : (
             <Grid2 container spacing={2}>
               {daysOfWeek.map((day) => (
-                <Grid2 size={{ xs: 12, md: 6 }} key={day}>
+                <Grid2 size={{ xs: 12, md: 6 }} key={day.value}>
                   <Typography color="textSecondary" gutterBottom>
-                    {day}
+                    {day.label}
                   </Typography>
                   <Box display="flex" gap={2}>
                     <Controller
-                      name={`timings.${day}.open`}
+                      name={`timings.${day.value}.open`}
                       control={control}
                       render={({ field }) => (
                         <TimePicker
@@ -151,7 +153,7 @@ export default function Step3Form() {
                           }
                           onChange={(newValue) =>
                             setValue(
-                              `timings.${day}.open`,
+                              `timings.${day.value}.open`,
                               newValue ? newValue.format("hh:mm A") : ""
                             )
                           }
@@ -160,7 +162,7 @@ export default function Step3Form() {
                       )}
                     />
                     <Controller
-                      name={`timings.${day}.close`}
+                      name={`timings.${day.value}.close`}
                       control={control}
                       render={({ field }) => (
                         <TimePicker
@@ -176,7 +178,7 @@ export default function Step3Form() {
                           }
                           onChange={(newValue) =>
                             setValue(
-                              `timings.${day}.close`,
+                              `timings.${day.value}.close`,
                               newValue ? newValue.format("hh:mm A") : ""
                             )
                           }

@@ -28,12 +28,10 @@ const stepSchemas = [
     shortDis: yup.string().required("Short Description is required").max(500),
     tags: yup.array().of(yup.string()).min(1, "At least one tag is required"),
     category: yup.string().required("Category is required"),
-    boardType: yup.string().required("Board Type is required"),
+    bordType: yup.string().required("Board Type is required"),
     ageLimit: yup
       .number()
-      .typeError("Age Limit must be a number")
       .min(0, "Age Limit cannot be negative")
-      .nullable()
       .required("Age Limit is required"),
     price: yup.object().shape({
       category: yup.string().required("Price Category is required"),
@@ -47,7 +45,7 @@ const stepSchemas = [
         const file = value as File;
         return file && SUPPORTED_FORMATS.includes(file.type);
       })
-      .test("fileSize", "Max allowed size is 100KB", (value) => {
+      .test("fileSize", "Max allowed size is 5Mb", (value) => {
         const file = value as File;
         return file && file.size <= MAX_FILE_SIZE;
       }),
@@ -62,7 +60,7 @@ const stepSchemas = [
             const file = value as File;
             return file && SUPPORTED_FORMATS.includes(file.type);
           })
-          .test("fileSize", "Each image must be under 100KB", (value) => {
+          .test("fileSize", "Each image must be under 5Mb", (value) => {
             const file = value as File;
             return file && file.size <= MAX_FILE_SIZE;
           })
@@ -83,31 +81,31 @@ const stepSchemas = [
   }),
   yup.object().shape({
     timings: yup.object().shape({
-      Monday: yup.object().shape({
+      mon: yup.object().shape({
         open: yup.string().required("Open time is required"),
         close: yup.string().required("Close time is required"),
       }),
-      Tuesday: yup.object().shape({
+      tue: yup.object().shape({
         open: yup.string().required("Open time is required"),
         close: yup.string().required("Close time is required"),
       }),
-      Wednesday: yup.object().shape({
+      wed: yup.object().shape({
         open: yup.string().required("Open time is required"),
         close: yup.string().required("Close time is required"),
       }),
-      Thursday: yup.object().shape({
+      thu: yup.object().shape({
         open: yup.string().required("Open time is required"),
         close: yup.string().required("Close time is required"),
       }),
-      Friday: yup.object().shape({
+      fri: yup.object().shape({
         open: yup.string().required("Open time is required"),
         close: yup.string().required("Close time is required"),
       }),
-      Saturday: yup.object().shape({
+      sat: yup.object().shape({
         open: yup.string().required("Open time is required"),
         close: yup.string().required("Close time is required"),
       }),
-      Sunday: yup.object().shape({
+      sun: yup.object().shape({
         open: yup.string().required("Open time is required"),
         close: yup.string().required("Close time is required"),
       }),
@@ -154,12 +152,20 @@ export default function AddEstablishment() {
         zipcode: "",
       },
       price: {
-        category: "$" as "$" | "$$" | "$$$" | "$$$$",
-        min: 0,
-        max: 0,
+        category: "" as "$" | "$$" | "$$$" | "$$$$",
+        min: null,
+        max: null,
       },
       bordtype: "Both" as "Steel Tip" | "Plastic" | "Both",
-      timings: {},
+      timings: {
+        mon: { open: "", close: "" },
+        tue: { open: "", close: "" },
+        wed: { open: "", close: "" },
+        thu: { open: "", close: "" },
+        fri: { open: "", close: "" },
+        sat: { open: "", close: "" },
+        sun: { open: "", close: "" },
+      },
       socials: {
         facebook: "",
         instagram: "",
@@ -169,7 +175,7 @@ export default function AddEstablishment() {
         tiktok: "",
       },
       faqs: [{ q: "", a: "" }],
-      ageLimit: 0,
+      ageLimit: null,
       category: "",
       tags: [],
       images: [],
@@ -215,6 +221,7 @@ export default function AddEstablishment() {
     } catch (validationError: any) {
       if (validationError?.inner) {
         validationError?.inner.forEach((err: any) => {
+          console.error(err);
           methods.setError(err.path, { type: "manual", message: err.message });
         });
       }

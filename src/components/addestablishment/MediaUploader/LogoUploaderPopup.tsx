@@ -119,7 +119,6 @@ const LogoUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
 
       <Controller
         name="businessLogo"
-        defaultValue={null}
         control={control}
         render={() =>
           !file ? (

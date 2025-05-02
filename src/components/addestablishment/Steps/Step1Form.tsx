@@ -143,7 +143,7 @@ export default function Step1Form() {
                 {...field}
                 label="Age Limit"
                 onChange={(e) => setValue("ageLimit", e.target.value)}
-                value={field.value}
+                value={field.value === 0 ? undefined : field.value}
                 type="number"
                 error={!!fieldState.error}
                 helperText={fieldState.error?.message}
@@ -185,7 +185,7 @@ export default function Step1Form() {
                 value={field.value}
                 error={!!fieldState.error}
                 helperText={fieldState.error?.message}
-                onChange={(value) => setValue("boardType", value.target.value)}
+                onChange={(value) => setValue("bordType", value.target.value)}
               />
             )}
           />
@@ -289,24 +289,43 @@ export default function Step1Form() {
 const UploadButtons = () => {
   const [uploadLogo, setUploadLogo] = useState(false);
   const [uploadMedia, setUploadMedia] = useState(false);
+  const {
+    formState: { errors },
+  } = useFormContext();
 
   return (
     <div className="flex flex-wrap gap-4 justify-center mb-8">
-      <ThemeButton
-        text="Upload Logo"
-        type="button"
-        icon={<Upload className="w-5 h-5" />}
-        onClickEvent={() => setUploadLogo(true)}
-      />
+      <Box className="flex flex-col items-center justify-center gap-2">
+        <ThemeButton
+          text="Upload Logo"
+          type="button"
+          icon={<Upload className="w-5 h-5" />}
+          onClickEvent={() => setUploadLogo(true)}
+        />
+        {typeof errors?.businessLogo?.message === "string" && (
+          <Typography color="error" variant="body2" className="mt-2">
+            {errors.businessLogo.message}
+          </Typography>
+        )}
+      </Box>
+
       {uploadLogo && (
         <LogoUploaderPopup open={uploadLogo} setOpen={setUploadLogo} />
       )}
-      <ThemeButton
-        text="Upload Media"
-        type="button"
-        icon={<Upload className="w-5 h-5" />}
-        onClickEvent={() => setUploadMedia(true)}
-      />
+
+      <Box className="flex flex-col items-center justify-center gap-2">
+        <ThemeButton
+          text="Upload Media"
+          type="button"
+          icon={<Upload className="w-5 h-5" />}
+          onClickEvent={() => setUploadMedia(true)}
+        />
+        {typeof errors?.images?.message === "string" && (
+          <Typography color="error" variant="body2" className="mt-2">
+            {errors.images.message}
+          </Typography>
+        )}
+      </Box>
       {uploadMedia && (
         <ImagesUploaderPopup open={uploadMedia} setOpen={setUploadMedia} />
       )}

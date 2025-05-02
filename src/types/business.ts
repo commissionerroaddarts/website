@@ -32,9 +32,9 @@ export interface FAQ {
 }
 
 export interface Price {
-  category?: "$" | "$$" | "$$$" | "$$$$";
-  min?: number;
-  max?: number;
+  category?: "" | "$" | "$$" | "$$$" | "$$$$";
+  min?: number | null;
+  max?: number | null;
 }
 
 export interface Validation {
