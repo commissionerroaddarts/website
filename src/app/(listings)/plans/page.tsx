@@ -1,6 +1,5 @@
 import { generateMetadata } from "@/utils/metaData";
 import PlanGrid from "@/components/planpage/PlanGrid";
-import { getPlans } from "@/services/planService";
 
 export const metadata = generateMetadata({
   title: "Plans - Road Darts",
@@ -11,6 +10,5 @@ export const metadata = generateMetadata({
 });
 
 export default async function PlanPage() {
-  const plans = await getPlans(); // Fetch plans from your service
-  return <PlanGrid plans={plans} />;
+  return <PlanGrid />;
 }
