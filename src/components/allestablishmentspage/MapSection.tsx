@@ -20,7 +20,7 @@ const containerStyle = {
   height: "50vh",
 };
 
-const MapSection = ({ businesses }: Props) => {
+const MapSection = ({ businesses, isLoading }: Props) => {
   const [activeMarker, setActiveMarker] = useState<string | null>(null);
   const mapRef = useRef<google.maps.Map | null>(null);
 
