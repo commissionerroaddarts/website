@@ -4,7 +4,7 @@ import { Event } from "@/types/event";
 import { Skeleton } from "@mui/material";
 
 interface Props {
-  businesses: Business[] | Event[]; // Replace with your type
+  businesses: Business[]; // Replace with your type
   isLoading: boolean; // Add a loading state prop
 }
 

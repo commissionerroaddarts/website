@@ -124,7 +124,7 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
       <BusinessMapPopup
         handleMapClose={handleMapClose}
         openMap={openMap}
-        location={location || {}}
+        location={location ?? {}}
       />
     </>
   );

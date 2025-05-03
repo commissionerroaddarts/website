@@ -78,7 +78,8 @@ export default function MainEvents() {
         updateQuery={updateQuery}
       />
       {events.length > 0 ? (
-        <EstablishmentPageGrid businesses={events} isLoading={loading} />
+        // <EstablishmentPageGrid businesses={events} isLoading={loading} />
+        <p></p>
       ) : (
         <NoEventsFound setFilterParams={setFilterParams} />
       )}
