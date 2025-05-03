@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Card, CardContent, Grid2, Typography } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ThemeButton from "@/components/buttons/ThemeButton";
@@ -11,15 +11,28 @@ import { selectPlan } from "@/store/slices/planSlice";
 import { Plan, PlanCardProps } from "@/types/plan";
 import { motion } from "framer-motion";
 import { useAppState } from "@/hooks/useAppState";
+import { getPlans } from "@/services/planService";
 
-const PlanGrid = ({ plans }: { plans: Plan[] }) => {
+const PlanGrid = () => {
   const { user } = useAppState();
   const { userDetails } = user || {};
   const { subscription } = userDetails || {};
+  const [plans, setPlans] = useState<Plan[]>([]);
+
   const [isAlreadySubscribed, setIsAlreadySubscribed] = useState(false);
   if (subscription?.status.toLowerCase() === "active") {
     setIsAlreadySubscribed(true);
   }
+
+  useEffect(() => {
+    const fetchPlans = async () => {
+      // Fetch plans from your service
+      const response = await getPlans(); // Replace with your API call
+      setPlans(response.data); // Assuming the response contains the plans data
+    };
+    fetchPlans();
+  }, []);
+
   return (
     <Box
       sx={{
