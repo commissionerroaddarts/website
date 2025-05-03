@@ -28,8 +28,8 @@ const stepSchemas = [
     shortDis: yup.string().required("Short Description is required").max(500),
     tags: yup.array().of(yup.string()).min(1, "At least one tag is required"),
     category: yup.string().required("Category is required"),
-    bordType: yup.string().required("Board Type is required"),
-    ageLimit: yup
+    bordtype: yup.string().required("Board Type is required"),
+    agelimit: yup
       .number()
       .min(0, "Age Limit cannot be negative")
       .required("Age Limit is required"),
@@ -38,34 +38,13 @@ const stepSchemas = [
       min: yup.number().required("Minimum Price is required"),
       max: yup.number().required("Maximum Price is required"),
     }),
-    businessLogo: yup
-      .mixed()
-      .required("Business Logo is required")
-      .test("fileType", "Unsupported file format", (value) => {
-        const file = value as File;
-        return file && SUPPORTED_FORMATS.includes(file.type);
-      })
-      .test("fileSize", "Max allowed size is 1MB", (value) => {
-        const file = value as File;
-        return file && file.size <= MAX_FILE_SIZE;
-      }),
-
-    images: yup
-      .array()
-      .of(
-        yup
-          .mixed()
-          .required()
-          .test("fileType", "Only JPG/PNG/WEBP images allowed", (value) => {
-            const file = value as File;
-            return file && SUPPORTED_FORMATS.includes(file.type);
-          })
-          .test("fileSize", "Each image must be under 1MB", (value) => {
-            const file = value as File;
-            return file && file.size <= MAX_FILE_SIZE;
-          })
-      )
-      .min(1, "At least one image is required"),
+    media: yup.object().shape({
+      logo: yup.string().required("Business Logo is required"),
+      images: yup
+        .array()
+        .of(yup.string().required())
+        .min(1, "At least one image is required"),
+    }),
   }),
   yup.object().shape({
     location: yup.object().shape({
@@ -136,55 +115,67 @@ export default function AddEstablishment() {
   const methods = useForm({
     mode: "onBlur",
     defaultValues: {
-      name: "",
-      tagline: "",
-      phone: "",
-      website: "",
-      shortDis: "",
-      location: {
-        geotag: {
-          lat: 0,
-          lng: 0,
-        },
-        state: "",
-        city: "",
-        country: "",
-        zipcode: "",
-      },
+      name: "Muhammad Umer khan",
+      tagline: "Business Tagline",
+      phone: "03343779404",
+      website: "https://umer.com",
+      tags: ["darts", "playtime", "business"],
+      agelimit: "18",
+      category: "Restaurant",
+      bordtype: "Both",
+      shortDis: "adfajfaskfklasjflkajfklasjfj",
       price: {
-        category: "" as "$" | "$$" | "$$$" | "$$$$",
-        min: null,
-        max: null,
+        category: "$$$",
+        min: 5,
+        max: 10,
       },
-      bordtype: "Both" as "Steel Tip" | "Plastic" | "Both",
+      location: {
+        country: "Pakistan",
+        state: "Sindh",
+        city: "Karachi",
+        zipcode: "35700",
+        geotag: {
+          lat: 24.9015625,
+          lng: 67.1143125,
+        },
+      },
       timings: {
-        mon: { open: "", close: "" },
-        tue: { open: "", close: "" },
-        wed: { open: "", close: "" },
-        thu: { open: "", close: "" },
-        fri: { open: "", close: "" },
-        sat: { open: "", close: "" },
-        sun: { open: "", close: "" },
+        mon: {
+          open: "12:30 AM",
+          close: "12:30 AM",
+        },
+        tue: {
+          open: "12:30 AM",
+          close: "12:30 AM",
+        },
+        wed: {
+          open: "12:30 AM",
+          close: "12:30 AM",
+        },
+        thu: {
+          open: "12:30 AM",
+          close: "12:30 AM",
+        },
+        fri: {
+          open: "12:30 AM",
+          close: "12:30 AM",
+        },
+        sat: {
+          open: "12:30 AM",
+          close: "12:30 AM",
+        },
+        sun: {
+          open: "12:30 AM",
+          close: "12:30 AM",
+        },
       },
-      socials: {
-        facebook: "",
-        instagram: "",
-        twitter: "",
-        linkedin: "",
-        youtube: "",
-        tiktok: "",
-      },
-      faqs: [{ q: "", a: "" }],
-      ageLimit: null,
-      category: "",
-      tags: [],
-      images: [],
-      businessLogo: "",
-      status: "Active" as
-        | "Active"
-        | "Closed Down"
-        | "Coming Soon"
-        | "Under Remodel",
+      socials: {},
+      faqs: [
+        {
+          q: "what is umer",
+          a: "regdfgdfgdfgdfgf",
+        },
+      ],
     },
   });
 

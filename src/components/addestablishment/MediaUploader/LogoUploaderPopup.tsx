@@ -64,7 +64,7 @@ const LogoUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
     reader.readAsDataURL(selectedFile);
 
     setFile(selectedFile); // <-- Local state
-    setValue("businessLogo", selectedFile); // <-- Sync with RHF
+    setValue("media.logo", selectedFile); // <-- Sync with RHF
 
     const fileUrl = URL.createObjectURL(selectedFile);
     setPreviewUrl(fileUrl);
@@ -85,7 +85,7 @@ const LogoUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
   };
 
   const handleRemove = () => {
-    setValue("businessLogo", null);
+    setValue("media.logo", null);
     setPreviewUrl(null);
     setUploadProgress(0);
     if (fileInputRef.current) {
@@ -118,7 +118,7 @@ const LogoUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
       </h1>
 
       <Controller
-        name="businessLogo"
+        name="media.logo"
         control={control}
         render={() =>
           !file ? (

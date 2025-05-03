@@ -17,12 +17,12 @@ export default function MainEstablishment() {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
   const [businesses, setBusinesses] = useState<Business[]>([]); // Single object state for all filters
-  const search = searchParams.get("search") ?? "";
-  const category = searchParams.get("category") ?? "";
-  const boardType = searchParams.get("boardType") ?? "";
-  const city = searchParams.get("city") ?? "";
-  const state = searchParams.get("state") ?? "";
-  const zipcode = searchParams.get("zipcode") ?? "";
+  const search = searchParams.get("search") ?? null;
+  const category = searchParams.get("category") ?? null;
+  const boardType = searchParams.get("boardType") ?? null;
+  const city = searchParams.get("city") ?? null;
+  const state = searchParams.get("state") ?? null;
+  const zipcode = searchParams.get("zipcode") ?? null;
   const ageLimit = searchParams.get("ageLimit")?.split(",").map(Number) ?? null;
 
   const [filterParams, setFilterParams] = useState<FilterValues>({
@@ -68,25 +68,25 @@ export default function MainEstablishment() {
 
   // Update filter params state and query params in the URL
   const updateQuery = () => {
-    // const params = new URLSearchParams();
-    // Object.entries(filterParams).forEach(([key, value]) => {
-    //   if (Array.isArray(value)) {
-    //     const validValues = value.filter(
-    //       (v) => v !== null && v !== undefined && v !== ""
-    //     );
-    //     if (validValues.length > 0) {
-    //       validValues.forEach((v) => params.append(key, v.toString()));
-    //     }
-    //   } else if (
-    //     value !== null &&
-    //     value !== undefined &&
-    //     value !== "" &&
-    //     value !== 0
-    //   ) {
-    //     params.set(key, value.toString());
-    //   }
-    // });
-
+    const params = new URLSearchParams();
+    Object.entries(filterParams).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        const validValues = value.filter(
+          (v) => v !== null && v !== undefined && v !== ""
+        );
+        if (validValues.length > 0) {
+          validValues.forEach((v) => params.append(key, v.toString()));
+        }
+      } else if (
+        value !== null &&
+        value !== undefined &&
+        value !== "" &&
+        value !== 0
+      ) {
+        params.set(key, value.toString());
+      }
+    });
+    router.push(`/establishments?${params.toString()}`);
     getBusinesses();
   };
 

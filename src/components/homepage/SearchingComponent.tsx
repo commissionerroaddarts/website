@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import ThemeButton from "@/components/buttons/ThemeButton";
 import SelectSearchDropDown from "@/components/global/SelectSearchDropDown";
 import { cities_states } from "@/utils/cities_states";
@@ -16,11 +16,21 @@ const categoryOptions = [
 const SearchComponent: React.FC = () => {
   const [category, setCategory] = useState("");
   const [city, setCity] = useState("");
+  const [searchError, setSearchError] = useState("");
   const router = useRouter();
 
   const handleSearch = () => {
-    router.push(`/establishments?category=${category}&city=${city}`); // Implement search logic here
+    if (category === "" && city === "") {
+      setSearchError("Please select either category or city.");
+    } else if (category !== "" && city === "") {
+      router.push(`/establishments?category=${category}`); // Implement search logic here
+    } else if (category === "" && city !== "") {
+      router.push(`/establishments?city=${city}`); // Implement search logic here
+    } else if (category !== "" && city !== "") {
+      router.push(`/establishments?category=${category}&city=${city}`); // Implement search logic here
+    }
   };
+
   const [visibleCities, setVisibleCities] = useState(10);
 
   const cityOptions = useMemo(() => {
@@ -45,6 +55,7 @@ const SearchComponent: React.FC = () => {
         margin: "3rem auto -3rem",
         zIndex: 20,
         display: "flex",
+        flexDirection: "column",
         gap: "1rem",
         padding: "1rem",
         "&::before": {
@@ -56,7 +67,6 @@ const SearchComponent: React.FC = () => {
           border: "1px solid border: 0.86px solid",
           borderImageSource:
             " linear-gradient(109.03deg, rgba(255, 255, 255, 0.8) 0.66%, rgba(211, 211, 211, 0.1) 99.26%)",
-
           width: "100%",
           height: "100%",
           opacity: 0.5,
@@ -65,28 +75,40 @@ const SearchComponent: React.FC = () => {
         },
       }}
     >
-      <SelectSearchDropDown
-        options={categoryOptions}
-        label="What are you looking for?"
-        value={category}
-        onChange={(e) => setCategory(e.target.value)}
-      />
+      <Box className="flex gap-3">
+        <SelectSearchDropDown
+          options={categoryOptions}
+          label="What are you looking for?"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+        />
 
-      {/* City Dropdown */}
-      <SelectSearchDropDown
-        options={cityOptions}
-        onScroll={handleScroll}
-        label="City"
-        value={city}
-        onChange={(e) => setCity(e.target.value)}
-      />
+        {/* City Dropdown */}
+        <SelectSearchDropDown
+          options={cityOptions}
+          onScroll={handleScroll}
+          label="City"
+          value={city}
+          onChange={(e) => setCity(e.target.value)}
+        />
 
-      <ThemeButton
-        onClickEvent={handleSearch}
-        icon={null}
-        text="Search"
-        //   icon={<SearchIcon />}
-      />
+        <ThemeButton
+          onClickEvent={handleSearch}
+          icon={null}
+          text="Search"
+          //   icon={<SearchIcon />}
+        />
+      </Box>
+      {searchError !== "" && (
+        <Typography
+          variant="h6"
+          color="red"
+          fontSize={"0.8rem"}
+          textAlign={"center"}
+        >
+          {searchError}
+        </Typography>
+      )}
     </Box>
   );
 };

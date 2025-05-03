@@ -81,11 +81,11 @@ export interface ApiResponse {
 }
 
 export interface FilterValues {
-  search?: string;
-  category?: string;
-  boardType?: string;
-  city?: string;
-  state?: string;
-  zipcode?: string;
+  search?: string | null;
+  category?: string | null;
+  boardType?: string | null;
+  city?: string | null;
+  state?: string | null;
+  zipcode?: string | null;
   ageLimit?: number[] | null;
 }

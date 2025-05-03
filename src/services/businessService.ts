@@ -1,4 +1,4 @@
-import { ApiResponse, Business, FilterValues } from "@/types/business";
+import { ApiResponse, FilterValues } from "@/types/business";
 import { baseUrl } from "@/constants/baseUrl";
 import axiosInstance from "@/utils/axiosInstance";
 
@@ -41,33 +41,30 @@ export const fetchBusinesses = async (
   }
 };
 
-export const insertBusiness = async (data: Partial<Business>) => {
+export const insertBusiness = async (data: any) => {
   try {
-    const formData = new FormData();
-
-    for (const key in data) {
-      const value = data[key as keyof Business];
-      if (value !== undefined && value !== null) {
-        if (key === "businessLogo" && value instanceof File) {
-          formData.append(key, value, value.name);
-        } else if (key === "images" && Array.isArray(value)) {
-          value.forEach((file) => {
-            if (file instanceof File) {
-              formData.append(key, file, file.name);
-            }
+    const { media, ...rest } = data;
+    const response = await axiosInstance.post(`${API_URL}`, rest);
+    if (response.status === 201) {
+      const { _id: businessId } = response.data;
+      if (media?.images) {
+        const formData = new FormData();
+        if (media?.images.length > 0) {
+          media?.images.forEach((file: File) => {
+            formData.append("images", file);
           });
-        } else {
-          formData.append(key, value?.toString());
         }
+        if (media?.logo) {
+          formData.append("businessLogo", media.logo);
+        }
+        console.log("formdata", media);
+        await axiosInstance.patch(`${API_URL}/media/${businessId}`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
       }
     }
-    console.log(formData);
-
-    const response = await axiosInstance.post(`${API_URL}`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
 
     return response.data;
   } catch (error) {

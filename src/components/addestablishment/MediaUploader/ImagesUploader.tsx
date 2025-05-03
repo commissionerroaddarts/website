@@ -66,11 +66,17 @@ const ImagesUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
       return isValidType && isValidSize;
     });
 
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      const base64String = result.split(",")[1]; // Extract the base64 string
+      setValue("media.images", base64String); // <-- Sync with RHF
+    };
     const previewUrls = validFiles.map((file) => URL.createObjectURL(file));
 
     setFiles(validFiles);
     setPreviews(previewUrls);
-    setValue("images", validFiles);
+    setValue("media.images", validFiles);
   };
 
   const handleRemove = (index: number) => {
@@ -78,7 +84,7 @@ const ImagesUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
     const updatedPreviews = previews.filter((_, i) => i !== index);
     setFiles(updatedFiles);
     setPreviews(updatedPreviews);
-    setValue("images", updatedFiles);
+    setValue("media.images", updatedFiles);
   };
 
   return (
@@ -93,7 +99,7 @@ const ImagesUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
       </h1>
 
       <Controller
-        name="images"
+        name="media.images"
         control={control}
         defaultValue={[]}
         render={({ field, fieldState }) => (

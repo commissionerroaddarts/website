@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Box, Card, CardContent, Grid2, Typography } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ThemeButton from "@/components/buttons/ThemeButton";
@@ -13,6 +13,13 @@ import { motion } from "framer-motion";
 import { useAppState } from "@/hooks/useAppState";
 
 const PlanGrid = ({ plans }: { plans: Plan[] }) => {
+  const { user } = useAppState();
+  const { userDetails } = user || {};
+  const { subscription } = userDetails || {};
+  const [isAlreadySubscribed, setIsAlreadySubscribed] = useState(false);
+  if (subscription?.status.toLowerCase() === "active") {
+    setIsAlreadySubscribed(true);
+  }
   return (
     <Box
       sx={{

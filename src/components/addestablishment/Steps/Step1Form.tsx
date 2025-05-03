@@ -136,13 +136,13 @@ export default function Step1Form() {
         {/* Age Limit Field */}
         <Grid2 size={{ xs: 12, md: 6 }}>
           <Controller
-            name="ageLimit"
+            name="agelimit"
             control={control}
             render={({ field, fieldState }) => (
               <CustomInput
                 {...field}
                 label="Age Limit"
-                onChange={(e) => setValue("ageLimit", e.target.value)}
+                onChange={(e) => setValue("agelimit", e.target.value)}
                 value={field.value === 0 ? undefined : field.value}
                 type="number"
                 error={!!fieldState.error}
@@ -175,7 +175,7 @@ export default function Step1Form() {
         {/* Board Type Dropdown */}
         <Grid2 size={{ xs: 12, md: 6 }}>
           <Controller
-            name="bordType"
+            name="bordtype"
             control={control}
             render={({ field, fieldState }) => (
               <SelectSearchDropDown
@@ -185,7 +185,7 @@ export default function Step1Form() {
                 value={field.value}
                 error={!!fieldState.error}
                 helperText={fieldState.error?.message}
-                onChange={(value) => setValue("bordType", value.target.value)}
+                onChange={(value) => setValue("bordtype", value.target.value)}
               />
             )}
           />
@@ -302,9 +302,9 @@ const UploadButtons = () => {
           icon={<Upload className="w-5 h-5" />}
           onClickEvent={() => setUploadLogo(true)}
         />
-        {typeof errors?.businessLogo?.message === "string" && (
+        {typeof errors["media.logo"]?.message === "string" && (
           <Typography color="error" variant="body2" className="mt-2">
-            {errors.businessLogo.message}
+            {errors["media.logo"].message}
           </Typography>
         )}
       </Box>
@@ -320,9 +320,9 @@ const UploadButtons = () => {
           icon={<Upload className="w-5 h-5" />}
           onClickEvent={() => setUploadMedia(true)}
         />
-        {typeof errors?.images?.message === "string" && (
+        {typeof errors["media.images"]?.message === "string" && (
           <Typography color="error" variant="body2" className="mt-2">
-            {errors.images.message}
+            {errors["media.images"].message}
           </Typography>
         )}
       </Box>

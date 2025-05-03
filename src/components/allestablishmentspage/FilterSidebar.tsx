@@ -191,7 +191,6 @@ const FilterSidebar: React.FC<SidebarProps> = ({
               text="Apply Filters"
               className="w-full"
               onClick={onClose}
-              type="submit"
             />
           </Box>
 

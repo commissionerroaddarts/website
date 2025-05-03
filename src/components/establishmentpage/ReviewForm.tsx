@@ -35,7 +35,7 @@ interface RatingFormProps {
   readonly submittedReview?: SubmittedUserReview | null;
 }
 
-export default function RatingForm({
+export default function ReviewForm({
   id: businessId,
   selectedRating = 0,
   establishmentName = "The Establishment",
