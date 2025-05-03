@@ -25,7 +25,6 @@ const FilterSection = ({
   const [openSidebar, setOpenSidebar] = useState(false);
   const closeSidebar = () => {
     setOpenSidebar(false);
-    updateQuery();
   };
 
   const handleRemoveSearchFilter = () => {
@@ -73,6 +72,7 @@ const FilterSection = ({
               setFilters={setFilters}
               open={openSidebar}
               onClose={closeSidebar}
+              updateQuery={updateQuery}
             />
           </>
         )}

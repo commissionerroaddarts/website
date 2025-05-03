@@ -10,12 +10,14 @@ import { FilterValues } from "@/types/business";
 import { Close } from "@mui/icons-material";
 import { cities_states } from "@/utils/cities_states"; // Assume this is a JSON file with all US cities
 import { boardTypeOptions, categoryOptions } from "@/utils/dropdowns";
+import { useRouter } from "next/navigation";
 
 interface SidebarProps {
   open: boolean;
   onClose: () => void;
   filters: FilterValues;
   setFilters: (filters: FilterValues) => void;
+  updateQuery: () => void;
 }
 
 const FilterSidebar: React.FC<SidebarProps> = ({
@@ -23,9 +25,11 @@ const FilterSidebar: React.FC<SidebarProps> = ({
   onClose,
   filters,
   setFilters,
+  updateQuery,
 }) => {
   const [visibleCities, setVisibleCities] = useState(10);
   const [visibleStates, setVisibleStates] = useState(10);
+  const router = useRouter();
 
   const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -62,17 +66,27 @@ const FilterSidebar: React.FC<SidebarProps> = ({
       setVisibleStates((prev) => Math.min(prev + 10, cities_states.length));
     }
   };
-
   const handleRemoveFilters = () => {
     setFilters({
-      category: "",
-      boardType: "",
-      city: "",
-      state: "",
-      zipcode: "",
-      ageLimit: [0, 100],
+      category: null,
+      boardType: null,
+      city: null,
+      state: null,
+      zipcode: null,
+      ageLimit: null,
     });
+
+    const url = new URL(window.location.href);
+    url.searchParams.delete("category");
+    url.searchParams.delete("boardType");
+    url.searchParams.delete("city");
+    url.searchParams.delete("state");
+    url.searchParams.delete("zipcode");
+    url.searchParams.delete("ageLimit");
+
     onClose();
+
+    router.push("/establishments");
   };
 
   return (
@@ -190,7 +204,10 @@ const FilterSidebar: React.FC<SidebarProps> = ({
             <ThemeButton
               text="Apply Filters"
               className="w-full"
-              onClick={onClose}
+              onClick={() => {
+                updateQuery();
+                onClose();
+              }}
             />
           </Box>
 

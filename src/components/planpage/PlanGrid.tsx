@@ -23,6 +23,7 @@ const PlanGrid = () => {
   if (subscription?.status.toLowerCase() === "active") {
     setIsAlreadySubscribed(true);
   }
+  console.log(isAlreadySubscribed);
 
   useEffect(() => {
     const fetchPlans = async () => {

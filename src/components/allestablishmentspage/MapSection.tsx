@@ -44,6 +44,13 @@ const MapSection = ({ businesses, isLoading }: Props) => {
       const bounds = new window.google.maps.LatLngBounds();
       businessLocations.forEach((loc) => bounds.extend(loc.position));
       map.fitBounds(bounds);
+
+      // Delay setting max zoom after bounds are applied
+      google.maps.event.addListenerOnce(map, "bounds_changed", () => {
+        if ((map.getZoom() ?? 0) > 15) {
+          map.setZoom(15); // Adjust this value as needed
+        }
+      });
     }
   };
 

@@ -80,6 +80,7 @@ const SelectSearchDropDown = ({
         options={options}
         sx={{ width: "100%", "::placeholder": { color: "white" } }}
         onScroll={onScroll}
+        value={options.find((option) => option.value === value) ?? null}
         onChange={(event, newValue) => {
           if (newValue) {
             onChange({
