@@ -43,7 +43,6 @@ export default function MainEstablishment() {
 
   const getBusinesses = async () => {
     setLoading(true);
-
     // Create a cleaned version of filterParams
     const validFilterParams = Object.fromEntries(
       Object.entries(filterParams).filter(([_, value]) => {

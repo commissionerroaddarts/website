@@ -65,7 +65,7 @@ const navLinks = [
     },
   },
   {
-    href: "/plans",
+    href: "/add-listing",
     label: "Add Listing",
     style: {
       "&:hover": {
@@ -194,9 +194,6 @@ const NavLinks = ({
     <>
       {navLinks.map(({ href, label, style }) => {
         if (label === "Sign In" && isLoggedIn) return null;
-        if (href === "/plans" && subscriptionStatus === "active") {
-          href = "/add-listing";
-        }
         const isActive = pathname === href;
 
         return (
@@ -204,7 +201,7 @@ const NavLinks = ({
             <Button
               sx={{
                 color: "white",
-                padding: "1rem 1.5rem",
+                padding: "1rem",
                 borderRadius: "86px",
                 backgroundColor: isActive ? "#645467" : "transparent",
                 ...style,

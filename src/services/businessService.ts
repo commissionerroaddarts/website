@@ -57,7 +57,6 @@ export const insertBusiness = async (data: any) => {
         if (media?.logo) {
           formData.append("businessLogo", media.logo);
         }
-        console.log("formdata", media);
         await axiosInstance.patch(`${API_URL}/media/${businessId}`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
@@ -66,7 +65,7 @@ export const insertBusiness = async (data: any) => {
       }
     }
 
-    return response.data;
+    return response;
   } catch (error) {
     console.error("Error inserting business:", error);
     throw error;

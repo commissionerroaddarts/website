@@ -113,7 +113,6 @@ export default function ReviewForm({
       spaceAllocated: null,
       gamingAmbience: null,
     });
-    router.back();
   };
 
   const handlePost = async (data: { review: string }) => {

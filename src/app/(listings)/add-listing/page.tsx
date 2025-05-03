@@ -1,7 +1,5 @@
 import AddEstablishmentForm from "@/components/addestablishment/AddEstablishmentForm";
 
-const AddListing = () => {
+export default async function AddListing() {
   return <AddEstablishmentForm />;
-};
-
-export default AddListing;
+}

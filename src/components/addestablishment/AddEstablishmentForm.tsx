@@ -10,6 +10,10 @@ import Step3Form from "./Steps/Step3Form";
 import Step2Form from "./Steps/Step2Form";
 import Step5Form from "./Steps/Step5Form";
 import { insertBusiness } from "@/services/businessService";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import { useAppState } from "@/hooks/useAppState";
+import PromoCodePopupComponent from "./PromoCodeComponent";
 const MAX_FILE_SIZE = 1 * 1024 * 1024; // 1 MB
 const SUPPORTED_FORMATS = ["image/jpeg", "image/png", "image/webp"];
 
@@ -137,22 +141,38 @@ export default function AddEstablishment() {
   const methods = useForm({
     mode: "onBlur",
   });
-
+  const router = useRouter();
+  const { user } = useAppState();
+  const { userDetails } = user;
+  const { subscription } = userDetails || {};
   const [currentStep, setCurrentStep] = useState(1);
   const totalSteps = 5;
+  const [isLoading, setIsLoading] = useState(false);
+
+  if (!subscription) {
+    return <PromoCodePopupComponent />;
+  }
+
   const handleStepSubmit = async (direction: "next" | "prev") => {
     const currentSchema = stepSchemas[currentStep - 1]; // currentStep is 1-based
     if (direction === "next" && currentStep === totalSteps) {
       try {
+        setIsLoading(true);
         const values = methods.getValues();
         await currentSchema.validate(values, { abortEarly: false });
 
         // Call the API service method to insert business
         const response = await insertBusiness(values);
-        console.log("Business successfully added:", response);
-
-        // Optionally reset the form or navigate to a success page
-        methods.reset();
+        if (response.status === 201) {
+          const { _id } = response.data;
+          if (_id) {
+            toast.success("Business added successfully!");
+            // Optionally reset the form or navigate to a success page
+            methods.reset();
+            setIsLoading(false);
+            router.push(`/establishments/${_id}`); // Redirect to establishments page
+          }
+        }
       } catch (apiError) {
         console.error("Failed to add business:", apiError);
       }
@@ -162,9 +182,7 @@ export default function AddEstablishment() {
       if (direction === "next") {
         const values = methods.getValues();
         await currentSchema.validate(values, { abortEarly: false });
-
         setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
-        console.log("Form data:", values);
       } else {
         setCurrentStep((prev) => Math.max(prev - 1, 1));
       }
@@ -175,7 +193,6 @@ export default function AddEstablishment() {
           methods.setError(err.path, { type: "manual", message: err.message });
         });
       }
-      console.error("Validation failed!", validationError);
     }
   };
 
@@ -185,6 +202,7 @@ export default function AddEstablishment() {
         totalSteps={totalSteps}
         currentStep={currentStep}
         onStepSubmit={handleStepSubmit}
+        isLoading={isLoading}
       >
         {currentStep === 1 && <Step1Form />}
         {currentStep === 2 && <Step2Form />}

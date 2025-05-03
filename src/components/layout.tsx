@@ -11,11 +11,6 @@ import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { getUserDetails } from "@/services/authService";
 import { useAppDispatch } from "@/store";
-import Modal from "@mui/material/Modal";
-import Box from "@mui/material/Box";
-import Link from "next/link";
-import CloseIcon from "@mui/icons-material/Close";
-import { IconButton } from "@mui/material";
 import { useAppState } from "@/hooks/useAppState";
 
 interface LayoutProps {
@@ -133,10 +128,9 @@ export default function Layout({ children }: LayoutProps) {
       <CssBaseline />
       {/* ✅ Always include metadata */}
 
-      <IconsComponent />
       {isHomePage && isVisible && (
         <AnimatePresence mode="wait">
-          <PromoCodePopupComponent />
+          <IconsComponent />
         </AnimatePresence>
       )}
       <div
@@ -154,70 +148,8 @@ export default function Layout({ children }: LayoutProps) {
     </ThemeProvider>
   );
 }
-const PromoCodePopupComponent = () => {
-  const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    setOpen(true); // Open the modal when the component mounts
-  }, []);
-
-  const handleClose = () => setOpen(false);
-  const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    border: "none!important",
-    outline: "none!important",
-    p: 4,
-  };
-
-  return (
-    <Modal
-      keepMounted
-      open={open}
-      onClose={handleClose}
-      sx={{
-        backdropFilter: "blur(8px)", // Add blur effect to the overlay background
-      }}
-      aria-labelledby="keep-mounted-modal-title"
-      aria-describedby="keep-mounted-modal-description"
-    >
-      <motion.div
-        initial={{ opacity: 0, y: -100 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: 100 }}
-        transition={{ duration: 0.5, ease: "linear" }}
-      >
-        <Box sx={style}>
-          <IconButton
-            onClick={handleClose}
-            style={{
-              position: "absolute",
-              top: "30px",
-              right: "10px",
-              color: "white",
-              zIndex: 1,
-              fontWeight: "bolder",
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-          <Link href="/plans" passHref>
-            <Image
-              src="/images/banners/promo.svg" // Replace with your image path
-              alt="Promo"
-              width={500} // Adjust width as needed
-              height={500} // Adjust height as needed
-            />
-          </Link>
-        </Box>
-      </motion.div>
-    </Modal>
-  );
-};
-
-const IconsComponent = () => {
+export const IconsComponent = () => {
   const isFullHeight =
     typeof window !== "undefined" && window.innerHeight === 100;
 

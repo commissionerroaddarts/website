@@ -2,7 +2,7 @@
 import React from "react";
 import dynamic from "next/dynamic";
 const EstablishmentMapLocation = dynamic(
-  () => import("@/components/global/EstablishmentMapLocation")
+  () => import("@/components/modals/EstablishmentMapLocation")
 );
 const CloseIcon = React.lazy(() => import("@mui/icons-material/Close"));
 import { Box, Dialog, DialogContent, IconButton } from "@mui/material";

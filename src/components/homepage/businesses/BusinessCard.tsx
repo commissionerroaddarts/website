@@ -13,12 +13,13 @@ import RoomIcon from "@mui/icons-material/Room";
 import CallIcon from "@mui/icons-material/Call";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { Business } from "@/types/business";
-import { Stars } from "@mui/icons-material";
 import BusinessMapPopup from "./BusinessMapPopup";
 import Link from "next/link";
+import { StarRatingWithPopup } from "@/components/global/StarRating";
 
 function BusinessCard({ business }: { readonly business: Business }) {
-  const { media, category, status, name, price, location } = business;
+  const { _id, media, category, status, name, price, location, averageRating } =
+    business;
   const [openMap, setOpenMap] = useState(false);
   const handleMapOpen = () => setOpenMap(true);
   const handleMapClose = () => setOpenMap(false);
@@ -67,24 +68,21 @@ function BusinessCard({ business }: { readonly business: Business }) {
               {status ?? "Unknown"}
             </Typography>
           </Box>
+          <Box className="flex flex-col gap-1">
+            {/* Title */}
+            <Typography variant="h6" sx={{ mt: 1 }}>
+              <Link
+                href={`/establishments/${business?._id}`}
+                style={{ color: "#fff", textDecoration: "none" }}
+                passHref
+                prefetch
+              >
+                {name ?? "Unnamed Business"}
+              </Link>
+            </Typography>
 
-          {/* Title */}
-          <Typography variant="h6" sx={{ mt: 1 }}>
-            <Link
-              href={`/establishments/${business?._id}`}
-              style={{ color: "#fff", textDecoration: "none" }}
-              passHref
-              prefetch
-            >
-              {name ?? "Unnamed Business"}
-            </Link>
-          </Typography>
-
-          {/* show ratings stars icons */}
-          <Box sx={{ display: "flex", mt: 1 }}>
-            {Array.from({ length: 5 }).map((_, index) => (
-              <Stars key={`star-${index}`} sx={{ color: "#f1c40f" }} />
-            ))}
+            {/* show ratings stars icons */}
+            <StarRatingWithPopup id={_id} averageRating={averageRating ?? 0} />
           </Box>
 
           {/* Price and Location */}

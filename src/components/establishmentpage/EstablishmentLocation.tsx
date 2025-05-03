@@ -3,7 +3,7 @@ import Image from "next/image";
 import TimingsPopup from "./TimingsPopup";
 import SocialIcons from "@/components/global/SocialIcons";
 import { Box } from "@mui/material";
-import EstablishmentMapLocation from "@/components/global/EstablishmentMapLocation";
+import EstablishmentMapLocation from "@/components/modals/EstablishmentMapLocation";
 
 interface EstablishmentLocationProps {
   readonly business: Business;

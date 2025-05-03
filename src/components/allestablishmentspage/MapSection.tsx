@@ -24,6 +24,13 @@ const MapSection = ({ businesses, isLoading }: Props) => {
   const [activeMarker, setActiveMarker] = useState<string | null>(null);
   const mapRef = useRef<google.maps.Map | null>(null);
 
+  const { isLoaded, loadError } = useJsApiLoader({
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? "",
+  });
+
+  if (loadError) return <div>Map cannot be loaded right now, sorry.</div>;
+  if (!isLoaded) return <div>Loading Map...</div>;
+
   const businessLocations = businesses
     .filter((b) => b.location?.geotag)
     .map((b) => ({
@@ -53,13 +60,6 @@ const MapSection = ({ businesses, isLoading }: Props) => {
       });
     }
   };
-
-  const { isLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? "",
-  });
-
-  if (loadError) return <div>Map cannot be loaded right now, sorry.</div>;
-  if (!isLoaded) return <div>Loading Map...</div>;
 
   return (
     <section className="container mx-auto my-4">

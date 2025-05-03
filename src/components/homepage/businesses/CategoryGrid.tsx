@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { Box, Grid2, Typography } from "@mui/material";
-import ThemeOutlineButton from "@/components/buttons/ThemeOutlineButton";
+import { useRouter } from "next/navigation";
 
 interface Category {
   id: number;
@@ -12,7 +12,6 @@ interface Category {
 
 interface CategoryGridProps {
   categories: Category[];
-  onCategoryClick?: (id: number) => void;
 }
 
 const CategoryCard: React.FC<{ category: Category; onClick?: () => void }> = ({
@@ -75,38 +74,43 @@ const CategoryCard: React.FC<{ category: Category; onClick?: () => void }> = ({
   </Box>
 );
 
-const CategoryGrid: React.FC<CategoryGridProps> = ({
-  categories,
-  onCategoryClick,
-}) => (
-  <Box
-    sx={{ textAlign: "center", py: 4 }}
-    className="flex flex-col items-center"
-  >
-    <Typography variant="h4" gutterBottom>
-      Explore Our Locations
-    </Typography>
-    <Grid2 container spacing={2} justifyContent="center" mt={3}>
-      {categories.map((category, index) => (
-        <Grid2
-          size={{
-            xs: 12,
-            sm: index % 4 === 0 ? 6 : 3, // First item of each row is 6, others are 3
-            md: index % 4 === 0 ? 6 : 3,
-            lg: index % 4 === 0 ? 6 : 3,
-          }}
-          key={category.id}
-        >
-          <CategoryCard
-            category={category}
-            onClick={() => onCategoryClick?.(category.id)}
-          />
-        </Grid2>
-      ))}
-    </Grid2>
+const CategoryGrid: React.FC<CategoryGridProps> = ({ categories }) => {
+  const router = useRouter();
+  const handleLocationClick = (locationName: string) => () => {
+    // Handle the click event for the location card
+    if (!locationName) return;
+    // Perform any action you want with the location name
+    router.push(`/establishments?city=${locationName}`);
+  };
 
-    <ThemeOutlineButton text="View All Locations" applyMargin={true} />
-  </Box>
-);
+  return (
+    <Box
+      sx={{ textAlign: "center", py: 4 }}
+      className="flex flex-col items-center"
+    >
+      <Typography variant="h4" gutterBottom>
+        Explore Our Locations
+      </Typography>
+      <Grid2 container spacing={2} justifyContent="center" mt={3}>
+        {categories.map((category, index) => (
+          <Grid2
+            size={{
+              xs: 12,
+              sm: index % 4 === 0 ? 6 : 3, // First item of each row is 6, others are 3
+              md: index % 4 === 0 ? 6 : 3,
+              lg: index % 4 === 0 ? 6 : 3,
+            }}
+            key={category.id}
+          >
+            <CategoryCard
+              category={category}
+              onClick={handleLocationClick(category.name)} // Pass the category name to the click handler
+            />
+          </Grid2>
+        ))}
+      </Grid2>
+    </Box>
+  );
+};
 
 export default CategoryGrid;

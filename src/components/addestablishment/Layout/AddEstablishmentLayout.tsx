@@ -10,6 +10,7 @@ interface AddEstablishmentLayoutProps {
   readonly totalSteps: number;
   readonly onStepSubmit: (direction: "next" | "prev") => void;
   readonly currentStep: number;
+  readonly isLoading?: boolean;
 }
 
 export default function AddEstablishmentLayout({
@@ -17,6 +18,7 @@ export default function AddEstablishmentLayout({
   totalSteps,
   onStepSubmit,
   currentStep,
+  isLoading = false,
 }: AddEstablishmentLayoutProps) {
   const handleNext = () => {
     onStepSubmit("next");
@@ -56,13 +58,21 @@ export default function AddEstablishmentLayout({
               type="button"
               icon={<MoveLeft color="white" />}
               onClickEvent={handlePrev}
+              disabled={isLoading}
             />
           )}
           <ThemeButton
-            text="Next"
+            text={
+              currentStep === 5
+                ? isLoading
+                  ? "Submitting..."
+                  : "Submit"
+                : "Next"
+            }
             icon={<MoveRight color="white" />}
             type="button"
             onClickEvent={handleNext}
+            disabled={isLoading}
           />
         </div>
       </div>
