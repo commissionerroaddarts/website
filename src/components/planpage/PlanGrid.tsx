@@ -12,27 +12,26 @@ import { Plan, PlanCardProps } from "@/types/plan";
 import { motion } from "framer-motion";
 import { useAppState } from "@/hooks/useAppState";
 import { getPlans } from "@/services/planService";
+import Preloader from "../global/Preloader";
 
 const PlanGrid = () => {
-  const { user } = useAppState();
-  const { userDetails } = user || {};
-  const { subscription } = userDetails || {};
   const [plans, setPlans] = useState<Plan[]>([]);
-
-  const [isAlreadySubscribed, setIsAlreadySubscribed] = useState(false);
-  if (subscription?.status.toLowerCase() === "active") {
-    setIsAlreadySubscribed(true);
-  }
-  console.log(isAlreadySubscribed);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchPlans = async () => {
+      setLoading(true);
       // Fetch plans from your service
       const response = await getPlans(); // Replace with your API call
-      setPlans(response.data); // Assuming the response contains the plans data
+      setPlans(response); // Assuming the response contains the plans data
+      setLoading(false);
     };
     fetchPlans();
   }, []);
+
+  if (loading) {
+    return <Preloader />;
+  }
 
   return (
     <Box
@@ -69,12 +68,23 @@ const PlanCard = ({ plan }: PlanCardProps) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { user } = useAppState(); // Assuming you have a user object in your Redux store
-  const { isLoggedIn } = user; // Check if user is logged in
+  const { isLoggedIn, userDetails } = user; // Check if user is logged in
+  const { subscription } = userDetails || {};
+  const [isAlreadySubscribed, setIsAlreadySubscribed] = useState(false);
 
-  const handleGetStarted = async (planName: string) => {
+  useEffect(() => {
+    if (subscription?.status?.toLowerCase() === "active") {
+      setIsAlreadySubscribed(true);
+    }
+  }, [subscription]);
+
+  const handleGetStarted = async () => {
     dispatch(selectPlan(plan)); // Save to Redux
-
-    if (isLoggedIn) {
+    if (isAlreadySubscribed) {
+      alert(
+        "You are already subscribed to a plan. Please contact support for further assistance."
+      );
+    } else if (isLoggedIn) {
       router.push("/checkout"); // Redirect to checkout page
     } else {
       router.push("/login"); // Redirect to login page
@@ -162,14 +172,11 @@ const PlanCard = ({ plan }: PlanCardProps) => {
           </motion.div>
           <Typography className=" flex justify-center mt-4">
             {plan.featured ? (
-              <ThemeButton
-                text="Get Started"
-                onClickEvent={() => handleGetStarted(plan.name)}
-              />
+              <ThemeButton text="Get Started" onClickEvent={handleGetStarted} />
             ) : (
               <ThemeOutlineButton
                 text="Get Started"
-                onClickEvent={() => handleGetStarted(plan.name)}
+                onClickEvent={handleGetStarted}
               />
             )}
           </Typography>
