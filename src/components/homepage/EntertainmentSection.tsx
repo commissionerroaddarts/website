@@ -43,18 +43,19 @@ const EntertainmentSection = () => {
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 3000,
-
     responsive: [
       {
         breakpoint: 960,
         settings: {
           slidesToShow: 2,
+          arrows: true,
         },
       },
       {
         breakpoint: 600,
         settings: {
           slidesToShow: 1,
+          arrows: false,
         },
       },
     ],

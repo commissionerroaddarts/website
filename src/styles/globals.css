@@ -111,3 +111,12 @@ body::-webkit-scrollbar-thumb {
   border: none !important ;
   outline: none !important ;
 }
+
+/* You can put this in your global CSS or inside a <style jsx global> tag */
+.slick-dots li button:before {
+  color: white !important; /* Make inactive dots white */
+}
+
+.slick-dots li.slick-active button:before {
+  color: #ffffff !important; /* Make active dot white as well */
+}

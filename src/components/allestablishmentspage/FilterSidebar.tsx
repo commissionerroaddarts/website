@@ -69,20 +69,20 @@ const FilterSidebar: React.FC<SidebarProps> = ({
   const handleRemoveFilters = () => {
     setFilters({
       category: null,
-      boardType: null,
+      boardtype: null,
       city: null,
       state: null,
       zipcode: null,
-      ageLimit: null,
+      agelimit: null,
     });
 
     const url = new URL(window.location.href);
     url.searchParams.delete("category");
-    url.searchParams.delete("boardType");
+    url.searchParams.delete("boardtype");
     url.searchParams.delete("city");
     url.searchParams.delete("state");
     url.searchParams.delete("zipcode");
-    url.searchParams.delete("ageLimit");
+    url.searchParams.delete("agelimit");
 
     onClose();
 
@@ -139,13 +139,13 @@ const FilterSidebar: React.FC<SidebarProps> = ({
           </label>
           <Slider
             id="age-limit-slider"
-            value={filters.ageLimit ?? 0}
-            name="ageLimit"
+            value={filters.agelimit ?? 0}
+            name="agelimit"
             min={0}
             max={100}
             valueLabelDisplay="auto"
             onChange={(_, value) =>
-              setFilters({ ...filters, ageLimit: value as number[] })
+              setFilters({ ...filters, agelimit: value as number[] })
             }
             sx={{
               color: "#C45EEE",
@@ -157,9 +157,9 @@ const FilterSidebar: React.FC<SidebarProps> = ({
         <Box mb={3}>
           <SelectSearchDropDown
             label="Board Type"
-            name="boardType"
+            name="boardtype"
             options={boardTypeOptions}
-            value={filters.boardType ?? ""}
+            value={filters.boardtype ?? ""}
             onChange={handleFilterChange}
           />
         </Box>

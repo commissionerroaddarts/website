@@ -10,7 +10,6 @@ import { SearchX } from "lucide-react";
 import useDebounce from "@/hooks/useDebounce";
 import { Event } from "@/types/event";
 import MapSection from "../allestablishmentspage/MapSection";
-import EstablishmentPageGrid from "../allestablishmentspage/EstablishmentPageGrid";
 import { fetchEvents } from "@/services/eventService";
 
 export default function MainEvents() {
@@ -20,11 +19,11 @@ export default function MainEvents() {
   const [events, setEvents] = useState<Event[]>([]); // Single object state for all filters
   const search = searchParams.get("search") ?? "";
   const category = searchParams.get("category") ?? "";
-  const boardType = searchParams.get("boardType") ?? "";
+  const boardtype = searchParams.get("boardtype") ?? "";
   const city = searchParams.get("city") ?? "";
   const state = searchParams.get("state") ?? "";
   const zipcode = searchParams.get("zipcode") ?? "";
-  const ageLimit = searchParams.get("ageLimit")?.split(",").map(Number) ?? [
+  const agelimit = searchParams.get("agelimit")?.split(",").map(Number) ?? [
     0,
     100, // Default age limit range
   ];
@@ -32,11 +31,11 @@ export default function MainEvents() {
   const [filterParams, setFilterParams] = useState<FilterValues>({
     search,
     category,
-    boardType,
+    boardtype,
     city,
     state,
     zipcode,
-    ageLimit,
+    agelimit,
   });
 
   const debouncedSearch = useDebounce(filterParams.search, 500);

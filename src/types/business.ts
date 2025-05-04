@@ -83,9 +83,9 @@ export interface ApiResponse {
 export interface FilterValues {
   search?: string | null;
   category?: string | null;
-  boardType?: string | null;
+  boardtype?: string | null;
   city?: string | null;
   state?: string | null;
   zipcode?: string | null;
-  ageLimit?: number[] | null;
+  agelimit?: number[] | null;
 }

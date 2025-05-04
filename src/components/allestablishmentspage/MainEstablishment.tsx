@@ -19,20 +19,20 @@ export default function MainEstablishment() {
   const [businesses, setBusinesses] = useState<Business[]>([]); // Single object state for all filters
   const search = searchParams.get("search") ?? null;
   const category = searchParams.get("category") ?? null;
-  const boardType = searchParams.get("boardType") ?? null;
+  const boardtype = searchParams.get("boardtype") ?? null;
   const city = searchParams.get("city") ?? null;
   const state = searchParams.get("state") ?? null;
   const zipcode = searchParams.get("zipcode") ?? null;
-  const ageLimit = searchParams.get("ageLimit")?.split(",").map(Number) ?? null;
+  const agelimit = searchParams.get("agelimit")?.split(",").map(Number) ?? null;
 
   const [filterParams, setFilterParams] = useState<FilterValues>({
     search,
     category,
-    boardType,
+    boardtype,
     city,
     state,
     zipcode,
-    ageLimit,
+    agelimit,
   });
 
   const debouncedSearch = useDebounce(filterParams.search, 500);

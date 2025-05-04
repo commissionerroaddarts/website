@@ -1,37 +1,82 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import ThemeButton from "@/components/buttons/ThemeButton";
 import SelectSearchDropDown from "@/components/global/SelectSearchDropDown";
 import { cities_states } from "@/utils/cities_states";
 import { useRouter } from "next/navigation";
+import CustomInput from "../global/CustomInput";
+import { Search } from "lucide-react";
+import { Close } from "@mui/icons-material";
+import { useForm, Controller } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { categoryOptions } from "@/utils/dropdowns";
 
-const categoryOptions = [
-  { label: "Bar & Grill", value: "Bar & Grill" },
-  { label: "Restaurant", value: "Restaurant" },
-  { label: "Gaming Hall", value: "Gaming Hall" },
-];
+const schema = yup
+  .object({
+    search: yup.string().optional(),
+    category: yup.string().optional(),
+    city: yup.string().optional(),
+  })
+  .test("at-least-one", "At least one field must be filled", (obj) => {
+    const hasOne = !!(obj.search ?? obj.category ?? obj.city);
+    return hasOne;
+  });
+
+type FormValues = {
+  search?: string;
+  category?: string;
+  city?: string;
+};
 
 const SearchComponent: React.FC = () => {
-  const [category, setCategory] = useState("");
-  const [city, setCity] = useState("");
-  const [searchError, setSearchError] = useState("");
+  const [visibleCities, setVisibleCities] = useState(10);
   const router = useRouter();
 
-  const handleSearch = () => {
-    if (category === "" && city === "") {
-      setSearchError("Please select either category or city.");
-    } else if (category !== "" && city === "") {
-      router.push(`/establishments?category=${category}`); // Implement search logic here
-    } else if (category === "" && city !== "") {
-      router.push(`/establishments?city=${city}`); // Implement search logic here
-    } else if (category !== "" && city !== "") {
-      router.push(`/establishments?category=${category}&city=${city}`); // Implement search logic here
-    }
+  const {
+    handleSubmit,
+    control,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm<FormValues>({
+    resolver: yupResolver(schema),
+    defaultValues: {
+      search: "",
+      category: "",
+      city: "",
+    },
+  });
+
+  const filters = watch();
+
+  const handleSearch = (data: FormValues) => {
+    const { search, category, city } = data;
+    let query = "/establishments?";
+    if (search) query += `search=${search}&`;
+    if (category) query += `category=${category}&`;
+    if (city) query += `city=${city}`;
+    router.push(query);
   };
 
-  const [visibleCities, setVisibleCities] = useState(10);
+  const handleRemoveSearchFilter = () => {
+    setValue("search", "");
+    const url = new URL(window.location.href);
+    url.searchParams.delete("search");
+    window.history.replaceState(null, "", url.toString());
+  };
+
+  const handleSearchInputIcons = () => {
+    return filters?.search !== "" ? (
+      <button className="cursor-pointer" onClick={handleRemoveSearchFilter}>
+        <Close />
+      </button>
+    ) : (
+      <Search color="white" />
+    );
+  };
 
   const cityOptions = useMemo(() => {
     return cities_states.slice(0, visibleCities).map((cs) => ({
@@ -49,15 +94,9 @@ const SearchComponent: React.FC = () => {
 
   return (
     <Box
+      className="relative z-20 flex flex-col gap-4 p-4 max-w-[90%] md:max-w-[75%] mx-auto"
       sx={{
-        position: "relative",
-        maxWidth: 800,
         margin: "3rem auto -3rem",
-        zIndex: 20,
-        display: "flex",
-        flexDirection: "column",
-        gap: "1rem",
-        padding: "1rem",
         "&::before": {
           content: '""',
           position: "absolute",
@@ -75,40 +114,70 @@ const SearchComponent: React.FC = () => {
         },
       }}
     >
-      <Box className="flex gap-3">
-        <SelectSearchDropDown
-          options={categoryOptions}
-          label="What are you looking for?"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-        />
+      <form onSubmit={handleSubmit(handleSearch)}>
+        <Box className="flex flex-col md:flex-row gap-3">
+          {/* Search input */}
+          <Controller
+            name="search"
+            control={control}
+            render={({ field, fieldState }) => (
+              <CustomInput
+                className="w-full"
+                icon={handleSearchInputIcons()}
+                iconPosition="end"
+                label="Search"
+                error={!!fieldState.error}
+                helperText={fieldState.error?.message}
+                placeholder="Search by name, tags, tagline etc."
+                {...field}
+              />
+            )}
+          />
 
-        {/* City Dropdown */}
-        <SelectSearchDropDown
-          options={cityOptions}
-          onScroll={handleScroll}
-          label="City"
-          value={city}
-          onChange={(e) => setCity(e.target.value)}
-        />
+          {/* Category Dropdown */}
+          <Controller
+            name="category"
+            control={control}
+            render={({ field, fieldState }) => (
+              <SelectSearchDropDown
+                options={categoryOptions}
+                label="What are you looking for?"
+                value={field.value ?? ""}
+                error={!!fieldState.error}
+                helperText={fieldState.error?.message}
+                onChange={(e) => field.onChange(e.target.value)}
+              />
+            )}
+          />
 
-        <ThemeButton
-          onClickEvent={handleSearch}
-          icon={null}
-          text="Search"
-          //   icon={<SearchIcon />}
-        />
-      </Box>
-      {searchError !== "" && (
-        <Typography
-          variant="h6"
-          color="red"
-          fontSize={"0.8rem"}
-          textAlign={"center"}
-        >
-          {searchError}
-        </Typography>
-      )}
+          {/* City Dropdown */}
+          <Controller
+            name="city"
+            control={control}
+            render={({ field, fieldState }) => (
+              <SelectSearchDropDown
+                options={cityOptions}
+                onScroll={handleScroll}
+                label="City"
+                value={field.value ?? ""}
+                error={!!fieldState.error}
+                helperText={fieldState.error?.message}
+                onChange={(e) => field.onChange(e.target.value)}
+              />
+            )}
+          />
+
+          <ThemeButton
+            onClickEvent={handleSubmit(handleSearch)}
+            text="Search"
+          />
+        </Box>
+        {Object.keys(errors).length > 0 && (
+          <h6 className="!text-red-500 text-xs text-center  mt-2">
+            Please provide at least one search parameter!
+          </h6>
+        )}
+      </form>
     </Box>
   );
 };

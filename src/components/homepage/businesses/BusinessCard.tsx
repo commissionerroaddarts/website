@@ -5,7 +5,6 @@ import {
   CardContent,
   CardMedia,
   Typography,
-  Button,
   Box,
   Chip,
 } from "@mui/material";
@@ -16,13 +15,39 @@ import { Business } from "@/types/business";
 import BusinessMapPopup from "./BusinessMapPopup";
 import Link from "next/link";
 import { StarRatingWithPopup } from "@/components/global/StarRating";
+import ThemeButton from "@/components/buttons/ThemeButton";
+import ThemeOutlineButton from "@/components/buttons/ThemeOutlineButton";
+import { Map } from "lucide-react";
 
 function BusinessCard({ business }: { readonly business: Business }) {
-  const { _id, media, category, status, name, price, location, averageRating } =
-    business;
+  const {
+    _id,
+    phone,
+    media,
+    category,
+    status,
+    name,
+    price,
+    location,
+    averageRating,
+  } = business;
   const [openMap, setOpenMap] = useState(false);
   const handleMapOpen = () => setOpenMap(true);
   const handleMapClose = () => setOpenMap(false);
+  const getStatusColor = (status: string | undefined): string => {
+    switch (status) {
+      case "Active":
+        return "#4caf50";
+      case "Closed Down":
+        return "#f44336";
+      case "Coming Soon":
+        return "#ff9800";
+      case "Under Remodel":
+        return "#2196f3";
+      default:
+        return "#9e9e9e";
+    }
+  };
 
   return (
     <>
@@ -42,7 +67,7 @@ function BusinessCard({ business }: { readonly business: Business }) {
         {/* Image Section */}
         <CardMedia
           component="img"
-          sx={{ width: 300, height: 300, borderRadius: 2 }}
+          sx={{ width: 250, height: 250, borderRadius: 2 }}
           image={media?.images?.[0] ?? "/images/placeholder.png"}
           alt={name}
         />
@@ -63,8 +88,18 @@ function BusinessCard({ business }: { readonly business: Business }) {
               color="secondary"
               sx={{ backgroundColor: "#5A2A84" }}
             />
-            <Typography sx={{ display: "flex", alignItems: "center" }}>
-              <CheckCircleIcon sx={{ fontSize: 18, mr: 0.5 }} />{" "}
+            <Typography
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                padding: "0.5rem 1rem",
+                borderRadius: "50px",
+                fontSize: "0.7rem",
+                background: getStatusColor(status),
+              }}
+              variant="h6"
+            >
+              <CheckCircleIcon sx={{ fontSize: 12, mr: 0.5 }} />{" "}
               {status ?? "Unknown"}
             </Typography>
           </Box>
@@ -107,20 +142,17 @@ function BusinessCard({ business }: { readonly business: Business }) {
 
           {/* Buttons Section */}
           <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
-            <Button
-              variant="contained"
-              startIcon={<CallIcon />}
-              sx={{ background: "#5A2A84", borderRadius: 2 }}
-            >
-              Call Us Now
-            </Button>
-            <Button
-              variant="contained"
-              sx={{ background: "#9b59b6", borderRadius: 2 }}
+            <Link href={`tel:${phone}`} passHref>
+              <ThemeButton
+                text="Call Us Now"
+                icon={<CallIcon fontSize="small" />}
+              />
+            </Link>
+            <ThemeOutlineButton
+              icon={<Map />}
               onClick={handleMapOpen}
-            >
-              Show Map
-            </Button>
+              text="Show Map"
+            />
           </Box>
         </CardContent>
       </Card>

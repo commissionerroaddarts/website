@@ -56,50 +56,39 @@ function HomeBanner() {
       }}
     >
       <Navbar />
-      <Box textAlign="center" sx={{ marginTop: -17 }}>
+      <Box textAlign="center">
         <motion.div initial="hidden" animate="visible" variants={scaleIn}>
           <Box
             sx={{
               position: "relative",
               width: "100%",
-              height: "500px",
+              height: { xs: "200px", sm: "300px", md: "450px" },
               zIndex: 0,
               display: "flex",
               justifyContent: "center",
-              // "&:before": {
-              //   content: '""',
-              //   position: "absolute",
-              //   top: 0,
-              //   left: 0,
-              //   right: 0,
-              //   bottom: 0,
-              //   opacity: 0.5,
-              //   background:
-              //     "url('/images/banners/banner-icon-rays.svg') no-repeat center center",
-              //   backgroundSize: "cover",
-              //   zIndex: 23,
-              // },
+              "& img": {
+                width: { xs: "80%", sm: "90%", md: "100%" },
+                height: "auto",
+              },
             }}
+            className="-mt-14 max-sm:-mt-7 "
           >
             <Image
               src="/images/banners/banner-icon.png"
               alt="Road Darts"
-              // Apply blur effect
-              width={950}
-              height={950}
+              fill
               style={{ objectFit: "contain" }}
             />
           </Box>
         </motion.div>
 
-        <Box className="flex flex-col gap-1 relative z-[200] -mt-10">
+        <Box className="flex flex-col gap-1 relative z-[200] -mt-2 max-w-[90%] md:max-w-[95%] mx-auto">
           <motion.div
             variants={itemVariants}
             initial="hidden"
             animate="visible"
-            className="h-full w-full   mb-2  text-white font-bold text-5xl"
+            className="h-full w-full mb-2 text-white font-bold text-4xl sm:text-5xl xl:text-6xl"
           >
-            {/* <AnimText delay={20} /> */}
             Stay Sharp, Throw Anywhere
           </motion.div>
 

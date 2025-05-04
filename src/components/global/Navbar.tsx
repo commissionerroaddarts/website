@@ -127,15 +127,23 @@ function Navbar() {
             <Typography
               variant="h6"
               component="div"
-              sx={{ color: "white", cursor: "pointer" }}
+              sx={{
+                color: "white",
+                cursor: "pointer",
+                width: "30%",
+                position: "relative", // <-- Required for Image with fill
+                height: { xs: "80px", sm: "100px", md: "120px" },
+                "& img": {
+                  width: { xs: "80%", sm: "90%", md: "100%" },
+                  height: "auto",
+                },
+              }}
             >
               <Image
                 src="/images/logos/road-darts-logo.png"
                 alt="Logo"
-                width={160}
-                // Apply blur effect
-                height={160}
-                style={{ height: "120px", width: "auto" }}
+                fill
+                style={{ objectFit: "contain" }}
               />
             </Typography>
           </Link>

@@ -13,7 +13,7 @@ const Footer = () => {
     >
       <Typography variant="body2">
         Copyright &copy; {new Date().getFullYear()} Road Dart | 45 B Road NY.
-        USA | Tel: <a href="tel:007-123-456">007-123-456</a>
+        USA
       </Typography>
     </Box>
   );

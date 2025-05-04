@@ -12,6 +12,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { getUserDetails } from "@/services/authService";
 import { useAppDispatch } from "@/store";
 import { useAppState } from "@/hooks/useAppState";
+import { Box } from "@mui/material";
+import ScrollToTop from "@/components/global/ScrollToTop";
 
 interface LayoutProps {
   readonly children: ReactNode;
@@ -127,24 +129,17 @@ export default function Layout({ children }: LayoutProps) {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       {/* ✅ Always include metadata */}
-
       {isHomePage && isVisible && (
         <AnimatePresence mode="wait">
           <IconsComponent />
         </AnimatePresence>
       )}
-      <div
-        style={{
-          minHeight: "100vh",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-        }}
-      >
+      <Box className="flex flex-col justify-between min-h-screen">
         {!isHomePage && !isCheckoutPage && <Navbar />}
         <main>{children}</main>
         <Footer />
-      </div>
+      </Box>
+      <ScrollToTop /> {/* ← Add this here */}
     </ThemeProvider>
   );
 }

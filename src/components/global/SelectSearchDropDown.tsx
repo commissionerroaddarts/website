@@ -29,6 +29,10 @@ const theme = createTheme({
           background: " rgba(21, 5, 27, 1)",
           borderRadius: "23px",
         },
+        noOptions: {
+          color: "white", // 🔥 this changes "No options" text to white
+          fontFamily: "Lexend",
+        },
         listbox: {
           "& .MuiAutocomplete-option": {
             fontFamily: "Lexend",
