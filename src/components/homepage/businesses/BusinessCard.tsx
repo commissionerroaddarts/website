@@ -59,7 +59,7 @@ function BusinessCard({ business }: { readonly business: Business }) {
           borderRadius: 3,
           color: "#fff",
           p: 2,
-          maxWidth: "100%",
+          width: "100%",
           boxShadow: 3,
           gap: 1,
         }}

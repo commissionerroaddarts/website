@@ -31,15 +31,10 @@ const BusinessGrid = () => {
       <Grid2
         container
         spacing={4}
-        sx={{ mt: 2, justifyContent: "center", width: "90%", margin: "0 auto" }}
+        sx={{ mt: 2, justifyContent: "center", width: "88%", margin: "0 auto" }}
       >
         {businesses?.data.map((business: Business) => (
-          <Grid2
-            key={business?._id}
-            gridTemplateColumns={{
-              xs: "1fr",
-            }}
-          >
+          <Grid2 key={business?._id} width={"100%"}>
             <CardStaggerAnimation stagger={0.1} duration={0.3} yOffset={30}>
               {isMobile ? (
                 <BusinessCardMobile business={business} />
