@@ -100,7 +100,7 @@ function HomeBanner() {
           >
             <Typography
               gutterBottom
-              sx={{ position: "relative", zIndex: 2, fontWeight: 200 }}
+              sx={{ position: "relative", fontWeight: 200 }}
             >
               Discover the best dart venues, tournaments, and tips to improve
               your game.

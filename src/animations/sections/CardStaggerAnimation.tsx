@@ -9,6 +9,7 @@ interface CardStaggerAnimationProps {
   duration?: number;
   stagger?: number;
   yOffset?: number;
+  xOffset?: number;
 }
 
 const CardStaggerAnimation: React.FC<CardStaggerAnimationProps> = ({
@@ -17,6 +18,7 @@ const CardStaggerAnimation: React.FC<CardStaggerAnimationProps> = ({
   duration = 1,
   stagger = 0.2,
   yOffset = 20,
+  xOffset = 0,
 }) => {
   const ref = useRef(null);
 
@@ -30,10 +32,11 @@ const CardStaggerAnimation: React.FC<CardStaggerAnimationProps> = ({
   };
 
   const cardVariants = (index: number) => ({
-    hidden: { opacity: 0, y: yOffset },
+    hidden: { opacity: 0, y: yOffset, x: xOffset },
     visible: {
       opacity: 1,
       y: 0,
+      x: 0,
       transition: { duration, delay: delay * index },
     },
   });
@@ -49,7 +52,7 @@ const CardStaggerAnimation: React.FC<CardStaggerAnimationProps> = ({
     >
       {React.Children.toArray(children).map((child, index) => (
         <motion.div
-          key={(child as React.ReactElement).key || index}
+          key={(child as React.ReactElement).key ?? index}
           variants={cardVariants(index)}
           className="w-full"
         >

@@ -90,7 +90,7 @@ const ImagesUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
   return (
     <Box
       className="flex flex-col items-center justify-center py-10 p-4"
-      style={{
+      sx={{
         background: "linear-gradient(148.71deg, #200C27 2.12%, #6D3880 98.73%)",
       }}
     >

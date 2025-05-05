@@ -11,10 +11,13 @@ import { default as BusinessCardMobile } from "@/components/allestablishmentspag
 import ThemeOutlineButton from "@/components/buttons/ThemeOutlineButton";
 import Link from "next/link";
 import { Business } from "@/types/business";
+import { useMediaQuery } from "@mui/system";
+import theme from "@/theme/theme";
 
 const BusinessGrid = () => {
-  const { businesses, status, error } = useFetchBusinesses(1, 3); // 2-sec intentional loading
-  const isMobile = typeof window !== "undefined" && window.innerWidth < 1024;
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const businessCount = isMobile ? 4 : 3; // Adjust based on screen size
+  const { businesses, status, error } = useFetchBusinesses(1, businessCount); // 2-sec intentional loading
   if (status === "loading") return <BusinessSkeleton count={3} />;
   if (error) return <p>Error: {error}</p>;
 
@@ -25,23 +28,27 @@ const BusinessGrid = () => {
       <Typography variant="h4" gutterBottom className="text-center">
         Explore Our Businesses
       </Typography>
-
       <Grid2
         container
         spacing={4}
         sx={{ mt: 2, justifyContent: "center", width: "90%", margin: "0 auto" }}
       >
-        <CardStaggerAnimation stagger={0.1} duration={0.3} yOffset={30}>
-          {businesses?.data.map((business: Business) => (
-            <Grid2 size={{ xs: 12 }} key={business?._id}>
+        {businesses?.data.map((business: Business) => (
+          <Grid2
+            key={business?._id}
+            gridTemplateColumns={{
+              xs: "1fr",
+            }}
+          >
+            <CardStaggerAnimation stagger={0.1} duration={0.3} yOffset={30}>
               {isMobile ? (
                 <BusinessCardMobile business={business} />
               ) : (
                 <BusinessCard business={business} />
               )}
-            </Grid2>
-          ))}
-        </CardStaggerAnimation>
+            </CardStaggerAnimation>
+          </Grid2>
+        ))}
       </Grid2>
 
       <Link href="/establishments" passHref>

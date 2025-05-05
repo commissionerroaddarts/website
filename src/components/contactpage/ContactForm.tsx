@@ -43,13 +43,12 @@ const ContactForm = () => {
   const onSubmit = async (data: Inquiry) => {
     try {
       const response = await submitContactForm(data);
-      toast.success(response.message || "Form submitted successfully!");
+      toast.success(response.message ?? "Form submitted successfully!");
       dispatch(setInquiryData(data)); // Store data in Redux
-
       router.push("/thank-you");
       reset();
     } catch (error: any) {
-      toast.error(error.response?.data?.error || "Failed to submit form.");
+      toast.error(error.response?.data?.error ?? "Failed to submit form.");
     }
   };
 
@@ -57,11 +56,11 @@ const ContactForm = () => {
     <FadeInSection xOffset={30} delay={0.5}>
       <Paper
         sx={{
-          p: 4,
           borderRadius: "16px",
           background:
             "linear-gradient(112.11deg, rgba(31, 0, 55, 0.82) 2.19%, rgba(75, 0, 130, 0.1) 95.99%)",
         }}
+        className="py-8 px-4 md:px-8"
       >
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid2 container spacing={2}>
@@ -148,7 +147,7 @@ const ContactForm = () => {
             </Grid2>
 
             {/* Submit Button */}
-            <Grid2 size={{ xs: 12 }} textAlign="center">
+            <Grid2 size={{ xs: 12 }} className="flex justify-center">
               <ThemeButton
                 text={isSubmitting ? "Submitting..." : "Submit Now"}
                 type="submit"

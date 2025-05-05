@@ -16,7 +16,7 @@ export const metadata = generateMetadata({
 
 const page = () => {
   return (
-    <Box>
+    <Box className="flex flex-col gap-16 md:gap-10 my-4">
       <AboutUsSection />
 
       <FadeInSection>

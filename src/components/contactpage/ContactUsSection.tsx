@@ -17,7 +17,7 @@ const ContactUsSection = () => {
         </Typography>
       </FadeInSection>
 
-      <Grid2 container spacing={4} alignItems="center" mt={2}>
+      <Grid2 container alignItems="center" mt={4}>
         {/* Contact Info */}
         <Grid2 size={{ xs: 12, md: 5 }}>
           <ContactInfo />

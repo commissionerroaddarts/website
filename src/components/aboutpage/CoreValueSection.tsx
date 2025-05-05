@@ -22,7 +22,7 @@ const coreValues = [
 
 const CoreValueSection = () => {
   return (
-    <Box sx={{ textAlign: "center", py: 2, px: 8 }}>
+    <Box className="core-value-section text-center px-4 md:px-8">
       <Typography variant="h4" fontWeight="bold" color="white" gutterBottom>
         Our Core Values
       </Typography>

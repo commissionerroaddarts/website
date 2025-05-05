@@ -8,8 +8,6 @@ import {
   Typography,
   Drawer,
   List,
-  ListItem,
-  ListItemText,
   useMediaQuery,
   useTheme,
   Avatar,
@@ -30,6 +28,8 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import RateReviewIcon from "@mui/icons-material/RateReview";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { User } from "@/types/user";
+import CardStaggerAnimation from "@/animations/sections/CardStaggerAnimation";
+import { X } from "lucide-react";
 
 const navbarVariants = {
   hidden: { opacity: 0, y: -20 },
@@ -86,7 +86,7 @@ const navLinks = [
 
 function Navbar() {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [drawerOpen, setDrawerOpen] = useState(false);
   const { user } = useAppState();
   const { userDetails, isLoggedIn } = user || {};
@@ -96,15 +96,49 @@ function Navbar() {
   };
 
   const drawer = (
-    <Box sx={{ width: 250 }} onClick={() => toggleDrawer(false)}>
-      <List>
-        {navLinks.map(({ href, label, style }) => (
-          <Link key={href} href={href} passHref prefetch>
-            <ListItem component="a" sx={style}>
-              <ListItemText primary={label} />
-            </ListItem>
-          </Link>
-        ))}
+    <Box className="w-screen" sx={{ width: "100vw" }}>
+      <List sx={{ padding: "2rem" }}>
+        <IconButton
+          sx={{
+            position: "absolute",
+            top: "20px",
+            right: "20px",
+            color: "white",
+            zIndex: 1,
+            background: "#ec6dff",
+            borderRadius: "50%",
+            padding: "0.5rem",
+            "&:hover": {
+              opacity: 0.8,
+            },
+          }}
+          onClick={() => toggleDrawer(false)}
+          aria-label="Close"
+        >
+          <X className="h-5 w-5 text-white" />
+        </IconButton>
+
+        <CardStaggerAnimation
+          stagger={0.1}
+          duration={0.1}
+          yOffset={-20}
+          xOffset={-30}
+        >
+          {navLinks.map(({ href, label, style }) => {
+            if (href === "login" && isLoggedIn) return null;
+            return (
+              <Link
+                key={href}
+                href={href}
+                passHref
+                prefetch
+                style={{ ...style, fontSize: "2rem" }}
+              >
+                {label}
+              </Link>
+            );
+          })}
+        </CardStaggerAnimation>
       </List>
     </Box>
   );
@@ -130,13 +164,9 @@ function Navbar() {
               sx={{
                 color: "white",
                 cursor: "pointer",
-                width: "30%",
                 position: "relative", // <-- Required for Image with fill
+                width: { xs: "30%", sm: "10%" },
                 height: { xs: "80px", sm: "100px", md: "120px" },
-                "& img": {
-                  width: { xs: "80%", sm: "90%", md: "100%" },
-                  height: "auto",
-                },
               }}
             >
               <Image
@@ -162,6 +192,12 @@ function Navbar() {
                 anchor="right"
                 open={drawerOpen}
                 onClose={() => toggleDrawer(false)}
+                sx={{
+                  "& .MuiDrawer-paper": {
+                    background:
+                      "linear-gradient(148.71deg, #200C27 2.12%, #6D3880 98.73%)",
+                  },
+                }}
               >
                 {drawer}
               </Drawer>

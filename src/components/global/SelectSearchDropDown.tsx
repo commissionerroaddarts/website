@@ -36,6 +36,7 @@ const theme = createTheme({
         listbox: {
           "& .MuiAutocomplete-option": {
             fontFamily: "Lexend",
+            zIndex: 1000,
             color: "white",
             "&:hover": {
               backgroundColor: "#333",

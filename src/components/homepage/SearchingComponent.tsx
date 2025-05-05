@@ -94,7 +94,7 @@ const SearchComponent: React.FC = () => {
 
   return (
     <Box
-      className="relative z-20 flex flex-col gap-4 p-4 max-w-[90%] md:max-w-[75%] mx-auto"
+      className="relative z-20 flex flex-col gap-4 p-4 max-w-[90%] lg:max-w-[75%] mx-auto flex-wrap"
       sx={{
         margin: "3rem auto -3rem",
         "&::before": {
@@ -115,7 +115,18 @@ const SearchComponent: React.FC = () => {
       }}
     >
       <form onSubmit={handleSubmit(handleSearch)}>
-        <Box className="flex flex-col md:flex-row gap-3">
+        <Box
+          className="grid gap-3"
+          sx={{
+            display: "grid",
+            gridTemplateColumns: {
+              xs: "1fr",
+              sm: "repeat(2, 1fr)",
+              lg: "repeat(4, 1fr)",
+            },
+            alignItems: "center",
+          }}
+        >
           {/* Search input */}
           <Controller
             name="search"
@@ -173,7 +184,7 @@ const SearchComponent: React.FC = () => {
           />
         </Box>
         {Object.keys(errors).length > 0 && (
-          <h6 className="!text-red-500 text-xs text-center  mt-2">
+          <h6 className="!text-red-500 text-xs text-center mt-2">
             Please provide at least one search parameter!
           </h6>
         )}
