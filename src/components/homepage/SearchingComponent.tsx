@@ -152,7 +152,7 @@ const SearchComponent: React.FC = () => {
             render={({ field, fieldState }) => (
               <SelectSearchDropDown
                 options={categoryOptions}
-                label="What are you looking for?"
+                label="Category"
                 value={field.value ?? ""}
                 error={!!fieldState.error}
                 helperText={fieldState.error?.message}
