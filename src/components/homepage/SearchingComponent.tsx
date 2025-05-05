@@ -21,7 +21,8 @@ const schema = yup
     city: yup.string().optional(),
   })
   .test("at-least-one", "At least one field must be filled", (obj) => {
-    const hasOne = !!(obj.search ?? obj.category ?? obj.city);
+    const hasOne = obj.search === "" || obj.category === "" || obj.city === "";
+    console.log(hasOne, obj);
     return hasOne;
   });
 
@@ -53,7 +54,9 @@ const SearchComponent: React.FC = () => {
   const filters = watch();
 
   const handleSearch = (data: FormValues) => {
+    console.log(data);
     const { search, category, city } = data;
+
     let query = "/establishments?";
     if (search) query += `search=${search}&`;
     if (category) query += `category=${category}&`;
@@ -133,6 +136,7 @@ const SearchComponent: React.FC = () => {
             control={control}
             render={({ field, fieldState }) => (
               <CustomInput
+                {...field}
                 className="w-full"
                 icon={handleSearchInputIcons()}
                 iconPosition="end"
@@ -140,7 +144,8 @@ const SearchComponent: React.FC = () => {
                 error={!!fieldState.error}
                 helperText={fieldState.error?.message}
                 placeholder="Search by name, tags, tagline etc."
-                {...field}
+                onChange={(e) => setValue("search", e.target.value)}
+                value={field.value ?? ""}
               />
             )}
           />
@@ -156,7 +161,7 @@ const SearchComponent: React.FC = () => {
                 value={field.value ?? ""}
                 error={!!fieldState.error}
                 helperText={fieldState.error?.message}
-                onChange={(e) => field.onChange(e.target.value)}
+                onChange={(e) => setValue("category", e.target.value)}
               />
             )}
           />
@@ -173,15 +178,12 @@ const SearchComponent: React.FC = () => {
                 value={field.value ?? ""}
                 error={!!fieldState.error}
                 helperText={fieldState.error?.message}
-                onChange={(e) => field.onChange(e.target.value)}
+                onChange={(e) => setValue("city", e.target.value)}
               />
             )}
           />
 
-          <ThemeButton
-            onClickEvent={handleSubmit(handleSearch)}
-            text="Search"
-          />
+          <ThemeButton type="submit" text="Search" />
         </Box>
         {Object.keys(errors).length > 0 && (
           <h6 className="!text-red-500 text-xs text-center mt-2">

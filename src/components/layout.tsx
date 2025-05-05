@@ -14,6 +14,7 @@ import { useAppDispatch } from "@/store";
 import { useAppState } from "@/hooks/useAppState";
 import { Box } from "@mui/material";
 import ScrollToTop from "@/components/global/ScrollToTop";
+import { useMediaQuery } from "@mui/system";
 
 interface LayoutProps {
   readonly children: ReactNode;
@@ -106,6 +107,7 @@ export default function Layout({ children }: LayoutProps) {
   const { user } = useAppState();
   const { isLoggedIn } = user;
   const duration = 3500; // Duration in milliseconds (3 seconds)
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -129,7 +131,7 @@ export default function Layout({ children }: LayoutProps) {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       {/* ✅ Always include metadata */}
-      {isHomePage && isVisible && (
+      {isHomePage && isVisible && !isMobile && (
         <AnimatePresence mode="wait">
           <IconsComponent />
         </AnimatePresence>

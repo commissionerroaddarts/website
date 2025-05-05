@@ -22,7 +22,7 @@ const BusinessMapPopup = ({
   return (
     <Dialog open={openMap} onClose={handleMapClose} maxWidth="md" fullWidth>
       <DialogContent>
-        <Box className=" absolute top-5 right-5 z-10">
+        <Box className=" absolute top-1 right-1 md:top-5 md:right-5 z-10">
           <IconButton onClick={handleMapClose}>
             <CloseIcon />
           </IconButton>

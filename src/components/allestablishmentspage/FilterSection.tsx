@@ -37,9 +37,14 @@ const FilterSection = ({
   const handleSearchInputIcons = () => {
     if (isLoading) {
       return <Loader color="white" />;
-    } else if (filters?.search !== "") {
+    } else if (filters?.search !== null && filters?.search !== "") {
       return (
-        <button className="cursor-pointer" onClick={handleRemoveSearchFilter}>
+        <button
+          className="cursor-pointer bg-transparent border-none p-0"
+          onClick={handleRemoveSearchFilter}
+          aria-label="Remove search filter"
+          type="button"
+        >
           <Close />
         </button>
       );
@@ -49,7 +54,9 @@ const FilterSection = ({
   };
 
   const handleFilterIcon = () => {
-    if (Object.values(filters).every((filter) => filter !== "")) {
+    if (
+      Object.values(filters).every((filter) => filter !== "" && filter !== null)
+    ) {
       return <FunnelX color="white" />;
     } else {
       return <Filter color="white" />;
@@ -58,7 +65,7 @@ const FilterSection = ({
 
   return (
     <div className="bg-[#3a2a3e] bg-opacity-50 rounded-lg p-4 mb-8">
-      <div className="flex gap-4">
+      <div className="flex flex-col md:flex-row gap-4">
         {isFilteration && (
           <>
             <ThemeButton
@@ -76,7 +83,10 @@ const FilterSection = ({
             />
           </>
         )}
-        <form onSubmit={updateQuery} className="flex gap-4 w-full">
+        <form
+          onSubmit={updateQuery}
+          className="flex flex-col md:flex-row gap-4 w-full"
+        >
           <div className="flex-grow">
             <CustomInput
               className="w-full"
@@ -90,7 +100,7 @@ const FilterSection = ({
               }
             />
           </div>
-          <ThemeButton text="Search" type="submit" onClick={updateQuery} />
+          <ThemeButton text="Search" type="submit" />
         </form>
       </div>
     </div>

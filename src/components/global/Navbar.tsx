@@ -18,7 +18,7 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useAppState } from "@/hooks/useAppState";
 import { logoutUser } from "@/services/authService";
@@ -90,10 +90,28 @@ function Navbar() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const { user } = useAppState();
   const { userDetails, isLoggedIn } = user || {};
+  const pathname = usePathname();
 
   const toggleDrawer = (open: boolean) => {
     setDrawerOpen(open);
   };
+
+  useEffect(() => {
+    const handleDrawerClose = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        toggleDrawer(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleDrawerClose);
+    return () => {
+      window.removeEventListener("keydown", handleDrawerClose);
+    };
+  }, []);
+
+  useEffect(() => {
+    toggleDrawer(false);
+  }, [pathname]);
 
   const drawer = (
     <Box className="w-screen" sx={{ width: "100vw" }}>

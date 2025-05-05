@@ -3,11 +3,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { IconsComponent } from "../layout";
+import { useMediaQuery } from "@mui/system";
+import theme from "@/theme/theme";
 
 const PromoCodePopupComponent = () => {
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
   return (
     <>
-      <IconsComponent />
+      {!isMobile && <IconsComponent />}
       <motion.div
         initial={{ opacity: 0, y: -100 }}
         animate={{ opacity: 1, y: 0 }}

@@ -25,6 +25,7 @@ export default function MainEstablishment() {
   const zipcode = searchParams.get("zipcode") ?? null;
   const agelimit = searchParams.get("agelimit")?.split(",").map(Number) ?? null;
 
+  console.log(search);
   const [filterParams, setFilterParams] = useState<FilterValues>({
     search,
     category,
@@ -38,7 +39,6 @@ export default function MainEstablishment() {
   const debouncedSearch = useDebounce(filterParams.search, 500);
   useEffect(() => {
     setFilterParams((prev) => ({ ...prev, search: debouncedSearch }));
-    getBusinesses();
   }, [debouncedSearch]);
 
   const getBusinesses = async () => {
@@ -113,15 +113,17 @@ const NoBusinessesFound = ({
   setFilterParams: (params: FilterValues) => void;
 }) => {
   return (
-    <div
-      style={{
+    <Box
+      sx={{
         background:
           "linear-gradient(152.76deg, #3F0F50 21.4%, #5D1178 54.49%, #200C27 85.73%)",
       }}
-      className="flex justify-center items-center flex-col py-4 gap-3  rounded-lg shadow-md"
+      className="flex justify-center items-center flex-col py-4 gap-3   rounded-lg shadow-md"
     >
       <SearchX size={50} color="white" strokeWidth={2} />
-      <h1 className="text-4xl font-bold capitalize ">No results found!</h1>
+      <h1 className="text-2xl md:text-4xl text-center font-bold capitalize ">
+        No results found!
+      </h1>
       <p>
         Try searching:{" "}
         <button
@@ -131,6 +133,6 @@ const NoBusinessesFound = ({
           Darts
         </button>
       </p>
-    </div>
+    </Box>
   );
 };
