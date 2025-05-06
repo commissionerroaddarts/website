@@ -54,8 +54,21 @@ const ProfileImageEditor: React.FC<Props> = ({ open, onClose, onSave }) => {
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle>Edit Profile Image</DialogTitle>
-      <DialogContent>
+      <DialogTitle
+        sx={{
+          color: "primary.main",
+        }}
+      >
+        Edit Profile Image
+      </DialogTitle>
+      <DialogContent
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+          alignItems: "center",
+        }}
+      >
         {!imageSrc ? (
           <Button variant="outlined" component="label">
             Upload Image

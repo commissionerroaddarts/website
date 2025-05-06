@@ -1,5 +1,6 @@
-import { TextField, InputAdornment } from "@mui/material";
-import { ComponentProps, ReactNode } from "react";
+import { TextField, InputAdornment, IconButton } from "@mui/material";
+import { ComponentProps, ReactNode, useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 
 interface CustomInputProps extends ComponentProps<typeof TextField> {
   label: string;
@@ -25,8 +26,17 @@ const CustomInput: React.FC<CustomInputProps> = ({
   border,
   borderRadiusPixels,
   onChange,
+  type = "text",
   ...rest
 }) => {
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleTogglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
+
+  const isPasswordField = type === "password";
+
   return (
     <TextField
       fullWidth
@@ -37,12 +47,24 @@ const CustomInput: React.FC<CustomInputProps> = ({
       rows={multiline ? rows : 1}
       error={error}
       helperText={error ? helperText : ""}
+      type={isPasswordField && showPassword ? "text" : type}
       slotProps={{
         input: {
           [iconPosition === "start" ? "startAdornment" : "endAdornment"]:
             icon ? (
               <InputAdornment position={iconPosition}>{icon}</InputAdornment>
             ) : undefined,
+          endAdornment: isPasswordField ? (
+            <InputAdornment position="end">
+              <IconButton onClick={handleTogglePasswordVisibility} edge="end">
+                {showPassword ? (
+                  <EyeOff color="white" />
+                ) : (
+                  <Eye color="white" />
+                )}
+              </IconButton>
+            </InputAdornment>
+          ) : undefined,
         },
       }}
       sx={{

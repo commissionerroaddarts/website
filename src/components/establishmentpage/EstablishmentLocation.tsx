@@ -49,7 +49,7 @@ export default function EstablishmentLocation({
         <SocialIcons socials={socials || {}} />
 
         {/* Claim Now */}
-        <div className="flex items-center space-x-2 mt-4">
+        {/* <div className="flex items-center space-x-2 mt-4">
           <Image
             src="/images/icons/claim.svg"
             alt="Claim"
@@ -60,7 +60,7 @@ export default function EstablishmentLocation({
           <button className=" text-white  rounded-lg">
             Own or work here? <b> Claim Now</b>
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );

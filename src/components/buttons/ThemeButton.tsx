@@ -6,12 +6,14 @@ interface ThemeButtonProps extends MuiButtonProps {
   onClickEvent?: () => void;
   icon?: React.ReactNode;
   text: string;
+  backgroundColor?: string; // Optional prop for background color
 }
 
 const ThemeButton: React.FC<ThemeButtonProps> = ({
   onClickEvent,
   icon,
   text,
+  backgroundColor = "#8224E3", // Default background color
   ...rest
 }) => {
   return (
@@ -19,7 +21,7 @@ const ThemeButton: React.FC<ThemeButtonProps> = ({
       onClick={onClickEvent}
       variant="contained"
       sx={{
-        background: "#8224E3",
+        background: backgroundColor,
         borderRadius: "100px",
         minWidth: "120px",
         padding: "0.8rem 2rem",

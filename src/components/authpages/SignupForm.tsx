@@ -217,7 +217,7 @@ const SignupForm = () => {
 
           <Box mt={2}>
             <Typography variant="body2" align="center">
-              Already Have An Account?{" "}
+              Already have an account?{" "}
               <Link
                 href="/login"
                 style={{ fontWeight: "bold", textDecoration: "underline" }}

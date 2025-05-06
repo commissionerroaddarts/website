@@ -217,18 +217,7 @@ const FilterSidebar: React.FC<SidebarProps> = ({
               <ThemeButton
                 text="Clear Filters"
                 onClick={handleRemoveFilters}
-                variant="outlined"
-                color="secondary"
-                sx={{
-                  color: "white",
-                  backgroundColor: "red",
-                  "&:hover": {
-                    backgroundColor: "darkred",
-                  },
-                  borderRadius: "100px",
-                  minWidth: "120px",
-                  padding: "0.8rem 2rem",
-                }}
+                backgroundColor="red"
                 className="w-full"
               />
             </Box>

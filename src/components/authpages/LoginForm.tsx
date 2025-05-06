@@ -185,16 +185,29 @@ const LoginForm = () => {
           </Grid2>
         </Grid2>
 
-        <Box mt={2}>
+        <Box
+          mt={2}
+          className="flex flex-col md:flex-row gap-2 justify-between "
+        >
           <Typography variant="body2" align="center">
-            Don't Have An Account?{" "}
+            Don't have an account?{" "}
             <Link
               href="/signup"
-              style={{ fontWeight: "bold", textDecoration: "underline" }}
+              style={{ fontWeight: "bold" }}
               passHref
               prefetch
             >
               Sign up
+            </Link>
+          </Typography>
+          <Typography variant="body2" align="center">
+            <Link
+              href="/forget-password"
+              style={{ fontWeight: "bold" }}
+              passHref
+              prefetch
+            >
+              Forgot Password?
             </Link>
           </Typography>
         </Box>

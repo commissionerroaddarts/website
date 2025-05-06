@@ -84,7 +84,10 @@ const FilterSection = ({
           </>
         )}
         <form
-          onSubmit={updateQuery}
+          onSubmit={(e) => {
+            e.preventDefault();
+            updateQuery();
+          }}
           className="flex flex-col md:flex-row gap-4 w-full"
         >
           <div className="flex-grow">

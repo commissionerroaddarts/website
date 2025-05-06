@@ -144,6 +144,7 @@ function Navbar() {
         >
           {navLinks.map(({ href, label, style }) => {
             if (href === "login" && isLoggedIn) return null;
+
             return (
               <Link
                 key={href}

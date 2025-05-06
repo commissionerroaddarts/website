@@ -25,7 +25,6 @@ export default function MainEstablishment() {
   const zipcode = searchParams.get("zipcode") ?? null;
   const agelimit = searchParams.get("agelimit")?.split(",").map(Number) ?? null;
 
-  console.log(search);
   const [filterParams, setFilterParams] = useState<FilterValues>({
     search,
     category,
@@ -39,6 +38,7 @@ export default function MainEstablishment() {
   const debouncedSearch = useDebounce(filterParams.search, 500);
   useEffect(() => {
     setFilterParams((prev) => ({ ...prev, search: debouncedSearch }));
+    getBusinesses();
   }, [debouncedSearch]);
 
   const getBusinesses = async () => {
