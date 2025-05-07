@@ -47,6 +47,8 @@ const LoginForm = () => {
   const router = useRouter(); // Assuming you're using Next.js router
   const search = useSearchParams(); // Assuming you're using Next.js router
   const businessId = search.get("business"); // Get the business ID from the URL
+  const page = search.get("page"); // Get the page from the URL
+  const isFromBusinessPage = page === "main"; // Check if the page is the main business page
 
   if (isLoggedIn) {
     router.push("/profile");
@@ -66,7 +68,11 @@ const LoginForm = () => {
       if (selectedPlan) {
         router.push("/checkout"); // Call the checkout service
       } else if (businessId) {
-        router.back(); // Redirect to the business page
+        if (isFromBusinessPage) {
+          router.push(`/establishments/${businessId}`); // Redirect to the business page
+        } else {
+          router.back(); // Redirect to the business page
+        }
       } else {
         router.push("/"); // Uncomment if using Next.js router
       }

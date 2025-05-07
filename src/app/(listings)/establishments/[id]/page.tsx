@@ -24,8 +24,12 @@ export default async function EstablishmentPage({
   }
 
   return (
-    <div className="p-6 min-h-screen">
-      <Grid2 container spacing={6} sx={{ padding: "0 6rem" }}>
+    <div className="p-2 md:p-6 min-h-screen">
+      <Grid2
+        container
+        spacing={6}
+        className="max-w-[95%] md:max-w-[90%] mx-auto"
+      >
         {/* Gallery */}
         {business.media && (
           <Grid2 size={{ xs: 12 }}>

@@ -13,8 +13,8 @@ type EstablishmentFAQProps = Readonly<{
 
 export default function EstablishmentFAQ({ faqs }: EstablishmentFAQProps) {
   return (
-    <div className="mt-6">
-      <Typography variant="h6" className="text-white mb-4">
+    <div className="mt-10">
+      <Typography variant="h6" className="text-white mb-6">
         FAQs
       </Typography>
       {faqs.map((faq) => (
@@ -32,7 +32,16 @@ export default function EstablishmentFAQ({ faqs }: EstablishmentFAQProps) {
             expandIcon={<ExpandMoreIcon sx={{ color: "white" }} />}
             sx={{ backgroundColor: "#C4C4C41A", borderRadius: "8px" }}
           >
-            <Typography sx={{ fontWeight: "bold" }}>{faq.q}</Typography>
+            <Typography
+              variant="h6"
+              sx={{
+                color: "white",
+                fontWeight: "normal",
+                fontSize: "1rem",
+              }}
+            >
+              {faq.q}
+            </Typography>
           </AccordionSummary>
           <AccordionDetails
             sx={{

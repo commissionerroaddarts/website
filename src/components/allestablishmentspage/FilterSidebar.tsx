@@ -1,16 +1,16 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { Box, Drawer, IconButton, Slider } from "@mui/material";
+import { Box, Drawer, Slider } from "@mui/material";
 import { motion } from "framer-motion";
 import ThemeButton from "@/components/buttons/ThemeButton";
 import SelectSearchDropDown from "@/components/global/SelectSearchDropDown";
 import CustomInput from "@/components/global/CustomInput";
 import { FilterValues } from "@/types/business";
-import { Close } from "@mui/icons-material";
 import { cities_states } from "@/utils/cities_states"; // Assume this is a JSON file with all US cities
 import { boardTypeOptions, categoryOptions } from "@/utils/dropdowns";
 import { useRouter } from "next/navigation";
+import CloseIconButton from "@/components/global/CloseIconButton";
 
 interface SidebarProps {
   open: boolean;
@@ -105,19 +105,7 @@ const FilterSidebar: React.FC<SidebarProps> = ({
       >
         <h2 className="text-xl font-bold mb-4 text-white">Filters</h2>
 
-        <IconButton
-          onClick={onClose}
-          style={{
-            position: "absolute",
-            top: "10px",
-            right: "10px",
-            color: "white",
-            zIndex: 1,
-          }}
-        >
-          <Close />
-        </IconButton>
-
+        <CloseIconButton onClick={onClose} />
         {/* Category */}
         <Box mb={3}>
           <SelectSearchDropDown

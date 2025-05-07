@@ -1,9 +1,9 @@
 import { Business, Price } from "@/types/business";
-import Image from "next/image";
 import TimingsPopup from "./TimingsPopup";
 import SocialIcons from "@/components/global/SocialIcons";
 import { Box } from "@mui/material";
 import EstablishmentMapLocation from "@/components/modals/EstablishmentMapLocation";
+import { CircleDollarSign, Globe, MapPinned, Phone } from "lucide-react";
 
 interface EstablishmentLocationProps {
   readonly business: Business;
@@ -20,7 +20,7 @@ export default function EstablishmentLocation({
 
   return (
     <div
-      className="p-4  rounded-lg space-y-4"
+      className="  rounded-lg space-y-4"
       style={{
         background:
           "linear-gradient(152.76deg, #3F0F50 21.4%, #5D1178 54.49%, #200C27 85.73%)",
@@ -39,7 +39,6 @@ export default function EstablishmentLocation({
           city={location?.city}
           state={location?.state}
           country={location?.country}
-          coordinates={coordinates}
         />
 
         {/* Timings */}
@@ -47,20 +46,6 @@ export default function EstablishmentLocation({
 
         {/* Social Icons */}
         <SocialIcons socials={socials || {}} />
-
-        {/* Claim Now */}
-        {/* <div className="flex items-center space-x-2 mt-4">
-          <Image
-            src="/images/icons/claim.svg"
-            alt="Claim"
-            width={30}
-            height={30}
-            // Apply blur effect
-          />
-          <button className=" text-white  rounded-lg">
-            Own or work here? <b> Claim Now</b>
-          </button>
-        </div> */}
       </div>
     </div>
   );
@@ -73,7 +58,6 @@ const BasicDetails = ({
   state,
   city,
   country,
-  coordinates,
 }: {
   phone?: string;
   website?: string;
@@ -81,58 +65,32 @@ const BasicDetails = ({
   city?: string;
   state?: string;
   country?: string;
-  coordinates: [number, number];
 }) => {
   return (
-    <>
-      <Box>
-        <div className="flex items-center space-x-2">
-          <Image
-            src="/images/icons/location.svg"
-            alt="Phone"
-            width={30}
-            height={30}
-            // Apply blur effect
-          />
-          <span>{`${city}${state ? `, ${state}` : ""}, ${country}`} </span>
-        </div>
-      </Box>
-      <div className="flex mt-4 items-center space-x-2">
-        <Image
-          src="/images/icons/phone.svg"
-          alt="Phone"
-          width={30}
-          height={30}
-          // Apply blur effect
-        />
+    <Box className="p-4 flex flex-col gap-4 " sx={{ margin: 0 }}>
+      <div className="flex items-center gap-2">
+        <MapPinned color="white" size={25} />
+        <span>{`${city}${state ? `, ${state}` : ""}, ${country}`} </span>
+      </div>
+
+      <div className="flex items-center gap-2 flex-wrap">
+        <Phone color="white" size={25} />
         <span>{phone}</span>
       </div>
-      <div className="flex items-center space-x-2">
-        <Image
-          src="/images/icons/website.svg"
-          alt="Phone"
-          width={30}
-          height={30}
-          // Apply blur effect
-        />
+      <div className="flex items-center gap-2 flex-wrap">
+        <Globe color="white" size={25} />
         <a href={website} className="text-purple-300">
-          {website && website.length > 40
-            ? `${website.substring(0, 40)}...`
+          {website && website.length > 25
+            ? `${website.substring(0, 25)}...`
             : website}
         </a>
       </div>
-      <div className="flex items-center space-x-2">
-        <Image
-          src="/images/icons/pricing.svg"
-          alt="Phone"
-          width={30}
-          height={30}
-          // Apply blur effect
-        />
+      <div className="flex items-center gap-2 flex-wrap">
+        <CircleDollarSign color="white" size={25} />
         <span>
           {price?.category} {price?.min} - {price?.max}
         </span>
       </div>
-    </>
+    </Box>
   );
 };

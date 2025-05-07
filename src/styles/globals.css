@@ -93,13 +93,13 @@ body::-webkit-scrollbar-thumb {
   border: 3px solid var(--secondary) !important;
 }
 
-.slick-slide > div {
+/* .slick-slide > div {
   margin: 0 10px;
 }
 
 .slick-list {
   margin: 0 -10px;
-}
+} */
 
 .MuiOutlinedInput-root,
 .MuiOutlinedInput-notchedOutline {

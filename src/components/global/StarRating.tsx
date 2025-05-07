@@ -10,11 +10,11 @@ export const StarRating = ({
   size: string;
 }) => {
   return (
-    <div className="flex">
+    <div className="flex justify-center items-center">
       {[1, 2, 3, 4, 5].map((star) => (
         <svg
           key={star}
-          className={`${size} cursor-pointer ${
+          className={`${size} ${
             rating && star <= rating ? "text-yellow-500" : "text-gray"
           }`}
           fill={rating && star <= rating ? "currentColor" : "none"}

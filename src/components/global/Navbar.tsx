@@ -30,6 +30,7 @@ import { User } from "@/types/user";
 import CardStaggerAnimation from "@/animations/sections/CardStaggerAnimation";
 import { X } from "lucide-react";
 import ThemeButton from "@/components/buttons/ThemeButton";
+import CloseIconButton from "./CloseIconButton";
 
 const navbarVariants = {
   hidden: { opacity: 0, y: -20 },
@@ -96,7 +97,7 @@ function Navbar() {
           prefetch
           className={`text-white py-3 rounded-[86px] ${
             isActive ? "bg-[#645467] my-2 px-8" : "px-5"
-          } ${isMobile ? "text-[2rem]" : "text-[1rem]"} hover:bg-[#64546766]`}
+          } ${isMobile ? "text-[2rem]" : "text-[1rem] "} hover:bg-[#64546766]`}
         >
           {label}
         </Link>
@@ -128,25 +129,7 @@ function Navbar() {
   const drawer = (
     <Box sx={{ width: "100vw" }}>
       <List sx={{ padding: "2rem" }}>
-        <IconButton
-          sx={{
-            position: "absolute",
-            top: "20px",
-            right: "20px",
-            color: "white",
-            zIndex: 1,
-            background: "#ec6dff",
-            borderRadius: "50%",
-            padding: "0.5rem",
-            "&:hover": {
-              opacity: 0.8,
-            },
-          }}
-          onClick={() => toggleDrawer(false)}
-          aria-label="Close"
-        >
-          <X className="h-5 w-5 text-white" />
-        </IconButton>
+        <CloseIconButton onClick={() => toggleDrawer(false)} />
 
         <CardStaggerAnimation
           stagger={0.1}
@@ -185,8 +168,8 @@ function Navbar() {
                   xs: "80px",
                   sm: "100px",
                   md: "120px",
-                  lg: "140px",
-                  xl: "160px",
+                  lg: "130px",
+                  xl: "150px",
                 },
               }}
             >

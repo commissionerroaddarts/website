@@ -5,8 +5,12 @@ import { getBusinessReviews } from "@/services/ratingService";
 import { useEffect, useState } from "react";
 import { BusinessReview, SubmittedUserReview } from "@/types/ratings";
 import ReviewForm from "./ReviewForm";
+import { useAppState } from "@/hooks/useAppState";
+import Link from "next/link";
 
 const EstablishmentReview = ({ id }: { id: string }) => {
+  const { user } = useAppState();
+  const { isLoggedIn } = user;
   const [reviews, setReviews] = useState<BusinessReview[]>([]);
   const [averageRating, setAverageRating] = useState<number>(0);
   const [totalReviews, setTotalReviews] = useState<number>(0);
@@ -28,6 +32,22 @@ const EstablishmentReview = ({ id }: { id: string }) => {
     };
     fetchReviews();
   }, [id]);
+
+  if (!isLoggedIn) {
+    return (
+      <Box
+        style={{
+          padding: "1rem  0",
+          borderRadius: "1rem",
+          fontSize: "1.5rem",
+        }}
+      >
+        <Link href={`/login?business=${id}&page=main`} passHref>
+          Please login to leave a review
+        </Link>
+      </Box>
+    );
+  }
 
   return (
     <Box

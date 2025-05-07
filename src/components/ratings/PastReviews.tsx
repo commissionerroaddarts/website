@@ -20,14 +20,22 @@ export default function PastReviews({
           Past Reviews
         </Typography>
 
-        <Box sx={{ textAlign: "center", mb: 4 }}>
+        <Box
+          sx={{
+            textAlign: "center",
+            mb: 4,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
           <Typography variant="h5" fontWeight="bold">
             {averageRating?.toFixed(1)}
           </Typography>
           <Typography variant="body1" gutterBottom>
             Based on {totalReviews} reviews
           </Typography>
-          <StarRating rating={averageRating} size="size-10" />
+          <StarRating rating={averageRating} size="size-6 md:size-8" />
         </Box>
       </Grid2>
 

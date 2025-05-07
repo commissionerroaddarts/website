@@ -3,11 +3,11 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import RatingForm from "@/components/ratings/RatingForm";
 import PastReviews from "@/components/ratings/PastReviews";
-import { Dialog, DialogContent, IconButton } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
+import { Dialog, DialogContent } from "@mui/material";
 import { getBusinessReviews } from "@/services/ratingService";
 import { useEffect, useState } from "react";
 import { BusinessReview, SubmittedUserReview } from "@/types/ratings";
+import CloseIconButton from "../global/CloseIconButton";
 
 export default function RatingModal({ id }: { readonly id: string }) {
   const router = useRouter();
@@ -55,18 +55,7 @@ export default function RatingModal({ id }: { readonly id: string }) {
         backdropFilter: "blur(10px)", // Add blur effect
       }}
     >
-      <IconButton
-        onClick={handleClose}
-        style={{
-          position: "absolute",
-          top: "10px",
-          right: "10px",
-          color: "white",
-          zIndex: 1,
-        }}
-      >
-        <CloseIcon />
-      </IconButton>
+      <CloseIconButton onClick={handleClose} />
       <DialogContent
         dividers
         style={{

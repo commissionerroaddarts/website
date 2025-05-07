@@ -1,14 +1,8 @@
 "use client";
 import React, { useState } from "react";
-import Image from "next/image";
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  IconButton,
-  Box,
-} from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
+import { Dialog, DialogContent, Box } from "@mui/material";
+import { Clock } from "lucide-react";
+import CloseIconButton from "@/components/global/CloseIconButton";
 
 // Helper to convert "12:37 PM" to minutes since midnight
 interface Timings {
@@ -39,8 +33,20 @@ const TimingsPopup: React.FC<TimingsPopupProps> = ({ timings }) => {
 
   // Get today's day (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
   const today = new Date().getDay();
-  const days = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
-  const todayKey = days[today];
+  const days = [
+    { label: "Monday", value: "mon" },
+    { label: "Tuesday", value: "tue" },
+    { label: "Wednesday", value: "wed" },
+    { label: "Thursday", value: "thu" },
+    { label: "Friday", value: "fri" },
+    { label: "Saturday", value: "sat" },
+    {
+      label: "Sunday",
+      value: "sun",
+    },
+  ];
+  const todayKey = days.filter((day) => day.value === days[today].value)[0]
+    .value;
 
   // Function to check open/close status
   const checkOpenStatus = (day: string): string => {
@@ -67,18 +73,12 @@ const TimingsPopup: React.FC<TimingsPopupProps> = ({ timings }) => {
       {/* Trigger Button */}
       <div className="flex items-center space-x-2 justify-between">
         <Box
-          display={{ xs: "block", md: "flex" }}
+          display="flex"
           justifyContent={{ md: "space-between" }}
           gap={1}
           alignItems="center"
         >
-          <Image
-            src="/images/icons/timings.svg"
-            alt="Phone"
-            width={30}
-            // Apply blur effect
-            height={30}
-          />
+          <Clock color="white" size={25} />
           <span>Today: {checkOpenStatus(todayKey)}</span>
         </Box>
         <Box
@@ -98,53 +98,85 @@ const TimingsPopup: React.FC<TimingsPopupProps> = ({ timings }) => {
             Expand
           </button>
         </Box>
-      </div>
 
-      {/* Popup */}
-      <Dialog
-        open={open}
-        onClose={() => setOpen(false)}
-        maxWidth="xs"
-        fullWidth
-      >
-        <DialogTitle sx={{ color: "black" }}>
-          Business Hours
-          <IconButton
-            aria-label="close"
-            onClick={() => setOpen(false)}
-            sx={{ position: "absolute", right: 8, top: 8 }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
-        <DialogContent dividers>
-          {days.map((day) => (
-            <div
-              key={day}
-              className="flex justify-between text-black items-center py-1 border-b"
-              style={{
-                color: "black",
-              }}
-            >
-              <span className="capitalize ">{day}</span>
-              <span>
-                {timings[day]?.open} - {timings[day]?.close}
-              </span>
-              <span
-                className={`text-sm ${
-                  checkOpenStatus(day) === "Open"
-                    ? "text-green-500"
-                    : "text-red-500"
-                }`}
-              >
-                {checkOpenStatus(day)}
-              </span>
-            </div>
-          ))}
-        </DialogContent>
-      </Dialog>
+        <OpeningHoursDialog
+          open={open}
+          onClose={() => setOpen(false)}
+          days={days}
+          timings={timings}
+        />
+      </div>
     </div>
   );
 };
+
+interface OpeningHoursDialogProps {
+  open: boolean;
+  onClose: () => void;
+  days: {
+    label: string;
+    value: string;
+  }[];
+  timings: Timings;
+}
+
+function OpeningHoursDialog({
+  open,
+  onClose,
+  days,
+  timings,
+}: Readonly<OpeningHoursDialogProps>) {
+  return (
+    <Dialog
+      open={open}
+      onClose={onClose}
+      slotProps={{
+        paper: {
+          style: {
+            backgroundColor: "transparent",
+            boxShadow: "none",
+            maxWidth: "36rem",
+            width: "100%",
+            margin: "16px",
+            borderRadius: "1.5rem",
+            overflow: "hidden",
+            backdropFilter: "blur(10px)",
+          },
+        },
+      }}
+    >
+      <DialogContent
+        sx={{
+          padding: 0,
+          background:
+            "linear-gradient(148.71deg, #200C27 2.12%, #6D3880 98.73%)",
+        }}
+      >
+        <CloseIconButton onClick={onClose} />
+        <div className="relative z-10 p-10 pt-16 pb-10">
+          <h1 className="text-center font-cursive text-white text-4xl mb-10">
+            ExtraMile - Opening Hours
+          </h1>
+
+          <div className="space-y-2">
+            {days.map((day, index) => (
+              <div
+                key={day.value}
+                className="flex justify-between items-center"
+              >
+                <span className="text-white text-xl font-sans">
+                  {day.label}
+                </span>
+                <span className="text-white text-xl font-sans">
+                  {timings[day.value]?.open} - {timings[day.value]?.close}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
 
 export default TimingsPopup;

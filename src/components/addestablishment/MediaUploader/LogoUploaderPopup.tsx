@@ -5,8 +5,8 @@ import { Controller, useFormContext } from "react-hook-form";
 import ThemeButton from "../../buttons/ThemeButton";
 import LogoDropzone from "./FileDropzone";
 import LogoPreviewCropper from "./LogoPreview";
-import { Box, Dialog, IconButton } from "@mui/material";
-import { X } from "lucide-react";
+import { Box, Dialog } from "@mui/material";
+import CloseIconButton from "@/components/global/CloseIconButton";
 
 const LogoUploaderPopup = ({
   open,
@@ -23,26 +23,7 @@ const LogoUploaderPopup = ({
       onClose={() => setOpen(false)}
       className=" rounded-3xl backdrop-blur-sm relative"
     >
-      <IconButton
-        sx={{
-          position: "absolute",
-          top: "20px",
-          right: "20px",
-          color: "white",
-          zIndex: 1,
-          background: "#ec6dff",
-          borderRadius: "50%",
-          padding: "0.5rem",
-          "&:hover": {
-            opacity: 0.8,
-          },
-        }}
-        onClick={() => setOpen(false)}
-        aria-label="Close"
-      >
-        <X className="h-5 w-5 text-white" />
-      </IconButton>
-
+      <CloseIconButton onClick={() => setOpen(false)} />
       <LogoUploader setOpen={setOpen} />
     </Dialog>
   );

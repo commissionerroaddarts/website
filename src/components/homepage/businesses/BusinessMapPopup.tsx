@@ -7,6 +7,7 @@ const EstablishmentMapLocation = dynamic(
 const CloseIcon = React.lazy(() => import("@mui/icons-material/Close"));
 import { Box, Dialog, DialogContent, IconButton } from "@mui/material";
 import { Location } from "@/types/business";
+import CloseIconButton from "@/components/global/CloseIconButton";
 
 interface BusinessMapPopupProps {
   handleMapClose: () => void;
@@ -23,9 +24,7 @@ const BusinessMapPopup = ({
     <Dialog open={openMap} onClose={handleMapClose} maxWidth="md" fullWidth>
       <DialogContent>
         <Box className=" absolute top-1 right-1 md:top-5 md:right-5 z-10">
-          <IconButton onClick={handleMapClose}>
-            <CloseIcon />
-          </IconButton>
+          <CloseIconButton onClick={handleMapClose} />
         </Box>
         <EstablishmentMapLocation location={location || {}} />
       </DialogContent>
