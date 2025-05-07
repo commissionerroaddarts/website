@@ -98,34 +98,38 @@ export default function ReviewForm({
     }
   }, [submittedReview, setValue]);
 
-  const resetUI = () => {
-    setRating({
-      boardCondition: 0,
-      throwingLaneConditions: 0,
-      lightingConditions: 0,
-      spaceAllocated: 0,
-      gamingAmbience: 0,
-    });
-    setHoveredStar({
-      boardCondition: null,
-      throwingLaneConditions: null,
-      lightingConditions: null,
-      spaceAllocated: null,
-      gamingAmbience: null,
-    });
-  };
-
   const handlePost = async (data: { review: string }) => {
-    const payload: PostRatingFormData = {
-      business: businessId,
-      ...rating,
-      text: data.review,
-      img: "",
-    };
-    const res = await postReview(payload);
-    if (res.error) toast.error(res.error.message ?? "Error posting review");
-    toast.success("Review posted successfully!");
-    resetUI();
+    if (
+      rating.boardCondition < 1 ||
+      rating.throwingLaneConditions < 1 ||
+      rating.lightingConditions < 1 ||
+      rating.spaceAllocated < 1 ||
+      rating.gamingAmbience < 1
+    ) {
+      toast.error("All ratings must be at least 1 star.");
+      return;
+    }
+
+    try {
+      const payload: PostRatingFormData = {
+        business: businessId,
+        ...rating,
+        text: data.review,
+        // img: "",
+      };
+      const res = await postReview(payload);
+      if (res.error) {
+        toast.error(res.error.message ?? "Error posting review");
+        return;
+      }
+      if (res.success) {
+        toast.success("Review posted successfully!");
+
+        router.refresh();
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleUpdate = async (data: { review: string }) => {
@@ -139,10 +143,14 @@ export default function ReviewForm({
       return;
     }
     const res = await updateReview(submittedReview._id, payload);
-    if (res.error)
-      return toast.error(res.error.message ?? "Error updating review");
-    toast.success("Review updated successfully!");
-    resetUI();
+    if (res.error) {
+      toast.error(res.error.message ?? "Error updating review");
+      return;
+    }
+    if (res.success) {
+      toast.success("Review updated successfully!");
+      router.refresh();
+    }
   };
 
   const handleDelete = async () => {
@@ -151,10 +159,15 @@ export default function ReviewForm({
       return;
     }
     const res = await deleteReview(submittedReview?._id);
-    if (res.error)
-      return toast.error(res.error.message ?? "Error deleting review");
-    toast.success("Review deleted successfully!");
-    resetUI();
+    if (res.error) {
+      toast.error(res.error.message ?? "Error deleting review");
+      return;
+    }
+    if (res.success) {
+      toast.success("Review deleted successfully!");
+
+      router.refresh();
+    }
   };
 
   const onSubmit = submittedReview ? handleUpdate : handlePost;

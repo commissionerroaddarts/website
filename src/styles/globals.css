@@ -61,6 +61,7 @@ li,
 input::placeholder,
 legend,
 fieldset,
+div,
 label {
   color: var(--foreground);
   font-family: "Lexend", sans-serif !important; /* Apply Lexend font */

@@ -133,7 +133,7 @@ export default function RatingForm({
         business: businessId,
         ...rating,
         text: data.review,
-        img: "",
+        // img: "",
       };
       const res = await postReview(payload);
       if (res.error) {
@@ -164,8 +164,10 @@ export default function RatingForm({
       toast.error(res.error.message ?? "Error updating review");
       return;
     }
-    toast.success("Review updated successfully!");
-    resetUI();
+    if (res.success) {
+      toast.success("Review updated successfully!");
+      resetUI();
+    }
   };
 
   const handleDelete = async () => {

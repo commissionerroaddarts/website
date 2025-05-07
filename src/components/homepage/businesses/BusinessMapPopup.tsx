@@ -22,7 +22,7 @@ const BusinessMapPopup = ({
 }: BusinessMapPopupProps) => {
   return (
     <Dialog open={openMap} onClose={handleMapClose} maxWidth="md" fullWidth>
-      <DialogContent>
+      <DialogContent sx={{ padding: 0 }}>
         <Box className=" absolute top-1 right-1 md:top-5 md:right-5 z-10">
           <CloseIconButton onClick={handleMapClose} />
         </Box>

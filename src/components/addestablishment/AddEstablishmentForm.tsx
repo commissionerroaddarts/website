@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import * as yup from "yup";
 import AddEstablishmentLayout from "./Layout/AddEstablishmentLayout";
@@ -141,6 +141,24 @@ export default function AddEstablishment() {
   const methods = useForm({
     mode: "onBlur",
   });
+  const { formState } = methods; // Access formState to track dirty state
+  const { isDirty } = formState;
+
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (isDirty) {
+        event.preventDefault();
+        // Modern browsers handle the confirmation dialog with preventDefault
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [isDirty]);
+
   const router = useRouter();
   const { user } = useAppState();
   const { userDetails } = user;
