@@ -29,10 +29,11 @@ const schema = yup.object({
 });
 
 interface RatingFormProps {
-  readonly id: string;
-  readonly selectedRating?: number;
-  readonly establishmentName?: string;
-  readonly submittedReview?: SubmittedUserReview | null;
+  id: string;
+  selectedRating?: number;
+  establishmentName?: string;
+  submittedReview?: SubmittedUserReview | null;
+  fetchReviews: () => void;
 }
 
 export default function ReviewForm({
@@ -40,7 +41,8 @@ export default function ReviewForm({
   selectedRating = 0,
   establishmentName = "The Establishment",
   submittedReview = null,
-}: RatingFormProps) {
+  fetchReviews,
+}: Readonly<RatingFormProps>) {
   const router = useRouter();
   const [rating, setRating] = useState<RatingsObject>({
     boardCondition: selectedRating ?? 0,
@@ -124,7 +126,7 @@ export default function ReviewForm({
       }
       if (res.success) {
         toast.success("Review posted successfully!");
-
+        fetchReviews();
         router.refresh();
       }
     } catch (error) {

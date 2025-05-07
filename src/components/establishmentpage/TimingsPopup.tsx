@@ -153,21 +153,21 @@ function OpeningHoursDialog({
         }}
       >
         <CloseIconButton onClick={onClose} />
-        <div className="relative z-10 p-10 pt-16 pb-10">
-          <h1 className="text-center font-cursive text-white text-4xl mb-10">
-            ExtraMile - Opening Hours
+        <div className="relative z-10 p-10 md:pt-16 md:pb-10">
+          <h1 className="text-center font-cursive text-white text-2xl md:text-4xl mb-5">
+            Opening Hours
           </h1>
 
           <div className="space-y-2">
-            {days.map((day, index) => (
+            {days.map((day) => (
               <div
                 key={day.value}
                 className="flex justify-between items-center"
               >
-                <span className="text-white text-xl font-sans">
+                <span className="text-white text-sm md:text-xl font-sans">
                   {day.label}
                 </span>
-                <span className="text-white text-xl font-sans">
+                <span className="text-white text-sm md:text-xl font-sans">
                   {timings[day.value]?.open} - {timings[day.value]?.close}
                 </span>
               </div>

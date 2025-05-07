@@ -16,20 +16,19 @@ const EstablishmentReview = ({ id }: { id: string }) => {
   const [totalReviews, setTotalReviews] = useState<number>(0);
   const [submittedReview, setSubmittedReview] =
     useState<SubmittedUserReview | null>(null);
-
+  const fetchReviews = async () => {
+    try {
+      const response = await getBusinessReviews(id, "rating");
+      setReviews(response.data);
+      setAverageRating(response.averageRating);
+      setTotalReviews(response.totalReviews);
+      setSubmittedReview(response.submittedReview);
+    } catch (error) {
+      console.error("Error fetching reviews:", error);
+    }
+  };
   useEffect(() => {
     if (!id) return;
-    const fetchReviews = async () => {
-      try {
-        const response = await getBusinessReviews(id, "rating");
-        setReviews(response.data);
-        setAverageRating(response.averageRating);
-        setTotalReviews(response.totalReviews);
-        setSubmittedReview(response.submittedReview);
-      } catch (error) {
-        console.error("Error fetching reviews:", error);
-      }
-    };
     fetchReviews();
   }, [id]);
 
@@ -63,6 +62,7 @@ const EstablishmentReview = ({ id }: { id: string }) => {
         selectedRating={0}
         submittedReview={submittedReview}
         establishmentName={reviews[0]?.business?.name ?? "The Establishment"}
+        fetchReviews={fetchReviews}
       />
       {reviews.length > 0 && (
         <PastReviews

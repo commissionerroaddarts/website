@@ -198,7 +198,7 @@ const LoginForm = () => {
           <Typography variant="body2" align="center">
             Don't have an account?{" "}
             <Link
-              href="/signup"
+              href={businessId ? `/signup?business=${businessId}` : "/signup"}
               style={{ fontWeight: "bold" }}
               passHref
               prefetch
