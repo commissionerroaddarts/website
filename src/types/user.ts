@@ -35,4 +35,5 @@ export interface UserSubscription {
 
 export interface PasswordChange {
   newPassword: string;
+  confirmPassword?: string;
 }

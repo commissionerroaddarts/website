@@ -10,3 +10,7 @@ export interface SignupFormData {
   password: string;
   phone: string;
 }
+
+export interface ForgotPasswordFormData {
+  email: string;
+}

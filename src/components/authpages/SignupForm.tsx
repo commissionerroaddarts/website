@@ -54,7 +54,7 @@ const SignupForm = () => {
         toast.error(response.error);
         return;
       }
-      toast.success(response.message || "Signup successful!");
+      toast.success(response.message ?? "Signup successful!");
       if (selectedPlan) {
         router.push("/checkout"); // Redirect to login page after successful signup
       } else {
@@ -63,7 +63,7 @@ const SignupForm = () => {
       // Handle post-signup actions here (e.g., redirect, store token)
     } catch (error: any) {
       toast.error(
-        error.response?.data?.error || "Signup failed. Please try again."
+        error.response?.data?.error ?? "Signup failed. Please try again."
       );
     }
   };
@@ -76,7 +76,7 @@ const SignupForm = () => {
           borderRadius: "16px",
           textAlign: "center",
           background:
-            "linear-gradient(112.11deg, rgba(31, 0, 55, 0.82) 2.19%, rgba(75, 0, 130, 0.1) 95.99%)",
+            " linear-gradient(139deg, #200C27 -4.72%, #4A1C5A 48.82%, #3F0F50 102.37%)",
         }}
       >
         <Box>

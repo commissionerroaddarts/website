@@ -148,7 +148,7 @@ const ViewUserReviews = () => {
               <div className="space-y-6 mt-6">
                 {userReviews.map((review: any) => (
                   <ReviewCard
-                    key={review._id}
+                    key={review?._id}
                     review={review}
                     fetchUserReviews={fetchUserReviews}
                   />
@@ -185,24 +185,24 @@ function ReviewCard({
       >
         <CardMedia
           component="img"
-          image={review.business?.media?.logo ?? "/images/road_darts.png"} // fallback image
-          alt={review.business.name}
+          image={review?.business?.media?.logo ?? "/images/road_darts.png"} // fallback image
+          alt={review?.business?.name}
           sx={{ width: 200, height: 200, borderRadius: "8px" }}
         />
 
         <CardContent sx={{ flex: 1 }}>
           <Typography variant="h5" fontWeight="bold">
-            {review.business.name}
+            {review?.business?.name}
           </Typography>
 
           <Box className="flex flex-col items-start my-2 gap-1">
-            <StarRating rating={review.ratings?.overallRating} size="size-5" />
+            <StarRating rating={review?.ratings?.overallRating} size="size-5" />
 
             <Typography
               variant="body2"
               sx={{ fontStyle: "italic", color: "#d1c4e9", fontSize: "1rem" }}
             >
-              "{review.text || "No review text provided."}"
+              "{review?.text || "No review text provided."}"
             </Typography>
           </Box>
 
@@ -213,13 +213,13 @@ function ReviewCard({
             mb={2}
           >
             <Typography variant="caption" color="text.secondary">
-              {/* Date Posted: {format(new Date(review.createdAt), "MMMM dd, yyyy")} */}
+              {/* Date Posted: {format(new Date(review?.createdAt), "MMMM dd, yyyy")} */}
               Date Posted:{" "}
-              {new Date(review.createdAt ?? "").toLocaleDateString()}
+              {new Date(review?.createdAt ?? "").toLocaleDateString()}
             </Typography>
           </Stack>
           <ReviewActions
-            reviewId={review._id}
+            reviewId={review?._id}
             businessId={review?.business?._id}
             fetchUserReviews={fetchUserReviews}
           />
@@ -251,11 +251,11 @@ const ReviewActions = ({
         fetchUserReviews(); // Refetch reviews after deletions
         toast.success("Review deleted successfully!");
       } else {
-        toast.error("Failed to delete review.");
+        toast.error("Failed to delete review?.");
       }
     } catch (error) {
       setLoading(false);
-      toast.error("Error deleting review. Please try again.");
+      toast.error("Error deleting review?. Please try again.");
       console.error("Error deleting review:", error);
     }
     // Handle delete action

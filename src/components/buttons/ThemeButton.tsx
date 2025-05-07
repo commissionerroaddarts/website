@@ -7,6 +7,7 @@ interface ThemeButtonProps extends MuiButtonProps {
   icon?: React.ReactNode;
   text: string;
   backgroundColor?: string; // Optional prop for background color
+  fontSize?: string; // Optional prop for font size
 }
 
 const ThemeButton: React.FC<ThemeButtonProps> = ({
@@ -14,6 +15,7 @@ const ThemeButton: React.FC<ThemeButtonProps> = ({
   icon,
   text,
   backgroundColor = "#8224E3", // Default background color
+  fontSize = "1rem",
   ...rest
 }) => {
   return (
@@ -27,6 +29,7 @@ const ThemeButton: React.FC<ThemeButtonProps> = ({
         padding: "0.8rem 2rem",
         textTransform: "capitalize",
         display: "flex",
+        fontSize: fontSize,
         justifyContent: "center",
         alignItems: "center",
         gap: icon ? "8px" : "0",

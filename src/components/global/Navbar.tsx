@@ -5,7 +5,6 @@ import {
   Button,
   IconButton,
   Toolbar,
-  Typography,
   Drawer,
   List,
   useMediaQuery,
@@ -30,58 +29,18 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { User } from "@/types/user";
 import CardStaggerAnimation from "@/animations/sections/CardStaggerAnimation";
 import { X } from "lucide-react";
+import ThemeButton from "@/components/buttons/ThemeButton";
 
 const navbarVariants = {
   hidden: { opacity: 0, y: -20 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } },
 };
 
-const navLinks = [
-  {
-    href: "/",
-    label: "Home",
-    style: {
-      "&:hover": {
-        background: "#64546766",
-      },
-    },
-  },
-  {
-    href: "/about",
-    label: "About",
-    style: {
-      "&:hover": {
-        background: "#64546766",
-      },
-    },
-  },
-  {
-    href: "/contact-us",
-    label: "Contact",
-    style: {
-      "&:hover": {
-        background: "#64546766",
-      },
-    },
-  },
-  {
-    href: "/add-listing",
-    label: "Add Listing",
-    style: {
-      "&:hover": {
-        background: "#64546766",
-      },
-    },
-  },
-  {
-    href: "/login",
-    label: "Sign In",
-    style: {
-      "&:hover": {
-        background: "#64546766",
-      },
-    },
-  },
+const baseNavLinks = [
+  { href: "/", label: "Home" },
+  { href: "/about", label: "About" },
+  { href: "/contact-us", label: "Contact" },
+  { href: "/add-listing", label: "Add Listing" },
 ];
 
 function Navbar() {
@@ -91,6 +50,59 @@ function Navbar() {
   const { user } = useAppState();
   const { userDetails, isLoggedIn } = user || {};
   const pathname = usePathname();
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  const logoutHandler = async () => {
+    try {
+      //call the logout function from your auth service
+      await logoutUser(dispatch);
+      // Redirect to the login page or home page after logout
+      router.push("/login");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+
+  const getNavLinks = () => {
+    const links = [...baseNavLinks];
+
+    if (isLoggedIn && isMobile) {
+      links.push(
+        { href: "/profile", label: "Profile" },
+        { href: "/logout", label: "Logout" }
+      );
+    } else if (!isLoggedIn) {
+      links.push({ href: "/login", label: "Sign In" });
+    }
+
+    return links.map(({ href, label }) => {
+      const isActive = pathname === href;
+      if (href === "/logout") {
+        return (
+          <ThemeButton
+            key={href}
+            onClick={logoutHandler}
+            text={label}
+            fontSize="1.6rem"
+          />
+        );
+      }
+
+      return (
+        <Link
+          key={href}
+          href={href}
+          passHref
+          prefetch
+          className={`text-white py-3 rounded-[86px] ${
+            isActive ? "bg-[#645467] my-2 px-8" : "px-5"
+          } ${isMobile ? "text-[2rem]" : "text-[1rem]"} hover:bg-[#64546766]`}
+        >
+          {label}
+        </Link>
+      );
+    });
+  };
 
   const toggleDrawer = (open: boolean) => {
     setDrawerOpen(open);
@@ -114,7 +126,7 @@ function Navbar() {
   }, [pathname]);
 
   const drawer = (
-    <Box className="w-screen" sx={{ width: "100vw" }}>
+    <Box sx={{ width: "100vw" }}>
       <List sx={{ padding: "2rem" }}>
         <IconButton
           sx={{
@@ -141,22 +153,9 @@ function Navbar() {
           duration={0.1}
           yOffset={-20}
           xOffset={-30}
+          delay={0.2}
         >
-          {navLinks.map(({ href, label, style }) => {
-            if (href === "login" && isLoggedIn) return null;
-
-            return (
-              <Link
-                key={href}
-                href={href}
-                passHref
-                prefetch
-                style={{ ...style, fontSize: "2rem" }}
-              >
-                {label}
-              </Link>
-            );
-          })}
+          {getNavLinks()}
         </CardStaggerAnimation>
       </List>
     </Box>
@@ -177,15 +176,18 @@ function Navbar() {
       >
         <Toolbar>
           <Link href="/" passHref style={{ flexGrow: 1 }} prefetch>
-            <Typography
-              variant="h6"
-              component="div"
+            <Box
               sx={{
-                color: "white",
                 cursor: "pointer",
                 position: "relative", // <-- Required for Image with fill
-                width: { xs: "30%", sm: "10%" },
-                height: { xs: "80px", sm: "100px", md: "120px" },
+                width: { xs: "30%", sm: "10%", md: "15%" },
+                height: {
+                  xs: "80px",
+                  sm: "100px",
+                  md: "120px",
+                  lg: "140px",
+                  xl: "160px",
+                },
               }}
             >
               <Image
@@ -194,7 +196,7 @@ function Navbar() {
                 fill
                 style={{ objectFit: "contain" }}
               />
-            </Typography>
+            </Box>
           </Link>
 
           {isMobile ? (
@@ -229,12 +231,13 @@ function Navbar() {
                 alignItems: "center",
               }}
             >
-              <NavLinks
-                isLoggedIn={isLoggedIn}
-                subscriptionStatus={userDetails?.subscription?.status ?? ""}
-              />
+              {getNavLinks()}
               {isLoggedIn && userDetails && (
-                <ProfileLink userDetails={userDetails} />
+                <ProfileLink
+                  userDetails={userDetails}
+                  logoutHandler={logoutHandler}
+                  router={router}
+                />
               )}
             </Box>
           )}
@@ -244,55 +247,15 @@ function Navbar() {
   );
 }
 
-const NavLinks = ({
-  isLoggedIn,
-  subscriptionStatus,
+const ProfileLink = ({
+  userDetails,
+  logoutHandler,
+  router,
 }: {
-  isLoggedIn: boolean | null;
-  subscriptionStatus: string | null;
+  userDetails: User;
+  logoutHandler: () => void;
+  router: any; // Replace with the correct type for your router
 }) => {
-  const pathname = usePathname();
-
-  return (
-    <>
-      {navLinks.map(({ href, label, style }) => {
-        if (label === "Sign In" && isLoggedIn) return null;
-        const isActive = pathname === href;
-
-        return (
-          <Link key={href} href={href}>
-            <Button
-              sx={{
-                color: "white",
-                padding: "1rem",
-                borderRadius: "86px",
-                backgroundColor: isActive ? "#645467" : "transparent",
-                ...style,
-              }}
-            >
-              {label}
-            </Button>
-          </Link>
-        );
-      })}
-    </>
-  );
-};
-
-const ProfileLink = ({ userDetails }: { userDetails: User }) => {
-  const router = useRouter();
-  const dispatch = useAppDispatch();
-  const logoutHandler = async () => {
-    try {
-      //call the logout function from your auth service
-      await logoutUser(dispatch);
-      // Redirect to the login page or home page after logout
-      router.push("/login");
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
-  };
-
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -332,6 +295,8 @@ const ProfileLink = ({ userDetails }: { userDetails: User }) => {
             color: "white",
             padding: "1rem 1.5rem",
             borderRadius: "86px",
+            textTransform: "capitalize",
+            fontSize: "1rem",
           }}
           onClick={handleMenuOpen}
         >
@@ -383,6 +348,7 @@ const ProfileLink = ({ userDetails }: { userDetails: User }) => {
               "&:hover": {
                 backgroundColor: "#64546766", // Add hover effect
               },
+              textTransform: "capitalize",
             }}
           >
             {icon}

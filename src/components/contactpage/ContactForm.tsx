@@ -58,7 +58,7 @@ const ContactForm = () => {
         sx={{
           borderRadius: "16px",
           background:
-            "linear-gradient(112.11deg, rgba(31, 0, 55, 0.82) 2.19%, rgba(75, 0, 130, 0.1) 95.99%)",
+            " linear-gradient(139deg, #200C27 -4.72%, #4A1C5A 48.82%, #3F0F50 102.37%)",
         }}
         className="py-8 px-4 md:px-8"
       >

@@ -48,3 +48,12 @@ export const logoutUser = async (dispatch: AppDispatch) => {
     console.error("Logout error:", error);
   }
 };
+
+export const forgotPassword = async (data: { email: string }) => {
+  try {
+    const response = await axiosInstance.post("/auth/forgot-password", data);
+    return response; // Expected { message: "Password reset link sent!" }
+  } catch (error: any) {
+    console.error("Forgot password error:", error);
+  }
+};
