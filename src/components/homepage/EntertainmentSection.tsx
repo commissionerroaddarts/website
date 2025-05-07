@@ -62,7 +62,7 @@ const EntertainmentSection = () => {
   };
 
   return (
-    <Box sx={{ py: 6, textAlign: "center" }}>
+    <Box sx={{ py: 6, textAlign: "center" }} className="entertainment-section">
       <Typography
         variant="h4"
         sx={{ color: "white", fontWeight: "bold", mb: 4 }}

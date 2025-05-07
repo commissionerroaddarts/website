@@ -15,7 +15,7 @@ const ThemeButton: React.FC<ThemeButtonProps> = ({
   icon,
   text,
   backgroundColor = "#8224E3", // Default background color
-  fontSize = "1rem",
+  fontSize = "0.95rem",
   ...rest
 }) => {
   return (
@@ -34,7 +34,6 @@ const ThemeButton: React.FC<ThemeButtonProps> = ({
         alignItems: "center",
         gap: icon ? "8px" : "0",
         color: "white",
-        fontWeight: "600", // font-semibold
         transition: "all 0.3s", // transition-all duration-300
         "&:hover": {
           transform: "translate(-4px, -4px)", // hover:translate-x-[-4px] hover:translate-y-[-4px]

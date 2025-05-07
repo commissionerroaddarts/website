@@ -117,16 +117,36 @@ export default function RatingForm({
   };
 
   const handlePost = async (data: { review: string }) => {
-    const payload: PostRatingFormData = {
-      business: businessId,
-      ...rating,
-      text: data.review,
-      img: "",
-    };
-    const res = await postReview(payload);
-    if (res.error) toast.error(res.error.message ?? "Error posting review");
-    toast.success("Review posted successfully!");
-    resetUI();
+    if (
+      rating.boardCondition < 1 ||
+      rating.throwingLaneConditions < 1 ||
+      rating.lightingConditions < 1 ||
+      rating.spaceAllocated < 1 ||
+      rating.gamingAmbience < 1
+    ) {
+      toast.error("All ratings must be at least 1 star.");
+      return;
+    }
+
+    try {
+      const payload: PostRatingFormData = {
+        business: businessId,
+        ...rating,
+        text: data.review,
+        img: "",
+      };
+      const res = await postReview(payload);
+      if (res.error) {
+        toast.error(res.error.message ?? "Error posting review");
+        return;
+      }
+      if (res.success) {
+        toast.success("Review posted successfully!");
+        resetUI();
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleUpdate = async (data: { review: string }) => {
@@ -140,8 +160,10 @@ export default function RatingForm({
       return;
     }
     const res = await updateReview(submittedReview._id, payload);
-    if (res.error)
-      return toast.error(res.error.message ?? "Error updating review");
+    if (res.error) {
+      toast.error(res.error.message ?? "Error updating review");
+      return;
+    }
     toast.success("Review updated successfully!");
     resetUI();
   };
@@ -152,10 +174,14 @@ export default function RatingForm({
       return;
     }
     const res = await deleteReview(submittedReview?._id);
-    if (res.error)
-      return toast.error(res.error.message ?? "Error deleting review");
-    toast.success("Review deleted successfully!");
-    resetUI();
+    if (res.error) {
+      toast.error(res.error.message ?? "Error deleting review");
+      return;
+    }
+    if (res.success) {
+      toast.success("Review deleted successfully!");
+      resetUI();
+    }
   };
 
   const onSubmit = submittedReview ? handleUpdate : handlePost;
