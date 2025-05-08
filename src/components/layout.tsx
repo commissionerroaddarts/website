@@ -15,7 +15,7 @@ import { useAppState } from "@/hooks/useAppState";
 import { Box } from "@mui/material";
 import ScrollToTop from "@/components/global/ScrollToTop";
 import { useMediaQuery } from "@mui/system";
-import EmailVerificationDialogs from "./homepage/EmailVerificationDialogs";
+// import EmailVerificationDialogs from "./homepage/EmailVerificationDialogs";
 
 interface LayoutProps {
   readonly children: ReactNode;
@@ -136,9 +136,9 @@ export default function Layout({ children }: LayoutProps) {
           <IconsComponent />
         </AnimatePresence>
       )}
-      <Suspense fallback={<div>Loading...</div>}>
+      {/* <Suspense fallback={<div>Loading...</div>}>
         <EmailVerificationDialogs />
-      </Suspense>
+      </Suspense> */}
       <Box className="flex flex-col justify-between min-h-screen">
         {!isHomePage && !isCheckoutPage && <Navbar />}
         <main>{children}</main>
