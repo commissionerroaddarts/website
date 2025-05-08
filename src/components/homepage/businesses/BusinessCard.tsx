@@ -20,6 +20,7 @@ import ThemeOutlineButton from "@/components/buttons/ThemeOutlineButton";
 import { Map } from "lucide-react";
 
 function BusinessCard({ business }: { readonly business: Business }) {
+  // business
   const {
     _id,
     phone,
