@@ -140,7 +140,7 @@ export default function Layout({ children }: LayoutProps) {
         <EmailVerificationDialogs />
       </Suspense>
       <Box className="flex flex-col justify-between min-h-screen">
-        {!isHomePage && !isCheckoutPage && <Navbar />}
+        {!isHomePage && <Navbar />}
         <main>{children}</main>
         <Footer />
       </Box>

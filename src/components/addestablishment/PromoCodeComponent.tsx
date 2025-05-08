@@ -17,8 +17,8 @@ const PromoCodePopupComponent = () => {
           <Image
             src="/images/banners/promo.svg" // Replace with your image path
             alt="Promo"
-            width={500} // Adjust width as needed
-            height={500} // Adjust height as needed
+            width={450} // Adjust width as needed
+            height={450} // Adjust height as needed
           />
         </Link>
       </Box>
