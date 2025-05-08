@@ -8,13 +8,13 @@ const plans = [
       "linear-gradient(112.11deg, rgba(31, 0, 55, 0.82) 2.19%, rgba(75, 0, 130, 0.1) 95.99%)",
   },
   {
-    name: "Business plan",
+    name: "Standard plan",
     icon: "/images/icons/business.svg",
     bgColor: "#1D1D1D",
     featured: true,
   },
   {
-    name: "Enterprise plan",
+    name: "Premium plan",
     icon: "/images/icons/enterprise.svg",
     bgColor:
       "linear-gradient(112.11deg, rgba(31, 0, 55, 0.82) 2.19%, rgba(75, 0, 130, 0.1) 95.99%)",

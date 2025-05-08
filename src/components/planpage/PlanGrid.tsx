@@ -37,7 +37,6 @@ const PlanGrid = () => {
     <Box
       sx={{
         textAlign: "center",
-        mt: 5,
       }}
     >
       <Typography variant="h4" color="white" gutterBottom>
@@ -46,20 +45,18 @@ const PlanGrid = () => {
       <Typography color="white" mb={4}>
         Find the perfect plan to showcase your listings and grow your audience.
       </Typography>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          gap: "20px",
-          flexWrap: "wrap",
-        }}
+      <Grid2
+        container
+        spacing={3}
+        justifyContent="center"
+        className="max-w-[95%] md:max-w-[90%] mx-auto"
       >
         {plans.map((plan: Plan) => (
-          <Grid2 size={{ xs: 12, sm: 6, md: 4 }} key={plan.id}>
+          <Grid2 size={{ xs: 12, sm: 12, md: 4 }} key={plan.id}>
             <PlanCard key={plan.id} plan={plan} />
           </Grid2>
         ))}
-      </div>
+      </Grid2>
     </Box>
   );
 };
@@ -103,8 +100,9 @@ const PlanCard = ({ plan }: PlanCardProps) => {
           color: "white",
           borderRadius: "20px",
           padding: "10px",
-          width: 350,
-          height: 550,
+          boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.5)",
+          border: plan.featured ? "2px solid #8224E3" : "none",
+          height: 620,
           display: "flex",
           flexDirection: "column",
         }}
@@ -158,7 +156,12 @@ const PlanCard = ({ plan }: PlanCardProps) => {
                   visible: { opacity: 1, x: 0 },
                 }}
               >
-                <Typography display="flex" alignItems="center" mb={1}>
+                <Typography
+                  display="flex"
+                  alignItems="start"
+                  mb={1}
+                  textAlign="left"
+                >
                   <CheckCircleIcon
                     sx={{
                       color: !plan.featured ? "white" : "#8224E3",
