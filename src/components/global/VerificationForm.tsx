@@ -12,6 +12,7 @@ import {
   Grid2,
   Paper,
   Dialog,
+  DialogContent,
 } from "@mui/material";
 
 interface VerificationFormProps {
@@ -33,14 +34,20 @@ export default function VerificationFormPopup({
   return (
     <Dialog
       fullWidth
-      maxWidth="sm"
+      maxWidth="xs"
       open={open}
       onClose={() => {}}
       sx={{
         backdropFilter: "blur(5px)",
       }}
     >
-      <VerificationForm email={email} onVerified={onVerified} />
+      <DialogContent
+        sx={{
+          paddig: 0,
+        }}
+      >
+        <VerificationForm email={email} onVerified={onVerified} />
+      </DialogContent>
     </Dialog>
   );
 }

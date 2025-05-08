@@ -10,6 +10,7 @@ import ProfileImageEditor from "./tabs/ProfileImageEditor";
 import Preloader from "@/components/global/Preloader";
 import { toast } from "react-toastify";
 import { updateUserProfileImage } from "@/services/userService";
+import ThemeButton from "../buttons/ThemeButton";
 
 export default function AccountManagementPage() {
   const { user } = useAppState();
@@ -115,7 +116,43 @@ const ProfileImage = ({ userDetails }: { userDetails: User }) => {
       >
         {userDetails.firstname} {userDetails.lastname}
       </Typography>
-      <Typography color="text.secondary">{userDetails.email}</Typography>
+      <Box
+        sx={{
+          display: "inline-flex",
+          alignItems: "center",
+          mt: 1,
+        }}
+      >
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ fontWeight: "bold" }}
+        >
+          {userDetails.email}
+        </Typography>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{
+            ml: 1,
+            px: 2,
+            py: 0.5,
+            borderRadius: "16px",
+            bgcolor: "background.default",
+            border: "1px solid",
+            borderColor: "divider",
+            textTransform: "capitalize",
+          }}
+        >
+          {userDetails.status}
+        </Typography>
+      </Box>
+
+      {userDetails.status === "unverified" && (
+        <Box mt={2}>
+          <ThemeButton text="Resend Verification Email" onClick={() => {}} />
+        </Box>
+      )}
     </Box>
   );
 };

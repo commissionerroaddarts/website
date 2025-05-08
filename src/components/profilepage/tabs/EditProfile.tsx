@@ -7,9 +7,7 @@ import { useForm, Controller } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { updateUserProfile } from "@/services/userService";
-import VerificationFormPopup from "@/components/global/VerificationForm";
 import { toast } from "react-toastify";
-import { useState } from "react";
 
 const phoneRegex = /^(\+?\d{1,4}[\s-])?(?!0+\s+,?$)\d{10,14}$/; // Handles intl formats
 const nameRegex = /^[A-Za-z\s\-']+$/; // Allows letters, spaces, hyphens, apostrophes
@@ -41,58 +39,60 @@ const schema = yup.object().shape({
     .email("Invalid email address")
     .required("Email is required"),
 
-  phone: yup
-    .string()
-    .matches(phoneRegex, "Invalid phone number format")
-    .required("Phone number is required")
-    .notRequired(),
+  phone: yup.string().nullable().notRequired().matches(phoneRegex, {
+    message: "Invalid phone number format",
+    excludeEmptyString: true,
+  }),
 
   country: yup
     .string()
+    .nullable()
+    .notRequired()
     .min(2, "Country name must be at least 2 characters")
-    .max(56, "Country name too long")
-    .notRequired(),
+    .max(56, "Country name too long"),
 
   state: yup
     .string()
+    .nullable()
+    .notRequired()
     .min(2, "State name must be at least 2 characters")
-    .max(56, "State name too long")
-    .notRequired(),
+    .max(56, "State name too long"),
 
   city: yup
     .string()
+    .nullable()
+    .notRequired()
     .min(2, "City name must be at least 2 characters")
-    .max(56, "City name too long")
-    .notRequired(),
+    .max(56, "City name too long"),
 
-  zipCode: yup
-    .string()
-    .matches(zipCodeRegex, "Zip code must be 4 to 10 digits")
-    .notRequired(),
+  zipCode: yup.string().nullable().notRequired().matches(zipCodeRegex, {
+    message: "Zip code must be 4 to 10 digits",
+    excludeEmptyString: true,
+  }),
 
   facebook: yup
     .string()
-    .url("Facebook link must be a valid URL")
     .nullable()
-    .notRequired(),
+    .notRequired()
+    .url("Facebook link must be a valid URL"),
 
   instagram: yup
     .string()
-    .url("Instagram link must be a valid URL")
     .nullable()
-    .notRequired(),
+    .notRequired()
+    .url("Instagram link must be a valid URL"),
 
   twitter: yup
     .string()
-    .url("Twitter link must be a valid URL")
     .nullable()
-    .notRequired(),
+    .notRequired()
+    .url("Twitter link must be a valid URL"),
 
   linkedin: yup
     .string()
-    .url("LinkedIn link must be a valid URL")
     .nullable()
-    .notRequired(),
+    .notRequired()
+    .url("LinkedIn link must be a valid URL"),
 });
 
 const EditProfile = ({ user }: { user: User }) => {
@@ -100,43 +100,28 @@ const EditProfile = ({ user }: { user: User }) => {
     control,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
   } = useForm({
     defaultValues: {
       firstname: user.firstname,
       lastname: user.lastname,
       email: user.email,
       phone: user.phone,
-      country: user.address?.country ?? "",
-      state: user.address?.state ?? "",
-      city: user.address?.city ?? "",
-      zipCode: user.address?.zipcode ?? "",
-      facebook: user.socials?.facebook ?? "",
-      instagram: user.socials?.instagram ?? "",
-      twitter: user.socials?.twitter ?? "",
-      linkedin: user.socials?.linkedin ?? "",
+      country: user.address?.country,
+      state: user.address?.state,
+      city: user.address?.city,
+      zipCode: user.address?.zipcode,
+      facebook: user.socials?.facebook,
+      instagram: user.socials?.instagram,
+      twitter: user.socials?.twitter,
+      linkedin: user.socials?.linkedin,
     },
     resolver: yupResolver(schema),
   });
 
-  const [showVerification, setShowVerification] = useState(false);
-  const originalEmail = user.email;
-  //store updated email to a state
-  const [pendingData, setPendingData] = useState<any>(null); // to hold form data temporarily
+  const originalEmail = user.email; // Store the original email for comparison
 
   const onSubmit = async (data: any) => {
-    const emailChanged = data.email !== originalEmail;
-
-    if (emailChanged) {
-      setShowVerification(true);
-      setPendingData(data); // Store the updated email
-      return; // Optionally delay submission until verification
-    }
-
-    handleEditProfile(data);
-  };
-
-  const handleEditProfile = async (data: any) => {
     try {
       const updatedUser = {
         ...user,
@@ -156,11 +141,16 @@ const EditProfile = ({ user }: { user: User }) => {
           twitter: data.twitter,
           linkedin: data.linkedin,
         },
+        status: data.email !== originalEmail ? "unverified" : user.status, // Set status to "pending" if email is changed
       };
 
       const response = await updateUserProfile(updatedUser);
       if (!response) {
         toast.error("Failed to update profile. Please try again.");
+        return;
+      }
+      if (response) {
+        toast.success("Profile updated successfully!");
         return;
       }
       toast.success("Profile updated successfully!");
@@ -172,16 +162,6 @@ const EditProfile = ({ user }: { user: User }) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      {/* {showVerification && ( */}
-      <VerificationFormPopup
-        email={pendingData?.email} // Use the updated email for verification
-        open={showVerification}
-        onVerified={() => {
-          setShowVerification(false);
-          handleEditProfile(pendingData); // Trigger form submission again
-        }}
-      />
-      {/* )} */}
       <Box mb={4}>
         <Typography
           variant="subtitle1"
@@ -417,7 +397,7 @@ const EditProfile = ({ user }: { user: User }) => {
         <ThemeButton
           text={isSubmitting ? "Saving..." : "Save"}
           type="submit"
-          disabled={isSubmitting}
+          disabled={isSubmitting || !isDirty} // Disable if form is submitting or not dirty
         />
       </Box>
     </form>

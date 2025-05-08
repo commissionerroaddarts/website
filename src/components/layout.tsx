@@ -6,15 +6,17 @@ import CssBaseline from "@mui/material/CssBaseline";
 import theme from "@/theme/theme";
 import Navbar from "./global/Navbar";
 import Footer from "./global/Footer";
-import { usePathname } from "next/navigation"; // Correct hook
+import { usePathname, useSearchParams } from "next/navigation"; // Correct hook
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { getUserDetails } from "@/services/authService";
 import { useAppDispatch } from "@/store";
 import { useAppState } from "@/hooks/useAppState";
-import { Box } from "@mui/material";
+import { Box, Dialog, DialogContent } from "@mui/material";
 import ScrollToTop from "@/components/global/ScrollToTop";
 import { useMediaQuery } from "@mui/system";
+import ThemeButton from "./buttons/ThemeButton";
+import CloseIconButton from "./global/CloseIconButton";
 
 interface LayoutProps {
   readonly children: ReactNode;
@@ -108,6 +110,8 @@ export default function Layout({ children }: LayoutProps) {
   const { isLoggedIn } = user;
   const duration = 3500; // Duration in milliseconds (3 seconds)
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const search = useSearchParams();
+  const emailverification = search.get("emailverification");
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -130,11 +134,23 @@ export default function Layout({ children }: LayoutProps) {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      {/* ✅ Always include metadata */}
       {isHomePage && isVisible && !isMobile && (
         <AnimatePresence mode="wait">
           <IconsComponent />
         </AnimatePresence>
+      )}
+      {emailverification === "success" && (
+        <VerificationDialog>
+          <h2>Email Verification Successful</h2>
+          <p>Your email has been successfully verified.</p>
+        </VerificationDialog>
+      )}
+      {emailverification === "failed" && (
+        <VerificationDialog>
+          <h2>Email Verification Failed</h2>
+          <p>There was an error verifying your email. Please try again.</p>
+          <ThemeButton text="Resend Verification Email" onClick={() => {}} />
+        </VerificationDialog>
       )}
       <Box className="flex flex-col justify-between min-h-screen">
         {!isHomePage && !isCheckoutPage && <Navbar />}
@@ -191,5 +207,30 @@ export const IconsComponent = () => {
         </motion.div>
       ))}
     </>
+  );
+};
+
+const VerificationDialog = ({ children }: { children: ReactNode }) => {
+  const [open, setOpen] = useState(true);
+  return (
+    <Dialog
+      open={open}
+      fullWidth
+      maxWidth="xs"
+      sx={{ zIndex: 9999 }}
+      className="  backdrop-blur-sm relative"
+    >
+      <DialogContent
+        sx={{
+          textAlign: "center",
+          p: 4,
+          background:
+            "linear-gradient(148.71deg, #200C27 2.12%, #6D3880 98.73%)",
+        }}
+      >
+        <CloseIconButton onClick={() => setOpen(false)} />
+        {children}
+      </DialogContent>
+    </Dialog>
   );
 };
