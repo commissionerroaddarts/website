@@ -1,22 +1,21 @@
 "use client"; // ✅ Add this at the very top
 
-import { useState, ReactNode, useEffect } from "react";
+import { useState, ReactNode, useEffect, Suspense } from "react";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import theme from "@/theme/theme";
 import Navbar from "./global/Navbar";
 import Footer from "./global/Footer";
-import { usePathname, useSearchParams } from "next/navigation"; // Correct hook
+import { usePathname } from "next/navigation"; // Correct hook
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { getUserDetails } from "@/services/authService";
 import { useAppDispatch } from "@/store";
 import { useAppState } from "@/hooks/useAppState";
-import { Box, Dialog, DialogContent } from "@mui/material";
+import { Box } from "@mui/material";
 import ScrollToTop from "@/components/global/ScrollToTop";
 import { useMediaQuery } from "@mui/system";
-import ThemeButton from "./buttons/ThemeButton";
-import CloseIconButton from "./global/CloseIconButton";
+import EmailVerificationDialogs from "./homepage/EmailVerificationDialogs";
 
 interface LayoutProps {
   readonly children: ReactNode;
@@ -110,8 +109,6 @@ export default function Layout({ children }: LayoutProps) {
   const { isLoggedIn } = user;
   const duration = 3500; // Duration in milliseconds (3 seconds)
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  const search = useSearchParams();
-  const emailverification = search.get("emailverification");
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -139,19 +136,9 @@ export default function Layout({ children }: LayoutProps) {
           <IconsComponent />
         </AnimatePresence>
       )}
-      {emailverification === "success" && (
-        <VerificationDialog>
-          <h2>Email Verification Successful</h2>
-          <p>Your email has been successfully verified.</p>
-        </VerificationDialog>
-      )}
-      {emailverification === "failed" && (
-        <VerificationDialog>
-          <h2>Email Verification Failed</h2>
-          <p>There was an error verifying your email. Please try again.</p>
-          <ThemeButton text="Resend Verification Email" onClick={() => {}} />
-        </VerificationDialog>
-      )}
+      <Suspense fallback={<div>Loading...</div>}>
+        <EmailVerificationDialogs />
+      </Suspense>
       <Box className="flex flex-col justify-between min-h-screen">
         {!isHomePage && !isCheckoutPage && <Navbar />}
         <main>{children}</main>
@@ -207,30 +194,5 @@ export const IconsComponent = () => {
         </motion.div>
       ))}
     </>
-  );
-};
-
-const VerificationDialog = ({ children }: { children: ReactNode }) => {
-  const [open, setOpen] = useState(true);
-  return (
-    <Dialog
-      open={open}
-      fullWidth
-      maxWidth="xs"
-      sx={{ zIndex: 9999 }}
-      className="  backdrop-blur-sm relative"
-    >
-      <DialogContent
-        sx={{
-          textAlign: "center",
-          p: 4,
-          background:
-            "linear-gradient(148.71deg, #200C27 2.12%, #6D3880 98.73%)",
-        }}
-      >
-        <CloseIconButton onClick={() => setOpen(false)} />
-        {children}
-      </DialogContent>
-    </Dialog>
   );
 };
