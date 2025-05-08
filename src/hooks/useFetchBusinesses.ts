@@ -16,7 +16,7 @@ const useFetchBusinesses = (page = 1, limit = 3) => {
   useEffect(() => {
     fetchData();
   }, [fetchData]);
-
+  console.error(error);
   return { businesses, status, error, refresh: fetchData };
 };
 

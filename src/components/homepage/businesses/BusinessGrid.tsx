@@ -17,9 +17,8 @@ import theme from "@/theme/theme";
 const BusinessGrid = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const businessCount = isMobile ? 4 : 3; // Adjust based on screen size
-  const { businesses, status, error } = useFetchBusinesses(1, businessCount); // 2-sec intentional loading
+  const { businesses, status } = useFetchBusinesses(1, businessCount); // 2-sec intentional loading
   if (status === "loading") return <BusinessSkeleton count={3} />;
-  if (error) return <p>Error: {error}</p>;
 
   if (!businesses) return null;
 

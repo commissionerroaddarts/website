@@ -31,6 +31,7 @@ function BusinessCard({ business }: { readonly business: Business }) {
     location,
     averageRating,
   } = business;
+
   const [openMap, setOpenMap] = useState(false);
   const handleMapOpen = () => setOpenMap(true);
   const handleMapClose = () => setOpenMap(false);

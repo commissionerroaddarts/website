@@ -1,12 +1,11 @@
 import React from "react";
-import { Container, Box, Dialog, DialogContent } from "@mui/material";
+import { Container, Box } from "@mui/material";
 import BusinessGrid from "@/components/homepage/businesses/BusinessGrid";
 import CategoryGrid from "@/components/homepage/businesses/CategoryGrid";
 import EntertainmentSection from "@/components/homepage/EntertainmentSection";
 import HomeBanner from "@/components/homepage/HomeBanner";
 import FadeInSection from "@/animations/sections/FadeInSection";
 import { generateMetadata } from "@/utils/metaData";
-import ThemeButton from "@/components/buttons/ThemeButton";
 
 export const metadata = generateMetadata({
   title: "Home - Road Darts",
