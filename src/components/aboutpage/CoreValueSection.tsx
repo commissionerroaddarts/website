@@ -28,7 +28,7 @@ List your location, promote leagues, blind draws, tournaments, and dart-friendly
 const CoreValueSection = () => {
   return (
     <Box className="core-value-section text-center px-4 md:px-8">
-      <Typography variant="h4" fontWeight="bold" color="white" gutterBottom>
+      <Typography variant="h4" fontWeight="bold" color="white" marginBlock={5}>
         Stay sharp. Stay social. Throw anywhere!
       </Typography>
       
@@ -40,6 +40,7 @@ const CoreValueSection = () => {
                 background:
                   "linear-gradient(112.11deg, rgba(31, 0, 55, 0.82) 2.19%, rgba(75, 0, 130, 0.1) 95.99%)",
                 borderRadius: 2,
+                height:{xs:"100%",md:"400px"}
               }}
             >
               <CardContent

@@ -38,6 +38,7 @@ const PlanGrid = () => {
       sx={{
         textAlign: "center",
       }}
+      className="max-w-[90%] mx-auto"
     >
       <Typography variant="h4" color="white" gutterBottom>
         Select Your Plan
@@ -45,12 +46,7 @@ const PlanGrid = () => {
       <Typography color="white" mb={4}>
         Find the perfect plan to showcase your listings and grow your audience.
       </Typography>
-      <Grid2
-        container
-        spacing={3}
-        justifyContent="center"
-        className="max-w-[95%] md:max-w-[90%] mx-auto"
-      >
+      <Grid2 container spacing={3} justifyContent="center">
         {plans.map((plan: Plan) => (
           <Grid2 size={{ xs: 12, sm: 12, md: 4 }} key={plan.id}>
             <PlanCard key={plan.id} plan={plan} />
@@ -102,7 +98,7 @@ const PlanCard = ({ plan }: PlanCardProps) => {
           padding: "10px",
           boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.5)",
           border: plan.featured ? "2px solid #8224E3" : "none",
-          height: 620,
+          height: { xs: "auto", md: 620 },
           display: "flex",
           flexDirection: "column",
         }}

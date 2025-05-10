@@ -16,7 +16,15 @@ export default function AboutUsSection() {
         >
           About Us
         </Typography>
-        <Typography variant="h4" align="center" fontWeight="bold" gutterBottom>
+        <Typography
+          variant="h4"
+          align="center"
+          fontWeight="bold"
+          sx={{
+            marginBottom: { xs: 2, md: 5 },
+            fontSize: { xs: 30, md: 40 },
+          }}
+        >
           Born from the road. Built for the game.
         </Typography>
         {/* <Typography
@@ -48,9 +56,17 @@ export default function AboutUsSection() {
               mb={3}
               textAlign={"justify"}
             >
-              Road Darts was created out of a simple need — to stay sharp while traveling. Whether you're a seasoned player chasing competition or just looking to unwind with a few rounds at a local spot, Road Darts makes it easy to find dart-friendly venues that match your vibe. From dive bars with character to polished tournament lanes, discover the throwing environment where you feel most at home.
-              <br/>
-              More than just a directory — it's a social hub. Connect with fellow players, drop match requests, and stay in the loop on leagues, blind draws, and tournaments. 
+              Road Darts was created out of a simple need — to stay sharp while
+              traveling. Whether you're a seasoned player chasing competition or
+              just looking to unwind with a few rounds at a local spot, Road
+              Darts makes it easy to find dart-friendly venues that match your
+              vibe. From dive bars with character to polished tournament lanes,
+              discover the throwing environment where you feel most at home.
+              <br />
+              <br />
+              More than just a directory — it's a social hub. Connect with
+              fellow players, drop match requests, and stay in the loop on
+              leagues, blind draws, and tournaments.
             </Typography>
 
             <Typography
@@ -60,21 +76,30 @@ export default function AboutUsSection() {
               textAlign={"justify"}
               mb={3}
             >
-              For venues, Road Darts offers a hassle-free way to promote your dart scene, drive new traffic, and become a destination for players on the move. Whether you're running weekly leagues, hosting blind draws, or organizing special events, our platform gives you the tools to showcase it all to an audience that’s actively searching for places to play. Easily list your tournaments, post schedules, share updates, and get discovered by dart players traveling through or living nearby. It’s more than just advertising — it’s a direct connection to a passionate, engaged, and growing community of dart enthusiasts looking for their next favorite spot.
+              For venues, Road Darts offers a hassle-free way to promote your
+              dart scene, drive new traffic, and become a destination for
+              players on the move. Whether you're running weekly leagues,
+              hosting blind draws, or organizing special events, our platform
+              gives you the tools to showcase it all to an audience that’s
+              actively searching for places to play. Easily list your
+              tournaments, post schedules, share updates, and get discovered by
+              dart players traveling through or living nearby. It’s more than
+              just advertising — it’s a direct connection to a passionate,
+              engaged, and growing community of dart enthusiasts looking for
+              their next favorite spot.
             </Typography>
-            
           </FadeInSection>
         </Grid2>
         <Grid2 size={{ xs: 12, md: 6 }} order={{ xs: 1, md: 2 }}>
           <FadeInSection delay={0.5} xOffset={20}>
-            <Image
-              src="/images/banners/about-road-dart.svg"
-              alt="About Us Image"
-              width={400}
-              height={200}
-              // Apply blur effect
-              style={{ borderRadius: "8px", width: "100%", height: "auto" }}
-            />
+            <Box className="relative h-[200px]  md:h-[700px] lg:h-[510px] flex items-center  w-full ">
+              <Image
+                src="/images/banners/about-road-dart.png"
+                alt="About Us Image"
+                fill
+                className="object-cover rounded-lg p-0"
+              />
+            </Box>
           </FadeInSection>
         </Grid2>
       </Grid2>
