@@ -1,5 +1,6 @@
 import { generateMetadata } from "@/utils/metaData";
 import React from "react";
+import PrivacySection from "./PrivacySection";
 
 export const metadata = generateMetadata({
   title: "Privacy Policy",
@@ -9,7 +10,7 @@ export const metadata = generateMetadata({
 });
 
 const PrivacyPolicyPage = () => {
-  return <div>PrivacyPolicyPage</div>;
+  return <PrivacySection />;
 };
 
 export default PrivacyPolicyPage;

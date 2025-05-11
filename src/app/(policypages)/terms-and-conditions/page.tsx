@@ -1,5 +1,6 @@
 import { generateMetadata } from "@/utils/metaData";
 import React from "react";
+import TermsAndConditionsSection from "./TermsConditionsSection";
 
 export const metadata = generateMetadata({
   title: "Terms and Conditions",
@@ -9,7 +10,7 @@ export const metadata = generateMetadata({
 });
 
 const TermsConditionsPage = () => {
-  return <div>TermsConditionsPage</div>;
+  return <TermsAndConditionsSection />;
 };
 
 export default TermsConditionsPage;

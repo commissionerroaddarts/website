@@ -21,8 +21,8 @@ const Footer = () => {
   return (
     <Box className="flex flex-col gap-3 md:gap-0 md:flex-row justify-between items-center px-3 py-1 mt-10 bg-[#15051B]">
       <Typography variant="h6" sx={{ fontSize: "0.8rem", color: "white" }}>
-        Copyright &copy; {new Date().getFullYear()} Road Dart | 45 B Road NY.
-        USA
+        Copyright &copy; {new Date().getFullYear()} Road Darts LLC. | 14026
+        Stoney Gate PL - San Diego, CA 92128
       </Typography>
 
       <List className="flex gap-4 mt-2 md:mt-0">
