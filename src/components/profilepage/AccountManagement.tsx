@@ -11,6 +11,8 @@ import Preloader from "@/components/global/Preloader";
 import { toast } from "react-toastify";
 import { updateUserProfileImage } from "@/services/userService";
 import ThemeButton from "../buttons/ThemeButton";
+import { getUserDetails } from "@/services/authService";
+import { useAppDispatch } from "@/store";
 
 export default function AccountManagementPage() {
   const { user } = useAppState();
@@ -62,7 +64,7 @@ const ProfileImage = ({ userDetails }: { userDetails: User }) => {
   const [profileImage, setProfileImage] = useState<string>(
     userDetails?.profileImg ?? "/placeholder.svg"
   );
-
+  const dispatch = useAppDispatch();
   const handleSave = async (blob: Blob, fileUrl: string) => {
     setProfileImage(fileUrl);
     // You can also send `blob` to backend via FormData
@@ -75,6 +77,7 @@ const ProfileImage = ({ userDetails }: { userDetails: User }) => {
       formData.append("profileImg", file); // Now sending as a File
       const response = await updateUserProfileImage(formData);
       if (response.success) {
+        await getUserDetails(dispatch);
         toast.success("Profile image updated successfully!");
         return;
       }

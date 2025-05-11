@@ -16,14 +16,35 @@ import { useAppDispatch } from "@/store";
 
 // ✅ Form Validation Schema
 const schema = yup.object().shape({
-  firstname: yup.string().required("First name is required"),
-  lastname: yup.string().required("Last name is required"),
-  phone: yup.string().required("Phone number is required"),
-  email: yup.string().email("Invalid email").required("Email is required"),
+  firstname: yup
+    .string()
+    .required("First name is required")
+    .matches(/^[a-zA-Z]+$/, "First name must contain only letters")
+    .min(2, "First name must be at least 2 characters")
+    .max(50, "First name cannot exceed 50 characters"),
+  lastname: yup
+    .string()
+    .required("Last name is required")
+    .matches(/^[a-zA-Z]+$/, "Last name must contain only letters")
+    .min(2, "Last name must be at least 2 characters")
+    .max(50, "Last name cannot exceed 50 characters"),
+  phone: yup
+    .string()
+    .required("Phone number is required")
+    .matches(
+      /^\d{10,15}$/,
+      "Phone number must be between 10 and 15 digits and contain only numbers"
+    ),
+  email: yup
+    .string()
+    .email("Invalid email format")
+    .required("Email is required")
+    .max(100, "Email cannot exceed 100 characters"),
   message: yup
     .string()
+    .required("Message is required")
     .min(10, "Message must be at least 10 characters")
-    .required("Message is required"),
+    .max(500, "Message cannot exceed 500 characters"),
 });
 
 const ContactForm = () => {

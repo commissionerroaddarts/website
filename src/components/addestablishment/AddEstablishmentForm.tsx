@@ -19,28 +19,97 @@ const SUPPORTED_FORMATS = ["image/jpeg", "image/png", "image/webp"];
 
 const stepSchemas = [
   yup.object().shape({
-    name: yup.string().required("Business Name is required"),
-    tagline: yup.string().required("Business Tagline is required"),
+    name: yup
+      .string()
+      .required("Business Name is required")
+      .min(3, "Business Name must be at least 3 characters long")
+      .max(100, "Business Name cannot exceed 100 characters"),
+    tagline: yup
+      .string()
+      .required("Business Tagline is required")
+      .min(5, "Business Tagline must be at least 5 characters long")
+      .max(150, "Business Tagline cannot exceed 150 characters"),
     phone: yup
       .string()
       .matches(/^\d+$/, "Phone Number must be numeric")
-      .required("Business Phone Number is required"),
+      .required("Business Phone Number is required")
+      .length(10, "Phone Number must be exactly 10 digits"),
     website: yup
       .string()
       .url("Must be a valid URL")
-      .required("Website URL is required"),
-    shortDis: yup.string().required("Short Description is required").max(500),
-    tags: yup.array().of(yup.string()).min(1, "At least one tag is required"),
+      .required("Website URL is required")
+      .matches(
+        /^(https?:\/\/)?(www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$/,
+        "Website URL must be valid and properly formatted"
+      ),
+    shortDis: yup
+      .string()
+      .required("Short Description is required")
+      .min(20, "Short Description must be at least 20 characters long")
+      .max(500, "Short Description cannot exceed 500 characters"),
+    tags: yup
+      .array()
+      .of(yup.string().min(2, "Each tag must be at least 2 characters long"))
+      .min(1, "At least one tag is required")
+      .max(10, "You can add up to 10 tags"),
     category: yup.string().required("Category is required"),
     bordtype: yup.string().required("Board Type is required"),
     agelimit: yup
       .number()
       .min(0, "Age Limit cannot be negative")
+      .max(120, "Age Limit cannot exceed 120 years")
       .required("Age Limit is required"),
     price: yup.object().shape({
-      category: yup.string().required("Price Category is required"),
-      min: yup.number().required("Minimum Price is required"),
-      max: yup.number().required("Maximum Price is required"),
+      category: yup
+        .string()
+        .required("Price Category is required")
+        .oneOf(["$", "$$", "$$$", "$$$$"], "Invalid price category"),
+      min: yup
+        .number()
+        .required("Minimum Price is required")
+        .test(
+          "min-max-check",
+          "Minimum price must be less than maximum price",
+          function (value) {
+            const { max } = this.parent;
+            return max === undefined || value < max;
+          }
+        )
+        .test(
+          "category-min-check",
+          "Minimum price does not match the selected category",
+          function (value) {
+            const { category } = this.parent;
+            if (category === "$") return value >= 1 && value <= 10;
+            if (category === "$$") return value >= 11 && value <= 50;
+            if (category === "$$$") return value >= 51 && value <= 100;
+            if (category === "$$$$") return value >= 101;
+            return true;
+          }
+        ),
+      max: yup
+        .number()
+        .required("Maximum Price is required")
+        .test(
+          "min-max-check",
+          "Maximum price must be greater than minimum price",
+          function (value) {
+            const { min } = this.parent;
+            return min === undefined || value > min;
+          }
+        )
+        .test(
+          "category-max-check",
+          "Maximum price does not match the selected category",
+          function (value) {
+            const { category } = this.parent;
+            if (category === "$") return value >= 1 && value <= 10;
+            if (category === "$$") return value >= 11 && value <= 50;
+            if (category === "$$$") return value >= 51 && value <= 100;
+            if (category === "$$$$") return value >= 101;
+            return true;
+          }
+        ),
     }),
     media: yup.object().shape({
       logo: yup
@@ -69,70 +138,226 @@ const stepSchemas = [
               return file && file.size <= MAX_FILE_SIZE;
             })
         )
-        .min(1, "At least one image is required"),
+        .min(1, "At least one image is required")
+        .max(20, "Max 20 images can be uploaded"),
     }),
   }),
   yup.object().shape({
     location: yup.object().shape({
-      country: yup.string().required("Country is required"),
-      state: yup.string().required("State is required"),
-      city: yup.string().required("City is required"),
-      zipcode: yup.string().required("Zipcode is required"),
+      country: yup
+        .string()
+        .required("Country is required")
+        .min(2, "Country must be at least 2 characters long"),
+      state: yup
+        .string()
+        .required("State is required")
+        .min(2, "State must be at least 2 characters long"),
+      city: yup
+        .string()
+        .required("City is required")
+        .min(2, "City must be at least 2 characters long"),
+      zipcode: yup
+        .string()
+        .required("Zipcode is required")
+        .matches(/^\d{5}(-\d{4})?$/, "Invalid Zipcode format"),
       geotag: yup.object().shape({
-        lat: yup.number().required(),
-        lng: yup.number().required(),
+        lat: yup
+          .number()
+          .required("Latitude is required")
+          .min(-90, "Latitude must be between -90 and 90")
+          .max(90, "Latitude must be between -90 and 90"),
+        lng: yup
+          .number()
+          .required("Longitude is required")
+          .min(-180, "Longitude must be between -180 and 180")
+          .max(180, "Longitude must be between -180 and 180"),
       }),
     }),
   }),
   yup.object().shape({
     timings: yup.object().shape({
       mon: yup.object().shape({
-        open: yup.string().required("Open time is required"),
-        close: yup.string().required("Close time is required"),
+        open: yup
+          .string()
+          .required("Open time is required")
+          .matches(
+            /^([01]\d|2[0-3]):([0-5]\d)$/,
+            "Invalid time format (HH:mm)"
+          ),
+        close: yup
+          .string()
+          .required("Close time is required")
+          .matches(
+            /^([01]\d|2[0-3]):([0-5]\d)$/,
+            "Invalid time format (HH:mm)"
+          ),
       }),
       tue: yup.object().shape({
-        open: yup.string().required("Open time is required"),
-        close: yup.string().required("Close time is required"),
+        open: yup
+          .string()
+          .required("Open time is required")
+          .matches(
+            /^([01]\d|2[0-3]):([0-5]\d)$/,
+            "Invalid time format (HH:mm)"
+          ),
+        close: yup
+          .string()
+          .required("Close time is required")
+          .matches(
+            /^([01]\d|2[0-3]):([0-5]\d)$/,
+            "Invalid time format (HH:mm)"
+          ),
       }),
       wed: yup.object().shape({
-        open: yup.string().required("Open time is required"),
-        close: yup.string().required("Close time is required"),
+        open: yup
+          .string()
+          .required("Open time is required")
+          .matches(
+            /^([01]\d|2[0-3]):([0-5]\d)$/,
+            "Invalid time format (HH:mm)"
+          ),
+        close: yup
+          .string()
+          .required("Close time is required")
+          .matches(
+            /^([01]\d|2[0-3]):([0-5]\d)$/,
+            "Invalid time format (HH:mm)"
+          ),
       }),
       thu: yup.object().shape({
-        open: yup.string().required("Open time is required"),
-        close: yup.string().required("Close time is required"),
+        open: yup
+          .string()
+          .required("Open time is required")
+          .matches(
+            /^([01]\d|2[0-3]):([0-5]\d)$/,
+            "Invalid time format (HH:mm)"
+          ),
+        close: yup
+          .string()
+          .required("Close time is required")
+          .matches(
+            /^([01]\d|2[0-3]):([0-5]\d)$/,
+            "Invalid time format (HH:mm)"
+          ),
       }),
       fri: yup.object().shape({
-        open: yup.string().required("Open time is required"),
-        close: yup.string().required("Close time is required"),
+        open: yup
+          .string()
+          .required("Open time is required")
+          .matches(
+            /^([01]\d|2[0-3]):([0-5]\d)$/,
+            "Invalid time format (HH:mm)"
+          ),
+        close: yup
+          .string()
+          .required("Close time is required")
+          .matches(
+            /^([01]\d|2[0-3]):([0-5]\d)$/,
+            "Invalid time format (HH:mm)"
+          ),
       }),
       sat: yup.object().shape({
-        open: yup.string().required("Open time is required"),
-        close: yup.string().required("Close time is required"),
+        open: yup
+          .string()
+          .required("Open time is required")
+          .matches(
+            /^([01]\d|2[0-3]):([0-5]\d)$/,
+            "Invalid time format (HH:mm)"
+          ),
+        close: yup
+          .string()
+          .required("Close time is required")
+          .matches(
+            /^([01]\d|2[0-3]):([0-5]\d)$/,
+            "Invalid time format (HH:mm)"
+          ),
       }),
       sun: yup.object().shape({
-        open: yup.string().required("Open time is required"),
-        close: yup.string().required("Close time is required"),
+        open: yup
+          .string()
+          .required("Open time is required")
+          .matches(
+            /^([01]\d|2[0-3]):([0-5]\d)$/,
+            "Invalid time format (HH:mm)"
+          ),
+        close: yup
+          .string()
+          .required("Close time is required")
+          .matches(
+            /^([01]\d|2[0-3]):([0-5]\d)$/,
+            "Invalid time format (HH:mm)"
+          ),
       }),
     }),
   }),
   yup.object().shape({
     socials: yup.object().shape({
-      facebook: yup.string().url("Invalid Facebook URL").nullable(),
-      instagram: yup.string().url("Invalid Instagram URL").nullable(),
-      twitter: yup.string().url("Invalid Twitter URL").nullable(),
-      linkedin: yup.string().url("Invalid LinkedIn URL").nullable(),
-      youtube: yup.string().url("Invalid YouTube URL").nullable(),
-      tiktok: yup.string().url("Invalid TikTok URL").nullable(),
+      facebook: yup
+        .string()
+        .url("Invalid Facebook URL")
+        .matches(
+          /^(https?:\/\/)?(www\.)?facebook\.com\/[a-zA-Z0-9(.?)]+/,
+          "Invalid Facebook URL"
+        )
+        .nullable(),
+      instagram: yup
+        .string()
+        .url("Invalid Instagram URL")
+        .matches(
+          /^(https?:\/\/)?(www\.)?instagram\.com\/[a-zA-Z0-9(.?)]/,
+          "Invalid Instagram URL"
+        )
+        .nullable(),
+      twitter: yup
+        .string()
+        .url("Invalid Twitter URL")
+        .matches(
+          /^(https?:\/\/)?(www\.)?twitter\.com\/[a-zA-Z0-9(.?)]/,
+          "Invalid Twitter URL"
+        )
+        .nullable(),
+      linkedin: yup
+        .string()
+        .url("Invalid LinkedIn URL")
+        .matches(
+          /^(https?:\/\/)?(www\.)?linkedin\.com\/[a-zA-Z0-9(.?)]+/,
+          "Invalid LinkedIn URL"
+        )
+        .nullable(),
+      youtube: yup
+        .string()
+        .url("Invalid YouTube URL")
+        .matches(
+          /^(https?:\/\/)?(www\.)?youtube\.com\/[a-zA-Z0-9(.?)]/,
+          "Invalid YouTube URL"
+        )
+        .nullable(),
+      tiktok: yup
+        .string()
+        .url("Invalid TikTok URL")
+        .matches(
+          /^(https?:\/\/)?(www\.)?tiktok\.com\/[a-zA-Z0-9(.?)]+/,
+          "Invalid TikTok URL"
+        )
+        .nullable(),
     }),
   }),
   yup.object().shape({
-    faqs: yup.array().of(
-      yup.object({
-        q: yup.string().required("Question is required"),
-        a: yup.string().required("Answer is required"),
-      })
-    ),
+    faqs: yup
+      .array()
+      .of(
+        yup.object({
+          q: yup
+            .string()
+            .required("Question is required")
+            .min(10, "Question must be at least 10 characters long"),
+          a: yup
+            .string()
+            .required("Answer is required")
+            .min(10, "Answer must be at least 10 characters long"),
+        })
+      )
+      .min(1, "At least one FAQ is required"),
   }),
   // more steps schemas if needed
 ];

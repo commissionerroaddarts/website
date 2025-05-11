@@ -26,10 +26,7 @@ import { useAppState } from "@/hooks/useAppState";
 // ✅ Validation Schema
 const schema = yup.object().shape({
   identifier: yup.string().email("Invalid email").required("Email is required"),
-  password: yup
-    .string()
-    .min(4, "Password must be at least 4 characters")
-    .required("Password is required"),
+  password: yup.string().required("Password is required"),
 });
 
 const LoginForm = () => {

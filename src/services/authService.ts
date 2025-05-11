@@ -32,9 +32,9 @@ export const getUserDetails = async (dispatch: AppDispatch) => {
 export const registerUser = async (data: SignupFormData) => {
   try {
     const response = await axiosInstance.post("/auth/signup", data);
-    return response.data; // Expected { message: "Signup successful!" }
+    return response; // Expected { message: "Signup successful!" }
   } catch (error: any) {
-    console.error("Signup error:", error);
+    throw new Error(error?.response?.data?.error?.message ?? "Signup failed");
   }
 };
 
@@ -51,7 +51,7 @@ export const logoutUser = async (dispatch: AppDispatch) => {
 
 export const forgotPassword = async (data: { email: string }) => {
   try {
-    const response = await axiosInstance.post("/auth/forgot-password", data);
+    const response = await axiosInstance.post("/auth/forget-password", data);
     return response; // Expected { message: "Password reset link sent!" }
   } catch (error: any) {
     console.error("Forgot password error:", error);

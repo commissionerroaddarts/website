@@ -13,13 +13,13 @@ import { useRouter } from "next/navigation";
 const schema = yup.object().shape({
   password: yup
     .string()
+    .required("Password is required")
     .min(8, "Password must be at least 8 characters")
-    .max(20, "Password must be at most 20 characters")
+    .max(128, "Password cannot exceed 128 characters")
     .matches(
-      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
       "Password must include at least one uppercase letter, one lowercase letter, one number, and one special character"
-    )
-    .required("Password is required"),
+    ),
 
   confirmPassword: yup
     .string()

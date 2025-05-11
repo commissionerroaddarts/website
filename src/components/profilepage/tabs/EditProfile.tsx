@@ -39,10 +39,14 @@ const schema = yup.object().shape({
     .email("Invalid email address")
     .required("Email is required"),
 
-  phone: yup.string().nullable().notRequired().matches(phoneRegex, {
-    message: "Invalid phone number format",
-    excludeEmptyString: true,
-  }),
+  phone: yup
+    .string()
+    .nullable()
+    .required("Phone Number is Required")
+    .matches(phoneRegex, {
+      message: "Invalid phone number format",
+      excludeEmptyString: true,
+    }),
 
   country: yup
     .string()

@@ -101,13 +101,11 @@ const ImagesUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
                     {fieldState?.error.message}
                   </p>
                 )}
-                <button
-                  type="button"
+                <ThemeButton
                   onClick={() => fileInputRef.current?.click()}
-                  className="text-white border border-white px-4 py-2 rounded-md"
-                >
-                  Select Images
-                </button>
+                  type="button"
+                  text="Select Images"
+                />
               </div>
             ) : (
               <div className="grid grid-cols-3 gap-4 mb-4">

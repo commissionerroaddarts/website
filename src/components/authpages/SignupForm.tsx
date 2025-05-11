@@ -24,14 +24,38 @@ import { useAppState } from "@/hooks/useAppState";
 
 // ✅ Validation Schema
 const schema = yup.object().shape({
-  firstname: yup.string().required("First name is required"),
-  lastname: yup.string().required("Last name is required"),
-  email: yup.string().email("Invalid email").required("Email is required"),
-  phone: yup.string().required("Phone number is required"),
+  firstname: yup
+    .string()
+    .required("First name is required")
+    .matches(/^[a-zA-Z]+$/, "First name must contain only letters")
+    .min(2, "First name must be at least 2 characters")
+    .max(50, "First name cannot exceed 50 characters"),
+  lastname: yup
+    .string()
+    .required("Last name is required")
+    .matches(/^[a-zA-Z]+$/, "Last name must contain only letters")
+    .min(2, "Last name must be at least 2 characters")
+    .max(50, "Last name cannot exceed 50 characters"),
+  email: yup
+    .string()
+    .email("Invalid email format")
+    .required("Email is required"),
+  phone: yup
+    .string()
+    .required("Phone number is required")
+    .matches(
+      /^\d{10,15}$/,
+      "Phone number must be between 10 and 15 digits and contain only numbers"
+    ),
   password: yup
     .string()
+    .required("Password is required")
     .min(8, "Password must be at least 8 characters")
-    .required("Password is required"),
+    .max(128, "Password cannot exceed 128 characters")
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
+      "Password must include at least one uppercase letter, one lowercase letter, one number, and one special character"
+    ),
 });
 
 const SignupForm = () => {
@@ -43,28 +67,30 @@ const SignupForm = () => {
     resolver: yupResolver(schema),
   });
   const router = useRouter();
-  const { plan } = useAppState(); // Assuming you have a custom hook to get user state
+  const { user, plan } = useAppState(); // Assuming you have a custom hook to get user state
   const { selectedPlan } = plan; // Assuming you have a custom hook to get user state
+  const { isLoggedIn } = user; // Assuming you have a custom hook to get user state
+  // Redirect to dashboard if user is already logged in
+  if (isLoggedIn) {
+    router.push("/profile");
+    return null; // Prevent rendering the form if already logged in
+  }
 
   // ✅ Form Submission Handler
   const onSubmit = async (data: SignupFormData) => {
     try {
       const response = await registerUser(data);
-      if (response.error) {
-        toast.error(response.error);
-        return;
-      }
-      toast.success(response.message ?? "Signup successful!");
-      if (selectedPlan) {
-        router.push("/checkout"); // Redirect to login page after successful signup
-      } else {
-        router.push("/login"); // Redirect to login page after successful signup
+      if (response?.status === 201) {
+        toast.success(response?.data?.message ?? "Signup successful!");
+        if (selectedPlan) {
+          router.push("/checkout"); // Redirect to login page after successful signup
+        } else {
+          router.push("/login"); // Redirect to login page after successful signup
+        }
       }
       // Handle post-signup actions here (e.g., redirect, store token)
     } catch (error: any) {
-      toast.error(
-        error.response?.data?.error ?? "Signup failed. Please try again."
-      );
+      toast.error(error?.message ?? "Signup failed. Please try again.");
     }
   };
 
