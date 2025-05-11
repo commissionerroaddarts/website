@@ -157,17 +157,6 @@ const PrivacySection = () => {
           </Box>
 
           <Box className="flex items-center gap-1">
-            <Phone className="inline" color="white" size={20} />
-            <Link
-              href="tel:+18582555555"
-              underline="hover"
-              sx={{ color: "white!important" }}
-            >
-              +1 (858) 255-5555
-            </Link>
-          </Box>
-
-          <Box className="flex items-center gap-1">
             <Globe className="inline" color="white" size={20} />
             <Link
               href="https://www.roaddarts.com"
