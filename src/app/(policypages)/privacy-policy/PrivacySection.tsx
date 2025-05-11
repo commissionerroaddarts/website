@@ -130,7 +130,7 @@ const PrivacySection = () => {
           8. Children’s Privacy
         </Typography>
         <Typography gutterBottom>
-          Users must be 13+ years old. We do not knowingly collect data from
+          Users must be 18+ years old. We do not knowingly collect data from
           children.
         </Typography>
 
