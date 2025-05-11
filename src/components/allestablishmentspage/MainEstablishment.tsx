@@ -98,7 +98,9 @@ export default function MainEstablishment() {
         setFilters={setFilterParams}
         updateQuery={updateQuery}
       />
-      {businesses.length > 0 ? (
+      {loading ? (
+        <span>Loading</span>
+      ) : businesses.length > 0 ? (
         <BusinessGrid businesses={businesses} isLoading={loading} />
       ) : (
         <NoBusinessesFound setFilterParams={setFilterParams} />

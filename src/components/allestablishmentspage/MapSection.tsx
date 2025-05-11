@@ -1,14 +1,17 @@
 "use client";
 
-import { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import {
   GoogleMap,
   Marker,
   InfoWindow,
   useJsApiLoader,
+  MarkerClusterer,
 } from "@react-google-maps/api";
 import { Business } from "@/types/business";
 import { Event } from "@/types/event";
+import { Box } from "@mui/material";
+import Image from "next/image";
 
 interface Props {
   businesses: Business[] | Event[];
@@ -22,19 +25,25 @@ const containerStyle = {
 
 const MapSection = ({ businesses, isLoading }: Props) => {
   const [activeMarker, setActiveMarker] = useState<string | null>(null);
+  const [showMap, setShowMap] = useState(false);
   const mapRef = useRef<google.maps.Map | null>(null);
 
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? "",
   });
 
+  useEffect(() => {
+    if (isLoaded && !isLoading) {
+      const timeout = setTimeout(() => setShowMap(true), 300);
+      return () => clearTimeout(timeout);
+    }
+  }, [isLoaded, isLoading]);
   if (loadError) return <div>Map cannot be loaded right now, sorry.</div>;
-  if (!isLoaded) return <div>Loading Map...</div>;
-
+  if (!isLoaded || !showMap || isLoading) return <div>Loading Map...</div>;
   const businessLocations = businesses
     .filter((b) => b.location?.geotag)
     .map((b) => ({
-      id: String(b._id), // use _id for uniqueness
+      id: String(b._id),
       name: b.name,
       city: b.location?.city,
       state: b.location?.state,
@@ -43,19 +52,28 @@ const MapSection = ({ businesses, isLoading }: Props) => {
         lat: Number(b.location!.geotag!.lat),
         lng: Number(b.location!.geotag!.lng),
       },
-    }));
+      logo: b.media?.logo,
+    }))
+    .filter(
+      (loc, index, self) =>
+        index ===
+        self.findIndex(
+          (t) =>
+            t.position.lat === loc.position.lat &&
+            t.position.lng === loc.position.lng
+        )
+    );
 
   const handleLoad = (map: google.maps.Map) => {
     mapRef.current = map;
     if (businessLocations.length > 0) {
-      const bounds = new window.google.maps.LatLngBounds();
+      const bounds = new google.maps.LatLngBounds();
       businessLocations.forEach((loc) => bounds.extend(loc.position));
       map.fitBounds(bounds);
 
-      // Delay setting max zoom after bounds are applied
       google.maps.event.addListenerOnce(map, "bounds_changed", () => {
         if ((map.getZoom() ?? 0) > 15) {
-          map.setZoom(15); // Adjust this value as needed
+          map.setZoom(15);
         }
       });
     }
@@ -69,25 +87,60 @@ const MapSection = ({ businesses, isLoading }: Props) => {
           onLoad={handleLoad}
           onClick={() => setActiveMarker(null)}
         >
-          {businessLocations.map((loc) => (
-            <Marker
-              key={loc.id}
-              position={loc.position}
-              onClick={() => setActiveMarker(loc.id)}
-            >
-              {activeMarker === loc.id && (
-                <InfoWindow onCloseClick={() => setActiveMarker(null)}>
-                  <div className="!text-black">
-                    <h3 className="font-bold">{loc.name}</h3>
-                    <p>
-                      {loc.city}, {loc.state}
-                    </p>
-                    <p className="text-sm text-gray-500">{loc.description}</p>
-                  </div>
-                </InfoWindow>
-              )}
-            </Marker>
-          ))}
+          <MarkerClusterer>
+            {(clusterer) => (
+              <>
+                {businessLocations.map((loc) => (
+                  <Marker
+                    key={loc.id}
+                    position={loc.position}
+                    clusterer={clusterer}
+                    onClick={() => setActiveMarker(loc.id)}
+                  >
+                    {activeMarker === loc.id && (
+                      <InfoWindow onCloseClick={() => setActiveMarker(null)}>
+                        <div
+                          className="p-3 rounded-lg shadow-lg text-white "
+                          style={{
+                            background:
+                              "linear-gradient(135deg, #5D1178 0%, #3F0F50 100%)",
+                            minWidth: "200px",
+                            maxWidth: "250px",
+                            fontFamily: "Lexend, sans-serif",
+                            whiteSpace: "normal",
+                          }}
+                        >
+                          <Box className="flex items-center mb-2">
+                            {loc.logo && (
+                              <Image
+                                src={loc.logo}
+                                alt={loc.name}
+                                width={50}
+                                height={50}
+                                className="rounded-full mr-2"
+                              />
+                            )}
+                            <div className="flex flex-col">
+                              <h3 className="font-bold text-[16px] mb-0">
+                                {loc.name}
+                              </h3>
+                              <p className="text-xs">
+                                {loc.city}, {loc.state}
+                              </p>
+                            </div>
+                          </Box>
+
+                          <p className="text-xs text-gray-300">
+                            {loc.description}
+                          </p>
+                        </div>
+                      </InfoWindow>
+                    )}
+                  </Marker>
+                ))}
+              </>
+            )}
+          </MarkerClusterer>
         </GoogleMap>
       </div>
     </section>

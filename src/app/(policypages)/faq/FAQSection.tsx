@@ -82,7 +82,7 @@ const renderAccordion = (data: { question: string; answer: string }[]) => (
   <motion.div
     initial="hidden"
     whileInView="visible"
-    viewport={{ once: false, amount: 0.1 }}
+    viewport={{ once: true, amount: 0.1 }}
     variants={{
       hidden: { opacity: 0, y: 20 },
       visible: {
