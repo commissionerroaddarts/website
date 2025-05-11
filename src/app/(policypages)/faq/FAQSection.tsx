@@ -9,6 +9,8 @@ import {
   Box,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { motion } from "framer-motion";
+import CardStaggerAnimation from "@/animations/sections/CardStaggerAnimation";
 
 const venueFaqs = [
   {
@@ -76,30 +78,62 @@ const playerFaqs = [
   },
 ];
 
-const renderAccordion = (data: { question: string; answer: string }[]) =>
-  data.map((item) => (
-    <Accordion
-      key={item.question}
-      sx={{
-        background: "#8224E3",
-        color: "white",
-        mb: 2,
-        borderRadius: "8px",
-        marginTop: "1rem",
-      }}
-    >
-      <AccordionSummary expandIcon={<ExpandMoreIcon className="text-white" />}>
-        <Typography variant="h6" fontWeight="bold" sx={{ fontSize: "1.2rem" }}>
-          {item.question}
-        </Typography>
-      </AccordionSummary>
-      <AccordionDetails>
-        <Typography variant="h6" sx={{ fontSize: "1rem" }}>
-          {item.answer}
-        </Typography>
-      </AccordionDetails>
-    </Accordion>
-  ));
+const renderAccordion = (data: { question: string; answer: string }[]) => (
+  <motion.div
+    initial="hidden"
+    whileInView="visible"
+    viewport={{ once: false, amount: 0.1 }}
+    variants={{
+      hidden: { opacity: 0, y: 20 },
+      visible: {
+        opacity: 1,
+        y: [0, 20, 0],
+        transition: {
+          duration: 0.5,
+          staggerChildren: 0.2,
+          delayChildren: 0.2,
+        },
+      },
+    }}
+  >
+    {data.map((item) => (
+      <motion.div
+        key={item.question}
+        variants={{
+          hidden: { opacity: 0, y: 50 },
+          visible: { opacity: 1, y: 0 },
+        }}
+      >
+        <Accordion
+          sx={{
+            background: "#8224E3",
+            color: "white",
+            mb: 2,
+            borderRadius: "8px",
+            marginTop: "1rem",
+          }}
+        >
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon className="text-white" />}
+          >
+            <Typography
+              variant="h6"
+              fontWeight="bold"
+              sx={{ fontSize: "1.2rem" }}
+            >
+              {item.question}
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Typography variant="h6" sx={{ fontSize: "1rem" }}>
+              {item.answer}
+            </Typography>
+          </AccordionDetails>
+        </Accordion>
+      </motion.div>
+    ))}
+  </motion.div>
+);
 
 export default function FaqSection() {
   return (
@@ -133,6 +167,7 @@ export default function FaqSection() {
           >
             Venue Marketing FAQs
           </Typography>
+
           {renderAccordion(venueFaqs)}
         </Box>
 

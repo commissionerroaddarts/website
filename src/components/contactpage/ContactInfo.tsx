@@ -8,20 +8,14 @@ const contactValues = [
   {
     icon: "/images/icons/email.svg",
     title: "Email Address",
-    text: "info@roaddarts.com",
-    href: "mailto:info@roaddarts.com",
-  },
-  {
-    icon: "/images/icons/phone.svg",
-    title: "Phone Number",
-    text: "021-123-4567",
-    href: "tel:021-123-4567",
+    text: "support@roaddarts.com",
+    href: "mailto:support@roaddarts.com",
   },
   {
     icon: "/images/icons/location.svg",
     title: "Location",
-    text: "159 Algonquin Street, Brockton, MA 02302",
-    href: "https://www.google.com/maps/place/159+Algonquin+St,+Brockton,+MA+02302/@42.0836791,-71.0206583,17z/data=!3m1!4b1!4m6!3m5!1s0x89e3a2f8c7d9f5b7:0x8c2a2f8c7d9f5b7!8m2!3d42.0836791!4d-71.0184696!16s%2Fg%2F11c1gqjv_4",
+    text: "14026 Stoney Gate PL - San Diego, CA 92128",
+    href: "https://www.google.com/maps/search/?api=1&query=14026+Stoney+Gate+PL,+San+Diego,+CA+92128",
   },
 ];
 
