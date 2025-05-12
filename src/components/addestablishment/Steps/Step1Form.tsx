@@ -302,11 +302,14 @@ const UploadButtons = () => {
           icon={<Upload className="w-5 h-5" />}
           onClickEvent={() => setUploadLogo(true)}
         />
-        {typeof errors["media.logo"]?.message === "string" && (
-          <Typography color="error" variant="body2" className="mt-2">
-            {errors["media.logo"].message}
-          </Typography>
-        )}
+        {errors?.media &&
+          "logo" in errors.media &&
+          errors.media.logo &&
+          typeof errors?.media?.logo?.message === "string" && (
+            <Typography color="error" variant="body2" className="mt-2">
+              {errors?.media?.logo.message}
+            </Typography>
+          )}
       </Box>
 
       {uploadLogo && (
@@ -320,11 +323,14 @@ const UploadButtons = () => {
           icon={<Upload className="w-5 h-5" />}
           onClickEvent={() => setUploadMedia(true)}
         />
-        {typeof errors["media.images"]?.message === "string" && (
-          <Typography color="error" variant="body2" className="mt-2">
-            {errors["media.images"].message}
-          </Typography>
-        )}
+        {errors?.media &&
+          "logo" in errors.media &&
+          errors.media.images &&
+          typeof errors?.media?.images?.message === "string" && (
+            <Typography color="error" variant="body2" className="mt-2">
+              {errors?.media?.images.message}
+            </Typography>
+          )}
       </Box>
       {uploadMedia && (
         <ImagesUploaderPopup open={uploadMedia} setOpen={setUploadMedia} />

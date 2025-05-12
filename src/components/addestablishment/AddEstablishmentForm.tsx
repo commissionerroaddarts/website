@@ -126,29 +126,30 @@ const stepSchemas = [
         }),
       images: yup
         .array()
+        .min(1, "At least one image is required")
+        .test("required", "Images are required", (value) => {
+          return value && value.length > 0;
+        })
         .of(
           yup
             .mixed()
-            .required()
+            .test(
+              "fileRequired",
+              "Image is required",
+              (file) => file instanceof File
+            )
             .test("fileType", "Only JPG/PNG/WEBP images allowed", (value) => {
-              const file = value as File;
-              return file && SUPPORTED_FORMATS.includes(file.type);
+              if (!value || !(value instanceof File)) return false;
+              return SUPPORTED_FORMATS.includes(value.type);
             })
-            .test("fileSize", "Each image must be under 1MB", (value) => {
-              const file = value as File;
-              return file && file.size <= MAX_FILE_SIZE;
+            .test("fileSize", "Each image must be under 1MB", (file) => {
+              return file instanceof File && file.size <= MAX_FILE_SIZE;
             })
-        )
-        .min(1, "At least one image is required")
-        .max(20, "Max 20 images can be uploaded"),
+        ),
     }),
   }),
   yup.object().shape({
     location: yup.object().shape({
-      country: yup
-        .string()
-        .required("Country is required")
-        .min(2, "Country must be at least 2 characters long"),
       state: yup
         .string()
         .required("State is required")
@@ -159,7 +160,7 @@ const stepSchemas = [
         .min(2, "City must be at least 2 characters long"),
       zipcode: yup
         .string()
-        .required("Zipcode is required")
+        // .required("Zipcode is required")
         .matches(/^\d{5}(-\d{4})?$/, "Invalid Zipcode format"),
       geotag: yup.object().shape({
         lat: yup
@@ -309,9 +310,9 @@ export default function AddEstablishment() {
   const totalSteps = 5;
   const [isLoading, setIsLoading] = useState(false);
 
-  if (!subscription) {
-    return <PromoCodePopupComponent />;
-  }
+  // if (!subscription) {
+  //   return <PromoCodePopupComponent />;
+  // }
 
   const handleStepSubmit = async (direction: "next" | "prev") => {
     const currentSchema = stepSchemas[currentStep - 1]; // currentStep is 1-based
@@ -349,7 +350,6 @@ export default function AddEstablishment() {
     } catch (validationError: any) {
       if (validationError?.inner) {
         validationError?.inner.forEach((err: any) => {
-          console.error(err);
           methods.setError(err.path, { type: "manual", message: err.message });
         });
       }

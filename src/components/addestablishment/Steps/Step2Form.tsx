@@ -76,12 +76,13 @@ export default function Step2Form() {
         <Autocomplete
           onLoad={(autocomplete) => setAutocomplete(autocomplete)}
           onPlaceChanged={onPlaceChanged}
+          className="w-full"
         >
           <CustomInput
             label="Search for a location"
             icon={<Search color="white" />}
             iconPosition="end"
-            className="w-[80%]"
+            className="w-[100%]"
           />
         </Autocomplete>
       </Box>
@@ -103,7 +104,7 @@ export default function Step2Form() {
         </GoogleMap>
       </Box>
 
-      <Grid2 container spacing={2} mb={8}>
+      {/* <Grid2 container spacing={2} mb={8}>
         <Grid2 size={{ xs: 12, md: 6 }}>
           <Controller
             name="location.country"
@@ -172,7 +173,7 @@ export default function Step2Form() {
             )}
           />
         </Grid2>
-      </Grid2>
+      </Grid2> */}
     </Box>
   );
 }
