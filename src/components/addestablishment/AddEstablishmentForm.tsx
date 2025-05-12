@@ -116,12 +116,14 @@ const stepSchemas = [
       logo: yup
         .mixed()
         .test("fileType", "Unsupported file format", (value) => {
+          if (!value) return true; // Skip test if no file is uploaded
           const file = value as File;
-          return file && SUPPORTED_FORMATS.includes(file.type);
+          return SUPPORTED_FORMATS.includes(file.type);
         })
         .test("fileSize", "Max allowed size is 1MB", (value) => {
+          if (!value) return true; // Skip test if no file is uploaded
           const file = value as File;
-          return file && file.size <= MAX_FILE_SIZE;
+          return file.size <= MAX_FILE_SIZE;
         }),
       images: yup
         .array()
@@ -274,8 +276,9 @@ const stepSchemas = [
             .min(10, "Answer must be at least 10 characters long"),
         })
       )
-      .min(1, "At least one FAQ is required"),
+      .notRequired(), // Make the whole array optional
   }),
+
   // more steps schemas if needed
 ];
 
@@ -309,9 +312,9 @@ export default function AddEstablishment() {
   const totalSteps = 5;
   const [isLoading, setIsLoading] = useState(false);
 
-  if (!subscription) {
-    return <PromoCodePopupComponent />;
-  }
+  // if (!subscription) {
+  //   return <PromoCodePopupComponent />;
+  // }
 
   const handleStepSubmit = async (direction: "next" | "prev") => {
     const currentSchema = stepSchemas[currentStep - 1]; // currentStep is 1-based
