@@ -251,19 +251,7 @@ const UploadButtons = () => {
   } = useFormContext();
 
   const logo = watch("media.logo");
-  const images = watch("media.images") || [];
-
-  const isLogoError =
-    typeof errors?.media === "object" &&
-    errors.media !== null &&
-    "logo" in errors.media &&
-    typeof errors.media.logo?.message === "string";
-
-  const isImagesError =
-    typeof errors?.media === "object" &&
-    errors.media !== null &&
-    "images" in errors.media &&
-    typeof errors.media.images?.message === "string";
+  const images = watch("media.images") ?? [];
 
   // Remove functions
   const removeLogo = () => setValue("media.logo", null);
@@ -296,11 +284,14 @@ const UploadButtons = () => {
               icon={<Upload className="w-5 h-5" />}
               onClickEvent={() => setUploadLogo(true)}
             />
-            {isLogoError && (
-              <Typography color="error" variant="body2" className="mt-2">
-                {errors?.media?.logo?.message}
-              </Typography>
-            )}
+            {typeof errors?.media === "object" &&
+              errors.media !== null &&
+              "logo" in errors.media &&
+              typeof errors.media.logo?.message === "string" && (
+                <Typography color="error" variant="body2" className="mt-2">
+                  {errors?.media?.logo?.message}
+                </Typography>
+              )}
           </>
         )}
       </Box>
@@ -339,11 +330,14 @@ const UploadButtons = () => {
               icon={<Upload className="w-5 h-5" />}
               onClickEvent={() => setUploadMedia(true)}
             />
-            {isImagesError && (
-              <Typography color="error" variant="body2" className="mt-2">
-                {errors.media.images.message}
-              </Typography>
-            )}
+            {typeof errors?.media === "object" &&
+              errors.media !== null &&
+              "images" in errors.media &&
+              typeof errors.media.images?.message === "string" && (
+                <Typography color="error" variant="body2" className="mt-2">
+                  {errors.media.images.message}
+                </Typography>
+              )}
           </>
         )}
       </Box>

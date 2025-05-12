@@ -115,7 +115,6 @@ const stepSchemas = [
     media: yup.object().shape({
       logo: yup
         .mixed()
-        .required("Business Logo is required")
         .test("fileType", "Unsupported file format", (value) => {
           const file = value as File;
           return file && SUPPORTED_FORMATS.includes(file.type);
@@ -126,10 +125,10 @@ const stepSchemas = [
         }),
       images: yup
         .array()
-        .min(1, "At least one image is required")
-        .test("required", "Images are required", (value) => {
-          return value && value.length > 0;
-        })
+        // .min(1, "At least one image is required")
+        // .test("required", "Images are required", (value) => {
+        //   return value && value.length > 0;
+        // })
         .of(
           yup
             .mixed()
@@ -310,9 +309,9 @@ export default function AddEstablishment() {
   const totalSteps = 5;
   const [isLoading, setIsLoading] = useState(false);
 
-  // if (!subscription) {
-  //   return <PromoCodePopupComponent />;
-  // }
+  if (!subscription) {
+    return <PromoCodePopupComponent />;
+  }
 
   const handleStepSubmit = async (direction: "next" | "prev") => {
     const currentSchema = stepSchemas[currentStep - 1]; // currentStep is 1-based
