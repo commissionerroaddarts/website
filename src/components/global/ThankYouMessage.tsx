@@ -27,6 +27,9 @@ const ThankYouMessage = () => {
     if (!inquiryData && !urlParams.get("session_id")) {
       router.push("/"); // Redirect if no form data found
     } else {
+      if (urlParams.get("session_id")) {
+        router.push("/add-listing");
+      }
       setTimeout(() => dispatch(clearInquiryData()), 8000);
     }
   }, [inquiryData, router, dispatch]);

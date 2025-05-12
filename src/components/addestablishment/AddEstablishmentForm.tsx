@@ -178,116 +178,32 @@ const stepSchemas = [
   yup.object().shape({
     timings: yup.object().shape({
       mon: yup.object().shape({
-        open: yup
-          .string()
-          .required("Open time is required")
-          .matches(
-            /^([01]\d|2[0-3]):([0-5]\d)$/,
-            "Invalid time format (HH:mm)"
-          ),
-        close: yup
-          .string()
-          .required("Close time is required")
-          .matches(
-            /^([01]\d|2[0-3]):([0-5]\d)$/,
-            "Invalid time format (HH:mm)"
-          ),
+        open: yup.string().required("Open time is required"),
+        close: yup.string().required("Close time is required"),
       }),
       tue: yup.object().shape({
-        open: yup
-          .string()
-          .required("Open time is required")
-          .matches(
-            /^([01]\d|2[0-3]):([0-5]\d)$/,
-            "Invalid time format (HH:mm)"
-          ),
-        close: yup
-          .string()
-          .required("Close time is required")
-          .matches(
-            /^([01]\d|2[0-3]):([0-5]\d)$/,
-            "Invalid time format (HH:mm)"
-          ),
+        open: yup.string().required("Open time is required"),
+        close: yup.string().required("Close time is required"),
       }),
       wed: yup.object().shape({
-        open: yup
-          .string()
-          .required("Open time is required")
-          .matches(
-            /^([01]\d|2[0-3]):([0-5]\d)$/,
-            "Invalid time format (HH:mm)"
-          ),
-        close: yup
-          .string()
-          .required("Close time is required")
-          .matches(
-            /^([01]\d|2[0-3]):([0-5]\d)$/,
-            "Invalid time format (HH:mm)"
-          ),
+        open: yup.string().required("Open time is required"),
+        close: yup.string().required("Close time is required"),
       }),
       thu: yup.object().shape({
-        open: yup
-          .string()
-          .required("Open time is required")
-          .matches(
-            /^([01]\d|2[0-3]):([0-5]\d)$/,
-            "Invalid time format (HH:mm)"
-          ),
-        close: yup
-          .string()
-          .required("Close time is required")
-          .matches(
-            /^([01]\d|2[0-3]):([0-5]\d)$/,
-            "Invalid time format (HH:mm)"
-          ),
+        open: yup.string().required("Open time is required"),
+        close: yup.string().required("Close time is required"),
       }),
       fri: yup.object().shape({
-        open: yup
-          .string()
-          .required("Open time is required")
-          .matches(
-            /^([01]\d|2[0-3]):([0-5]\d)$/,
-            "Invalid time format (HH:mm)"
-          ),
-        close: yup
-          .string()
-          .required("Close time is required")
-          .matches(
-            /^([01]\d|2[0-3]):([0-5]\d)$/,
-            "Invalid time format (HH:mm)"
-          ),
+        open: yup.string().required("Open time is required"),
+        close: yup.string().required("Close time is required"),
       }),
       sat: yup.object().shape({
-        open: yup
-          .string()
-          .required("Open time is required")
-          .matches(
-            /^([01]\d|2[0-3]):([0-5]\d)$/,
-            "Invalid time format (HH:mm)"
-          ),
-        close: yup
-          .string()
-          .required("Close time is required")
-          .matches(
-            /^([01]\d|2[0-3]):([0-5]\d)$/,
-            "Invalid time format (HH:mm)"
-          ),
+        open: yup.string().required("Open time is required"),
+        close: yup.string().required("Close time is required"),
       }),
       sun: yup.object().shape({
-        open: yup
-          .string()
-          .required("Open time is required")
-          .matches(
-            /^([01]\d|2[0-3]):([0-5]\d)$/,
-            "Invalid time format (HH:mm)"
-          ),
-        close: yup
-          .string()
-          .required("Close time is required")
-          .matches(
-            /^([01]\d|2[0-3]):([0-5]\d)$/,
-            "Invalid time format (HH:mm)"
-          ),
+        open: yup.string().required("Open time is required"),
+        close: yup.string().required("Close time is required"),
       }),
     }),
   }),

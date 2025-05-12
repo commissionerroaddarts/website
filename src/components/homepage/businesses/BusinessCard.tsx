@@ -124,9 +124,7 @@ function BusinessCard({ business }: { readonly business: Business }) {
 
           {/* Price and Location */}
           <Typography sx={{ color: "#9b59b6", fontWeight: "bold", mt: 1 }}>
-            {price
-              ? `${price?.category} ${price?.min} - ${price?.max}`
-              : "No Price Info"}
+            {price ? price?.category : "No Price Info"}
           </Typography>
           <Box
             sx={{
