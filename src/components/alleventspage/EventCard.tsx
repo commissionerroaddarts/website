@@ -56,7 +56,7 @@ export default function EventCard({ event }: RestaurantCardProps) {
         <div>
           <div className="relative h-48">
             <Image
-              src={media?.images?.[0] ?? "/placeholder.svg"}
+              src={media?.logo ?? "/placeholder.svg"}
               alt={name}
               fill
               className="object-cover"

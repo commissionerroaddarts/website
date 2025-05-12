@@ -185,7 +185,10 @@ function ReviewCard({
       >
         <CardMedia
           component="img"
-          image={review?.business?.media?.logo ?? "/images/road_darts.png"} // fallback image
+          image={
+            review?.business?.media?.logo ??
+            "/images/banners/business-placeholder.png"
+          } // fallback image
           alt={review?.business?.name}
           sx={{ width: 200, height: 200, borderRadius: "8px" }}
         />

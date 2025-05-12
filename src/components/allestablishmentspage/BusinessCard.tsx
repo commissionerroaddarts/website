@@ -55,7 +55,11 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
         <div>
           <div className="relative h-48">
             <Image
-              src={media?.images?.[0] ?? "/placeholder.svg"}
+              src={
+                media?.logo ??
+                media?.images?.[0] ??
+                "/images/banners/business-placeholder.png"
+              }
               alt={name}
               fill
               className="object-cover"
