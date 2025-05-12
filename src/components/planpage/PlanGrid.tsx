@@ -169,7 +169,7 @@ const PlanCard = ({ plan }: PlanCardProps) => {
               </motion.div>
             ))}
           </motion.div>
-          <Typography className=" flex justify-center mt-4">
+          <Typography className="flex justify-center mt-4">
             {plan.featured ? (
               <ThemeButton text="Get Started" onClickEvent={handleGetStarted} />
             ) : (

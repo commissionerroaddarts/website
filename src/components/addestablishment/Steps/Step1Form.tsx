@@ -235,7 +235,7 @@ export default function Step1Form() {
             />
           )}
         />
-        <Grid2 container spacing={2} mt={2}>
+        {/* <Grid2 container spacing={2} mt={2}>
           <Grid2 size={{ xs: 12, md: 6 }}>
             <Controller
               name="price.min"
@@ -280,7 +280,7 @@ export default function Step1Form() {
               )}
             />
           </Grid2>
-        </Grid2>
+        </Grid2> */}
       </Box>
     </Box>
   );

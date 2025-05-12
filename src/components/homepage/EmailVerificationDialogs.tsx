@@ -1,8 +1,9 @@
 import { useSearchParams } from "next/navigation";
 import React, { ReactNode, useState } from "react";
-import ThemeButton from "@/components/buttons/ThemeButton";
+// import ThemeButton from "@/components/buttons/ThemeButton";
 import { Box, Dialog, DialogContent } from "@mui/material";
 import CloseIconButton from "@/components/global/CloseIconButton";
+// import { verifyEmail } from "@/services/authService";
 
 const EmailVerificationDialogs = () => {
   const search = useSearchParams();
@@ -21,7 +22,7 @@ const EmailVerificationDialogs = () => {
           <Box className="flex flex-col items-center justify-center p-4 gap-3">
             <h2>Email Verification Failed</h2>
             <p>There was an error verifying your email. Please try again.</p>
-            <ThemeButton text="Resend Verification Email" onClick={() => {}} />
+            {/* <ThemeButton text="Resend Verification Email" onClick={() => {}} /> */}
           </Box>
         </VerificationDialog>
       )}

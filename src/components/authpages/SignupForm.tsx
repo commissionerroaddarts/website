@@ -13,7 +13,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { registerUser } from "@/services/authService"; // API Service
+import { registerUser, verifyEmail } from "@/services/authService"; // API Service
 import { SignupFormData } from "@/types/auth";
 import CustomInput from "@/components/global/CustomInput";
 import ThemeButton from "@/components/buttons/ThemeButton";
@@ -82,10 +82,19 @@ const SignupForm = () => {
       const response = await registerUser(data);
       if (response?.status === 201) {
         toast.success(response?.data?.message ?? "Signup successful!");
-        if (selectedPlan) {
-          router.push("/checkout"); // Redirect to login page after successful signup
-        } else {
-          router.push("/login"); // Redirect to login page after successful signup
+
+        const verificationResponse = await verifyEmail({
+          email: data.email,
+        });
+        if (
+          verificationResponse?.status === 200 ||
+          verificationResponse?.status === 201
+        ) {
+          if (selectedPlan) {
+            router.push("/checkout"); // Redirect to login page after successful signup
+          } else {
+            router.push("/login"); // Redirect to login page after successful signup
+          }
         }
       }
       // Handle post-signup actions here (e.g., redirect, store token)

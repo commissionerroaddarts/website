@@ -65,7 +65,7 @@ export interface Business {
   tags?: string[];
   status?: "Active" | "Closed Down" | "Coming Soon" | "Under Remodel";
   validation?: Validation;
-  bordtype?: "Steel Tip" | "Plastic" | "Both";
+  bordtype?: "Steel Tip" | "Soft Tip" | "Both";
   averageRating?: number;
   totalReviews?: number;
   createdAt?: Date;

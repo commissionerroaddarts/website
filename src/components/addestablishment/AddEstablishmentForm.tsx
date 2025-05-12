@@ -36,8 +36,9 @@ const stepSchemas = [
       .length(10, "Phone Number must be exactly 10 digits"),
     website: yup
       .string()
+      .nullable()
+      .notRequired()
       .url("Must be a valid URL")
-      .required("Website URL is required")
       .matches(
         /^(https?:\/\/)?(www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$/,
         "Website URL must be valid and properly formatted"
@@ -64,52 +65,52 @@ const stepSchemas = [
         .string()
         .required("Price Category is required")
         .oneOf(["$", "$$", "$$$", "$$$$"], "Invalid price category"),
-      min: yup
-        .number()
-        .required("Minimum Price is required")
-        .test(
-          "min-max-check",
-          "Minimum price must be less than maximum price",
-          function (value) {
-            const { max } = this.parent;
-            return max === undefined || value < max;
-          }
-        )
-        .test(
-          "category-min-check",
-          "Minimum price does not match the selected category",
-          function (value) {
-            const { category } = this.parent;
-            if (category === "$") return value >= 1 && value <= 10;
-            if (category === "$$") return value >= 11 && value <= 50;
-            if (category === "$$$") return value >= 51 && value <= 100;
-            if (category === "$$$$") return value >= 101;
-            return true;
-          }
-        ),
-      max: yup
-        .number()
-        .required("Maximum Price is required")
-        .test(
-          "min-max-check",
-          "Maximum price must be greater than minimum price",
-          function (value) {
-            const { min } = this.parent;
-            return min === undefined || value > min;
-          }
-        )
-        .test(
-          "category-max-check",
-          "Maximum price does not match the selected category",
-          function (value) {
-            const { category } = this.parent;
-            if (category === "$") return value >= 1 && value <= 10;
-            if (category === "$$") return value >= 11 && value <= 50;
-            if (category === "$$$") return value >= 51 && value <= 100;
-            if (category === "$$$$") return value >= 101;
-            return true;
-          }
-        ),
+      // min: yup
+      //   .number()
+      //   .required("Minimum Price is required")
+      //   .test(
+      //     "min-max-check",
+      //     "Minimum price must be less than maximum price",
+      //     function (value) {
+      //       const { max } = this.parent;
+      //       return max === undefined || value < max;
+      //     }
+      //   )
+      //   .test(
+      //     "category-min-check",
+      //     "Minimum price does not match the selected category",
+      //     function (value) {
+      //       const { category } = this.parent;
+      //       if (category === "$") return value >= 1 && value <= 10;
+      //       if (category === "$$") return value >= 11 && value <= 50;
+      //       if (category === "$$$") return value >= 51 && value <= 100;
+      //       if (category === "$$$$") return value >= 101;
+      //       return true;
+      //     }
+      //   ),
+      // max: yup
+      //   .number()
+      //   .required("Maximum Price is required")
+      //   .test(
+      //     "min-max-check",
+      //     "Maximum price must be greater than minimum price",
+      //     function (value) {
+      //       const { min } = this.parent;
+      //       return min === undefined || value > min;
+      //     }
+      //   )
+      //   .test(
+      //     "category-max-check",
+      //     "Maximum price does not match the selected category",
+      //     function (value) {
+      //       const { category } = this.parent;
+      //       if (category === "$") return value >= 1 && value <= 10;
+      //       if (category === "$$") return value >= 11 && value <= 50;
+      //       if (category === "$$$") return value >= 51 && value <= 100;
+      //       if (category === "$$$$") return value >= 101;
+      //       return true;
+      //     }
+      //   ),
     }),
     media: yup.object().shape({
       logo: yup

@@ -57,3 +57,12 @@ export const forgotPassword = async (data: { email: string }) => {
     console.error("Forgot password error:", error);
   }
 };
+
+export const verifyEmail = async (data: { email: string }) => {
+  try {
+    const response = await axiosInstance.post("/auth/tempverify", data);
+    return response; // Expected { message: "Email verification link sent!" }
+  } catch (error: any) {
+    console.error("Email verification error:", error);
+  }
+};

@@ -11,7 +11,7 @@ import Preloader from "@/components/global/Preloader";
 import { toast } from "react-toastify";
 import { updateUserProfileImage } from "@/services/userService";
 import ThemeButton from "../buttons/ThemeButton";
-import { getUserDetails } from "@/services/authService";
+import { getUserDetails, verifyEmail } from "@/services/authService";
 import { useAppDispatch } from "@/store";
 
 export default function AccountManagementPage() {
@@ -87,6 +87,23 @@ const ProfileImage = ({ userDetails }: { userDetails: User }) => {
     }
   };
 
+  const handleResendVerification = async () => {
+    try {
+      // Logic to resend the verification email
+      const verificationResponse = await verifyEmail({
+        email: userDetails.email,
+      });
+      if (
+        verificationResponse?.status === 200 ||
+        verificationResponse?.status === 201
+      ) {
+        toast.success("Verified successfully!");
+      }
+    } catch (error: any) {
+      toast.error(error?.message ?? "Failed to verify.");
+    }
+  };
+
   return (
     <Box display="flex" flexDirection="column" alignItems="center" mb={4}>
       <Box position="relative" mb={2}>
@@ -153,7 +170,10 @@ const ProfileImage = ({ userDetails }: { userDetails: User }) => {
 
       {userDetails.status === "unverified" && (
         <Box mt={2}>
-          <ThemeButton text="Resend Verification Email" onClick={() => {}} />
+          <ThemeButton
+            text="Resend Verification Email"
+            onClick={handleResendVerification}
+          />
         </Box>
       )}
     </Box>

@@ -10,7 +10,6 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { motion } from "framer-motion";
-import CardStaggerAnimation from "@/animations/sections/CardStaggerAnimation";
 
 const venueFaqs = [
   {

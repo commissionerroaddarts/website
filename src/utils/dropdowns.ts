@@ -8,6 +8,6 @@ export const categoryOptions = [
 
 export const boardTypeOptions = [
   { label: "Steel Tip", value: "Steel Tip" },
-  { label: "Plastic", value: "Plastic" },
+  { label: "Soft Tip", value: "Soft Tip" },
   { label: "Both", value: "Both" },
 ];
