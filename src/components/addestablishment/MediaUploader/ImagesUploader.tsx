@@ -96,11 +96,6 @@ const ImagesUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
                   onChange={handleFileChange}
                   className="hidden"
                 />
-                {fieldState?.error && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {fieldState?.error.message}
-                  </p>
-                )}
                 <ThemeButton
                   onClick={() => fileInputRef.current?.click()}
                   type="button"
@@ -131,13 +126,15 @@ const ImagesUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
         )}
       />
 
-      <div className="flex justify-center">
-        <ThemeButton
-          text={"Upload"}
-          onClick={() => setOpen(false)}
-          className="w-full"
-        />
-      </div>
+      {files.length > 0 && (
+        <div className="flex justify-center">
+          <ThemeButton
+            text={"Upload"}
+            onClick={() => setOpen(false)}
+            className="w-full"
+          />
+        </div>
+      )}
     </Box>
   );
 };

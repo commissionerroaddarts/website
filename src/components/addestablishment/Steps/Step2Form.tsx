@@ -18,10 +18,10 @@ export default function Step2Form() {
     libraries: ["places"],
   });
 
-  const { control, setValue } = useFormContext();
+  const { setValue } = useFormContext();
 
   const [autocomplete, setAutocomplete] = useState<any>(null);
-  const [center, setCenter] = useState({ lat: 24.8607, lng: 67.0011 });
+  const [center, setCenter] = useState({ lat: 33.00122, lng: -117.06517 }); // 14026 Stoney Gate PL, San Diego, CA
   const [markerPosition, setMarkerPosition] = useState(center);
 
   const onPlaceChanged = () => {

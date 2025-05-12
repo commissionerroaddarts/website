@@ -2,20 +2,20 @@
 
 import { Controller, useFormContext } from "react-hook-form";
 import CustomInput from "@/components/global/CustomInput";
-import { Box, Grid2, Typography } from "@mui/material";
+import { Box, Grid2, IconButton, Typography } from "@mui/material";
 import ThemeButton from "@/components/buttons/ThemeButton";
 import { useState } from "react";
 import LogoUploaderPopup from "../MediaUploader/LogoUploaderPopup";
-import { Upload } from "lucide-react";
+import { Upload, X } from "lucide-react";
 import SelectSearchDropDown from "@/components/global/SelectSearchDropDown";
 import { boardTypeOptions, categoryOptions } from "@/utils/dropdowns";
 import ImagesUploaderPopup from "../MediaUploader/ImagesUploader";
 
 const priceCategories = [
-  { label: "budget", value: "$" },
-  { label: "midrange", value: "$$" },
-  { label: "luxury", value: "$$$" },
-  { label: "exclusive", value: "$$$$" },
+  { label: "Budget", value: "$" },
+  { label: "Mid Range", value: "$$" },
+  { label: "Luxury", value: "$$$" },
+  { label: "Exclusive", value: "$$$$" },
 ];
 
 export default function Step1Form() {
@@ -235,52 +235,6 @@ export default function Step1Form() {
             />
           )}
         />
-        {/* <Grid2 container spacing={2} mt={2}>
-          <Grid2 size={{ xs: 12, md: 6 }}>
-            <Controller
-              name="price.min"
-              control={control}
-              render={({ field, fieldState }) => (
-                <CustomInput
-                  label="Minimum Price"
-                  {...field}
-                  value={field.value === 0 ? "" : field.value}
-                  placeholder="Enter minimum price"
-                  type="number"
-                  error={!!fieldState.error}
-                  helperText={fieldState.error?.message}
-                  onChange={(e) => {
-                    const value = Math.max(0, Number(e.target.value));
-                    setValue("price.min", value);
-                  }}
-                  fullWidth
-                />
-              )}
-            />
-          </Grid2>
-          <Grid2 size={{ xs: 12, md: 6 }}>
-            <Controller
-              name="price.max"
-              control={control}
-              render={({ field, fieldState }) => (
-                <CustomInput
-                  label="Maximum Price"
-                  {...field}
-                  value={field.value === 0 ? "" : field.value}
-                  placeholder="Enter maximum price"
-                  onChange={(e) => {
-                    const value = Math.max(0, Number(e.target.value));
-                    setValue("price.max", value);
-                  }}
-                  type="number"
-                  error={!!fieldState.error}
-                  helperText={fieldState.error?.message}
-                  fullWidth
-                />
-              )}
-            />
-          </Grid2>
-        </Grid2> */}
       </Box>
     </Box>
   );
@@ -289,52 +243,141 @@ export default function Step1Form() {
 const UploadButtons = () => {
   const [uploadLogo, setUploadLogo] = useState(false);
   const [uploadMedia, setUploadMedia] = useState(false);
+
   const {
     formState: { errors },
+    watch,
+    setValue,
   } = useFormContext();
 
+  const logo = watch("media.logo");
+  const images = watch("media.images") || [];
+
+  const isLogoError =
+    typeof errors?.media === "object" &&
+    errors.media !== null &&
+    "logo" in errors.media &&
+    typeof errors.media.logo?.message === "string";
+
+  const isImagesError =
+    typeof errors?.media === "object" &&
+    errors.media !== null &&
+    "images" in errors.media &&
+    typeof errors.media.images?.message === "string";
+
+  // Remove functions
+  const removeLogo = () => setValue("media.logo", null);
+  const removeImage = (index: number) => {
+    const updatedImages = images.filter((_: any, i: number) => i !== index);
+    setValue("media.images", updatedImages);
+  };
+
   return (
-    <div className="flex flex-wrap gap-4 justify-center mb-8">
+    <div className="flex flex-wrap gap-10 justify-center mb-8">
+      {/* === LOGO === */}
       <Box className="flex flex-col items-center justify-center gap-2">
-        <ThemeButton
-          text="Upload Logo"
-          type="button"
-          icon={<Upload className="w-5 h-5" />}
-          onClickEvent={() => setUploadLogo(true)}
-        />
-        {errors?.media &&
-          "logo" in errors.media &&
-          errors.media.logo &&
-          typeof errors?.media?.logo?.message === "string" && (
-            <Typography color="error" variant="body2" className="mt-2">
-              {errors?.media?.logo.message}
-            </Typography>
-          )}
+        {logo ? (
+          <Box className="flex flex-col items-center gap-2 relative">
+            <Typography variant="h6">Logo Preview</Typography>
+            <div className="relative">
+              <img
+                src={URL.createObjectURL(logo)}
+                alt="Uploaded Logo"
+                className="w-24 h-24 object-contain "
+              />
+              <CloseIconButton onClick={removeLogo} />
+            </div>
+          </Box>
+        ) : (
+          <>
+            <ThemeButton
+              text="Upload Logo"
+              type="button"
+              icon={<Upload className="w-5 h-5" />}
+              onClickEvent={() => setUploadLogo(true)}
+            />
+            {isLogoError && (
+              <Typography color="error" variant="body2" className="mt-2">
+                {errors?.media?.logo?.message}
+              </Typography>
+            )}
+          </>
+        )}
       </Box>
 
       {uploadLogo && (
         <LogoUploaderPopup open={uploadLogo} setOpen={setUploadLogo} />
       )}
 
+      {/* === MEDIA IMAGES === */}
       <Box className="flex flex-col items-center justify-center gap-2">
-        <ThemeButton
-          text="Upload Media"
-          type="button"
-          icon={<Upload className="w-5 h-5" />}
-          onClickEvent={() => setUploadMedia(true)}
-        />
-        {errors?.media &&
-          "logo" in errors.media &&
-          errors.media.images &&
-          typeof errors?.media?.images?.message === "string" && (
-            <Typography color="error" variant="body2" className="mt-2">
-              {errors?.media?.images.message}
-            </Typography>
-          )}
+        {images.length > 0 ? (
+          <Box className="flex flex-col items-center gap-2">
+            <Typography variant="h6">Images Preview</Typography>
+            <div className="flex gap-2 flex-wrap justify-center">
+              {images.map((img: File, idx: number) => (
+                <div key={img.name} className="relative">
+                  <img
+                    src={URL.createObjectURL(img)}
+                    alt={`Uploaded ${idx}`}
+                    className="w-24 h-24 object-contain "
+                  />
+                  <CloseIconButton onClick={() => removeImage(idx)} />
+                </div>
+              ))}
+            </div>
+            <ThemeButton
+              text="Add More"
+              onClickEvent={() => setUploadMedia(true)}
+            />
+          </Box>
+        ) : (
+          <>
+            <ThemeButton
+              text="Upload Media"
+              type="button"
+              icon={<Upload className="w-5 h-5" />}
+              onClickEvent={() => setUploadMedia(true)}
+            />
+            {isImagesError && (
+              <Typography color="error" variant="body2" className="mt-2">
+                {errors.media.images.message}
+              </Typography>
+            )}
+          </>
+        )}
       </Box>
+
       {uploadMedia && (
         <ImagesUploaderPopup open={uploadMedia} setOpen={setUploadMedia} />
       )}
     </div>
+  );
+};
+
+const CloseIconButton = ({ onClick }: { onClick: () => void }) => {
+  return (
+    <IconButton
+      sx={{
+        position: "absolute",
+        top: "2px",
+        right: "2px",
+        color: "white",
+        zIndex: 100,
+        background: "red",
+        borderRadius: "50%",
+        cursor: "pointer",
+        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+        transition: "background 0.3s, transform 0.3s",
+        padding: "0.2rem",
+        "&:hover": {
+          opacity: 0.9,
+        },
+      }}
+      onClick={onClick}
+      aria-label="Close"
+    >
+      <X className="size-3 text-white" />
+    </IconButton>
   );
 };
