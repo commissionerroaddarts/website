@@ -12,10 +12,10 @@ import { boardTypeOptions, categoryOptions } from "@/utils/dropdowns";
 import ImagesUploaderPopup from "../MediaUploader/ImagesUploader";
 
 const priceCategories = [
-  { label: "Budget", value: "$" },
-  { label: "Mid Range", value: "$$" },
-  { label: "Luxury", value: "$$$" },
-  { label: "Exclusive", value: "$$$$" },
+  { label: "Budget ($)", value: "$" },
+  { label: "Mid Range ($$)", value: "$$" },
+  { label: "Luxury ($$$)", value: "$$$" },
+  { label: "Exclusive ($$$$)", value: "$$$$" },
 ];
 
 export default function Step1Form() {
