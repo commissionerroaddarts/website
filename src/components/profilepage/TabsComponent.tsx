@@ -3,7 +3,11 @@ import { User } from "@/types/user";
 import { Box, Tab, Tabs } from "@mui/material";
 import { usePathname, useRouter } from "next/navigation";
 
-export const TabsComponent = ({ userDetails }: { userDetails?: User | {} }) => {
+export const TabsComponent = ({
+  userDetails,
+}: {
+  userDetails?: User | null;
+}) => {
   const router = useRouter();
   const pathname = usePathname();
   const isStoreOwner =
