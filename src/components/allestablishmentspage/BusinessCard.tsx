@@ -41,8 +41,7 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
   const { user } = useAppState();
   const { userDetails } = user;
   const { role } = userDetails || {};
-  // const isStoreOwner = role === "owner" || role === "admin";
-  const isStoreOwner = true; // For testing purposes, set to true
+  const isStoreOwner = role === "owner" || role === "admin";
   const [openMap, setOpenMap] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
@@ -110,7 +109,7 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
 
                 <button
                   onClick={handleDelete}
-                  className="bg-red-500 text-white text-xs px-2 py-1 rounded  flex items-center justify-around"
+                  className="bg-red-500 cursor-pointer text-white text-xs px-2 py-1 rounded  flex items-center justify-around"
                 >
                   {loading ? "Deleting" : "Delete"}{" "}
                   <Trash className="inline-block ml-1" size={15} />

@@ -39,39 +39,39 @@ const EstablishmentMapLocation = ({
     mapRef.current = map;
   }, []);
 
-  const handleGetDirections = async () => {
-    if (!coordinates) return;
+  // const handleGetDirections = async () => {
+  //   if (!coordinates) return;
 
-    try {
-      const pos = await new Promise<GeolocationPosition>((resolve, reject) =>
-        navigator.geolocation.getCurrentPosition(resolve, reject)
-      );
+  //   try {
+  //     const pos = await new Promise<GeolocationPosition>((resolve, reject) =>
+  //       navigator.geolocation.getCurrentPosition(resolve, reject)
+  //     );
 
-      const origin = {
-        lat: pos.coords.latitude,
-        lng: pos.coords.longitude,
-      };
+  //     const origin = {
+  //       lat: pos.coords.latitude,
+  //       lng: pos.coords.longitude,
+  //     };
 
-      const directionsService = new google.maps.DirectionsService();
-      const result = await directionsService.route({
-        origin,
-        destination: coordinates,
-        travelMode: google.maps.TravelMode.DRIVING,
-        provideRouteAlternatives: true,
-      });
+  //     const directionsService = new google.maps.DirectionsService();
+  //     const result = await directionsService.route({
+  //       origin,
+  //       destination: coordinates,
+  //       travelMode: google.maps.TravelMode.DRIVING,
+  //       provideRouteAlternatives: true,
+  //     });
 
-      if (result.routes.length > 0) {
-        setDirectionsResponse(result);
-        setRoutes(result.routes);
-        setRouteIndex(0);
-        setShowDirections(true);
-      } else {
-        throw new Error("No route found");
-      }
-    } catch (err) {
-      console.warn("Directions error:", err);
-    }
-  };
+  //     if (result.routes.length > 0) {
+  //       setDirectionsResponse(result);
+  //       setRoutes(result.routes);
+  //       setRouteIndex(0);
+  //       setShowDirections(true);
+  //     } else {
+  //       throw new Error("No route found");
+  //     }
+  //   } catch (err) {
+  //     console.warn("Directions error:", err);
+  //   }
+  // };
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? "",
   });

@@ -4,6 +4,7 @@ import SocialIcons from "@/components/global/SocialIcons";
 import { Box } from "@mui/material";
 import EstablishmentMapLocation from "@/components/modals/EstablishmentMapLocation";
 import { CircleDollarSign, Globe, MapPinned, Phone } from "lucide-react";
+import Link from "next/link";
 
 interface EstablishmentLocationProps {
   readonly business: Business;
@@ -75,21 +76,21 @@ const BasicDetails = ({
 
       <div className="flex items-center gap-2 flex-wrap">
         <Phone color="white" size={25} />
-        <span>{phone}</span>
+        <Link href={`tel:${phone}`} passHref target="_blank">
+          {phone}
+        </Link>
       </div>
-      <div className="flex items-center gap-2 flex-wrap">
-        <Globe color="white" size={25} />
-        <a href={website} className="text-purple-300">
-          {website && website.length > 25
-            ? `${website.substring(0, 25)}...`
-            : website}
-        </a>
-      </div>
+      {website && (
+        <div className="flex items-center gap-2 flex-wrap">
+          <Globe color="white" size={25} />
+          <Link href={website} passHref className="text-purple-300">
+            {website.length > 25 ? `${website.substring(0, 25)}...` : website}
+          </Link>
+        </div>
+      )}
       <div className="flex items-center gap-2 flex-wrap">
         <CircleDollarSign color="white" size={25} />
-        <span>
-          {price?.category} {price?.min} - {price?.max}
-        </span>
+        <span>{price?.category}</span>
       </div>
     </Box>
   );

@@ -38,11 +38,12 @@ function BusinessCard({ business }: { readonly business: Business }) {
     price,
     location,
     averageRating,
+    userId: userBusinessId,
   } = business;
 
   const { user } = useAppState();
   const { userDetails } = user;
-  const { role } = userDetails || {};
+  const { role, _id: userId } = userDetails || {};
   const isStoreOwner = role === "owner" || role === "admin";
   const [openMap, setOpenMap] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -135,7 +136,7 @@ function BusinessCard({ business }: { readonly business: Business }) {
               sx={{ backgroundColor: "#5A2A84" }}
             />
             <Box className="relative flex gap-2">
-              {isStoreOwner && (
+              {userBusinessId === userId && (
                 <>
                   <Link
                     href={`/edit-establishment/${_id}`}
@@ -146,7 +147,7 @@ function BusinessCard({ business }: { readonly business: Business }) {
 
                   <button
                     onClick={handleDelete}
-                    className="bg-red-500 text-white text-[0.7rem] px-2 py-1 rounded-xl  flex items-center justify-around"
+                    className="bg-red-500 cursor-pointer text-white text-[0.7rem] px-2 py-1 rounded-xl  flex items-center justify-around"
                   >
                     {loading ? "Deleting" : "Delete"}{" "}
                     <Trash className="inline-block ml-1" size={17} />
