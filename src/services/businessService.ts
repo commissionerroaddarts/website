@@ -7,7 +7,8 @@ const API_URL = `${baseUrl}/businesses`;
 export const fetchBusinesses = async (
   page = 1,
   limit = 10,
-  filters: FilterValues = {}
+  filters: FilterValues = {},
+  userId?: string
 ): Promise<ApiResponse> => {
   try {
     // Start building the query string
@@ -30,7 +31,14 @@ export const fetchBusinesses = async (
     });
 
     // Build the final URL with the query parameters
-    const url = `${API_URL}?${params.toString()}`;
+    let url = `${API_URL}?${params.toString()}`;
+
+    // If userId is provided, append it to the URL
+    if (userId) {
+      const userParams = new URLSearchParams();
+      userParams.set("user", userId);
+      url += `&${userParams.toString()}`;
+    }
 
     // Make the API request
     const response = await axiosInstance.get<ApiResponse>(url);
@@ -68,6 +76,47 @@ export const insertBusiness = async (data: any) => {
     return response;
   } catch (error) {
     console.error("Error inserting business:", error);
+    throw error;
+  }
+};
+
+export const updateBusiness = async (data: any) => {
+  try {
+    const { media, ...rest } = data;
+    const response = await axiosInstance.patch(`${API_URL}/${data._id}`, rest);
+    if (response.status === 200) {
+      const { _id: businessId } = response.data;
+      if (media?.images) {
+        const formData = new FormData();
+        if (media?.images.length > 0) {
+          media?.images.forEach((file: File) => {
+            formData.append("images", file);
+          });
+        }
+        if (media?.logo) {
+          formData.append("businessLogo", media.logo);
+        }
+        await axiosInstance.patch(`${API_URL}/media/${businessId}`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+      }
+    }
+
+    return response;
+  } catch (error) {
+    console.error("Error updating business:", error);
+    throw error;
+  }
+};
+
+export const deleteBusiness = async (businessId: string) => {
+  try {
+    const response = await axiosInstance.delete(`${API_URL}/${businessId}`);
+    return response;
+  } catch (error) {
+    console.error("Error deleting business:", error);
     throw error;
   }
 };

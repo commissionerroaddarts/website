@@ -1,38 +1,28 @@
 // app/establishments/page.tsx
 "use client";
 
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams, useRouter, redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Box } from "@mui/material";
-import MapSection from "./MapSection";
-import FilterSection from "./FilterSection";
-import BusinessGrid from "./EstablishmentPageGrid";
+import BusinessGrid from "@/components/allestablishmentspage/EstablishmentPageGrid";
 import { fetchBusinesses } from "@/services/businessService";
 import { Business, FilterValues } from "@/types/business";
 import { SearchX } from "lucide-react";
 import useDebounce from "@/hooks/useDebounce";
+import FilterSection from "@/components/allestablishmentspage/FilterSection";
+import { useAppState } from "@/hooks/useAppState";
 
-export default function MainEstablishment() {
+export default function MyEstablishmentsComponent() {
+  const { user } = useAppState();
+  const { userDetails } = user;
+  const { _id } = userDetails ?? {};
   const searchParams = useSearchParams();
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
   const [businesses, setBusinesses] = useState<Business[]>([]); // Single object state for all filters
   const search = searchParams.get("search") ?? null;
-  const category = searchParams.get("category") ?? null;
-  const boardtype = searchParams.get("boardtype") ?? null;
-  const city = searchParams.get("city") ?? null;
-  const state = searchParams.get("state") ?? null;
-  const zipcode = searchParams.get("zipcode") ?? null;
-  const agelimit = searchParams.get("agelimit")?.split(",").map(Number) ?? null;
-
   const [filterParams, setFilterParams] = useState<FilterValues>({
     search,
-    category,
-    boardtype,
-    city,
-    state,
-    zipcode,
-    agelimit,
   });
 
   const debouncedSearch = useDebounce(filterParams.search, 500);
@@ -56,7 +46,7 @@ export default function MainEstablishment() {
     );
 
     try {
-      const { data } = await fetchBusinesses(1, 10, validFilterParams);
+      const { data } = await fetchBusinesses(1, 10, validFilterParams, _id);
       setBusinesses(data);
     } catch (error) {
       console.error("Failed to fetch businesses:", error);
@@ -89,14 +79,19 @@ export default function MainEstablishment() {
     getBusinesses();
   };
 
+  if (!_id) {
+    redirect("/login");
+    return null;
+  }
+
   return (
     <Box sx={{ maxWidth: "90%", margin: "0 auto" }}>
-      <MapSection businesses={businesses} isLoading={loading} />
       <FilterSection
         isLoading={loading}
         filters={filterParams}
         setFilters={setFilterParams}
         updateQuery={updateQuery}
+        isFilteration={false}
       />
       {(() => {
         if (loading) {

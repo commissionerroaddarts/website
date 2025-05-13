@@ -28,7 +28,7 @@ const ThankYouMessage = () => {
       router.push("/"); // Redirect if no form data found
     } else {
       if (urlParams.get("session_id")) {
-        router.push("/add-listing");
+        router.push("/add-establishment");
       }
       setTimeout(() => dispatch(clearInquiryData()), 8000);
     }

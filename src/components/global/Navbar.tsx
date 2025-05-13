@@ -28,7 +28,7 @@ import RateReviewIcon from "@mui/icons-material/RateReview";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { User } from "@/types/user";
 import CardStaggerAnimation from "@/animations/sections/CardStaggerAnimation";
-import { X } from "lucide-react";
+import { Building, X } from "lucide-react";
 import ThemeButton from "@/components/buttons/ThemeButton";
 import CloseIconButton from "./CloseIconButton";
 
@@ -41,7 +41,7 @@ const baseNavLinks = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
   { href: "/contact-us", label: "Contact" },
-  { href: "/add-listing", label: "Add Listing" },
+  { href: "/add-establishment", label: "Add Listing" },
 ];
 
 function Navbar() {
@@ -260,6 +260,13 @@ const ProfileLink = ({
       icon: <RateReviewIcon sx={{ marginRight: "8px" }} />,
       action: () => router.push("/profile/my-reviews"),
     },
+    userDetails?.role === "owner"
+      ? {
+          label: "View Your Listings",
+          icon: <Building style={{ marginRight: "8px" }} />,
+          action: () => router.push("/profile/my-establishments"),
+        }
+      : {},
     {
       label: "Logout",
       icon: <LogoutIcon sx={{ marginRight: "8px" }} />,

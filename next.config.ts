@@ -5,7 +5,6 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       { hostname: "fastly.4sqi.net" },
       { hostname: "res.cloudinary.com" },
-      { hostname: "images.unsplash.com" },
       { hostname: "picsum.photos" },
       { hostname: "media.istockphoto.com" },
       { hostname: "media.gettyimages.com" },
@@ -24,6 +23,12 @@ const nextConfig: NextConfig = {
       { hostname: "fonts.gstatic.com" },
       { hostname: "fonts.googleapis.com" },
       { hostname: "www.shutterstock.com" },
+      { hostname: "images.unsplash.com" },
+      { hostname: "images.pexels.com" },
+      { hostname: "cdn.pixabay.com" },
+      { hostname: "media.istockphoto.com" },
+      { hostname: "media.gettyimages.com" },
+      { hostname: "cdn.vectorstock.com" },
     ],
   },
 
