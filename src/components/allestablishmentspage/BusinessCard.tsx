@@ -7,7 +7,11 @@ import Link from "next/link";
 import { useState } from "react";
 import BusinessMapPopup from "@/components/homepage/businesses/BusinessMapPopup";
 import { Business } from "@/types/business";
-import { StarRatingWithPopup } from "@/components/global/StarRating";
+import {
+  StarRating,
+  StarRatingWithPopup,
+} from "@/components/global/StarRating";
+import { useAppState } from "@/hooks/useAppState";
 
 interface RestaurantCardProps {
   readonly business: Business;
@@ -29,6 +33,8 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
     // totalReviews,
   } = business;
 
+  const { user } = useAppState();
+  const { userDetails } = user;
   const [openMap, setOpenMap] = useState<boolean>(false);
 
   if (
@@ -91,7 +97,15 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
               <h3 className="text-white font-medium text-2xl">{name}</h3>
             </div>
 
-            <StarRatingWithPopup id={_id} averageRating={averageRating ?? 0} />
+            {userDetails &&
+            (userDetails?.role === "admin" || userDetails?.role === "owner") ? (
+              <StarRating rating={averageRating ?? 0} size="size-5" />
+            ) : (
+              <StarRatingWithPopup
+                id={_id}
+                averageRating={averageRating ?? 0}
+              />
+            )}
 
             {/* Location */}
             <div className="flex items-center mb-2">

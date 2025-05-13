@@ -10,7 +10,7 @@ export const StarRating = ({
   size: string;
 }) => {
   return (
-    <div className="flex justify-center items-center">
+    <div className="flex  items-center">
       {[1, 2, 3, 4, 5].map((star) => (
         <svg
           key={star}

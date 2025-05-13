@@ -14,10 +14,14 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { Business } from "@/types/business";
 import BusinessMapPopup from "./BusinessMapPopup";
 import Link from "next/link";
-import { StarRatingWithPopup } from "@/components/global/StarRating";
+import {
+  StarRating,
+  StarRatingWithPopup,
+} from "@/components/global/StarRating";
 import ThemeButton from "@/components/buttons/ThemeButton";
 import ThemeOutlineButton from "@/components/buttons/ThemeOutlineButton";
 import { Map } from "lucide-react";
+import { useAppState } from "@/hooks/useAppState";
 
 function BusinessCard({ business }: { readonly business: Business }) {
   // business
@@ -33,6 +37,8 @@ function BusinessCard({ business }: { readonly business: Business }) {
     averageRating,
   } = business;
 
+  const { user } = useAppState();
+  const { userDetails } = user;
   const [openMap, setOpenMap] = useState(false);
   const handleMapOpen = () => setOpenMap(true);
   const handleMapClose = () => setOpenMap(false);
@@ -122,8 +128,15 @@ function BusinessCard({ business }: { readonly business: Business }) {
               </Link>
             </Typography>
 
-            {/* show ratings stars icons */}
-            <StarRatingWithPopup id={_id} averageRating={averageRating ?? 0} />
+            {userDetails &&
+            (userDetails?.role === "admin" || userDetails?.role === "owner") ? (
+              <StarRating rating={averageRating ?? 0} size="size-5" />
+            ) : (
+              <StarRatingWithPopup
+                id={_id}
+                averageRating={averageRating ?? 0}
+              />
+            )}
           </Box>
 
           {/* Price and Location */}

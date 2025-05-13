@@ -89,7 +89,7 @@ function HomeBanner() {
             animate="visible"
             className="h-full w-full mb-2 text-white font-bold text-4xl sm:text-5xl xl:text-6xl"
           >
-            Stay Sharp, Throw Anywhere
+            Stay Sharp, Be Social, Throw Anywhere.
           </motion.div>
 
           <motion.div

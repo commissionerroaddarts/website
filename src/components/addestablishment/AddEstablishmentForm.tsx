@@ -312,9 +312,9 @@ export default function AddEstablishment() {
   const totalSteps = 5;
   const [isLoading, setIsLoading] = useState(false);
 
-  // if (!subscription) {
-  //   return <PromoCodePopupComponent />;
-  // }
+  if (!subscription) {
+    return <PromoCodePopupComponent />;
+  }
 
   const handleStepSubmit = async (direction: "next" | "prev") => {
     const currentSchema = stepSchemas[currentStep - 1]; // currentStep is 1-based

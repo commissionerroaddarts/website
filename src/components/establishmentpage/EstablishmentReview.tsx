@@ -10,7 +10,7 @@ import Link from "next/link";
 
 const EstablishmentReview = ({ id }: { id: string }) => {
   const { user } = useAppState();
-  const { isLoggedIn } = user;
+  const { isLoggedIn, userDetails } = user;
   const [reviews, setReviews] = useState<BusinessReview[]>([]);
   const [averageRating, setAverageRating] = useState<number>(0);
   const [totalReviews, setTotalReviews] = useState<number>(0);
@@ -31,6 +31,10 @@ const EstablishmentReview = ({ id }: { id: string }) => {
     if (!id) return;
     fetchReviews();
   }, [id]);
+
+  if (userDetails && userDetails?.role === "owner") {
+    return null;
+  }
 
   if (!isLoggedIn) {
     return (

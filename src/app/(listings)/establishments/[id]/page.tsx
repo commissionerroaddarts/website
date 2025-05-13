@@ -5,6 +5,7 @@ import { Box, Grid2 } from "@mui/material";
 import EstablishmentFAQ from "@/components/establishmentpage/EstablishmentFAQ";
 import EstablishmentReview from "@/components/establishmentpage/EstablishmentReview";
 import EstablishmentLocation from "@/components/establishmentpage/EstablishmentLocation";
+import { Business } from "@/types/business";
 
 export default async function EstablishmentPage({
   params,
@@ -18,7 +19,7 @@ export default async function EstablishmentPage({
     return data;
   };
 
-  const business = await fetchBusiness();
+  const business: Business = await fetchBusiness();
   if (!business) {
     return <div>Business not found</div>;
   }
@@ -47,7 +48,9 @@ export default async function EstablishmentPage({
             />
 
             {/* FAQs */}
-            {business.faqs && <EstablishmentFAQ faqs={business.faqs} />}
+            {business.faqs && business.faqs?.length > 0 && (
+              <EstablishmentFAQ faqs={business.faqs} />
+            )}
 
             {/* Reviews */}
             <EstablishmentReview id={business._id} />
