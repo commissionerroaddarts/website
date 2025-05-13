@@ -2,7 +2,7 @@
 import PastReviews from "@/components/ratings/PastReviews";
 import { Box } from "@mui/material";
 import { getBusinessReviews } from "@/services/ratingService";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { BusinessReview, SubmittedUserReview } from "@/types/ratings";
 import ReviewForm from "./ReviewForm";
 import { useAppState } from "@/hooks/useAppState";

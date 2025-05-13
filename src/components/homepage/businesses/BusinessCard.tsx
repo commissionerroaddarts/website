@@ -20,8 +20,11 @@ import {
 } from "@/components/global/StarRating";
 import ThemeButton from "@/components/buttons/ThemeButton";
 import ThemeOutlineButton from "@/components/buttons/ThemeOutlineButton";
-import { Map } from "lucide-react";
+import { Edit, Map, Trash } from "lucide-react";
 import { useAppState } from "@/hooks/useAppState";
+import { useRouter } from "next/navigation";
+import { deleteBusiness } from "@/services/businessService";
+import { toast } from "react-toastify";
 
 function BusinessCard({ business }: { readonly business: Business }) {
   // business
@@ -39,7 +42,11 @@ function BusinessCard({ business }: { readonly business: Business }) {
 
   const { user } = useAppState();
   const { userDetails } = user;
+  const { role } = userDetails || {};
+  const isStoreOwner = role === "owner" || role === "admin";
   const [openMap, setOpenMap] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const handleMapOpen = () => setOpenMap(true);
   const handleMapClose = () => setOpenMap(false);
   const getStatusColor = (status: string | undefined): string => {
@@ -54,6 +61,33 @@ function BusinessCard({ business }: { readonly business: Business }) {
         return "#2196f3";
       default:
         return "#9e9e9e";
+    }
+  };
+
+  const handleDelete = async (e: any) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setLoading(true);
+    // Add confirmation dialog if needed
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this establishment?"
+    );
+    if (!confirmed) {
+      setLoading(false);
+      return;
+    }
+    try {
+      // Implement delete functionality here
+      // For example, you might call a delete API endpoint
+      const response = await deleteBusiness(_id);
+      if (response.status === 200) {
+        toast.success("Establishment deleted successfully");
+        router.refresh();
+      }
+    } catch (error) {
+      console.error("Error deleting establishment:", error);
+      toast.error("Failed to delete establishment");
+      setLoading(false);
     }
   };
 
@@ -100,20 +134,40 @@ function BusinessCard({ business }: { readonly business: Business }) {
               color="secondary"
               sx={{ backgroundColor: "#5A2A84" }}
             />
-            <Typography
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                padding: "0.5rem 1rem",
-                borderRadius: "50px",
-                fontSize: "0.7rem",
-                background: getStatusColor(status),
-              }}
-              variant="h6"
-            >
-              <CheckCircleIcon sx={{ fontSize: 12, mr: 0.5 }} />{" "}
-              {status ?? "Unknown"}
-            </Typography>
+            <Box className="relative flex gap-2">
+              {isStoreOwner && (
+                <Box className="absolute top-2 right-2 " zIndex={10}>
+                  <Link
+                    href={`/edit-establishment/${_id}`}
+                    className="bg-purple-700 text-white text-sm px-2 py-1 rounded flex items-center justify-around"
+                  >
+                    Edit <Edit className="inline-block ml-1" size={20} />
+                  </Link>
+
+                  <button
+                    onClick={handleDelete}
+                    className="bg-red-500 text-white text-sm px-2 py-1 rounded  flex items-center justify-around"
+                  >
+                    {loading ? "Deleting" : "Delete"}{" "}
+                    <Trash className="inline-block ml-1" size={20} />
+                  </button>
+                </Box>
+              )}
+              <Typography
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  padding: "0.5rem 1rem",
+                  borderRadius: "50px",
+                  fontSize: "0.7rem",
+                  background: getStatusColor(status),
+                }}
+                variant="h6"
+              >
+                <CheckCircleIcon sx={{ fontSize: 12, mr: 0.5 }} />{" "}
+                {status ?? "Unknown"}
+              </Typography>
+            </Box>
           </Box>
           <Box className="flex flex-col gap-1">
             {/* Title */}
@@ -128,8 +182,7 @@ function BusinessCard({ business }: { readonly business: Business }) {
               </Link>
             </Typography>
 
-            {userDetails &&
-            (userDetails?.role === "admin" || userDetails?.role === "owner") ? (
+            {userDetails && isStoreOwner ? (
               <StarRating rating={averageRating ?? 0} size="size-5" />
             ) : (
               <StarRatingWithPopup

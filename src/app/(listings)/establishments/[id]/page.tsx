@@ -52,7 +52,6 @@ export default async function EstablishmentPage({
               <EstablishmentFAQ faqs={business.faqs} />
             )}
 
-            {/* Reviews */}
             <EstablishmentReview id={business._id} />
           </Box>
         </Grid2>
