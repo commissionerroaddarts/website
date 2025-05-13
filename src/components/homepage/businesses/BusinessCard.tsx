@@ -107,18 +107,24 @@ function BusinessCard({ business }: { readonly business: Business }) {
           gap: 1,
         }}
       >
-        {/* Image Section */}
-        <CardMedia
-          component="img"
-          sx={{ width: 250, height: 250, borderRadius: 2 }}
-          image={
-            media?.logo ??
-            media?.images?.[0] ??
-            "/images/banners/business-placeholder.png"
-          }
-          alt={name}
-        />
-
+        <Link
+          href={`/establishments/${business?._id}`}
+          className="w-[350px] h-[250px] rounded-2xl"
+          passHref
+          prefetch
+        >
+          {/* Image Section */}
+          <CardMedia
+            component="img"
+            sx={{ width: 250, height: 250, borderRadius: 2 }}
+            image={
+              media?.logo ??
+              media?.images?.[0] ??
+              "/images/banners/business-placeholder.png"
+            }
+            alt={name}
+          />
+        </Link>
         {/* Content Section */}
         <CardContent
           sx={{

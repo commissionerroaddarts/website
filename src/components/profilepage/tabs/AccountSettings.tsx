@@ -65,7 +65,7 @@ const AccountSettings = () => {
       }}
     >
       <Container sx={{ flex: 1 }}>
-        <TabsComponent userDetails={userDetails ?? {}} />
+        <TabsComponent userDetails={userDetails ?? null} />
 
         <Box
           sx={{
