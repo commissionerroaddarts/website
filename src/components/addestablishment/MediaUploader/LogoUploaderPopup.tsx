@@ -5,7 +5,7 @@ import { Controller, useFormContext } from "react-hook-form";
 import ThemeButton from "../../buttons/ThemeButton";
 import LogoDropzone from "./FileDropzone";
 import LogoPreviewCropper from "./LogoPreview";
-import { Box, Dialog } from "@mui/material";
+import { Box, Dialog, Typography } from "@mui/material";
 import CloseIconButton from "@/components/global/CloseIconButton";
 
 const LogoUploaderPopup = ({
@@ -30,7 +30,11 @@ const LogoUploaderPopup = ({
 };
 
 const LogoUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
-  const { control, setValue } = useFormContext();
+  const {
+    control,
+    setValue,
+    formState: { errors },
+  } = useFormContext();
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -86,6 +90,7 @@ const LogoUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
     setValue("file", croppedFile);
     setPreviewUrl(croppedFileUrl);
   };
+  console.log(errors);
 
   return (
     <Box
@@ -119,14 +124,23 @@ const LogoUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
           )
         }
       />
-
-      <div className="flex justify-center">
-        <ThemeButton
-          text={"Upload"}
-          onClick={() => setOpen(false)}
-          className="w-full"
-        />
-      </div>
+      {typeof errors?.media === "object" &&
+        errors.media !== null &&
+        "logo" in errors.media &&
+        typeof errors.media.logo?.message === "string" && (
+          <Typography color="error" variant="body2" className="mt-2">
+            {errors?.media?.logo?.message}
+          </Typography>
+        )}
+      {file && (
+        <div className="flex justify-center">
+          <ThemeButton
+            text={"Upload"}
+            onClick={() => setOpen(false)}
+            className="w-full"
+          />
+        </div>
+      )}
     </Box>
   );
 };

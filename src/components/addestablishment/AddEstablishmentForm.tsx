@@ -9,12 +9,13 @@ import Step4Form from "./Steps/Step4Form";
 import Step3Form from "./Steps/Step3Form";
 import Step2Form from "./Steps/Step2Form";
 import Step5Form from "./Steps/Step5Form";
-import { insertBusiness } from "@/services/businessService";
+import { insertBusiness, updateBusiness } from "@/services/businessService";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { useAppState } from "@/hooks/useAppState";
 import PromoCodePopupComponent from "./PromoCodeComponent";
-const MAX_FILE_SIZE = 1 * 1024 * 1024; // 1 MB
+import { Business } from "@/types/business";
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
 const SUPPORTED_FORMATS = ["image/jpeg", "image/png", "image/webp"];
 
 const stepSchemas = [
@@ -115,38 +116,39 @@ const stepSchemas = [
     media: yup.object().shape({
       logo: yup
         .mixed()
-        .test("fileType", "Unsupported file format", (value) => {
-          if (!value) return true; // Skip test if no file is uploaded
+        .test("fileOrUrl", "Unsupported file format", (value) => {
+          if (!value) return true;
+
+          if (typeof value === "string") return true; // Accept URL
+
           const file = value as File;
           return SUPPORTED_FORMATS.includes(file.type);
         })
-        .test("fileSize", "Max allowed size is 1MB", (value) => {
-          if (!value) return true; // Skip test if no file is uploaded
+        .test("fileSize", "Max allowed size is 5MB", (value) => {
+          if (!value || typeof value === "string") return true;
+
           const file = value as File;
           return file.size <= MAX_FILE_SIZE;
         }),
-      images: yup
-        .array()
-        // .min(1, "At least one image is required")
-        // .test("required", "Images are required", (value) => {
-        //   return value && value.length > 0;
-        // })
-        .of(
-          yup
-            .mixed()
-            .test(
-              "fileRequired",
-              "Image is required",
-              (file) => file instanceof File
-            )
-            .test("fileType", "Only JPG/PNG/WEBP images allowed", (value) => {
-              if (!value || !(value instanceof File)) return false;
-              return SUPPORTED_FORMATS.includes(value.type);
-            })
-            .test("fileSize", "Each image must be under 1MB", (file) => {
-              return file instanceof File && file.size <= MAX_FILE_SIZE;
-            })
-        ),
+
+      images: yup.array().of(
+        yup
+          .mixed()
+          .test("fileOrUrl", "Only JPG/PNG/WEBP images allowed", (value) => {
+            if (!value) return false;
+
+            if (typeof value === "string") return true; // Accept URL
+
+            return (
+              value instanceof File && SUPPORTED_FORMATS.includes(value.type)
+            );
+          })
+          .test("fileSize", "Each image must be under 5MB", (value) => {
+            if (!value || typeof value === "string") return true;
+
+            return value instanceof File && value.size <= MAX_FILE_SIZE;
+          })
+      ),
     }),
   }),
   yup.object().shape({
@@ -282,9 +284,73 @@ const stepSchemas = [
   // more steps schemas if needed
 ];
 
-export default function AddEstablishment() {
+export default function AddEstablishment({
+  business,
+  isEdit = false,
+}: {
+  readonly business?: Readonly<Business>;
+  readonly isEdit?: boolean;
+}) {
   const methods = useForm({
     mode: "onBlur",
+    defaultValues: {
+      name: business?.name ?? "",
+      tagline: business?.tagline ?? "",
+      phone: business?.phone ? business.phone.toString() : "",
+      website: business?.website ?? "",
+      shortDis: business?.shortDis ?? "",
+      tags: business?.tags || [],
+      category: business?.category ?? "",
+      bordtype: business?.bordtype ?? "",
+      agelimit: business?.agelimit ?? 0,
+      price: {
+        category: business?.price?.category ?? "$",
+      },
+      location: {
+        state: business?.location?.state ?? "",
+        city: business?.location?.city ?? "",
+        zipcode: business?.location?.zipcode ?? "",
+        country: business?.location?.country ?? "",
+        geotag: {
+          lat: business?.location?.geotag?.lat ?? 0,
+          lng: business?.location?.geotag?.lng ?? 0,
+        },
+      },
+      timings: {
+        mon: {
+          open: business?.timings?.mon?.open ?? "",
+          close: business?.timings?.mon?.close ?? "",
+        },
+        tue: {
+          open: business?.timings?.tue?.open ?? "",
+          close: business?.timings?.tue?.close ?? "",
+        },
+        wed: {
+          open: business?.timings?.wed?.open ?? "",
+          close: business?.timings?.wed?.close ?? "",
+        },
+        thu: {
+          open: business?.timings?.thu?.open ?? "",
+          close: business?.timings?.thu?.close ?? "",
+        },
+        fri: {
+          open: business?.timings?.fri?.open ?? "",
+          close: business?.timings?.fri?.close ?? "",
+        },
+        sat: {
+          open: business?.timings?.sat?.open ?? "",
+          close: business?.timings?.sat?.close ?? "",
+        },
+        sun: {
+          open: business?.timings?.sun?.open ?? "",
+          close: business?.timings?.sun?.close ?? "",
+        },
+      },
+      media: {
+        logo: business?.media?.logo ?? null,
+        images: business?.media?.images || [],
+      },
+    },
   });
   const { formState } = methods; // Access formState to track dirty state
   const { isDirty } = formState;
@@ -312,13 +378,17 @@ export default function AddEstablishment() {
   const totalSteps = 5;
   const [isLoading, setIsLoading] = useState(false);
 
+  if (business?.userId !== userDetails?._id) {
+    return <div>You are not authorized to edit this business</div>;
+  }
+
   if (!subscription) {
     return <PromoCodePopupComponent />;
   }
 
   const handleStepSubmit = async (direction: "next" | "prev") => {
     const currentSchema = stepSchemas[currentStep - 1]; // currentStep is 1-based
-    if (direction === "next" && currentStep === totalSteps) {
+    if (direction === "next" && currentStep === totalSteps && !isEdit) {
       try {
         setIsLoading(true);
         const values = methods.getValues();
@@ -340,6 +410,28 @@ export default function AddEstablishment() {
         console.error("Failed to add business:", apiError);
       }
       return;
+    } else if (direction === "next" && currentStep === totalSteps && isEdit) {
+      try {
+        setIsLoading(true);
+        const values = methods.getValues();
+        await currentSchema.validate(values, { abortEarly: false });
+
+        const updatedValues = { ...values, _id: business?._id };
+        // Call the API service method to insert business
+        const response = await updateBusiness(updatedValues);
+        if (response?.data?.success) {
+          toast.success(
+            response?.data?.message ?? "Business updated successfully!"
+          );
+          // Optionally reset the form or navigate to a success page
+          methods.reset();
+          setIsLoading(false);
+          router.push(`/establishments/${business?._id}`); // Redirect to establishments page
+        }
+      } catch (apiError) {
+        console.error("Failed to add business:", apiError);
+      }
+      return;
     }
     try {
       if (direction === "next") {
@@ -352,6 +444,7 @@ export default function AddEstablishment() {
     } catch (validationError: any) {
       if (validationError?.inner) {
         validationError?.inner.forEach((err: any) => {
+          console.error(err);
           methods.setError(err.path, { type: "manual", message: err.message });
         });
       }
@@ -365,6 +458,7 @@ export default function AddEstablishment() {
         currentStep={currentStep}
         onStepSubmit={handleStepSubmit}
         isLoading={isLoading}
+        isEdit={isEdit}
       >
         {currentStep === 1 && <Step1Form />}
         {currentStep === 2 && <Step2Form />}

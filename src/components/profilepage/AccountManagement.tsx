@@ -28,7 +28,7 @@ export default function AccountManagementPage() {
       }}
     >
       <Container sx={{ flex: 1, py: 2 }}>
-        <TabsComponent />
+        <TabsComponent userDetails={userDetails} />
 
         <Box
           sx={{

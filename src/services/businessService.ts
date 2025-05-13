@@ -82,10 +82,9 @@ export const insertBusiness = async (data: any) => {
 
 export const updateBusiness = async (data: any) => {
   try {
-    const { media, ...rest } = data;
-    const response = await axiosInstance.patch(`${API_URL}/${data._id}`, rest);
+    const { media, _id, ...rest } = data;
+    const response = await axiosInstance.patch(`${API_URL}/${_id}`, rest);
     if (response.status === 200) {
-      const { _id: businessId } = response.data;
       if (media?.images) {
         const formData = new FormData();
         if (media?.images.length > 0) {
@@ -96,7 +95,7 @@ export const updateBusiness = async (data: any) => {
         if (media?.logo) {
           formData.append("businessLogo", media.logo);
         }
-        await axiosInstance.patch(`${API_URL}/media/${businessId}`, formData, {
+        await axiosInstance.patch(`${API_URL}/media/${_id}`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },

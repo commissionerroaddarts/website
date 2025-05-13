@@ -11,6 +11,7 @@ interface AddEstablishmentLayoutProps {
   readonly onStepSubmit: (direction: "next" | "prev") => void;
   readonly currentStep: number;
   readonly isLoading?: boolean;
+  readonly isEdit?: boolean;
 }
 
 export default function AddEstablishmentLayout({
@@ -19,6 +20,7 @@ export default function AddEstablishmentLayout({
   onStepSubmit,
   currentStep,
   isLoading = false,
+  isEdit,
 }: AddEstablishmentLayoutProps) {
   const handleNext = () => {
     onStepSubmit("next");
@@ -31,10 +33,14 @@ export default function AddEstablishmentLayout({
   return (
     <div className="max-w-4xl mx-auto">
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold mb-2">Add New Establishments</h1>
-        <p className="text-gray-300">
-          Fill in the details to add a new listing to the platform
-        </p>
+        <h1 className="text-3xl font-bold mb-2">
+          {!isEdit ? "Add New Establishments" : "Edit Establishment"}
+        </h1>
+        {!isEdit && (
+          <p className="text-gray-300">
+            Fill in the details to add a new listing to the platform
+          </p>
+        )}
       </div>
 
       <div

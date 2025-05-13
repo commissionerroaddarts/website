@@ -28,7 +28,7 @@ import RateReviewIcon from "@mui/icons-material/RateReview";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { User } from "@/types/user";
 import CardStaggerAnimation from "@/animations/sections/CardStaggerAnimation";
-import { Building, X } from "lucide-react";
+import { Building } from "lucide-react";
 import ThemeButton from "@/components/buttons/ThemeButton";
 import CloseIconButton from "./CloseIconButton";
 
@@ -241,7 +241,8 @@ const ProfileLink = ({
 }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-
+  const isStoreOwner =
+    userDetails.role === "admin" || userDetails.role === "owner";
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -260,13 +261,15 @@ const ProfileLink = ({
       icon: <RateReviewIcon sx={{ marginRight: "8px" }} />,
       action: () => router.push("/profile/my-reviews"),
     },
-    userDetails?.role === "owner"
-      ? {
-          label: "View Your Listings",
-          icon: <Building style={{ marginRight: "8px" }} />,
-          action: () => router.push("/profile/my-establishments"),
-        }
-      : {},
+    ...(isStoreOwner
+      ? [
+          {
+            label: "View Your Listings",
+            icon: <Building style={{ marginRight: "8px" }} />,
+            action: () => router.push("/profile/my-establishments"),
+          },
+        ]
+      : []),
     {
       label: "Logout",
       icon: <LogoutIcon sx={{ marginRight: "8px" }} />,

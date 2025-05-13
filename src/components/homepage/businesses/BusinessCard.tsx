@@ -83,7 +83,7 @@ function BusinessCard({ business }: { readonly business: Business }) {
       const response = await deleteBusiness(_id);
       if (response.status === 200) {
         toast.success("Establishment deleted successfully");
-        router.refresh();
+        router.push("/profile/my-establishments");
       }
     } catch (error) {
       console.error("Error deleting establishment:", error);
@@ -140,14 +140,14 @@ function BusinessCard({ business }: { readonly business: Business }) {
                 <>
                   <Link
                     href={`/edit-establishment/${_id}`}
-                    className="bg-purple-700 text-white text-[0.7rem] px-2 py-1 rounded-xl flex items-center justify-around"
+                    className="bg-purple-700 text-white text-[0.7rem] px-4 py-2 rounded-full flex items-center justify-around"
                   >
                     Edit <Edit className="inline-block ml-1" size={17} />
                   </Link>
 
                   <button
                     onClick={handleDelete}
-                    className="bg-red-500 cursor-pointer text-white text-[0.7rem] px-2 py-1 rounded-xl  flex items-center justify-around"
+                    className="bg-red-500 cursor-pointer text-white text-[0.7rem] px-4 py-2 rounded-full  flex items-center justify-around"
                   >
                     {loading ? "Deleting" : "Delete"}{" "}
                     <Trash className="inline-block ml-1" size={17} />

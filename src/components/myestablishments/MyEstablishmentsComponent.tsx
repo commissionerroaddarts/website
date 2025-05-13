@@ -81,7 +81,6 @@ export default function MyEstablishmentsComponent() {
 
   if (!_id) {
     redirect("/login");
-    return null;
   }
 
   return (

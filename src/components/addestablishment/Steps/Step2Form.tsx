@@ -1,14 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { useFormContext, Controller } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import {
   useLoadScript,
   GoogleMap,
   Marker,
   Autocomplete,
 } from "@react-google-maps/api";
-import { Box, Typography, Grid2, CircularProgress } from "@mui/material";
+import { Box, Typography, CircularProgress } from "@mui/material";
 import CustomInput from "@/components/global/CustomInput";
 import { Search } from "lucide-react";
 
@@ -18,10 +18,13 @@ export default function Step2Form() {
     libraries: ["places"],
   });
 
-  const { setValue } = useFormContext();
-
+  const { setValue, watch } = useFormContext();
+  const location = watch("location");
+  const { geotag } = location;
   const [autocomplete, setAutocomplete] = useState<any>(null);
-  const [center, setCenter] = useState({ lat: 33.00122, lng: -117.06517 }); // 14026 Stoney Gate PL, San Diego, CA
+  const [center, setCenter] = useState(
+    geotag ?? { lat: 33.00122, lng: -117.06517 }
+  ); // 14026 Stoney Gate PL, San Diego, CA
   const [markerPosition, setMarkerPosition] = useState(center);
 
   const onPlaceChanged = () => {
@@ -80,7 +83,7 @@ export default function Step2Form() {
         >
           <CustomInput
             label="Search for a location"
-            icon={<Search color="white" />}
+            icon={<Search color="white" size={30} />}
             iconPosition="end"
             className="w-[100%]"
           />

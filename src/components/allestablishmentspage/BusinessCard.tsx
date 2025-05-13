@@ -81,7 +81,7 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
       const response = await deleteBusiness(_id);
       if (response.status === 200) {
         toast.success("Establishment deleted successfully");
-        router.refresh();
+        router.push("/profile/my-establishments");
       }
     } catch (error) {
       console.error("Error deleting establishment:", error);

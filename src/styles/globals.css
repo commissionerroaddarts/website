@@ -133,6 +133,102 @@ body::-webkit-scrollbar-thumb {
   overflow: hidden !important;
 }
 
+/* Style the dropdown container */
+.pac-container {
+  z-index: 9999 !important;
+  border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  background-color: white;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  padding: 5px;
+}
+
+/* Style individual items */
+.pac-item {
+  padding: 10px 15px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+}
+
+/* On hover */
+.pac-item:hover {
+  background-color: #f5f5f5;
+}
+
+/* Highlighted text */
+.pac-item-query {
+  font-weight: 600;
+  color: #1976d2;
+}
 .gm-style .gm-style-iw-tc::after {
   background: rebeccapurple;
+}
+
+/* Style the dropdown container */
+.pac-container {
+  z-index: 9999 !important;
+  border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  background-color: white;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  padding: 5px;
+}
+
+.pac-container {
+  background-color: #fff;
+  z-index: 1000;
+  border-radius: 2px;
+  font-size: 11px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  overflow: hidden;
+  width: 350px;
+}
+
+.pac-icon {
+  width: 15px;
+  height: 20px;
+  margin-right: 7px;
+  margin-top: 6px;
+  display: inline-block;
+  vertical-align: top;
+  background-image: url(https://maps.gstatic.com/mapfiles/api-3/images/autocomplete-icons.png);
+  background-size: 34px;
+}
+
+.pac-icon-marker {
+  background-position: -1px -161px;
+}
+
+.pac-item {
+  cursor: pointer;
+  padding: 0 4px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  line-height: 30px;
+  vertical-align: middle;
+  text-align: left;
+  border-top: 1px solid #e6e6e6;
+  color: #999;
+}
+
+.pac-item.custom {
+  background-color: #fff9c4;
+}
+
+.pac-item:hover {
+  background-color: #efefef;
+}
+
+.pac-item-error,
+.pac-item-error:hover {
+  color: #aaa;
+  padding: 0 5px;
+  cursor: default;
+  background-color: #fff;
 }

@@ -1,10 +1,13 @@
 "use client";
+import { User } from "@/types/user";
 import { Box, Tab, Tabs } from "@mui/material";
 import { usePathname, useRouter } from "next/navigation";
 
-export const TabsComponent = () => {
+export const TabsComponent = ({ userDetails }: { userDetails: User }) => {
   const router = useRouter();
   const pathname = usePathname();
+  const { role } = userDetails;
+  const isStoreOwner = role === "admin" || role === "owner";
 
   const handleTabChange = (e: React.SyntheticEvent, newValue: string) => {
     if (newValue === "profile") {
@@ -16,6 +19,9 @@ export const TabsComponent = () => {
 
   const tabs = [
     { label: "Edit Profile", value: "profile" },
+    ...(isStoreOwner
+      ? [{ label: "My Establishments", value: "my-establishments" }]
+      : []),
     // { label: "Upgrade Plan", value: "upgrade-plan" },
     { label: "Settings", value: "settings" },
     { label: "My Reviews", value: "my-reviews" },

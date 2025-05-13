@@ -269,7 +269,11 @@ const UploadButtons = () => {
             <Typography variant="h6">Logo Preview</Typography>
             <div className="relative">
               <img
-                src={URL.createObjectURL(logo)}
+                src={
+                  typeof logo === "string" && logo.includes("http")
+                    ? logo
+                    : URL.createObjectURL(logo)
+                }
                 alt="Uploaded Logo"
                 className="w-24 h-24 object-contain "
               />
@@ -309,7 +313,9 @@ const UploadButtons = () => {
               {images.map((img: File, idx: number) => (
                 <div key={img.name} className="relative">
                   <img
-                    src={URL.createObjectURL(img)}
+                    src={
+                      typeof img === "string" ? img : URL.createObjectURL(img)
+                    }
                     alt={`Uploaded ${idx}`}
                     className="w-24 h-24 object-contain "
                   />
