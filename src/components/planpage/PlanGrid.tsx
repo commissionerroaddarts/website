@@ -114,16 +114,24 @@ const PlanCard = ({ plan }: PlanCardProps) => {
               alignItems: "center",
             }}
           >
-            <Image
-              src={plan.icon}
-              alt={plan.name}
-              width={50}
-              height={50}
-              // Apply blur effect
-            />
-            <Typography variant="h6" align="center" gutterBottom>
-              {plan.name}
-            </Typography>
+            <Box className="flex flex-col gap-1 justify-center items-center mb-3">
+              <Image
+                src={plan.icon}
+                alt={plan.name}
+                width={50}
+                height={50}
+                // Apply blur effect
+              />
+              <Box>
+                <Typography variant="h6" align="center" className="m-0">
+                  {plan.name}
+                </Typography>
+
+                <Typography align="center" className="text-sm m-0">
+                  {plan.description}
+                </Typography>
+              </Box>
+            </Box>
             <Typography variant="h3" align="center">
               ${plan.price}
               <span style={{ fontSize: "1rem" }}>/month</span>

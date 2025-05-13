@@ -34,7 +34,10 @@ export default async function EstablishmentPage({
         {/* Gallery */}
         {business.media && (
           <Grid2 size={{ xs: 12 }}>
-            <EstablishmentGallery images={business.media.images ?? []} />
+            <EstablishmentGallery
+              images={business.media.images ?? []}
+              id={business?._id}
+            />
           </Grid2>
         )}
 

@@ -8,16 +8,30 @@ import "slick-carousel/slick/slick-theme.css";
 import CloseIconButton from "@/components/global/CloseIconButton";
 import { useMediaQuery } from "@mui/system";
 import theme from "@/theme/theme";
+import { useAppState } from "@/hooks/useAppState";
+import { deleteBusiness } from "@/services/businessService";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { Edit, Trash } from "lucide-react";
+import ThemeButton from "../buttons/ThemeButton";
 
 interface GalleryProps {
   readonly images: string[];
+  readonly id: string;
 }
 
-export default function EstablishmentGallery({ images }: GalleryProps) {
+export default function EstablishmentGallery({ images, id }: GalleryProps) {
   const imageCount = images.length;
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [open, setOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const { user } = useAppState();
+  const { userDetails } = user;
+  const { role } = userDetails || {};
+  const isStoreOwner = role === "owner" || role === "admin";
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleOpen = (index: number) => {
     setSelectedIndex(index);
@@ -84,8 +98,51 @@ export default function EstablishmentGallery({ images }: GalleryProps) {
     </Button>
   );
 
+  const handleDelete = async (e: any) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setLoading(true);
+    // Add confirmation dialog if needed
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this establishment?"
+    );
+    if (!confirmed) {
+      setLoading(false);
+      return;
+    }
+    try {
+      // Implement delete functionality here
+      // For example, you might call a delete API endpoint
+      const response = await deleteBusiness(id);
+      if (response.status === 200) {
+        toast.success("Establishment deleted successfully");
+        router.push("/profile/my-establishments");
+      }
+    } catch (error) {
+      console.error("Error deleting establishment:", error);
+      toast.error("Failed to delete establishment");
+      setLoading(false);
+    }
+  };
+
   return (
     <>
+      {isStoreOwner && (
+        <>
+          <Link href={`/edit-establishment/${id}`}>
+            <ThemeButton
+              text="Edit Detail"
+              endIcon={<Edit className="inline-block ml-1" size={30} />}
+            />
+          </Link>
+
+          <ThemeButton
+            onClick={handleDelete}
+            text={loading ? "Deleting" : "Delete"}
+            endIcon={<Trash className="inline-block ml-1" size={30} />}
+          />
+        </>
+      )}
       {!isMobile ? (
         <Grid2 container spacing={2}>
           {imageCount === 1 && (
