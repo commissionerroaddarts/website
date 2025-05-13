@@ -141,11 +141,11 @@ const PlanCard = ({ plan }: PlanCardProps) => {
               onChange={(e) => setBillingCycle(e.target.value)}
             /> */}
             <Typography variant="h3" align="center">
-              ${plan.prices.monthly.price}
+              ${plan.prices.monthly.amount}
               <span style={{ fontSize: "1rem" }}>/month</span>
             </Typography>
             <Typography align="center" sx={{ opacity: 0.8 }}>
-              Billed annually (${plan.prices.yearly.price})
+              Billed annually (${plan.prices.yearly.amount})
             </Typography>
           </Box>
           <motion.div

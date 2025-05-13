@@ -6,11 +6,13 @@ export interface Plan {
   prices: {
     monthly: {
       priceId: string;
-      price: number;
+      amount: number;
+      currency: string;
     };
     yearly: {
       priceId: string;
-      price: number;
+      amount: number;
+      currency: string;
     };
   };
   currency: string;

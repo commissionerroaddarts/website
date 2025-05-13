@@ -9,8 +9,8 @@ const CheckoutSummary = () => {
   const { selectedPlan, promoCode } = plan; // Get the selected plan from Redux store
   const isYearly = selectedPlan?.billingCycle === "yearly";
   const price = isYearly
-    ? selectedPlan?.prices?.yearly?.price
-    : selectedPlan?.prices?.monthly?.price;
+    ? selectedPlan?.prices?.yearly?.amount
+    : selectedPlan?.prices?.monthly?.amount;
   return (
     <Box
       className="w-full bg-[#1f0b2e] relative text-white rounded-2xl p-4 space-y-5 shadow-lg mx-auto"
