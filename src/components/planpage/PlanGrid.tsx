@@ -13,6 +13,7 @@ import { motion } from "framer-motion";
 import { useAppState } from "@/hooks/useAppState";
 import { getPlans } from "@/services/planService";
 import Preloader from "../global/Preloader";
+// import SelectSearchDropDown from "../global/SelectSearchDropDown";
 
 const PlanGrid = () => {
   const [plans, setPlans] = useState<Plan[]>([]);
@@ -64,6 +65,7 @@ const PlanCard = ({ plan }: PlanCardProps) => {
   const { isLoggedIn, userDetails } = user; // Check if user is logged in
   const { subscription } = userDetails || {};
   const [isAlreadySubscribed, setIsAlreadySubscribed] = useState(false);
+  const [billingCycle, setBillingCycle] = useState<string>("yearly");
 
   useEffect(() => {
     if (subscription?.status?.toLowerCase() === "active") {
@@ -72,7 +74,8 @@ const PlanCard = ({ plan }: PlanCardProps) => {
   }, [subscription]);
 
   const handleGetStarted = async () => {
-    dispatch(selectPlan(plan)); // Save to Redux
+    const updatedPlan = { ...plan, billingCycle };
+    dispatch(selectPlan(updatedPlan)); // Save to Redux
     if (isAlreadySubscribed) {
       alert(
         "You are already subscribed to a plan. Please contact support for further assistance."
@@ -132,12 +135,17 @@ const PlanCard = ({ plan }: PlanCardProps) => {
                 </Typography>
               </Box>
             </Box>
+
+            {/* <SelectSearchDropDown
+              options={["Monthly", "Yearly"]}
+              onChange={(e) => setBillingCycle(e.target.value)}
+            /> */}
             <Typography variant="h3" align="center">
-              ${plan.price}
+              ${plan.prices.monthly.price}
               <span style={{ fontSize: "1rem" }}>/month</span>
             </Typography>
             <Typography align="center" sx={{ opacity: 0.8 }}>
-              Billed annually
+              Billed annually (${plan.prices.yearly.price})
             </Typography>
           </Box>
           <motion.div

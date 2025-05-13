@@ -16,7 +16,10 @@ const stripePromise = loadStripe(
 export default function CheckoutFormWrapper() {
   const { plan } = useAppState(); // Assuming you have a plan object in your Redux store
   const { selectedPlan, promoCode } = plan; // Get the selected plan from Redux store
-  const priceId = selectedPlan?.priceId; // Get the price ID from the selected plan
+  const priceId =
+    selectedPlan?.billingCycle === "monthly"
+      ? selectedPlan?.prices?.monthly?.priceId
+      : selectedPlan?.prices?.yearly?.priceId; // Get the price ID from the selected plan
   const [clientSecret, setClientSecret] = useState("");
 
   useEffect(() => {

@@ -48,7 +48,11 @@ function BusinessCard({ business }: { readonly business: Business }) {
   const [openMap, setOpenMap] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const handleMapOpen = () => setOpenMap(true);
+  const handleMapOpen = (e: any) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setOpenMap(true);
+  };
   const handleMapClose = () => setOpenMap(false);
   const getStatusColor = (status: string | undefined): string => {
     switch (status) {
@@ -93,7 +97,12 @@ function BusinessCard({ business }: { readonly business: Business }) {
   };
 
   return (
-    <>
+    <Link
+      href={`/establishments/${business?._id}`}
+      className="w-[350px] h-[250px] rounded-2xl"
+      passHref
+      prefetch
+    >
       <Card
         sx={{
           display: "flex",
@@ -107,24 +116,17 @@ function BusinessCard({ business }: { readonly business: Business }) {
           gap: 1,
         }}
       >
-        <Link
-          href={`/establishments/${business?._id}`}
-          className="w-[350px] h-[250px] rounded-2xl"
-          passHref
-          prefetch
-        >
-          {/* Image Section */}
-          <CardMedia
-            component="img"
-            sx={{ width: 250, height: 250, borderRadius: 2 }}
-            image={
-              media?.logo ??
-              media?.images?.[0] ??
-              "/images/banners/business-placeholder.png"
-            }
-            alt={name}
-          />
-        </Link>
+        {/* Image Section */}
+        <CardMedia
+          component="img"
+          sx={{ width: 250, height: 250, borderRadius: 2 }}
+          image={
+            media?.logo ??
+            media?.images?.[0] ??
+            "/images/banners/business-placeholder.png"
+          }
+          alt={name}
+        />
         {/* Content Section */}
         <CardContent
           sx={{
@@ -147,6 +149,7 @@ function BusinessCard({ business }: { readonly business: Business }) {
                   <Link
                     href={`/edit-establishment/${_id}`}
                     className="bg-purple-700 text-white text-[0.7rem] px-4 py-2 rounded-full flex items-center justify-around"
+                    onClick={(e) => e.stopPropagation()}
                   >
                     Edit <Edit className="inline-block ml-1" size={17} />
                   </Link>
@@ -179,14 +182,7 @@ function BusinessCard({ business }: { readonly business: Business }) {
           <Box className="flex flex-col gap-1">
             {/* Title */}
             <Typography variant="h6" sx={{ mt: 1 }}>
-              <Link
-                href={`/establishments/${business?._id}`}
-                style={{ color: "#fff", textDecoration: "none" }}
-                passHref
-                prefetch
-              >
-                {name ?? "Unnamed Business"}
-              </Link>
+              {name ?? "Unnamed Business"}
             </Typography>
 
             {userDetails && isStoreOwner ? (
@@ -219,9 +215,14 @@ function BusinessCard({ business }: { readonly business: Business }) {
 
           {/* Buttons Section */}
           <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
-            <Link href={`tel:${phone}`} passHref>
+            <Link
+              href={`tel:${phone}`}
+              passHref
+              onClick={(e) => e.stopPropagation()}
+            >
               <ThemeButton
                 text="Call Us Now"
+                onClick={(e) => e.stopPropagation()}
                 icon={<CallIcon fontSize="small" />}
               />
             </Link>
@@ -239,7 +240,7 @@ function BusinessCard({ business }: { readonly business: Business }) {
         openMap={openMap}
         location={location || {}}
       />
-    </>
+    </Link>
   );
 }
 
