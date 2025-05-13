@@ -7,6 +7,10 @@ import { useAppState } from "@/hooks/useAppState";
 const CheckoutSummary = () => {
   const { plan } = useAppState(); // Assuming you have a plan object in your Redux store
   const { selectedPlan, promoCode } = plan; // Get the selected plan from Redux store
+  const isYearly = selectedPlan?.billingCycle === "yearly";
+  const price = isYearly
+    ? selectedPlan?.prices?.yearly?.price
+    : selectedPlan?.prices?.monthly?.price;
   return (
     <Box
       className="w-full bg-[#1f0b2e] relative text-white rounded-2xl p-4 space-y-5 shadow-lg mx-auto"
@@ -134,9 +138,7 @@ const CheckoutSummary = () => {
             className=" font-bold tracking-wide"
             sx={{ fontSize: "2rem", color: "white" }}
           >
-            {selectedPlan?.price
-              ? parseInt(selectedPlan.price).toFixed(2)
-              : "0.00"}{" "}
+            {price ? price.toFixed(2) : "0.00"}{" "}
             <span
               className="font-normal uppercase"
               style={{ fontSize: "1rem", textTransform: "uppercase" }}
