@@ -136,22 +136,22 @@ function BusinessCard({ business }: { readonly business: Business }) {
             />
             <Box className="relative flex gap-2">
               {isStoreOwner && (
-                <Box className="absolute top-2 right-2 " zIndex={10}>
+                <>
                   <Link
                     href={`/edit-establishment/${_id}`}
-                    className="bg-purple-700 text-white text-sm px-2 py-1 rounded flex items-center justify-around"
+                    className="bg-purple-700 text-white text-[0.7rem] px-2 py-1 rounded-xl flex items-center justify-around"
                   >
-                    Edit <Edit className="inline-block ml-1" size={20} />
+                    Edit <Edit className="inline-block ml-1" size={17} />
                   </Link>
 
                   <button
                     onClick={handleDelete}
-                    className="bg-red-500 text-white text-sm px-2 py-1 rounded  flex items-center justify-around"
+                    className="bg-red-500 text-white text-[0.7rem] px-2 py-1 rounded-xl  flex items-center justify-around"
                   >
                     {loading ? "Deleting" : "Delete"}{" "}
-                    <Trash className="inline-block ml-1" size={20} />
+                    <Trash className="inline-block ml-1" size={17} />
                   </button>
-                </Box>
+                </>
               )}
               <Typography
                 sx={{
