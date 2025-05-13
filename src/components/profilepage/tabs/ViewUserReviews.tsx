@@ -2,8 +2,6 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-
-import { TabsComponent } from "../TabsComponent";
 import { getUserRatings } from "@/services/userService";
 import { useAppState } from "@/hooks/useAppState";
 import useDebounce from "@/hooks/useDebounce";
@@ -111,9 +109,6 @@ const ViewUserReviews = () => {
       }}
     >
       <Container sx={{ flex: 1 }}>
-        {/* Tabs */}
-        <TabsComponent />
-
         {/* Reviews Section */}
         <Box
           sx={{
@@ -261,8 +256,6 @@ const ReviewActions = ({
       toast.error("Error deleting review?. Please try again.");
       console.error("Error deleting review:", error);
     }
-    // Handle delete action
-    console.log("Delete review with ID:", reviewId);
   };
 
   return (

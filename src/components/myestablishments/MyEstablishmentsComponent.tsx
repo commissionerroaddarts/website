@@ -3,7 +3,7 @@
 
 import { useSearchParams, useRouter, redirect } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Box } from "@mui/material";
+import { Box, Container } from "@mui/material";
 import BusinessGrid from "@/components/allestablishmentspage/EstablishmentPageGrid";
 import { fetchBusinesses } from "@/services/businessService";
 import { Business, FilterValues } from "@/types/business";
@@ -11,6 +11,7 @@ import { SearchX } from "lucide-react";
 import useDebounce from "@/hooks/useDebounce";
 import FilterSection from "@/components/allestablishmentspage/FilterSection";
 import { useAppState } from "@/hooks/useAppState";
+import { TabsComponent } from "../profilepage/TabsComponent";
 
 export default function MyEstablishmentsComponent() {
   const { user } = useAppState();
@@ -84,47 +85,60 @@ export default function MyEstablishmentsComponent() {
   }
 
   return (
-    <Box sx={{ maxWidth: "90%", margin: "0 auto" }}>
-      {businesses.length > 2 && (
-        <FilterSection
-          isLoading={loading}
-          filters={filterParams}
-          setFilters={setFilterParams}
-          updateQuery={updateQuery}
-          isFilteration={false}
-        />
-      )}
-      {(() => {
-        if (loading) {
-          return (
-            <div className="w-full flex justify-center items-center h-20">
-              <svg
-                className="animate-spin h-10 w-10 text-purple-500"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  strokeWidth="4"
-                  fill="none"
-                />
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 1 1 16 0A8 8 0 0 1 4 12zm2.5-1h9a2.5 2.5 0 1 1-5 0h-4a2.5 2.5 0 0 1-4.5-1z"
-                />
-              </svg>
-            </div>
-          );
-        }
-        if (businesses.length > 0) {
-          return <BusinessGrid businesses={businesses} isLoading={loading} />;
-        }
-        return <NoBusinessesFound setFilterParams={setFilterParams} />;
-      })()}
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <Container sx={{ flex: 1, py: 2 }}>
+        <TabsComponent userDetails={userDetails} />
+
+        <Box sx={{ maxWidth: "90%", margin: "0 auto" }}>
+          {businesses.length > 2 && (
+            <FilterSection
+              isLoading={loading}
+              filters={filterParams}
+              setFilters={setFilterParams}
+              updateQuery={updateQuery}
+              isFilteration={false}
+            />
+          )}
+          {(() => {
+            if (loading) {
+              return (
+                <div className="w-full flex justify-center items-center h-20">
+                  <svg
+                    className="animate-spin h-10 w-10 text-purple-500"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      strokeWidth="4"
+                      fill="none"
+                    />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 1 1 16 0A8 8 0 0 1 4 12zm2.5-1h9a2.5 2.5 0 1 1-5 0h-4a2.5 2.5 0 0 1-4.5-1z"
+                    />
+                  </svg>
+                </div>
+              );
+            }
+            if (businesses.length > 0) {
+              return (
+                <BusinessGrid businesses={businesses} isLoading={loading} />
+              );
+            }
+            return <NoBusinessesFound setFilterParams={setFilterParams} />;
+          })()}
+        </Box>
+      </Container>
     </Box>
   );
 }

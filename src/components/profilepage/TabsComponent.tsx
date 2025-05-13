@@ -27,7 +27,7 @@ export const TabsComponent = ({
       ? [{ label: "My Establishments", value: "my-establishments" }]
       : []),
     // { label: "Upgrade Plan", value: "upgrade-plan" },
-    { label: "Settings", value: "settings" },
+    { label: "Security Settings", value: "settings" },
     { label: "My Reviews", value: "my-reviews" },
   ];
 
