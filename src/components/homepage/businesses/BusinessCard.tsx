@@ -48,11 +48,11 @@ function BusinessCard({ business }: { readonly business: Business }) {
   const [openMap, setOpenMap] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const handleMapOpen = (e: any) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setOpenMap(true);
-  };
+  // const handleMapOpen = (e: any) => {
+  //   e.preventDefault();
+  //   e.stopPropagation();
+  //   setOpenMap(true);
+  // };
   const handleMapClose = () => setOpenMap(false);
   const getStatusColor = (status: string | undefined): string => {
     switch (status) {
@@ -228,7 +228,7 @@ function BusinessCard({ business }: { readonly business: Business }) {
             </Link>
             <ThemeOutlineButton
               icon={<Map />}
-              onClick={handleMapOpen}
+              // onClick={handleMapOpen}
               text="Show Map"
             />
           </Box>
