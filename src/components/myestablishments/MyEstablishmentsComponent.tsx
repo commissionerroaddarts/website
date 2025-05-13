@@ -86,13 +86,15 @@ export default function MyEstablishmentsComponent() {
 
   return (
     <Box sx={{ maxWidth: "90%", margin: "0 auto" }}>
-      <FilterSection
-        isLoading={loading}
-        filters={filterParams}
-        setFilters={setFilterParams}
-        updateQuery={updateQuery}
-        isFilteration={false}
-      />
+      {businesses.length > 2 && (
+        <FilterSection
+          isLoading={loading}
+          filters={filterParams}
+          setFilters={setFilterParams}
+          updateQuery={updateQuery}
+          isFilteration={false}
+        />
+      )}
       {(() => {
         if (loading) {
           return (
