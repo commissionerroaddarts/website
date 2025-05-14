@@ -29,46 +29,46 @@ export default function CheckoutFormWrapper() {
       ? selectedPlan?.prices?.monthly?.priceId
       : selectedPlan?.prices?.yearly?.priceId;
 
-  useEffect(() => {
-    const initCheckout = async () => {
-      if (!priceId || !email || !promoCode) return;
+  // Save this function to use manually
+  const initCheckout = async () => {
+    if (!priceId) return;
 
-      try {
-        const clientSecret = await checkoutService({
-          promoCode,
-          email,
-          priceId,
-        });
-        if (clientSecret) {
-          setShowConfetti(true);
-          setTimeout(() => {
-            setShowConfetti(false);
-          }, 5000); // Hide confetti after 5 seconds
-          console.log("Client Secret:", clientSecret);
-          console.log("Checkout initialized successfully:", {
-            clientSecret,
-            priceId,
-            promoCode,
-            email,
-          });
-          setClientSecret(clientSecret);
-          setCheckoutReady(true);
-        }
-      } catch (error) {
-        console.error("Failed to initialize checkout:", error);
+    try {
+      const clientSecret = await checkoutService({
+        promoCode,
+        email,
+        priceId,
+      });
+      if (clientSecret) {
+        setShowConfetti(true);
+        setTimeout(() => setShowConfetti(false), 5000);
+        console.log("Client Secret:", clientSecret);
+        setClientSecret(clientSecret);
+        setCheckoutReady(true);
       }
-    };
+    } catch (error) {
+      console.error("Failed to initialize checkout:", error);
+    }
+  };
 
-    if (!clientSecret) initCheckout();
+  // Call it when priceId becomes available
+  useEffect(() => {
+    if (priceId) {
+      initCheckout();
+    }
   }, [priceId, email, promoCode]);
 
   const options: StripeElementsOptions = {
     clientSecret,
   };
 
-  const handleFormSuccess = (data: { email: string; promoCode: string }) => {
-    dispatch(setEmail(data.email));
-    dispatch(setPromoCode(data.promoCode));
+  const handleFormSuccess = async (data: {
+    email?: string;
+    promoCode?: string;
+  }) => {
+    dispatch(setEmail(data.email ?? ""));
+    dispatch(setPromoCode(data.promoCode ?? ""));
+    await initCheckout();
   };
 
   return (

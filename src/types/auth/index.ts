@@ -16,6 +16,6 @@ export interface ForgotPasswordFormData {
 }
 
 export interface PreCheckoutFormData {
-  email: string;
-  promoCode: string;
+  email?: string;
+  promoCode?: string;
 }

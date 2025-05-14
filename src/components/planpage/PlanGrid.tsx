@@ -12,9 +12,8 @@ import { Plan, PlanCardProps } from "@/types/plan";
 import { motion } from "framer-motion";
 import { useAppState } from "@/hooks/useAppState";
 import { getPlans } from "@/services/planService";
-import Preloader from "../global/Preloader";
-import SelectSearchDropDown from "../global/SelectSearchDropDown";
-// import SelectSearchDropDown from "../global/SelectSearchDropDown";
+import Preloader from "@/components/global/Preloader";
+import SelectSearchDropDown from "@/components/global/SelectSearchDropDown";
 
 const PlanGrid = () => {
   const [plans, setPlans] = useState<Plan[]>([]);
