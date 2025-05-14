@@ -1,9 +1,10 @@
 "use client";
-import React from "react";
+import React, { useRef } from "react";
 import { Grid2, Paper } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import ReCAPTCHA from "react-google-recaptcha";
 import { toast } from "react-toastify";
 import CustomInput from "@/components/global/CustomInput";
 import ThemeButton from "@/components/buttons/ThemeButton";
@@ -13,6 +14,8 @@ import FadeInSection from "@/animations/sections/FadeInSection";
 import { useRouter } from "next/navigation";
 import { setInquiryData } from "@/store/slices/inquirySlice";
 import { useAppDispatch } from "@/store";
+
+const RECAPTCHA_SITE_KEY = "6LcSVDorAAAAAD5rv32FLmEnY7lzeVCsbolcjsnK";
 
 // ✅ Form Validation Schema
 const schema = yup.object().shape({
@@ -51,7 +54,7 @@ const ContactForm = () => {
   const {
     handleSubmit,
     control,
-    reset,
+
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: yupResolver(schema),
@@ -59,15 +62,21 @@ const ContactForm = () => {
 
   const router = useRouter();
   const dispatch = useAppDispatch(); // Assuming you have a custom hook to get user state
+  const recaptchaRef = useRef<ReCAPTCHA | null>(null);
 
   // ✅ Form Submit Handler
   const onSubmit = async (data: Inquiry) => {
     try {
+      const recaptchaToken = await recaptchaRef.current?.executeAsync();
+      if (!recaptchaToken) {
+        toast.error("Please complete the reCAPTCHA verification.");
+        return;
+      }
       const response = await submitContactForm(data);
       toast.success(response.message ?? "Form submitted successfully!");
       dispatch(setInquiryData(data)); // Store data in Redux
       router.push("/thank-you");
-      reset();
+      recaptchaRef.current?.reset();
     } catch (error: any) {
       toast.error(error.response?.data?.error ?? "Failed to submit form.");
     }
@@ -164,6 +173,15 @@ const ContactForm = () => {
                     helperText={errors.message?.message}
                   />
                 )}
+              />
+            </Grid2>
+
+            {/* ✅ Google reCAPTCHA */}
+            <Grid2 size={{ xs: 12 }} className="flex justify-center">
+              <ReCAPTCHA
+                sitekey={RECAPTCHA_SITE_KEY}
+                size="invisible"
+                ref={recaptchaRef}
               />
             </Grid2>
 

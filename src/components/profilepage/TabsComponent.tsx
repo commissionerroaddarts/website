@@ -28,7 +28,6 @@ export const TabsComponent = ({
       : []),
     // { label: "Upgrade Plan", value: "upgrade-plan" },
     { label: "Security Settings", value: "settings" },
-    { label: "My Reviews", value: "my-reviews" },
   ];
 
   return (
