@@ -13,6 +13,7 @@ import { motion } from "framer-motion";
 import { useAppState } from "@/hooks/useAppState";
 import { getPlans } from "@/services/planService";
 import Preloader from "../global/Preloader";
+import SelectSearchDropDown from "../global/SelectSearchDropDown";
 // import SelectSearchDropDown from "../global/SelectSearchDropDown";
 
 const PlanGrid = () => {
@@ -58,14 +59,21 @@ const PlanGrid = () => {
   );
 };
 
+type BillingCycle = "yearly" | "monthly";
+
+const billingCycleOptions = [
+  { value: "yearly", label: "Yearly" },
+  { value: "monthly", label: "Monthly" },
+];
+
 const PlanCard = ({ plan }: PlanCardProps) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { user } = useAppState(); // Assuming you have a user object in your Redux store
-  const { isLoggedIn, userDetails } = user; // Check if user is logged in
+  const { userDetails } = user; // Check if user is logged in
   const { subscription } = userDetails || {};
   const [isAlreadySubscribed, setIsAlreadySubscribed] = useState(false);
-  const [billingCycle, setBillingCycle] = useState<string>("yearly");
+  const [billingCycle, setBillingCycle] = useState<BillingCycle>("yearly");
 
   useEffect(() => {
     if (subscription?.status?.toLowerCase() === "active") {
@@ -134,12 +142,25 @@ const PlanCard = ({ plan }: PlanCardProps) => {
             </Box>
 
             <Typography variant="h3" align="center">
-              ${plan.prices.monthly.amount}
-              <span style={{ fontSize: "1rem" }}>/month</span>
+              ${plan.prices[billingCycle].amount}
+              <span style={{ fontSize: "1rem" }}>
+                /{billingCycle === "monthly" ? "month" : "year"}
+              </span>
             </Typography>
+            <Box className="mt-5 w-[70%] mx-auto">
+              <SelectSearchDropDown
+                options={billingCycleOptions}
+                label="Yearly / Monthly"
+                value={billingCycle}
+                onChange={(event) =>
+                  setBillingCycle(event.target.value as BillingCycle)
+                }
+              />
+            </Box>
+            {/* 
             <Typography align="center" sx={{ opacity: 0.8 }}>
               Billed annually (${plan.prices.yearly.amount})
-            </Typography>
+            </Typography> */}
           </Box>
           <motion.div
             initial="hidden"
