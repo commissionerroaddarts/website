@@ -6,7 +6,7 @@ export const metadata = generateMetadata({
   title: "Contact Us - Road Darts",
   description:
     "Get in touch with the Road Darts team for any inquiries, support, or feedback.",
-  url: "/login",
+  url: "/contact-us",
   image: "/images/banners/banner-icon.png",
 });
 

@@ -5,25 +5,18 @@ import { loadStripe } from "@stripe/stripe-js";
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? ""
 );
-export const checkoutService = async (planName: string) => {
+export const checkoutService = async (preDetails: {
+  promoCode: string;
+  email: string;
+  priceId: string;
+}) => {
   try {
-    const response = await axiosInstance.post("/subscription/checkout", {
-      plan: planName,
-    });
-
-    const { id } = response.data;
-
-    const stripe = await stripePromise;
-
-    if (!stripe) {
-      throw new Error("Stripe.js has not loaded yet.");
-    }
-
-    const { error } = await stripe.redirectToCheckout({ sessionId: id });
-
-    if (error) {
-      console.error("Stripe checkout error:", error);
-    }
+    const response = await axiosInstance.post(
+      "/subscription/checkout",
+      preDetails
+    );
+    const { clientSecret } = response.data;
+    return clientSecret; // { clientSecret }
 
     // return id; // Expected { message: "Checkout successful!" }
   } catch (error: any) {

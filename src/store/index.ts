@@ -4,33 +4,7 @@ import planReducer from "./slices/planSlice";
 import businessReducer from "./slices/businessSlice";
 import userReducer from "./slices/userSlice";
 import inquiryReducer from "./slices/inquirySlice";
-import { persistStore, persistReducer } from "redux-persist";
-import createWebStorage from "redux-persist/lib/storage/createWebStorage";
-
-const createNoopStorage = () => {
-  return {
-    getItem() {
-      return Promise.resolve(null);
-    },
-    setItem() {
-      return Promise.resolve();
-    },
-    removeItem() {
-      return Promise.resolve();
-    },
-  };
-};
-
-// Prevent localStorage usage in SSR
-const storage =
-  typeof window !== "undefined"
-    ? createWebStorage("local")
-    : createNoopStorage();
-
-const persistConfig = {
-  key: "root",
-  storage,
-};
+import { persistStore } from "redux-persist";
 
 // Combine reducers
 const rootReducer = combineReducers({
@@ -39,8 +13,6 @@ const rootReducer = combineReducers({
   user: userReducer,
   inquiry: inquiryReducer,
 });
-
-const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
   reducer: rootReducer,

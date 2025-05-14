@@ -14,3 +14,8 @@ export interface SignupFormData {
 export interface ForgotPasswordFormData {
   email: string;
 }
+
+export interface PreCheckoutFormData {
+  email: string;
+  promoCode: string;
+}

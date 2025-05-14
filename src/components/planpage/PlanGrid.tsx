@@ -80,11 +80,8 @@ const PlanCard = ({ plan }: PlanCardProps) => {
       alert(
         "You are already subscribed to a plan. Please contact support for further assistance."
       );
-    } else if (isLoggedIn) {
-      router.push("/checkout"); // Redirect to checkout page
-    } else {
-      router.push("/login"); // Redirect to login page
     }
+    router.push("/checkout"); // Redirect to checkout page
   };
 
   return (
@@ -101,7 +98,7 @@ const PlanCard = ({ plan }: PlanCardProps) => {
           padding: "10px",
           boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.5)",
           border: plan.featured ? "2px solid #8224E3" : "none",
-          height: { xs: "auto", md: 620 },
+          height: { xs: "auto", md: 660 },
           display: "flex",
           flexDirection: "column",
         }}
@@ -136,10 +133,6 @@ const PlanCard = ({ plan }: PlanCardProps) => {
               </Box>
             </Box>
 
-            {/* <SelectSearchDropDown
-              options={["Monthly", "Yearly"]}
-              onChange={(e) => setBillingCycle(e.target.value)}
-            /> */}
             <Typography variant="h3" align="center">
               ${plan.prices.monthly.amount}
               <span style={{ fontSize: "1rem" }}>/month</span>

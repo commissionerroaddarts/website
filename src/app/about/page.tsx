@@ -10,7 +10,7 @@ export const metadata = generateMetadata({
   title: "About Us - Road Darts",
   description:
     "Learn more about the Road Darts team, our mission, and our core values.",
-  url: "/login",
+  url: "/about",
   image: "/images/banners/banner-icon.png",
 });
 

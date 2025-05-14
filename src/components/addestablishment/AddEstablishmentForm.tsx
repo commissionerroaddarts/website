@@ -11,7 +11,7 @@ import Step2Form from "./Steps/Step2Form";
 import Step5Form from "./Steps/Step5Form";
 import { insertBusiness, updateBusiness } from "@/services/businessService";
 import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useAppState } from "@/hooks/useAppState";
 import PromoCodePopupComponent from "./PromoCodeComponent";
 import { Business } from "@/types/business";
@@ -383,7 +383,7 @@ export default function AddEstablishment({
   }
 
   if (!subscription) {
-    return <PromoCodePopupComponent />;
+    redirect("/plans");
   }
 
   const handleStepSubmit = async (direction: "next" | "prev") => {

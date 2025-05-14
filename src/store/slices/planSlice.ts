@@ -4,11 +4,13 @@ import { Plan } from "@/types/plan";
 interface PlanState {
   selectedPlan: Plan | null;
   promoCode: string;
+  email: string;
 }
 
 const initialState: PlanState = {
   selectedPlan: null,
   promoCode: "",
+  email: "",
 };
 
 const planSlice = createSlice({
@@ -24,11 +26,15 @@ const planSlice = createSlice({
     setPromoCode: (state, action: PayloadAction<string>) => {
       state.promoCode = action.payload;
     },
+    setEmail: (state, action: PayloadAction<string>) => {
+      state.email = action.payload;
+    },
     clearPromoCode: (state) => {
       state.promoCode = "";
     },
   },
 });
 
-export const { selectPlan, clearPlan } = planSlice.actions;
+export const { selectPlan, clearPlan, setEmail, setPromoCode } =
+  planSlice.actions;
 export default planSlice.reducer;
