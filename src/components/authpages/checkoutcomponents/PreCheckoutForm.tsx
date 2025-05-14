@@ -13,14 +13,14 @@ import { redirect } from "next/navigation";
 
 // ✅ Schema (Email + PromoCode)
 const schema = yup.object().shape({
-  email: yup.string().email("Invalid email").optional(),
+  email: yup.string().email("Invalid email").required("Email is required"),
   promoCode: yup.string().optional(),
 });
 
 const PreCheckoutForm = ({
   onSuccess,
 }: {
-  onSuccess: (data: { email?: string; promoCode?: string }) => void;
+  onSuccess: (data: { email: string; promoCode?: string }) => void;
 }) => {
   const {
     handleSubmit,
@@ -61,6 +61,16 @@ const PreCheckoutForm = ({
       >
         <Grid2 container spacing={2} alignItems="center">
           {/* LEFT: Form */}
+          {/* <Grid2 size={{ xs: 12, md: 6 }}>
+            <ThemeButton
+              text="Back"
+              type="button"
+              style={{ width: "100%" }}
+              backgroundColor="transparent"
+              onClick={() => redirect("/plans")}
+            />
+          </Grid2> */}
+
           <Grid2 size={{ xs: 12 }}>
             <Box className="flex flex-col items-center">
               <Typography variant="h5" mb={1} textAlign="center">
@@ -72,8 +82,14 @@ const PreCheckoutForm = ({
                 textAlign="center"
                 sx={{ opacity: 0.8 }}
               >
-                Unlock up to <strong>2 months of free access</strong> with your
-                promo code on the{" "}
+                Unlock up to{" "}
+                <strong>
+                  {selectedPlan?.name?.toLowerCase() === "basic"
+                    ? "1 month"
+                    : "2 months"}{" "}
+                  of free access
+                </strong>{" "}
+                with your promo code on the{" "}
                 <strong style={{ fontWeight: 600 }}>
                   {selectedPlan?.name}
                 </strong>{" "}
@@ -114,7 +130,6 @@ const PreCheckoutForm = ({
                       )}
                     />
                   </Grid2>
-
                   {/* Submit Button */}
                   <Grid2 size={{ xs: 12 }}>
                     <ThemeButton

@@ -63,7 +63,7 @@ export default function CheckoutFormWrapper() {
   };
 
   const handleFormSuccess = async (data: {
-    email?: string;
+    email: string;
     promoCode?: string;
   }) => {
     dispatch(setEmail(data.email ?? ""));
