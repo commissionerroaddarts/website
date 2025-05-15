@@ -58,6 +58,7 @@ const ContactForm = () => {
 
     try {
       const token = await executeRecaptcha("contact_form_submit"); // 🧠 Use an action name
+      console.log({ token });
       if (!token) {
         toast.error("Failed reCAPTCHA verification.");
         return;

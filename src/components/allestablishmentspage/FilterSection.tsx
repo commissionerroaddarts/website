@@ -97,7 +97,7 @@ const FilterSection = ({
               iconPosition="end"
               label="Search"
               value={filters.search}
-              placeholder="Search by name, tags, tagline etc."
+              placeholder="Search by Dartboard Type, Zip Code, Venue Type etc."
               onChange={(e) =>
                 setFilters({ ...filters, search: e.target.value })
               }

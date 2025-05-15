@@ -142,7 +142,7 @@ const SearchComponent: React.FC = () => {
                 label="Search"
                 error={!!fieldState.error}
                 helperText={fieldState.error?.message}
-                placeholder="Search by name, tags, tagline etc."
+                placeholder="Search by Dartboard Type, Zip Code, Venue Type etc."
                 onChange={(e) => setValue("search", e.target.value)}
                 value={field.value ?? ""}
               />
