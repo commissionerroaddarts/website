@@ -27,11 +27,7 @@ const BusinessGrid = () => {
       <Typography variant="h4" gutterBottom className="text-center">
         Explore Our Businesses
       </Typography>
-      <Grid2
-        container
-        spacing={4}
-        sx={{ mt: 2, justifyContent: "center", width: "88%", margin: "0 auto" }}
-      >
+      <Grid2 container spacing={4} sx={{ mt: 2, justifyContent: "center" }}>
         {businesses?.data.map((business: Business) => (
           <Grid2 key={business?._id} width={"100%"}>
             <CardStaggerAnimation stagger={0.1} duration={0.3} yOffset={30}>

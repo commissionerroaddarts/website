@@ -20,7 +20,7 @@ export default async function HomePage() {
     <Box>
       <HomeBanner />
 
-      <Container maxWidth="lg" sx={{ mt: 10 }}>
+      <Container sx={{ mt: 10, maxWidth: { xs: "lg", md: "80%", xl: "75%" } }}>
         <FadeInSection>
           {/* Explore Our Listings */}
           <BusinessGrid />

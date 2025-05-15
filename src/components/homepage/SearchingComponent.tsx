@@ -54,7 +54,6 @@ const SearchComponent: React.FC = () => {
   const filters = watch();
 
   const handleSearch = (data: FormValues) => {
-    console.log(data);
     const { search, category, city } = data;
 
     let query = "/establishments?";
