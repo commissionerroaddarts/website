@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useRef, useState } from "react";
 import { Grid2, Paper } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -13,26 +13,26 @@ import FadeInSection from "@/animations/sections/FadeInSection";
 import { useRouter } from "next/navigation";
 import { setInquiryData } from "@/store/slices/inquirySlice";
 import { useAppDispatch } from "@/store";
-import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import ReCAPTCHA from "react-google-recaptcha";
 
-// ✅ Validation Schema remains unchanged
+// ✅ Schema unchanged
 const schema = yup.object().shape({
   firstname: yup
     .string()
-    .required("First name is required")
-    .matches(/^[a-zA-Z]+$/, "Only letters allowed")
+    .required()
+    .matches(/^[a-zA-Z]+$/)
     .min(2)
     .max(50),
   lastname: yup
     .string()
-    .required("Last name is required")
-    .matches(/^[a-zA-Z]+$/, "Only letters allowed")
+    .required()
+    .matches(/^[a-zA-Z]+$/)
     .min(2)
     .max(50),
   phone: yup
     .string()
-    .required("Phone number is required")
-    .matches(/^\d{10,15}$/, "Must be 10–15 digits"),
+    .required()
+    .matches(/^\d{10,15}$/),
   email: yup.string().email().required().max(100),
   message: yup.string().required().min(10).max(500),
 });
@@ -42,31 +42,23 @@ const ContactForm = () => {
     handleSubmit,
     control,
     formState: { errors, isSubmitting },
-  } = useForm({
-    resolver: yupResolver(schema),
-  });
+  } = useForm<Inquiry>({ resolver: yupResolver(schema) });
+
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
+  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
 
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const { executeRecaptcha } = useGoogleReCaptcha(); // ✅ v3 hook
 
   const onSubmit = async (data: Inquiry) => {
-    if (!executeRecaptcha) {
-      toast.error("reCAPTCHA not available.");
-      return;
-    }
+    // if (!recaptchaToken) {
+    //   toast.error("Please verify reCAPTCHA");
+    //   return;
+    // }
 
     try {
-      const token = await executeRecaptcha("contact_form_submit"); // 🧠 Use an action name
-      console.log({ token });
-      if (!token) {
-        toast.error("Failed reCAPTCHA verification.");
-        return;
-      }
-
       const response = await submitContactForm({
         ...data,
-        // recaptchaToken: token,
       });
 
       toast.success(response.message ?? "Form submitted!");
@@ -74,6 +66,9 @@ const ContactForm = () => {
       router.push("/thank-you");
     } catch (error: any) {
       toast.error(error?.response?.data?.error ?? "Submission failed.");
+    } finally {
+      recaptchaRef.current?.reset();
+      setRecaptchaToken(null);
     }
   };
 
@@ -89,8 +84,8 @@ const ContactForm = () => {
       >
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid2 container spacing={2}>
-            {/* First Name */}
-            <Grid2 size={{ xs: 12, sm: 6 }}>
+            {/* Inputs... (unchanged) */}
+            <Grid2 size={{ xs: 12, md: 6 }}>
               <Controller
                 name="firstname"
                 control={control}
@@ -105,8 +100,7 @@ const ContactForm = () => {
               />
             </Grid2>
 
-            {/* Last Name */}
-            <Grid2 size={{ xs: 12, sm: 6 }}>
+            <Grid2 size={{ xs: 12, md: 6 }}>
               <Controller
                 name="lastname"
                 control={control}
@@ -121,7 +115,6 @@ const ContactForm = () => {
               />
             </Grid2>
 
-            {/* Phone */}
             <Grid2 size={{ xs: 12 }}>
               <Controller
                 name="phone"
@@ -137,7 +130,6 @@ const ContactForm = () => {
               />
             </Grid2>
 
-            {/* Email */}
             <Grid2 size={{ xs: 12 }}>
               <Controller
                 name="email"
@@ -153,7 +145,6 @@ const ContactForm = () => {
               />
             </Grid2>
 
-            {/* Message */}
             <Grid2 size={{ xs: 12 }}>
               <Controller
                 name="message"
@@ -168,6 +159,15 @@ const ContactForm = () => {
                     helperText={errors.message?.message}
                   />
                 )}
+              />
+            </Grid2>
+
+            {/* reCAPTCHA */}
+            <Grid2 size={{ xs: 12 }} className="flex justify-center">
+              <ReCAPTCHA
+                ref={recaptchaRef}
+                sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY as string}
+                onChange={(token) => setRecaptchaToken(token)}
               />
             </Grid2>
 

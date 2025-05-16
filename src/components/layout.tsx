@@ -16,7 +16,6 @@ import { Box } from "@mui/material";
 import ScrollToTop from "@/components/global/ScrollToTop";
 import { useMediaQuery } from "@mui/system";
 import EmailVerificationDialogs from "./homepage/EmailVerificationDialogs";
-import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 
 interface LayoutProps {
   readonly children: ReactNode;
@@ -129,27 +128,23 @@ export default function Layout({ children }: LayoutProps) {
   }, [dispatch, isLoggedIn]);
 
   return (
-    <GoogleReCaptchaProvider
-      reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ?? ""}
-    >
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        {isHomePage && isVisible && !isMobile && (
-          <AnimatePresence mode="wait">
-            <IconsComponent />
-          </AnimatePresence>
-        )}
-        <Suspense fallback={<div>Loading...</div>}>
-          <EmailVerificationDialogs />
-        </Suspense>
-        <Box className="flex flex-col justify-between min-h-screen">
-          {!isHomePage && <Navbar />}
-          <main>{children}</main>
-          <Footer />
-        </Box>
-        <ScrollToTop /> {/* ← Add this here */}
-      </ThemeProvider>
-    </GoogleReCaptchaProvider>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      {isHomePage && isVisible && !isMobile && (
+        <AnimatePresence mode="wait">
+          <IconsComponent />
+        </AnimatePresence>
+      )}
+      <Suspense fallback={<div>Loading...</div>}>
+        <EmailVerificationDialogs />
+      </Suspense>
+      <Box className="flex flex-col justify-between min-h-screen">
+        {!isHomePage && <Navbar />}
+        <main>{children}</main>
+        <Footer />
+      </Box>
+      <ScrollToTop /> {/* ← Add this here */}
+    </ThemeProvider>
   );
 }
 
