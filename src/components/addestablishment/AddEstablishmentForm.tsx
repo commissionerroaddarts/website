@@ -13,7 +13,6 @@ import { insertBusiness, updateBusiness } from "@/services/businessService";
 import { toast } from "react-toastify";
 import { redirect, useRouter } from "next/navigation";
 import { useAppState } from "@/hooks/useAppState";
-import PromoCodePopupComponent from "./PromoCodeComponent";
 import { Business } from "@/types/business";
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
 const SUPPORTED_FORMATS = ["image/jpeg", "image/png", "image/webp"];
@@ -161,10 +160,7 @@ const stepSchemas = [
         .string()
         .required("City is required")
         .min(2, "City must be at least 2 characters long"),
-      zipcode: yup
-        .string()
-        // .required("Zipcode is required")
-        .matches(/^\d{5}(-\d{4})?$/, "Invalid Zipcode format"),
+      zipcode: yup.string().optional(),
       geotag: yup.object().shape({
         lat: yup
           .number()
