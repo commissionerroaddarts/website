@@ -42,7 +42,6 @@ export default function CheckoutFormWrapper() {
       if (clientSecret) {
         setShowConfetti(true);
         setTimeout(() => setShowConfetti(false), 5000);
-        console.log("Client Secret:", clientSecret);
         setClientSecret(clientSecret);
         setCheckoutReady(true);
       }

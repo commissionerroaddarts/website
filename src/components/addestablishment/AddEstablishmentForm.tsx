@@ -13,6 +13,7 @@ import { insertBusiness, updateBusiness } from "@/services/businessService";
 import { toast } from "react-toastify";
 import { redirect, useRouter } from "next/navigation";
 import { useAppState } from "@/hooks/useAppState";
+import Confetti from "react-confetti"; // 🎉 install it via `npm i react-confetti
 import { Business } from "@/types/business";
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
 const SUPPORTED_FORMATS = ["image/jpeg", "image/png", "image/webp"];
@@ -373,6 +374,7 @@ export default function AddEstablishment({
   const [currentStep, setCurrentStep] = useState(5);
   const totalSteps = 5;
   const [isLoading, setIsLoading] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
 
   if (business && business.userId !== userDetails?._id) {
     return <div>You are not authorized to edit this business</div>;
@@ -398,6 +400,8 @@ export default function AddEstablishment({
             toast.success(
               "🎉 Congratulations! Your business is now live on RoadDart. Get ready to welcome new customers and grow your presence! 🚀"
             );
+            setShowConfetti(true);
+            setTimeout(() => setShowConfetti(false), 5000);
             // Optionally reset the form or navigate to a success page
             methods.reset();
             setIsLoading(false);
@@ -451,6 +455,7 @@ export default function AddEstablishment({
 
   return (
     <FormProvider {...methods}>
+      {showConfetti && <Confetti />}
       <AddEstablishmentLayout
         totalSteps={totalSteps}
         currentStep={currentStep}
