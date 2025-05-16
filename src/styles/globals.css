@@ -243,15 +243,7 @@ body::-webkit-scrollbar-thumb {
   z-index: 9999;
   /* Add a blurred background overlay */
 }
-.Toastify__toast-container::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  backdrop-filter: blur(8px);
-  background: rgba(32, 12, 39, 0.4); /* fallback color */
-  pointer-events: none;
-}
+
 .Toastify__progress-bar--wrp {
   display: none !important;
 }
