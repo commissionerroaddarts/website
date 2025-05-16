@@ -16,6 +16,7 @@ import { Box } from "@mui/material";
 import ScrollToTop from "@/components/global/ScrollToTop";
 import { useMediaQuery } from "@mui/system";
 import EmailVerificationDialogs from "./homepage/EmailVerificationDialogs";
+import { toast } from "react-toastify";
 
 interface LayoutProps {
   readonly children: ReactNode;

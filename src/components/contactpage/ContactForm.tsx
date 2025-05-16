@@ -14,27 +14,28 @@ import { useRouter } from "next/navigation";
 import { setInquiryData } from "@/store/slices/inquirySlice";
 import { useAppDispatch } from "@/store";
 import ReCAPTCHA from "react-google-recaptcha";
+import { recaptchaVerify } from "@/services/authService";
 
 // ✅ Schema unchanged
 const schema = yup.object().shape({
   firstname: yup
     .string()
-    .required()
+    .required("First name is required")
     .matches(/^[a-zA-Z]+$/)
     .min(2)
     .max(50),
   lastname: yup
     .string()
-    .required()
+    .required("Last name is required")
     .matches(/^[a-zA-Z]+$/)
     .min(2)
     .max(50),
   phone: yup
     .string()
-    .required()
+    .required("Phone number is required")
     .matches(/^\d{10,15}$/),
-  email: yup.string().email().required().max(100),
-  message: yup.string().required().min(10).max(500),
+  email: yup.string().email("Email is required").required().max(100),
+  message: yup.string().required("Message is required").min(10).max(500),
 });
 
 const ContactForm = () => {
@@ -51,12 +52,18 @@ const ContactForm = () => {
   const dispatch = useAppDispatch();
 
   const onSubmit = async (data: Inquiry) => {
-    // if (!recaptchaToken) {
-    //   toast.error("Please verify reCAPTCHA");
-    //   return;
-    // }
+    if (!recaptchaToken) {
+      toast.error("Please verify reCAPTCHA");
+      return;
+    }
 
     try {
+      const recaptchaResponse = await recaptchaVerify(recaptchaToken);
+      if (!recaptchaResponse) {
+        toast.error("reCAPTCHA verification failed");
+        return;
+      }
+
       const response = await submitContactForm({
         ...data,
       });

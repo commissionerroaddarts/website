@@ -156,10 +156,6 @@ const PlanCard = ({ plan }: PlanCardProps) => {
                 }
               />
             </Box>
-            {/* 
-            <Typography align="center" sx={{ opacity: 0.8 }}>
-              Billed annually (${plan.prices.yearly.amount})
-            </Typography> */}
           </Box>
           <motion.div
             initial="hidden"

@@ -32,9 +32,15 @@ const PreCheckoutForm = ({
   const { plan } = useAppState(); // Assuming you have a custom hook to get user state
   const { selectedPlan } = plan; // Assuming you have a custom hook to get user state
   const [loading, setLoading] = useState(false);
+  const promoCodes = ["Dartvenue", "Dartclub10", "FreeAd365 "];
   const onSubmit = async (data: PreCheckoutFormData) => {
     try {
       setLoading(true);
+      if (!promoCodes.includes(data.promoCode ?? "")) {
+        toast.error("Invalid promo code");
+        setLoading(false);
+        return;
+      }
       // Your logic here (e.g., API call)
       onSuccess(data); // Call the onSuccess function with the form data
       toast.success("Promo code applied successfully!");

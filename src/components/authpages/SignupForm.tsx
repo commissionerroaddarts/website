@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useRef, useState } from "react";
 import {
   Box,
   Typography,
@@ -13,7 +13,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { registerUser, verifyEmail } from "@/services/authService"; // API Service
+import { recaptchaVerify, registerUser } from "@/services/authService"; // API Service
 import { SignupFormData } from "@/types/auth";
 import CustomInput from "@/components/global/CustomInput";
 import ThemeButton from "@/components/buttons/ThemeButton";
@@ -21,6 +21,7 @@ import Link from "next/link";
 import { Google } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import { useAppState } from "@/hooks/useAppState";
+import ReCAPTCHA from "react-google-recaptcha";
 
 // ✅ Validation Schema
 const schema = yup.object().shape({
@@ -66,6 +67,8 @@ const SignupForm = () => {
   } = useForm<SignupFormData>({
     resolver: yupResolver(schema),
   });
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
+  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
   const router = useRouter();
   const { user, plan } = useAppState(); // Assuming you have a custom hook to get user state
   const { selectedPlan } = plan; // Assuming you have a custom hook to get user state
@@ -79,23 +82,31 @@ const SignupForm = () => {
   // ✅ Form Submission Handler
   const onSubmit = async (data: SignupFormData) => {
     try {
+      if (!recaptchaToken) {
+        toast.error("Please verify reCAPTCHA");
+        return;
+      }
+
+      const recaptchaResponse = await recaptchaVerify(recaptchaToken);
+
+      if (!recaptchaResponse) {
+        toast.error("reCAPTCHA verification failed");
+        return;
+      }
+
       const response = await registerUser(data);
       if (response?.status === 201) {
-        toast.success(response?.data?.message ?? "Signup successful!");
-
-        const verificationResponse = await verifyEmail({
-          email: data.email,
-        });
-        if (
-          verificationResponse?.status === 200 ||
-          verificationResponse?.status === 201
-        ) {
+        toast.success(
+          response?.data?.message ??
+            `We have sent a verification email at ${data.email}`
+        );
+        setTimeout(() => {
           if (selectedPlan) {
             router.push("/checkout"); // Redirect to login page after successful signup
           } else {
             router.push("/login"); // Redirect to login page after successful signup
           }
-        }
+        }, 2000);
       }
       // Handle post-signup actions here (e.g., redirect, store token)
     } catch (error: any) {
@@ -209,6 +220,15 @@ const SignupForm = () => {
                     helperText={errors.password?.message}
                   />
                 )}
+              />
+            </Grid2>
+
+            {/* reCAPTCHA */}
+            <Grid2 size={{ xs: 12 }} className="flex justify-center">
+              <ReCAPTCHA
+                ref={recaptchaRef}
+                sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY as string}
+                onChange={(token) => setRecaptchaToken(token)}
               />
             </Grid2>
 

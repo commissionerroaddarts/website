@@ -66,3 +66,14 @@ export const verifyEmail = async (data: { email: string }) => {
     console.error("Email verification error:", error);
   }
 };
+
+export const recaptchaVerify = async (token: string) => {
+  try {
+    const response = await axiosInstance.post(
+      `/auth/verify-captcha?token=${token}`
+    );
+    return response; // Expected { message: "reCAPTCHA verified!" }
+  } catch (error: any) {
+    console.error("reCAPTCHA verification error:", error);
+  }
+};

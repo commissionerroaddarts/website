@@ -138,7 +138,8 @@ const ProfileImage = ({ userDetails }: { userDetails: User }) => {
       </Typography>
       <Box
         sx={{
-          display: "inline-flex",
+          display: "flex",
+          flexWrap: "wrap",
           alignItems: "center",
           mt: 1,
         }}

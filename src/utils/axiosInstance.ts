@@ -23,7 +23,7 @@ axiosInstance.interceptors.request.use(
     return Promise.reject(
       error instanceof Error
         ? error
-        : new Error(error?.message || "An unknown error occurred")
+        : new Error(error?.message ?? "An unknown error occurred")
     );
   }
 );
@@ -40,7 +40,7 @@ axiosInstance.interceptors.response.use(
       // Server responded with a status other than 2xx
       console.error(
         "API Error:",
-        error?.response?.data?.message || error?.message
+        error?.response?.data?.message ?? error?.message
       );
     } else if (error.request) {
       // Request was made but no response received
@@ -52,7 +52,7 @@ axiosInstance.interceptors.response.use(
     return Promise.reject(
       error instanceof Error
         ? error
-        : new Error(error?.message || "An unknown error occurred")
+        : new Error(error?.message ?? "An unknown error occurred")
     );
   }
 );

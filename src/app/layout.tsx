@@ -40,7 +40,18 @@ export default function RootLayout({
       <body>
         <Preloader duration={3000}>
           <Providers>
-            <ToastContainer />
+            <ToastContainer
+              position="top-center"
+              autoClose={5000}
+              hideProgressBar={false}
+              newestOnTop
+              closeOnClick={false}
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="colored"
+            />
             <Layout>
               {modal}
               {children}

@@ -91,7 +91,7 @@ const Step5FaqForm = () => {
         text={fields.length > 0 ? "Add Another FAQ" : "Add FAQ"}
         icon={<PlusCircle color="white" />}
         onClickEvent={handleAddFaq}
-        applyMargin={fields.length > 0 ? false : true}
+        applyMargin={fields.length === 0}
       />
     </Box>
   );
