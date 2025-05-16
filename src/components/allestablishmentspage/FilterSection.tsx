@@ -64,7 +64,7 @@ const FilterSection = ({
   };
 
   return (
-    <div className="bg-[#3a2a3e] bg-opacity-50 rounded-lg p-4 mb-8">
+    <div className="bg-[#3a2a3e] bg-opacity-50 rounded-lg p-4 mb-8 container mx-auto">
       <div className="flex flex-col md:flex-row gap-4">
         {isFilteration && (
           <>

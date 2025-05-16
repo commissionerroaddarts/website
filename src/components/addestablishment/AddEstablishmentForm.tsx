@@ -378,7 +378,7 @@ export default function AddEstablishment({
   const totalSteps = 5;
   const [isLoading, setIsLoading] = useState(false);
 
-  if (business?.userId !== userDetails?._id) {
+  if (business && business.userId !== userDetails?._id) {
     return <div>You are not authorized to edit this business</div>;
   }
 
