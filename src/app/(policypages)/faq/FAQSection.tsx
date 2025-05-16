@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { motion } from "framer-motion";
+import React from "react";
 const venueFaqs = [
   {
     question:
@@ -130,7 +131,12 @@ const renderAccordion = (data: { question: string; answer: string }[]) => (
           </AccordionSummary>
           <AccordionDetails>
             <Typography variant="h6" sx={{ fontSize: "1rem" }}>
-              {item.answer}
+              {item.answer.split("\n").map((line: string, index: number) => (
+                <React.Fragment key={line + index}>
+                  {line}
+                  <br />
+                </React.Fragment>
+              ))}
             </Typography>
           </AccordionDetails>
         </Accordion>
