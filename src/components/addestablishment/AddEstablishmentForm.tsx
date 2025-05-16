@@ -395,7 +395,9 @@ export default function AddEstablishment({
         if (response.status === 201) {
           const { _id } = response.data;
           if (_id) {
-            toast.success("Business added successfully!");
+            toast.success(
+              "🎉 Congratulations! Your business is now live on RoadDart. Get ready to welcome new customers and grow your presence! 🚀"
+            );
             // Optionally reset the form or navigate to a success page
             methods.reset();
             setIsLoading(false);
