@@ -19,7 +19,9 @@ const GlobalError: React.FC<ErrorProps> = ({ error, reset }) => {
   };
   return (
     <Box className="flex justify-center flex-col items-center">
-      <Typography variant="h2">Something went wrong!</Typography>
+      <Typography variant="h2" sx={{ fontSize: { xs: "md", md: "xl" } }}>
+        Something went wrong!
+      </Typography>
       <p className="my-3">{error.message}</p>
       <ThemeButton
         text="Try Again"

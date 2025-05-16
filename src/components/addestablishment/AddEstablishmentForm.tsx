@@ -370,7 +370,7 @@ export default function AddEstablishment({
   const { user } = useAppState();
   const { userDetails } = user;
   const { subscription } = userDetails || {};
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(5);
   const totalSteps = 5;
   const [isLoading, setIsLoading] = useState(false);
 
