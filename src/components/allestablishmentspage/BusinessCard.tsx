@@ -35,13 +35,15 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
     tags,
     shortDis,
     averageRating,
+    userId,
     // totalReviews,
   } = business;
 
   const { user } = useAppState();
   const { userDetails } = user;
   const { role } = userDetails || {};
-  const isStoreOwner = role === "owner" || role === "admin";
+  const isStoreOwner =
+    (role === "owner" || role === "admin") && userId === userDetails?._id;
   const [openMap, setOpenMap] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();

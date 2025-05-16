@@ -39,7 +39,7 @@ export default function MainEstablishment() {
   useEffect(() => {
     setFilterParams((prev) => ({ ...prev, search: debouncedSearch }));
     getBusinesses();
-  }, [debouncedSearch]);
+  }, [debouncedSearch, filterParams?.category]);
 
   const getBusinesses = async () => {
     setLoading(true);
