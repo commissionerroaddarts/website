@@ -108,8 +108,30 @@ const PlanCard = ({ plan }: PlanCardProps) => {
           height: { xs: "auto", md: 700 },
           display: "flex",
           flexDirection: "column",
+          position: "relative", // Needed for ribbon positioning
         }}
       >
+        {plan.featured && (
+          <Box
+            sx={{
+              position: "absolute",
+              top: 34,
+              right: -36,
+              background: "#FF5722",
+              color: "white",
+              px: 3,
+              py: 0.5,
+              fontWeight: "bold",
+              fontSize: "1rem",
+              transform: "rotate(45deg)",
+              zIndex: 2,
+              boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+              letterSpacing: 1,
+            }}
+          >
+            HOT SELLING
+          </Box>
+        )}
         <CardContent
           sx={{ display: "flex", flexDirection: "column", flexGrow: 1 }}
         >

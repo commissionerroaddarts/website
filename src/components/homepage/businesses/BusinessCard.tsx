@@ -25,6 +25,7 @@ import { useAppState } from "@/hooks/useAppState";
 import { useRouter } from "next/navigation";
 import { deleteBusiness } from "@/services/businessService";
 import { toast } from "react-toastify";
+import PromotionSpace from "@/components/global/PromotionSpace";
 
 function BusinessCard({ business }: { readonly business: Business }) {
   // business
@@ -179,40 +180,43 @@ function BusinessCard({ business }: { readonly business: Business }) {
               </Typography>
             </Box>
           </Box>
-          <Box className="flex flex-col gap-1">
-            {/* Title */}
-            <Typography variant="h6" sx={{ mt: 1 }}>
-              {name ?? "Unnamed Business"}
-            </Typography>
+          <Box className="flex justify-between items-center">
+            <Box className="flex flex-col gap-1">
+              {/* Title */}
+              <Typography variant="h6" sx={{ mt: 1 }}>
+                {name ?? "Unnamed Business"}
+              </Typography>
 
-            {userDetails && isStoreOwner ? (
-              <StarRating rating={averageRating ?? 0} size="size-5" />
-            ) : (
-              <StarRatingWithPopup
-                id={_id}
-                averageRating={averageRating ?? 0}
-              />
-            )}
+              {userDetails && isStoreOwner ? (
+                <StarRating rating={averageRating ?? 0} size="size-5" />
+              ) : (
+                <StarRatingWithPopup
+                  id={_id}
+                  averageRating={averageRating ?? 0}
+                />
+              )}
+
+              {/* Price and Location */}
+              <Typography sx={{ color: "#9b59b6", fontWeight: "bold" }}>
+                {price ? price?.category : "No Price Info"}
+              </Typography>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  color: "#ccc",
+                  mt: 0.5,
+                }}
+              >
+                <RoomIcon sx={{ fontSize: 16, mr: 0.5 }} />
+                {location
+                  ? `${location?.city}, ${location?.state}, ${location?.country}`
+                  : "No Location Info"}
+              </Box>
+            </Box>
+
+            <PromotionSpace />
           </Box>
-
-          {/* Price and Location */}
-          <Typography sx={{ color: "#9b59b6", fontWeight: "bold", mt: 1 }}>
-            {price ? price?.category : "No Price Info"}
-          </Typography>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              color: "#ccc",
-              mt: 0.5,
-            }}
-          >
-            <RoomIcon sx={{ fontSize: 16, mr: 0.5 }} />
-            {location
-              ? `${location?.city}, ${location?.state}, ${location?.country}`
-              : "No Location Info"}
-          </Box>
-
           {/* Buttons Section */}
           <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
             <Link
