@@ -244,10 +244,6 @@ body::-webkit-scrollbar-thumb {
   /* Add a blurred background overlay */
 }
 
-.Toastify__progress-bar--wrp {
-  display: none !important;
-}
-
 .Toastify__toast {
   font-weight: bold;
   display: flex;
@@ -297,4 +293,21 @@ body::-webkit-scrollbar-thumb {
   fill: white;
   height: 26px;
   width: 30px;
+}
+
+@media screen and (max-width: 768px) {
+  .Toastify__toast {
+    min-width: 90vw;
+    padding: 1rem 1.5rem;
+    font-size: 1.2rem;
+  }
+  .Toastify__toast-body {
+    font-size: 1.2em;
+  }
+  .Toastify__toast--success,
+  .Toastify__toast--error,
+  .Toastify__toast--warning,
+  .Toastify__toast--info {
+    font-size: 1.2em;
+  }
 }

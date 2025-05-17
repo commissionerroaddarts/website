@@ -38,9 +38,16 @@ export default function RootLayout({
       </Head>
 
       <body>
-        <Preloader duration={1000}>
+        <Preloader duration={3000}>
           <Providers>
-            <ToastContainer />
+            <ToastContainer
+              position="top-center"
+              autoClose={500}
+              hideProgressBar={true}
+              newestOnTop
+              rtl={false}
+              theme="colored"
+            />
             <Layout>
               {modal}
               {children}
