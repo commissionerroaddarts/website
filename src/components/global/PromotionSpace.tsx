@@ -2,7 +2,7 @@
 import { Box, Typography } from "@mui/material";
 import { useState } from "react";
 
-const PromotionSpace = () => {
+const PromotionSpace = ({ checkOwner }: { readonly checkOwner: boolean }) => {
   const [editing, setEditing] = useState(false);
   const [promotion, setPromotion] = useState(
     "Update your current promotions here..."
@@ -91,22 +91,24 @@ const PromotionSpace = () => {
           >
             {promotion}
           </Typography>
-          <button
-            onClick={handleEdit}
-            style={{
-              background: "#fff",
-              color: "#5A2A84",
-              border: "none",
-              borderRadius: "8px",
-              padding: "0.3rem 0.8rem",
-              cursor: "pointer",
-              fontWeight: "bold",
-              marginLeft: "0.5rem",
-              fontSize: "0.7rem",
-            }}
-          >
-            Edit
-          </button>
+          {checkOwner && (
+            <button
+              onClick={handleEdit}
+              style={{
+                background: "#fff",
+                color: "#5A2A84",
+                border: "none",
+                borderRadius: "8px",
+                padding: "0.3rem 0.8rem",
+                cursor: "pointer",
+                fontWeight: "bold",
+                marginLeft: "0.5rem",
+                fontSize: "0.7rem",
+              }}
+            >
+              Edit
+            </button>
+          )}
         </Box>
       )}
     </Box>

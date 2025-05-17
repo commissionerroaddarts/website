@@ -297,7 +297,7 @@ body::-webkit-scrollbar-thumb {
 
 @media screen and (max-width: 768px) {
   .Toastify__toast {
-    min-width: 90vw;
+    min-width: 70vw;
     padding: 1rem 1.5rem;
     font-size: 1.2rem;
   }

@@ -49,6 +49,7 @@ function BusinessCard({ business }: { readonly business: Business }) {
   const [openMap, setOpenMap] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const checkOwner = isStoreOwner && userBusinessId === userId;
   // const handleMapOpen = (e: any) => {
   //   e.preventDefault();
   //   e.stopPropagation();
@@ -215,7 +216,7 @@ function BusinessCard({ business }: { readonly business: Business }) {
               </Box>
             </Box>
 
-            <PromotionSpace />
+            <PromotionSpace checkOwner={checkOwner} />
           </Box>
           {/* Buttons Section */}
           <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>

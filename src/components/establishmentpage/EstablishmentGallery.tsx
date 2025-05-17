@@ -127,7 +127,7 @@ export default function EstablishmentGallery({ images, id }: GalleryProps) {
 
   return (
     <>
-      {isStoreOwner && (
+      {/* {isStoreOwner && (
         <>
           <Link href={`/edit-establishment/${id}`}>
             <ThemeButton
@@ -142,7 +142,7 @@ export default function EstablishmentGallery({ images, id }: GalleryProps) {
             endIcon={<Trash className="inline-block ml-1" size={30} />}
           />
         </>
-      )}
+      )} */}
       {!isMobile ? (
         <Grid2 container spacing={2}>
           {imageCount === 1 && (
