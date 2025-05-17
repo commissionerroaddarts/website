@@ -13,6 +13,7 @@ export interface Plan {
       priceId: string;
       amount: number;
       currency: string;
+      discountedPrice?: number;
     };
   };
   currency: string;

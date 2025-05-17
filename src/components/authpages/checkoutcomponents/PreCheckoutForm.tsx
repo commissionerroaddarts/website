@@ -12,31 +12,54 @@ import { useAppState } from "@/hooks/useAppState";
 import { redirect } from "next/navigation";
 
 // ✅ Schema (Email + PromoCode)
-const schema = yup.object().shape({
-  email: yup.string().email("Invalid email").required("Email is required"),
-  promoCode: yup.string().optional(),
-});
-
+const getSchema = (
+  isLoggedIn: boolean
+): yup.ObjectSchema<PreCheckoutFormData> => {
+  return yup.object({
+    email: isLoggedIn
+      ? yup.string().default("")
+      : yup
+          .string()
+          .email("Invalid email format")
+          .required("Email is required"),
+    promoCode: yup.string().default(""),
+  }) as yup.ObjectSchema<PreCheckoutFormData>;
+};
 const PreCheckoutForm = ({
   onSuccess,
 }: {
   onSuccess: (data: { email: string; promoCode?: string }) => void;
 }) => {
+  const { plan, user } = useAppState(); // Assuming you have a custom hook to get user state
+  const { selectedPlan } = plan; // Assuming you have a custom hook to get user state
+  const { isLoggedIn } = user;
   const {
     handleSubmit,
     control,
     formState: { errors, isSubmitting },
   } = useForm<PreCheckoutFormData>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(getSchema(isLoggedIn)),
   });
-  const { plan } = useAppState(); // Assuming you have a custom hook to get user state
-  const { selectedPlan } = plan; // Assuming you have a custom hook to get user state
+
   const [loading, setLoading] = useState(false);
-  const promoCodes = ["Dartvenue", "Dartclub10", "FreeAd365 "];
+
+  const priceId =
+    selectedPlan?.billingCycle === "monthly"
+      ? selectedPlan?.prices?.monthly?.priceId
+      : selectedPlan?.prices?.yearly?.priceId;
+  const promoCodes = ["DARTVENUE", "DARTCLUB10", "FREEAD365"];
+
   const onSubmit = async (data: PreCheckoutFormData) => {
     try {
+      if (!priceId) {
+        toast.error("Please select a plan");
+        redirect("/plans");
+      }
       setLoading(true);
-      if (!promoCodes.includes(data.promoCode ?? "")) {
+      if (
+        data.promoCode &&
+        !promoCodes.includes(data.promoCode.toUpperCase())
+      ) {
         toast.error("Invalid promo code");
         setLoading(false);
         return;
@@ -51,10 +74,6 @@ const PreCheckoutForm = ({
     }
   };
 
-  if (!plan) {
-    redirect("/plans");
-  }
-
   return (
     <Container maxWidth="sm">
       <Paper
@@ -66,17 +85,6 @@ const PreCheckoutForm = ({
         }}
       >
         <Grid2 container spacing={2} alignItems="center">
-          {/* LEFT: Form */}
-          {/* <Grid2 size={{ xs: 12, md: 6 }}>
-            <ThemeButton
-              text="Back"
-              type="button"
-              style={{ width: "100%" }}
-              backgroundColor="transparent"
-              onClick={() => redirect("/plans")}
-            />
-          </Grid2> */}
-
           <Grid2 size={{ xs: 12 }}>
             <Box className="flex flex-col items-center">
               <Typography variant="h5" mb={1} textAlign="center">
@@ -106,20 +114,22 @@ const PreCheckoutForm = ({
               <form onSubmit={handleSubmit(onSubmit)}>
                 <Grid2 container spacing={2}>
                   {/* Email Field */}
-                  <Grid2 size={{ xs: 12 }}>
-                    <Controller
-                      name="email"
-                      control={control}
-                      render={({ field }) => (
-                        <CustomInput
-                          label="Email Address"
-                          {...field}
-                          error={!!errors.email}
-                          helperText={errors.email?.message}
-                        />
-                      )}
-                    />
-                  </Grid2>
+                  {!isLoggedIn && (
+                    <Grid2 size={{ xs: 12 }}>
+                      <Controller
+                        name="email"
+                        control={control}
+                        render={({ field }) => (
+                          <CustomInput
+                            label="Email Address"
+                            {...field}
+                            error={!!errors.email}
+                            helperText={errors.email?.message}
+                          />
+                        )}
+                      />
+                    </Grid2>
+                  )}
 
                   {/* Promo Code Field */}
                   <Grid2 size={{ xs: 12 }}>

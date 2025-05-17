@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { setPromoCode, setEmail } from "@/store/slices/planSlice";
 import PreCheckoutForm from "@/components/authpages/checkoutcomponents/PreCheckoutForm"; // Adjust path
 import Confetti from "react-confetti"; // 🎉 install it via `npm i react-confetti`
+import { redirect } from "next/navigation";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? ""
@@ -17,12 +18,17 @@ const stripePromise = loadStripe(
 
 export default function CheckoutFormWrapper() {
   const dispatch = useAppDispatch();
-  const { plan } = useAppSelector((state) => state);
+  const { plan, user } = useAppSelector((state) => state);
+  const { isLoggedIn, userDetails } = user;
+  const { email: userEmail } = userDetails || {};
   const { selectedPlan, email, promoCode } = plan;
-
   const [clientSecret, setClientSecret] = useState("");
   const [checkoutReady, setCheckoutReady] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
+
+  if (!selectedPlan) {
+    redirect("/plans");
+  }
 
   const priceId =
     selectedPlan?.billingCycle === "monthly"
@@ -34,11 +40,14 @@ export default function CheckoutFormWrapper() {
     if (!priceId) return;
 
     try {
-      const clientSecret = await checkoutService({
+      const data = {
         promoCode,
-        email,
+        email: isLoggedIn ? userEmail ?? "" : email ?? "",
         priceId,
-      });
+      };
+      console.log(data);
+      const clientSecret = await checkoutService(data);
+
       if (clientSecret) {
         setShowConfetti(true);
         setTimeout(() => setShowConfetti(false), 5000);
@@ -49,13 +58,6 @@ export default function CheckoutFormWrapper() {
       console.error("Failed to initialize checkout:", error);
     }
   };
-
-  // Call it when priceId becomes available
-  useEffect(() => {
-    if (priceId) {
-      initCheckout();
-    }
-  }, [priceId, email, promoCode]);
 
   const options: StripeElementsOptions = {
     clientSecret,

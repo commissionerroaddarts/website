@@ -75,9 +75,17 @@ const CustomInput: React.FC<CustomInputProps> = ({
             : borderRadiusPixels ?? "50px",
           outline: "none",
           border: border ?? "none",
+          "&.Mui-disabled": {
+            color: "#f0f0f0",
+            WebkitTextFillColor: "#a0a0a0",
+          },
         },
         "& .MuiInputBase-input::placeholder": {
           color: "rgba(150, 150, 150, 1)",
+        },
+        "& .Mui-disabled .MuiInputBase-input": {
+          color: "#a0a0a0",
+          WebkitTextFillColor: "#a0a0a0",
         },
       }}
       {...rest}

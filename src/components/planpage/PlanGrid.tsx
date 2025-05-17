@@ -141,7 +141,20 @@ const PlanCard = ({ plan }: PlanCardProps) => {
             </Box>
 
             <Typography variant="h3" align="center">
-              ${plan.prices[billingCycle].amount}
+              <span
+                className={`${
+                  billingCycle === "yearly"
+                    ? "line-through !text-gray-300 text-[1.4rem]"
+                    : ""
+                }`}
+              >
+                ${plan.prices[billingCycle]?.amount}
+              </span>
+              {billingCycle === "yearly" && (
+                <span className="text-[#8224E3]">
+                  ${plan.prices[billingCycle]?.discountedPrice}
+                </span>
+              )}
               <span style={{ fontSize: "1rem" }}>
                 /{billingCycle === "monthly" ? "month" : "year"}
               </span>

@@ -6,18 +6,22 @@ const plans = [
     icon: "/images/icons/basic.svg",
     bgColor:
       "linear-gradient(112.11deg, rgba(31, 0, 55, 0.82) 2.19%, rgba(75, 0, 130, 0.1) 95.99%)",
+    discountedPriceYearly: 99,
   },
   {
     name: "Standard plan",
     icon: "/images/icons/business.svg",
     bgColor: "#1D1D1D",
     featured: true,
+    discountedPriceYearly: 208.98,
   },
   {
     name: "Premium plan",
     icon: "/images/icons/enterprise.svg",
     bgColor:
       "linear-gradient(112.11deg, rgba(31, 0, 55, 0.82) 2.19%, rgba(75, 0, 130, 0.1) 95.99%)",
+
+    discountedPriceYearly: 538.96,
   },
 ];
 
@@ -38,6 +42,7 @@ export const getPlans = async () => {
           yearly: {
             ...plan.prices.yearly,
             amount: (plan.prices.yearly.amount / 100).toFixed(2),
+            discountedPrice: matchingPlan?.discountedPriceYearly,
           },
         },
         icon: matchingPlan?.icon ?? null,
