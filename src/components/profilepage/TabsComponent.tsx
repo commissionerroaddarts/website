@@ -24,7 +24,7 @@ export const TabsComponent = ({
   const tabs = [
     { label: "Edit Profile", value: "profile" },
     ...(isStoreOwner
-      ? [{ label: "My Establishments", value: "my-establishments" }]
+      ? [{ label: "View Your Listings", value: "view-your-listings" }]
       : []),
     // { label: "Upgrade Plan", value: "upgrade-plan" },
     { label: "Security Settings", value: "settings" },

@@ -36,6 +36,7 @@ const PreCheckoutForm = ({
   const {
     handleSubmit,
     control,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<PreCheckoutFormData>({
     resolver: yupResolver(getSchema(isLoggedIn)),
@@ -144,6 +145,9 @@ const PreCheckoutForm = ({
                           label="Promo Code"
                           {...field}
                           error={!!errors.promoCode}
+                          onChange={(e) => {
+                            setValue("promoCode", e.target.value);
+                          }}
                           helperText={errors.promoCode?.message}
                         />
                       )}

@@ -152,7 +152,7 @@ const PlanCard = ({ plan }: PlanCardProps) => {
               </span>
               {billingCycle === "yearly" && (
                 <span className="text-[#8224E3]">
-                  ${plan.prices[billingCycle]?.discountedPrice}
+                  ${plan.prices[billingCycle]?.discountedPrice?.toFixed(2)}
                 </span>
               )}
               <span style={{ fontSize: "1rem" }}>

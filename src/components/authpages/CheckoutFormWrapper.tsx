@@ -5,23 +5,21 @@ import {
   EmbeddedCheckoutProvider,
 } from "@stripe/react-stripe-js";
 import { checkoutService } from "@/services/checkoutService";
-import { useAppDispatch, useAppSelector } from "@/store";
 import { useState } from "react";
-import { setPromoCode, setEmail } from "@/store/slices/planSlice";
 import PreCheckoutForm from "@/components/authpages/checkoutcomponents/PreCheckoutForm"; // Adjust path
 import Confetti from "react-confetti"; // 🎉 install it via `npm i react-confetti`
 import { redirect } from "next/navigation";
+import { useAppState } from "@/hooks/useAppState";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? ""
 );
 
 export default function CheckoutFormWrapper() {
-  const dispatch = useAppDispatch();
-  const { plan, user } = useAppSelector((state) => state);
+  const { plan, user } = useAppState(); // Assuming you have a custom hook to get user state
   const { isLoggedIn, userDetails } = user;
   const { email: userEmail } = userDetails || {};
-  const { selectedPlan, email, promoCode } = plan;
+  const { selectedPlan } = plan;
   const [clientSecret, setClientSecret] = useState("");
   const [checkoutReady, setCheckoutReady] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
@@ -36,19 +34,20 @@ export default function CheckoutFormWrapper() {
       : selectedPlan?.prices?.yearly?.priceId;
 
   // Save this function to use manually
-  const initCheckout = async () => {
+  const initCheckout = async (data: { email: string; promoCode?: string }) => {
     if (!priceId) return;
 
     try {
-      const data = {
-        promoCode,
-        email: isLoggedIn ? userEmail ?? "" : email ?? "",
+      const formData = {
+        promoCode: data.promoCode?.toUpperCase() ?? "",
+        email: isLoggedIn ? userEmail ?? "" : data.email ?? "",
         priceId,
+        plan: selectedPlan?.name?.split(" ")[0]?.toLowerCase(),
       };
-      const clientSecret = await checkoutService(data);
+      const clientSecret = await checkoutService(formData);
 
       if (clientSecret) {
-        if (promoCode !== "") {
+        if (data?.promoCode !== "") {
           setShowConfetti(true);
           setTimeout(() => setShowConfetti(false), 5000);
         }
@@ -64,19 +63,10 @@ export default function CheckoutFormWrapper() {
     clientSecret,
   };
 
-  const handleFormSuccess = async (data: {
-    email: string;
-    promoCode?: string;
-  }) => {
-    dispatch(setEmail(data.email ?? ""));
-    dispatch(setPromoCode(data.promoCode ?? ""));
-    await initCheckout();
-  };
-
   return (
     <>
       {!checkoutReady ? (
-        <PreCheckoutForm onSuccess={handleFormSuccess} />
+        <PreCheckoutForm onSuccess={initCheckout} />
       ) : (
         <>
           <EmbeddedCheckoutProvider stripe={stripePromise} options={options}>

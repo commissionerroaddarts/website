@@ -266,7 +266,7 @@ const ProfileLink = ({
           {
             label: "View Your Listings",
             icon: <Building style={{ marginRight: "8px" }} />,
-            action: () => router.push("/profile/my-establishments"),
+            action: () => router.push("/profile/view-your-listings"),
           },
         ]
       : []),

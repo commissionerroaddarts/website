@@ -9,15 +9,16 @@ export const checkoutService = async (preDetails: {
   promoCode: string;
   email: string;
   priceId: string;
+  plan: string;
 }) => {
   try {
+    console.log("preDetails", preDetails);
     const response = await axiosInstance.post(
       "/subscription/checkout",
       preDetails
     );
     const { clientSecret } = response.data;
-    return clientSecret; // { clientSecret }
-
+    return clientSecret;
     // return id; // Expected { message: "Checkout successful!" }
   } catch (error: any) {
     console.error("Checkout error:", error);
