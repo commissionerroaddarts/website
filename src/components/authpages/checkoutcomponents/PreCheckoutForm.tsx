@@ -64,9 +64,12 @@ const PreCheckoutForm = ({
         setLoading(false);
         return;
       }
+      if (data.promoCode) {
+        toast.success("Promo code applied successfully!");
+      }
+
       // Your logic here (e.g., API call)
       onSuccess(data); // Call the onSuccess function with the form data
-      toast.success("Promo code applied successfully!");
       setLoading(false);
     } catch (error: any) {
       setLoading(false);

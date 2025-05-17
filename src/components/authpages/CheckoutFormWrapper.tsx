@@ -6,7 +6,7 @@ import {
 } from "@stripe/react-stripe-js";
 import { checkoutService } from "@/services/checkoutService";
 import { useAppDispatch, useAppSelector } from "@/store";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { setPromoCode, setEmail } from "@/store/slices/planSlice";
 import PreCheckoutForm from "@/components/authpages/checkoutcomponents/PreCheckoutForm"; // Adjust path
 import Confetti from "react-confetti"; // 🎉 install it via `npm i react-confetti`
@@ -45,12 +45,13 @@ export default function CheckoutFormWrapper() {
         email: isLoggedIn ? userEmail ?? "" : email ?? "",
         priceId,
       };
-      console.log(data);
       const clientSecret = await checkoutService(data);
 
       if (clientSecret) {
-        setShowConfetti(true);
-        setTimeout(() => setShowConfetti(false), 5000);
+        if (promoCode !== "") {
+          setShowConfetti(true);
+          setTimeout(() => setShowConfetti(false), 5000);
+        }
         setClientSecret(clientSecret);
         setCheckoutReady(true);
       }
