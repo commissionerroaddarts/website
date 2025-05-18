@@ -231,12 +231,7 @@ function BusinessCard({ business }: { readonly business: Business }) {
                   icon={<CallIcon fontSize="small" />}
                 />
               </Link>
-              <Link
-                href={`/establishments/${business?._id}`}
-                className="w-[350px] h-[250px] rounded-2xl"
-                passHref
-                prefetch
-              >
+              <Link href={`/establishments/${business?._id}`} passHref prefetch>
                 {" "}
                 <ThemeButton
                   text="View More"
