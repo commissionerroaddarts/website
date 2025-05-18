@@ -9,7 +9,7 @@ import { deleteBusiness } from "@/services/businessService";
 import { toast } from "react-toastify";
 import Link from "next/link";
 import ThemeButton from "../buttons/ThemeButton";
-import { Edit, Trash } from "lucide-react";
+import { Camera, Edit, Trash } from "lucide-react";
 
 interface GalleryProps {
   readonly images: string[];
@@ -82,6 +82,19 @@ export default function EstablishmentProfileHeader({
           className="object-cover w-full h-full rounded-xl"
         />
 
+        {isStoreOwner && (
+          <button
+            className="absolute top-2 right-2  px-3 py-1 text-sm rounded-full shadow hover:bg-opacity-100 transition flex items-center gap-2"
+            style={{
+              background:
+                "linear-gradient(148.71deg, #200C27 2.12%, #6D3880 98.73%)",
+            }}
+            onClick={() => console.log("Edit Cover Photo Clicked")}
+          >
+            <Camera className="inline-block mr-1" size={20} />
+            {images[0] ? "Edit Cover Photo" : "Add Cover Photo"}
+          </button>
+        )}
         <div
           style={{
             position: "absolute",
@@ -108,7 +121,16 @@ export default function EstablishmentProfileHeader({
               fill
               className="object-cover w-full h-full"
             />
+            {isStoreOwner && (
+              <button
+                className="absolute -top-10 -right-10 bg-white bg-opacity-90 text-lg z-[100] px-2 py-0.5 rounded-full shadow hover:bg-opacity-100 transition"
+                onClick={() => console.log("Edit Logo Clicked")}
+              >
+                {logo ? "Edit" : "Add"}
+              </button>
+            )}
           </div>
+
           <div className="flex flex-col gap-2 mb-5">
             <h1 className="text-white text-3xl font-bold">{name}</h1>
             <p className="text-gray-400 text-sm">{tagline}</p>
