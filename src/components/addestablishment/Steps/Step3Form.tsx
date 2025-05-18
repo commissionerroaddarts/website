@@ -40,8 +40,9 @@ const timePickerStyles = {
 
 export default function Step3Form() {
   const { control, setValue, getValues } = useFormContext();
-
   const timings = getValues("timings");
+  console.log("timings", timings);
+  const [closedDays, setClosedDays] = useState<Record<string, boolean>>({});
 
   const [sameHours, setSameHours] = useState(false);
   const [allDaysHours, setAllDaysHours] = useState({ open: "", close: "" });
@@ -50,6 +51,17 @@ export default function Step3Form() {
       setValue(`timings.${day.value}.open`, allDaysHours.open);
       setValue(`timings.${day.value}.close`, allDaysHours.close);
     });
+  };
+
+  const toggleDayClosed = (dayKey: string) => {
+    setClosedDays((prev) => ({
+      ...prev,
+      [dayKey]: !prev[dayKey],
+    }));
+    if (!closedDays[dayKey]) {
+      setValue(`timings.${dayKey}.open`, "closed");
+      setValue(`timings.${dayKey}.close`, "closed");
+    }
   };
 
   useEffect(() => {
@@ -149,40 +161,17 @@ export default function Step3Form() {
                     {day.label}
                   </Typography>
                   <Box display="flex" alignItems="center" gap={2}>
-                    <Controller
-                      name={`timings.${day.value}.isClosed`} // Add a separate boolean flag
-                      control={control}
-                      defaultValue={false}
-                      render={({ field }) => (
-                        <ThemeButton
-                          text={field.value ? "Closed" : "Open"}
-                          onClickEvent={() => {
-                            const newStatus = !field.value;
-                            setValue(
-                              `timings.${day.value}.isClosed`,
-                              newStatus
-                            );
-
-                            if (newStatus) {
-                              // If closed, set times to "Closed"
-                              setValue(`timings.${day.value}.open`, "Closed");
-                              setValue(`timings.${day.value}.close`, "Closed");
-                            } else {
-                              // If reopened, reset times to empty
-                              setValue(`timings.${day.value}.open`, "");
-                              setValue(`timings.${day.value}.close`, "");
-                            }
-                          }}
-                          style={{
-                            backgroundColor: field.value
-                              ? "#d32f2f"
-                              : "#388e3c",
-                            color: "#fff",
-                            minWidth: 80,
-                            padding: "6px 16px",
-                          }}
-                        />
-                      )}
+                    <ThemeButton
+                      text={closedDays[day.value] ? "Closed" : "Open"}
+                      onClickEvent={() => toggleDayClosed(day.value)}
+                      style={{
+                        backgroundColor: closedDays[day.value]
+                          ? "#d32f2f"
+                          : "#388e3c",
+                        color: "#fff",
+                        minWidth: 80,
+                        padding: "6px 16px",
+                      }}
                     />
 
                     <Controller
@@ -192,7 +181,7 @@ export default function Step3Form() {
                         <TimePicker
                           label="Open"
                           {...field}
-                          disabled={getValues(`timings.${day.value}.closed`)}
+                          disabled={closedDays[day.value]} // Disable if closed
                           viewRenderers={{
                             hours: renderTimeViewClock,
                             minutes: renderTimeViewClock,
@@ -218,7 +207,7 @@ export default function Step3Form() {
                         <TimePicker
                           label="Close"
                           {...field}
-                          disabled={getValues(`timings.${day.value}.closed`)}
+                          disabled={closedDays[day.value]} // Disable if closed
                           viewRenderers={{
                             hours: renderTimeViewClock,
                             minutes: renderTimeViewClock,

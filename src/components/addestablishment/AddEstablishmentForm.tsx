@@ -179,32 +179,32 @@ const stepSchemas = [
   yup.object().shape({
     timings: yup.object().shape({
       mon: yup.object().shape({
-        open: yup.string(),
-        close: yup.string(),
+        open: yup.string().required("Open time is required"),
+        close: yup.string().required("Close time is required"),
       }),
       tue: yup.object().shape({
-        open: yup.string(),
-        close: yup.string(),
+        open: yup.string().required("Open time is required"),
+        close: yup.string().required("Close time is required"),
       }),
       wed: yup.object().shape({
-        open: yup.string(),
-        close: yup.string(),
+        open: yup.string().required("Open time is required"),
+        close: yup.string().required("Close time is required"),
       }),
       thu: yup.object().shape({
-        open: yup.string(),
-        close: yup.string(),
+        open: yup.string().required("Open time is required"),
+        close: yup.string().required("Close time is required"),
       }),
       fri: yup.object().shape({
-        open: yup.string(),
-        close: yup.string(),
+        open: yup.string().required("Open time is required"),
+        close: yup.string().required("Close time is required"),
       }),
       sat: yup.object().shape({
-        open: yup.string(),
-        close: yup.string(),
+        open: yup.string().required("Open time is required"),
+        close: yup.string().required("Close time is required"),
       }),
       sun: yup.object().shape({
-        open: yup.string(),
-        close: yup.string(),
+        open: yup.string().required("Open time is required"),
+        close: yup.string().required("Close time is required"),
       }),
     }),
   }),
@@ -307,32 +307,32 @@ export default function AddEstablishment({
       },
       timings: {
         mon: {
-          open: business?.timings?.mon?.open ?? "closed",
-          close: business?.timings?.mon?.close ?? "closed",
+          open: business?.timings?.mon?.open ?? "",
+          close: business?.timings?.mon?.close ?? "",
         },
         tue: {
           open: business?.timings?.tue?.open ?? "",
           close: business?.timings?.tue?.close ?? "",
         },
         wed: {
-          open: business?.timings?.wed?.open ?? "closed",
-          close: business?.timings?.wed?.close ?? "closed",
+          open: business?.timings?.wed?.open ?? "",
+          close: business?.timings?.wed?.close ?? "",
         },
         thu: {
-          open: business?.timings?.thu?.open ?? "closed",
-          close: business?.timings?.thu?.close ?? "closed",
+          open: business?.timings?.thu?.open ?? "",
+          close: business?.timings?.thu?.close ?? "",
         },
         fri: {
-          open: business?.timings?.fri?.open ?? "closed",
-          close: business?.timings?.fri?.close ?? "closed",
+          open: business?.timings?.fri?.open ?? "",
+          close: business?.timings?.fri?.close ?? "",
         },
         sat: {
-          open: business?.timings?.sat?.open ?? "closed",
-          close: business?.timings?.sat?.close ?? "closed",
+          open: business?.timings?.sat?.open ?? "",
+          close: business?.timings?.sat?.close ?? "",
         },
         sun: {
-          open: business?.timings?.sun?.open ?? "closed",
-          close: business?.timings?.sun?.close ?? "closed",
+          open: business?.timings?.sun?.open ?? "",
+          close: business?.timings?.sun?.close ?? "",
         },
       },
       media: {
@@ -361,19 +361,15 @@ export default function AddEstablishment({
 
   const router = useRouter();
   const { user } = useAppState();
-  const { userDetails, isLoggedIn } = user;
+  const { userDetails } = user;
   const { subscription } = userDetails || {};
-  const [currentStep, setCurrentStep] = useState(3);
+  const [currentStep, setCurrentStep] = useState(1);
   const totalSteps = 5;
   const [isLoading, setIsLoading] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
 
   if (business && business.userId !== userDetails?._id) {
     return <div>You are not authorized to edit this business</div>;
-  }
-
-  if (!isLoggedIn) {
-    redirect("/login");
   }
 
   if (!subscription) {
