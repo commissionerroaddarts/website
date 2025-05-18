@@ -13,9 +13,8 @@ import { motion } from "framer-motion";
 import React from "react";
 const venueFaqs = [
   {
-    question:
-      "What are the official height and throwing distance for a dartboard?",
-    answer: `The correct height for your dartboard is 5’8” from the ground to the center of your dartboard or bullseye. This is the same whether you are using a bristle or electronic dartboard.\n\nIn accordance with the World Darts Federation, the correct distance from your dartboard for steel tip darts is 7’9 1/4” (292 cm) from the bullseye (diagonal measurement) to the oche (throw line).\n\nThe most commonly used regulation distance for soft tip (or electronic dartboards) is a distance of 9’9 3/4” (299 cm) diagonal measurement from the bullseye to the oche.`,
+    question: "What are the official throwing distance for a dartboard?",
+    answer: `In accordance with the World Darts Federation, the correct distance from your dartboard for steel tip darts is 9’7 1/2” (293.4 cm) from the bullseye (diagonal measurement) to the oche (throw line).`,
   },
 
   {

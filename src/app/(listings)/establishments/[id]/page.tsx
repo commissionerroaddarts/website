@@ -1,11 +1,11 @@
 import { baseUrl } from "@/constants/baseUrl";
 import EstablishmentGallery from "@/components/establishmentpage/EstablishmentGallery";
-import EstablishmentHeader from "@/components/establishmentpage/EstablishmentHeader";
 import { Box, Grid2 } from "@mui/material";
 import EstablishmentFAQ from "@/components/establishmentpage/EstablishmentFAQ";
 import EstablishmentReview from "@/components/establishmentpage/EstablishmentReview";
 import EstablishmentLocation from "@/components/establishmentpage/EstablishmentLocation";
 import { Business } from "@/types/business";
+import EstablishmentProfileHeader from "@/components/establishmentpage/EstablishmentProfileHeader";
 
 export default async function EstablishmentPage({
   params,
@@ -31,25 +31,26 @@ export default async function EstablishmentPage({
         spacing={6}
         className="max-w-[95%] md:max-w-[90%] mx-auto"
       >
-        {/* Gallery */}
-        {business.media && (
-          <Grid2 size={{ xs: 12 }}>
-            <EstablishmentGallery
-              images={business.media.images ?? []}
-              id={business?._id}
-            />
-          </Grid2>
-        )}
-
+        <EstablishmentProfileHeader
+          id={business._id}
+          images={business.media?.images ?? []}
+          logo={business.media?.logo ?? ""}
+          name={business.name}
+          tagline={business.tagline}
+        />
         <Grid2 size={{ xs: 12, md: 6 }}>
           <Box>
-            {/* Header Section */}
-            <EstablishmentHeader
-              id={business._id}
-              name={business.name}
-              tagline={business.tagline}
-              shortDis={business.shortDis}
-            />
+            <div className=" space-y-4">
+              <div>
+                <h2 className="text-white text-xl font-semibold mb-2">
+                  Description
+                </h2>
+                <p className="text-gray-300">{business.shortDis}</p>
+              </div>
+              {(business.media?.images?.length ?? 0) > 1 && (
+                <EstablishmentGallery images={business.media?.images ?? []} />
+              )}
+            </div>
 
             {/* FAQs */}
             {business.faqs && business.faqs?.length > 0 && (

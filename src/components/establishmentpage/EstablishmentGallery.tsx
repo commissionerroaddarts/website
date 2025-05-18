@@ -3,27 +3,23 @@ import { useState } from "react";
 import { Grid2, Button, Dialog, DialogContent } from "@mui/material";
 import Image from "next/image";
 import Slider from "react-slick";
+import CloseIconButton from "@/components/global/CloseIconButton";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import CloseIconButton from "@/components/global/CloseIconButton";
-import { useMediaQuery } from "@mui/system";
-import theme from "@/theme/theme";
-import { useAppState } from "@/hooks/useAppState";
-import { deleteBusiness } from "@/services/businessService";
-import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { Edit, Trash } from "lucide-react";
-import ThemeButton from "../buttons/ThemeButton";
 
-interface GalleryProps {
-  readonly images: string[];
-  readonly id: string;
+interface ImageGalleryProps {
+  images: string[];
+  gridType?: "default" | "2x2";
+  maxImages?: number;
+  height?: string;
 }
 
-export default function EstablishmentGallery({ images, id }: GalleryProps) {
-  const imageCount = images.length;
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+export default function EstablishmentGallery({
+  images,
+  gridType = "default",
+  maxImages = 6,
+  height = "200px",
+}: Readonly<ImageGalleryProps>) {
   const [open, setOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -42,41 +38,17 @@ export default function EstablishmentGallery({ images, id }: GalleryProps) {
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 6000,
-    responsive: [
-      {
-        breakpoint: 960,
-        settings: {
-          slidesToShow: 2,
-          arrows: true,
-          dots: true,
-        },
-      },
-      {
-        breakpoint: 600,
-        settings: {
-          slidesToShow: 1,
-          arrows: false,
-          dots: false,
-        },
-      },
-    ],
+    arrows: true,
+    dots: true,
   };
 
-  if (imageCount === 0) return null;
-
-  const renderImage = (
-    img: string,
-    index: number,
-    height: string = "200px"
-  ) => (
+  const renderImage = (img: string, index: number) => (
     <Button
       key={img + index}
       onClick={() => handleOpen(index)}
       style={{
         position: "relative",
-        height: height,
-        maxHeight: "410px",
-        minHeight: "200px",
+        height,
         overflow: "hidden",
         borderRadius: "1rem",
         width: "100%",
@@ -85,91 +57,26 @@ export default function EstablishmentGallery({ images, id }: GalleryProps) {
     >
       <Image
         src={img}
-        alt={`Gallery Image ${index + 1}`}
+        alt={`Image ${index + 1}`}
         fill
-        className={`w-full object-cover h-full`}
+        className="object-cover w-full h-full"
       />
     </Button>
   );
 
+  if (!images || images.length === 0) return null;
+
   return (
     <>
-      {!isMobile ? (
-        <Grid2 container spacing={2}>
-          {imageCount === 1 && (
-            <Grid2 size={{ xs: 12 }}>
-              {renderImage(images[0], 0, "410px")}
-            </Grid2>
-          )}
+      <Grid2 container spacing={2}>
+        {images.slice(0, 4).map((img, idx) => (
+          <Grid2 key={img + idx} size={{ xs: 12, sm: 6 }}>
+            {renderImage(img, idx)}
+          </Grid2>
+        ))}
+      </Grid2>
 
-          {imageCount === 2 && (
-            <>
-              <Grid2 size={{ xs: 12, md: 6 }}>
-                {renderImage(images[0], 0, "410px")}
-              </Grid2>
-              <Grid2 size={{ xs: 12, md: 6 }}>
-                {renderImage(images[1], 1, "410px")}
-              </Grid2>
-            </>
-          )}
-
-          {imageCount === 3 && (
-            <>
-              <Grid2 size={{ xs: 12, md: 6 }}>
-                {renderImage(images[0], 0, "410px")}
-              </Grid2>
-              <Grid2 size={{ xs: 12, md: 6 }}>
-                <Grid2 container spacing={2}>
-                  <Grid2 size={{ xs: 12 }}>{renderImage(images[1], 1)}</Grid2>
-                  <Grid2 size={{ xs: 12 }}>{renderImage(images[2], 2)}</Grid2>
-                </Grid2>
-              </Grid2>
-            </>
-          )}
-
-          {imageCount === 4 && (
-            <>
-              <Grid2 size={{ xs: 12, md: 6 }}>
-                {renderImage(images[0], 0, "410px")}
-              </Grid2>
-              <Grid2 size={{ xs: 12, md: 6 }}>
-                <Grid2 container spacing={2}>
-                  <Grid2 size={{ xs: 12, md: 6 }}>
-                    {renderImage(images[1], 1)}
-                  </Grid2>
-                  <Grid2 size={{ xs: 12, md: 6 }}>
-                    {renderImage(images[2], 2)}
-                  </Grid2>
-                  <Grid2 size={{ xs: 12 }}>{renderImage(images[3], 3)}</Grid2>
-                </Grid2>
-              </Grid2>
-            </>
-          )}
-
-          {imageCount >= 5 && (
-            <>
-              <Grid2 size={{ xs: 12, md: 6 }}>
-                {renderImage(images[0], 0, "410px")}
-              </Grid2>
-              <Grid2 size={{ xs: 12, md: 6 }}>
-                <Grid2 container spacing={2}>
-                  {images.slice(1, 5).map((img, idx) => (
-                    <Grid2 size={{ xs: 12, md: 6 }} key={img + idx}>
-                      {renderImage(img, idx + 1, "200px")}
-                    </Grid2>
-                  ))}
-                </Grid2>
-              </Grid2>
-            </>
-          )}
-        </Grid2>
-      ) : (
-        <Grid2 container spacing={2}>
-          <Grid2 size={{ xs: 12 }}>{renderImage(images[0], 0)}</Grid2>
-        </Grid2>
-      )}
-
-      {/* Modal for Full View */}
+      {/* Modal Slider */}
       <Dialog
         open={open}
         onClose={handleClose}
