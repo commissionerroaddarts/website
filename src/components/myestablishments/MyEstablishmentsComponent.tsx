@@ -98,7 +98,7 @@ export default function MyEstablishmentsComponent() {
 
         <Box
           sx={{
-            maxWidth: businesses.length > 2 ? "90%" : "60%",
+            maxWidth: businesses.length > 0 ? "90%" : "60%",
             margin: "0 auto",
           }}
         >

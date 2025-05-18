@@ -55,7 +55,7 @@ export const insertBusiness = async (data: any) => {
     const response = await axiosInstance.post(`${API_URL}`, rest);
     if (response.status === 201) {
       const { _id: businessId } = response.data;
-      if (media?.images) {
+      if (media?.images || media?.logo) {
         const formData = new FormData();
         if (media?.images.length > 0) {
           media?.images.forEach((file: File) => {

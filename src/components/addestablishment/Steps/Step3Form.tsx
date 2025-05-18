@@ -42,7 +42,7 @@ export default function Step3Form() {
   const { control, setValue, getValues } = useFormContext();
 
   const timings = getValues("timings");
-  console.log(timings);
+
   const [sameHours, setSameHours] = useState(false);
   const [allDaysHours, setAllDaysHours] = useState({ open: "", close: "" });
   const handleSameHoursApply = () => {
@@ -68,14 +68,27 @@ export default function Step3Form() {
       </Typography>
 
       {/* Business Hours */}
-      <Box mb={4}>
+      <Box my={8}>
         <Box
           display="flex"
           justifyContent="space-between"
           alignItems="center"
           mb={2}
         >
-          <Typography variant="h5">Business Hours</Typography>
+          <Box className="flex gap-2 flex-col">
+            <Typography variant="h5">Business Hours</Typography>
+            <Typography
+              variant="body2"
+              color="textSecondary"
+              sx={{
+                width: { xs: "100%", md: "60%" },
+              }}
+            >
+              Select opening and closing times for each day. If your business is
+              closed on a specific day, leave both fields empty or mark it as
+              "Closed" using the toggle/button.
+            </Typography>
+          </Box>
           <ThemeButton
             onClickEvent={() => {
               setSameHours(!sameHours);
@@ -137,13 +150,29 @@ export default function Step3Form() {
                   </Typography>
                   <Box display="flex" alignItems="center" gap={2}>
                     <Controller
-                      name={`timings.${day.value}.closed`}
+                      name={`timings.${day.value}.isClosed`} // Add a separate boolean flag
                       control={control}
                       defaultValue={false}
                       render={({ field }) => (
                         <ThemeButton
                           text={field.value ? "Closed" : "Open"}
-                          onClickEvent={() => field.onChange(!field.value)}
+                          onClickEvent={() => {
+                            const newStatus = !field.value;
+                            setValue(
+                              `timings.${day.value}.isClosed`,
+                              newStatus
+                            );
+
+                            if (newStatus) {
+                              // If closed, set times to "Closed"
+                              setValue(`timings.${day.value}.open`, "Closed");
+                              setValue(`timings.${day.value}.close`, "Closed");
+                            } else {
+                              // If reopened, reset times to empty
+                              setValue(`timings.${day.value}.open`, "");
+                              setValue(`timings.${day.value}.close`, "");
+                            }
+                          }}
                           style={{
                             backgroundColor: field.value
                               ? "#d32f2f"
@@ -155,6 +184,7 @@ export default function Step3Form() {
                         />
                       )}
                     />
+
                     <Controller
                       name={`timings.${day.value}.open`}
                       control={control}

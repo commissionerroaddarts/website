@@ -179,32 +179,32 @@ const stepSchemas = [
   yup.object().shape({
     timings: yup.object().shape({
       mon: yup.object().shape({
-        open: yup.string().required("Open time is required"),
-        close: yup.string().required("Close time is required"),
+        open: yup.string(),
+        close: yup.string(),
       }),
       tue: yup.object().shape({
-        open: yup.string().required("Open time is required"),
-        close: yup.string().required("Close time is required"),
+        open: yup.string(),
+        close: yup.string(),
       }),
       wed: yup.object().shape({
-        open: yup.string().required("Open time is required"),
-        close: yup.string().required("Close time is required"),
+        open: yup.string(),
+        close: yup.string(),
       }),
       thu: yup.object().shape({
-        open: yup.string().required("Open time is required"),
-        close: yup.string().required("Close time is required"),
+        open: yup.string(),
+        close: yup.string(),
       }),
       fri: yup.object().shape({
-        open: yup.string().required("Open time is required"),
-        close: yup.string().required("Close time is required"),
+        open: yup.string(),
+        close: yup.string(),
       }),
       sat: yup.object().shape({
-        open: yup.string().required("Open time is required"),
-        close: yup.string().required("Close time is required"),
+        open: yup.string(),
+        close: yup.string(),
       }),
       sun: yup.object().shape({
-        open: yup.string().required("Open time is required"),
-        close: yup.string().required("Close time is required"),
+        open: yup.string(),
+        close: yup.string(),
       }),
     }),
   }),
@@ -307,32 +307,32 @@ export default function AddEstablishment({
       },
       timings: {
         mon: {
-          open: business?.timings?.mon?.open ?? "",
-          close: business?.timings?.mon?.close ?? "",
+          open: business?.timings?.mon?.open ?? "closed",
+          close: business?.timings?.mon?.close ?? "closed",
         },
         tue: {
           open: business?.timings?.tue?.open ?? "",
           close: business?.timings?.tue?.close ?? "",
         },
         wed: {
-          open: business?.timings?.wed?.open ?? "",
-          close: business?.timings?.wed?.close ?? "",
+          open: business?.timings?.wed?.open ?? "closed",
+          close: business?.timings?.wed?.close ?? "closed",
         },
         thu: {
-          open: business?.timings?.thu?.open ?? "",
-          close: business?.timings?.thu?.close ?? "",
+          open: business?.timings?.thu?.open ?? "closed",
+          close: business?.timings?.thu?.close ?? "closed",
         },
         fri: {
-          open: business?.timings?.fri?.open ?? "",
-          close: business?.timings?.fri?.close ?? "",
+          open: business?.timings?.fri?.open ?? "closed",
+          close: business?.timings?.fri?.close ?? "closed",
         },
         sat: {
-          open: business?.timings?.sat?.open ?? "",
-          close: business?.timings?.sat?.close ?? "",
+          open: business?.timings?.sat?.open ?? "closed",
+          close: business?.timings?.sat?.close ?? "closed",
         },
         sun: {
-          open: business?.timings?.sun?.open ?? "",
-          close: business?.timings?.sun?.close ?? "",
+          open: business?.timings?.sun?.open ?? "closed",
+          close: business?.timings?.sun?.close ?? "closed",
         },
       },
       media: {
