@@ -71,9 +71,11 @@ const SignupForm = () => {
   const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
   const router = useRouter();
   const { user, plan } = useAppState(); // Assuming you have a custom hook to get user state
-  const { selectedPlan } = plan; // Assuming you have a custom hook to get user state
+  const { selectedPlan, email } = plan; // Assuming you have a custom hook to get user state
   const { isLoggedIn } = user; // Assuming you have a custom hook to get user state
   // Redirect to dashboard if user is already logged in
+  const searchParams = new URLSearchParams(window.location.search);
+  const sessionId = searchParams.get("session_id");
   if (isLoggedIn) {
     router.push("/profile");
     return null; // Prevent rendering the form if already logged in
@@ -136,7 +138,9 @@ const SignupForm = () => {
             fontSize={13}
             gutterBottom
           >
-            Please fill in the details below to create your account.
+            {sessionId
+              ? "Payment successful! Please complete your account setup below."
+              : "Please fill in the details below to create your account."}
           </Typography>
         </Box>
 
@@ -184,6 +188,8 @@ const SignupForm = () => {
                     label="Email Address"
                     {...field}
                     error={!!errors.email}
+                    defaultValue={email ?? ""}
+                    disabled={email ? true : false}
                     helperText={errors.email?.message}
                   />
                 )}

@@ -4,27 +4,40 @@ import { Box, Typography } from "@mui/material";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
-const PromotionSpace = ({ checkOwner }: { readonly checkOwner: boolean }) => {
+interface PromotionProps {
+  readonly checkOwner: boolean;
+  readonly businessId: string;
+  readonly promotion: {
+    title?: string;
+    description?: string;
+  } | null;
+}
+
+const PromotionSpace = ({
+  checkOwner,
+  businessId,
+  promotion,
+}: PromotionProps) => {
   const [editing, setEditing] = useState(false);
-  const [promotion, setPromotion] = useState(
-    "Update your current promotions here..."
+  const [promotionState, setPromotionState] = useState(
+    promotion?.title ?? "Update your current promotions here..."
   );
-  const [inputValue, setInputValue] = useState(promotion);
+  const [inputValue, setInputValue] = useState(promotionState);
 
   const handleEdit = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setInputValue(promotion);
+    setInputValue(promotionState);
     setEditing(true);
   };
 
   const handleSave = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    setPromotion(inputValue);
+    setPromotionState(inputValue);
     setEditing(false);
     // Optionally, call an API to persist the promotion here
     try {
-      const response = await insertBusinessPromotion(inputValue);
-      if (response.status === 200) {
+      const response = await insertBusinessPromotion(inputValue, businessId);
+      if (response.success) {
         toast.success("Promotion saved successfully");
       } else {
         toast.error("Failed to save promotion");
@@ -103,7 +116,7 @@ const PromotionSpace = ({ checkOwner }: { readonly checkOwner: boolean }) => {
               flex: 1,
             }}
           >
-            {promotion}
+            {promotion?.description}
           </Typography>
           {checkOwner && (
             <button

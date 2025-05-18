@@ -63,6 +63,10 @@ export interface Business {
   agelimit?: number;
   category: string;
   tags?: string[];
+  promotion?: {
+    title?: string;
+    description?: string;
+  };
   status?: "Active" | "Closed Down" | "Coming Soon" | "Under Remodel";
   validation?: Validation;
   bordtype?: "Steel Tip" | "Soft Tip" | "Both";

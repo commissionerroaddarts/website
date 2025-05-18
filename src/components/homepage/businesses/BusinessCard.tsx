@@ -40,6 +40,7 @@ function BusinessCard({ business }: { readonly business: Business }) {
     location,
     averageRating,
     userId: userBusinessId,
+    promotion,
   } = business;
 
   const { user } = useAppState();
@@ -216,7 +217,11 @@ function BusinessCard({ business }: { readonly business: Business }) {
               </Box>
             </Box>
 
-            <PromotionSpace checkOwner={checkOwner} />
+            <PromotionSpace
+              checkOwner={checkOwner}
+              businessId={_id}
+              promotion={promotion ?? null}
+            />
           </Box>
           {/* Buttons Section */}
           <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>

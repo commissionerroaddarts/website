@@ -361,15 +361,19 @@ export default function AddEstablishment({
 
   const router = useRouter();
   const { user } = useAppState();
-  const { userDetails } = user;
+  const { userDetails, isLoggedIn } = user;
   const { subscription } = userDetails || {};
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(3);
   const totalSteps = 5;
   const [isLoading, setIsLoading] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
 
   if (business && business.userId !== userDetails?._id) {
     return <div>You are not authorized to edit this business</div>;
+  }
+
+  if (!isLoggedIn) {
+    redirect("/login");
   }
 
   if (!subscription) {

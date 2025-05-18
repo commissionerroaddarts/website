@@ -31,7 +31,7 @@ const ThankYouMessage = () => {
   const dispatch = useAppDispatch();
   const { inquiry, user } = useAppState();
   const { inquiryData } = inquiry;
-  const { userDetails } = user;
+  const { userDetails, isLoggedIn } = user;
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -51,8 +51,10 @@ const ThankYouMessage = () => {
     if (!inquiryData && !session) {
       router.push("/");
     } else {
-      if (session) {
+      if (session && isLoggedIn) {
         router.push("/add-establishment");
+      } else {
+        router.push("/signup?session_id=" + session);
       }
       setTimeout(() => dispatch(clearInquiryData()), 8000);
     }

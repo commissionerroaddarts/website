@@ -10,6 +10,8 @@ import PreCheckoutForm from "@/components/authpages/checkoutcomponents/PreChecko
 import Confetti from "react-confetti"; // 🎉 install it via `npm i react-confetti`
 import { redirect } from "next/navigation";
 import { useAppState } from "@/hooks/useAppState";
+import { useAppDispatch } from "@/store";
+import { setEmail, setPromoCode } from "@/store/slices/planSlice";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? ""
@@ -23,6 +25,7 @@ export default function CheckoutFormWrapper() {
   const [clientSecret, setClientSecret] = useState("");
   const [checkoutReady, setCheckoutReady] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
+  const dispatch = useAppDispatch();
 
   if (!selectedPlan) {
     redirect("/plans");
@@ -38,9 +41,12 @@ export default function CheckoutFormWrapper() {
     if (!priceId) return;
 
     try {
+      const email = isLoggedIn ? userEmail ?? "" : data.email ?? "";
+      dispatch(setEmail(email));
+      dispatch(setPromoCode(data.promoCode ?? ""));
       const formData = {
         promoCode: data.promoCode?.toUpperCase() ?? "",
-        email: isLoggedIn ? userEmail ?? "" : data.email ?? "",
+        email,
         priceId,
         plan: selectedPlan?.name?.split(" ")[0]?.toLowerCase(),
       };

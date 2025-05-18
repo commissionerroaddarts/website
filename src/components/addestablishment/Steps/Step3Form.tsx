@@ -135,7 +135,26 @@ export default function Step3Form() {
                   <Typography color="textSecondary" gutterBottom>
                     {day.label}
                   </Typography>
-                  <Box display="flex" gap={2}>
+                  <Box display="flex" alignItems="center" gap={2}>
+                    <Controller
+                      name={`timings.${day.value}.closed`}
+                      control={control}
+                      defaultValue={false}
+                      render={({ field }) => (
+                        <ThemeButton
+                          text={field.value ? "Closed" : "Open"}
+                          onClickEvent={() => field.onChange(!field.value)}
+                          style={{
+                            backgroundColor: field.value
+                              ? "#d32f2f"
+                              : "#388e3c",
+                            color: "#fff",
+                            minWidth: 80,
+                            padding: "6px 16px",
+                          }}
+                        />
+                      )}
+                    />
                     <Controller
                       name={`timings.${day.value}.open`}
                       control={control}
@@ -143,6 +162,7 @@ export default function Step3Form() {
                         <TimePicker
                           label="Open"
                           {...field}
+                          disabled={getValues(`timings.${day.value}.closed`)}
                           viewRenderers={{
                             hours: renderTimeViewClock,
                             minutes: renderTimeViewClock,
@@ -168,6 +188,7 @@ export default function Step3Form() {
                         <TimePicker
                           label="Close"
                           {...field}
+                          disabled={getValues(`timings.${day.value}.closed`)}
                           viewRenderers={{
                             hours: renderTimeViewClock,
                             minutes: renderTimeViewClock,
