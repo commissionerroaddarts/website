@@ -220,23 +220,16 @@ function BusinessCard({ business }: { readonly business: Business }) {
           {/* Buttons Section */}
           <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
             <Box className="flex gap-2">
+              <Link href={`/establishments/${business?._id}`} passHref prefetch>
+                {" "}
+                <ThemeButton text="View More" />
+              </Link>
               <Link
                 href={`tel:${phone}`}
                 passHref
                 onClick={(e) => e.stopPropagation()}
               >
-                <ThemeButton
-                  text="Call Us Now"
-                  backgroundColor="#5A2A84"
-                  icon={<CallIcon fontSize="small" />}
-                />
-              </Link>
-              <Link href={`/establishments/${business?._id}`} passHref prefetch>
-                {" "}
-                <ThemeButton
-                  text="View More"
-                  icon={<CallIcon fontSize="small" />}
-                />
+                <ThemeButton text="Call Us Now" backgroundColor="#5A2A84" />
               </Link>
             </Box>
             <ThemeOutlineButton
