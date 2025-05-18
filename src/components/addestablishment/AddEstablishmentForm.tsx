@@ -280,17 +280,17 @@ export default function AddEstablishment({
   readonly business?: Readonly<Business>;
   readonly isEdit?: boolean;
 }) {
-  const methods = useForm({
+  const methods = useForm<Business>({
     mode: "onBlur",
     defaultValues: {
       name: business?.name ?? "",
       tagline: business?.tagline ?? "",
       phone: business?.phone ? business.phone.toString() : "",
-      website: business?.website ?? "",
+      website: business?.website,
       shortDis: business?.shortDis ?? "",
       tags: business?.tags || [],
       category: business?.category ?? "",
-      bordtype: business?.bordtype ?? "",
+      bordtype: business?.bordtype ?? undefined,
       agelimit: business?.agelimit ?? 0,
       price: {
         category: business?.price?.category ?? "$",
@@ -298,7 +298,7 @@ export default function AddEstablishment({
       location: {
         state: business?.location?.state ?? "",
         city: business?.location?.city ?? "",
-        zipcode: business?.location?.zipcode ?? "",
+        zipcode: business?.location?.zipcode ?? "90210",
         country: business?.location?.country ?? "",
         geotag: {
           lat: business?.location?.geotag?.lat ?? 0,
@@ -336,7 +336,7 @@ export default function AddEstablishment({
         },
       },
       media: {
-        logo: business?.media?.logo ?? null,
+        logo: business?.media?.logo ?? "",
         images: business?.media?.images || [],
       },
     },
@@ -367,6 +367,7 @@ export default function AddEstablishment({
   const totalSteps = 5;
   const [isLoading, setIsLoading] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
+  const [closedDays, setClosedDays] = useState<Record<string, boolean>>({});
 
   if (business && business.userId !== userDetails?._id) {
     return <div>You are not authorized to edit this business</div>;
@@ -460,7 +461,9 @@ export default function AddEstablishment({
       >
         {currentStep === 1 && <Step1Form />}
         {currentStep === 2 && <Step2Form />}
-        {currentStep === 3 && <Step3Form />}
+        {currentStep === 3 && (
+          <Step3Form closedDays={closedDays} setClosedDays={setClosedDays} />
+        )}
         {currentStep === 4 && <Step4Form />}
         {currentStep === 5 && <Step5Form />}
       </AddEstablishmentLayout>

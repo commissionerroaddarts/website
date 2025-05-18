@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useFormContext } from "react-hook-form";
+import { FieldErrors, useFormContext } from "react-hook-form";
 import {
   useLoadScript,
   GoogleMap,
@@ -18,7 +18,11 @@ export default function Step2Form() {
     libraries: ["places"],
   });
 
-  const { setValue, watch } = useFormContext();
+  const {
+    setValue,
+    watch,
+    formState: { errors },
+  } = useFormContext();
   const location = watch("location");
   const { geotag } = location;
   const [autocomplete, setAutocomplete] = useState<any>(null);
@@ -30,7 +34,6 @@ export default function Step2Form() {
   const onPlaceChanged = () => {
     if (autocomplete !== null) {
       const place = autocomplete.getPlace();
-      console.log(place);
 
       if (place.geometry?.location) {
         const lat = place.geometry.location.lat();
@@ -62,7 +65,7 @@ export default function Step2Form() {
         if (addressComponents.city)
           setValue("location.city", addressComponents.city);
         if (addressComponents.zipcode)
-          setValue("location.zipcode", addressComponents.zipcode);
+          setValue("location.zipcode", addressComponents.zipcode ?? "90210");
       }
     }
   };
@@ -75,7 +78,7 @@ export default function Step2Form() {
         Location Details
       </Typography>
 
-      <Box display="flex" justifyContent="center" mb={4}>
+      <Box className="mb-4 flex flex-col gap-2 items-center">
         <Autocomplete
           onLoad={(autocomplete) => setAutocomplete(autocomplete)}
           onPlaceChanged={onPlaceChanged}
@@ -88,6 +91,14 @@ export default function Step2Form() {
             className="w-[100%]"
           />
         </Autocomplete>
+        {typeof errors?.location === "object" &&
+          Object.values(errors.location).some(
+            (err: any) => typeof err?.message === "string"
+          ) && (
+            <Typography color="error" variant="body2">
+              Please correct the location details.
+            </Typography>
+          )}
       </Box>
 
       <Box

@@ -1,6 +1,7 @@
-import React from "react";
+import React, { Suspense } from "react";
 import SignupForm from "@/components/authpages/SignupForm";
 import { generateMetadata } from "@/utils/metaData";
+import Preloader from "@/components/global/Preloader";
 
 export const metadata = generateMetadata({
   title: "Sign Up - Road Darts",
@@ -9,8 +10,10 @@ export const metadata = generateMetadata({
   image: "/images/banners/banner-icon.png",
 });
 
-const SignupPage = () => {
-  return <SignupForm />;
-};
-
-export default SignupPage;
+export default async function SignupPage() {
+  return (
+    <Suspense fallback={<Preloader />}>
+      <SignupForm />
+    </Suspense>
+  );
+}

@@ -9,11 +9,39 @@ export interface Location {
   zipcode?: string;
 }
 
+export interface LocationError {
+  location: {
+    geotag?: {
+      lat: number;
+      lng: number;
+    };
+    state?: string;
+    city?: string;
+    country?: string;
+    zipcode?: string;
+  };
+}
+
 // Helper to convert "12:37 PM" to minutes since midnight
 export interface Timings {
-  [key: string]: {
-    open: string;
-    close: string;
+  mon: { open: string; close: string };
+  tue: { open: string; close: string };
+  wed: { open: string; close: string };
+  thu: { open: string; close: string };
+  fri: { open: string; close: string };
+  sat: { open: string; close: string };
+  sun: { open: string; close: string };
+}
+
+export interface FieldErrorTimings {
+  timings: {
+    mon: { open: string; close: string };
+    tue: { open: string; close: string };
+    wed: { open: string; close: string };
+    thu: { open: string; close: string };
+    fri: { open: string; close: string };
+    sat: { open: string; close: string };
+    sun: { open: string; close: string };
   };
 }
 

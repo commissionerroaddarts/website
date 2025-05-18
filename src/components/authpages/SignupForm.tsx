@@ -19,7 +19,7 @@ import CustomInput from "@/components/global/CustomInput";
 import ThemeButton from "@/components/buttons/ThemeButton";
 import Link from "next/link";
 import { Google } from "@mui/icons-material";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAppState } from "@/hooks/useAppState";
 import ReCAPTCHA from "react-google-recaptcha";
 
@@ -74,7 +74,7 @@ const SignupForm = () => {
   const { selectedPlan, email } = plan; // Assuming you have a custom hook to get user state
   const { isLoggedIn } = user; // Assuming you have a custom hook to get user state
   // Redirect to dashboard if user is already logged in
-  const searchParams = new URLSearchParams(window.location.search);
+  const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
   if (isLoggedIn) {
     router.push("/profile");

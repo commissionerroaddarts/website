@@ -1,7 +1,7 @@
 "use client";
 
 import { Box, Grid2, Typography } from "@mui/material";
-import { Controller, useFormContext } from "react-hook-form";
+import { Controller, FieldErrors, useFormContext } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -9,6 +9,7 @@ import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { renderTimeViewClock } from "@mui/x-date-pickers/timeViewRenderers";
 import dayjs from "dayjs";
 import ThemeButton from "@/components/buttons/ThemeButton";
+import { FieldErrorTimings } from "@/types/business";
 
 const daysOfWeek = [
   { label: "Monday", value: "mon" },
@@ -21,28 +22,37 @@ const daysOfWeek = [
 ];
 
 const timePickerStyles = {
-  textField: {
-    sx: {
-      background: "rgba(22, 12, 24, 0.4)",
-      borderRadius: "50px",
-      "& .MuiInputBase-input::placeholder": {
-        color: "rgba(150, 150, 150, 1)",
-      },
-      "& .MuiPickersOutlinedInput-notchedOutline": {
-        border: "none",
-      },
-      "& .MuiSvgIcon-root": {
-        color: "#FFFFFF", // White clock icon
-      },
+  sx: {
+    background: "rgba(22, 12, 24, 0.4)",
+    borderRadius: "50px",
+    "& .MuiInputBase-input::placeholder": {
+      color: "rgba(150, 150, 150, 1)",
+    },
+    "& .MuiPickersOutlinedInput-notchedOutline": {
+      border: "none",
+    },
+    "& .MuiSvgIcon-root": {
+      color: "#FFFFFF", // White clock icon
     },
   },
 };
 
-export default function Step3Form() {
-  const { control, setValue, getValues } = useFormContext();
+export default function Step3Form({
+  closedDays,
+  setClosedDays,
+}: {
+  readonly closedDays: Record<string, boolean>;
+  readonly setClosedDays: React.Dispatch<
+    React.SetStateAction<Record<string, boolean>>
+  >;
+}) {
+  const {
+    control,
+    setValue,
+    getValues,
+    formState: { errors },
+  } = useFormContext();
   const timings = getValues("timings");
-  console.log("timings", timings);
-  const [closedDays, setClosedDays] = useState<Record<string, boolean>>({});
 
   const [sameHours, setSameHours] = useState(false);
   const [allDaysHours, setAllDaysHours] = useState({ open: "", close: "" });
@@ -123,7 +133,7 @@ export default function Step3Form() {
                   open: newValue ? newValue.format("hh:mm A") : "",
                 })
               }
-              slotProps={timePickerStyles}
+              slotProps={{ textField: timePickerStyles }}
             />
 
             <TimePicker
@@ -142,85 +152,126 @@ export default function Step3Form() {
                   close: newValue ? newValue.format("hh:mm A") : "",
                 })
               }
-              slotProps={timePickerStyles}
+              slotProps={{ textField: timePickerStyles }}
             />
           </Box>
         ) : (
           <Grid2 container spacing={2}>
-            {daysOfWeek.map((day) => (
-              <Grid2 size={{ xs: 12, md: 6 }} key={day.value}>
-                <Typography color="textSecondary" gutterBottom>
-                  {day.label}
-                </Typography>
-                <Box display="flex" alignItems="center" gap={2}>
-                  <ThemeButton
-                    text={closedDays[day.value] ? "Closed" : "Open"}
-                    onClickEvent={() => toggleDayClosed(day.value)}
-                    style={{
-                      backgroundColor: closedDays[day.value]
-                        ? "#d32f2f"
-                        : "#388e3c",
-                      color: "#fff",
-                      minWidth: 80,
-                      padding: "6px 16px",
-                    }}
-                  />
+            {daysOfWeek.map((day) => {
+              type DayKey =
+                | "mon"
+                | "tue"
+                | "wed"
+                | "thu"
+                | "fri"
+                | "sat"
+                | "sun";
+              const fieldErrors = errors as FieldErrors<FieldErrorTimings>;
+              const dayKey = day.value as DayKey;
+              const errorOpen = fieldErrors.timings?.[dayKey]?.open;
+              const errorClose = fieldErrors.timings?.[dayKey]?.close;
 
-                  <Controller
-                    name={`timings.${day.value}.open`}
-                    control={control}
-                    render={({ field }) => (
-                      <TimePicker
-                        label="Open"
-                        {...field}
-                        disabled={closedDays[day.value]} // Disable if closed
-                        viewRenderers={{
-                          hours: renderTimeViewClock,
-                          minutes: renderTimeViewClock,
-                          seconds: renderTimeViewClock,
-                        }}
-                        value={
-                          field.value ? dayjs(field.value, "hh:mm A") : null
-                        }
-                        onChange={(newValue) =>
-                          setValue(
-                            `timings.${day.value}.open`,
-                            newValue ? newValue.format("hh:mm A") : ""
-                          )
-                        }
-                        slotProps={timePickerStyles}
+              return (
+                <Grid2 size={{ xs: 12, md: 6 }} key={day.value}>
+                  <Box className="flex gap-3 items-center mb-3">
+                    <Typography color="textSecondary" gutterBottom>
+                      {day.label}
+                    </Typography>
+                    <ThemeButton
+                      text={closedDays[day.value] ? "Closed" : "Open"}
+                      onClickEvent={() => toggleDayClosed(day.value)}
+                      style={{
+                        backgroundColor: closedDays[day.value]
+                          ? "#d32f2f"
+                          : "#388e3c",
+                        color: "#fff",
+                        minWidth: 80,
+                        padding: "6px 16px",
+                      }}
+                    />
+                  </Box>
+                  <Box display="flex" alignItems="center" gap={2}>
+                    <Box className="flex gap-2 flex-col max-w-[45%]">
+                      <Controller
+                        name={`timings.${day.value}.open`}
+                        control={control}
+                        render={({ field }) => (
+                          <TimePicker
+                            label="Open"
+                            {...field}
+                            disabled={closedDays[day.value]} // Disable if closed
+                            viewRenderers={{
+                              hours: renderTimeViewClock,
+                              minutes: renderTimeViewClock,
+                              seconds: renderTimeViewClock,
+                            }}
+                            value={
+                              field.value ? dayjs(field.value, "hh:mm A") : null
+                            }
+                            onChange={(newValue) =>
+                              setValue(
+                                `timings.${day.value}.open`,
+                                newValue ? newValue.format("hh:mm A") : ""
+                              )
+                            }
+                            slotProps={{
+                              textField: {
+                                ...timePickerStyles,
+                                error: !!errorOpen,
+                              },
+                            }}
+                          />
+                        )}
                       />
-                    )}
-                  />
-                  <Controller
-                    name={`timings.${day.value}.close`}
-                    control={control}
-                    render={({ field }) => (
-                      <TimePicker
-                        label="Close"
-                        {...field}
-                        disabled={closedDays[day.value]} // Disable if closed
-                        viewRenderers={{
-                          hours: renderTimeViewClock,
-                          minutes: renderTimeViewClock,
-                          seconds: renderTimeViewClock,
-                        }}
-                        value={
-                          field.value ? dayjs(field.value, "hh:mm A") : null
-                        }
-                        onChange={(newValue) =>
-                          setValue(
-                            `timings.${day.value}.close`,
-                            newValue ? newValue.format("hh:mm A") : ""
-                          )
-                        }
-                        slotProps={timePickerStyles}
+                      {errorOpen?.message && (
+                        <Typography color="error" variant="body2">
+                          {errorOpen.message}
+                        </Typography>
+                      )}
+                    </Box>
+
+                    <Box className="flex gap-2 flex-col max-w-[45%]">
+                      <Controller
+                        name={`timings.${day.value}.close`}
+                        control={control}
+                        render={({ field }) => (
+                          <TimePicker
+                            label="Close"
+                            {...field}
+                            disabled={closedDays[day.value]} // Disable if closed
+                            viewRenderers={{
+                              hours: renderTimeViewClock,
+                              minutes: renderTimeViewClock,
+                              seconds: renderTimeViewClock,
+                            }}
+                            value={
+                              field.value ? dayjs(field.value, "hh:mm A") : null
+                            }
+                            onChange={(newValue) =>
+                              setValue(
+                                `timings.${day.value}.close`,
+                                newValue ? newValue.format("hh:mm A") : ""
+                              )
+                            }
+                            slotProps={{
+                              textField: {
+                                ...timePickerStyles,
+                                error: !!errorClose,
+                              },
+                            }}
+                          />
+                        )}
                       />
-                    )}
-                  />
-                </Box>
-              </Grid2>
-            ))}
+                      {errorClose?.message && (
+                        <Typography color="error" variant="body2">
+                          {errorClose.message}
+                        </Typography>
+                      )}
+                    </Box>
+                  </Box>
+                </Grid2>
+              );
+            })}
           </Grid2>
         )}
       </LocalizationProvider>
