@@ -24,13 +24,10 @@ export interface LocationError {
 
 // Helper to convert "12:37 PM" to minutes since midnight
 export interface Timings {
-  mon: { open: string; close: string };
-  tue: { open: string; close: string };
-  wed: { open: string; close: string };
-  thu: { open: string; close: string };
-  fri: { open: string; close: string };
-  sat: { open: string; close: string };
-  sun: { open: string; close: string };
+  [key: string]: {
+    open: string;
+    close: string;
+  };
 }
 
 export interface FieldErrorTimings {
