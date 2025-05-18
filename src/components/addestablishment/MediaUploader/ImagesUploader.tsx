@@ -4,7 +4,7 @@ import React, { useRef, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import ThemeButton from "../../buttons/ThemeButton";
 import { Box, Dialog, IconButton } from "@mui/material";
-import { X } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import CloseIconButton from "@/components/global/CloseIconButton";
 
 const ImagesUploaderPopup = ({
@@ -27,12 +27,31 @@ const ImagesUploaderPopup = ({
     </Dialog>
   );
 };
-
 const ImagesUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
-  const { control, setValue } = useFormContext();
+  const { control, setValue, getValues } = useFormContext();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [files, setFiles] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
+
+  // Show already uploaded images from form context on mount
+  React.useEffect(() => {
+    const existingImages = getValues("media.images");
+    if (
+      existingImages &&
+      Array.isArray(existingImages) &&
+      existingImages.length > 0
+    ) {
+      // If images are File objects, generate previews; if strings (URLs/base64), use directly
+      const previewUrls = existingImages.map((img: any) => {
+        if (img instanceof File) {
+          return URL.createObjectURL(img);
+        }
+        return img; // assume it's a URL or base64 string
+      });
+      setFiles(existingImages.filter((img: any) => img instanceof File));
+      setPreviews(previewUrls);
+    }
+  }, [getValues]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = Array.from(e.target.files || []);
@@ -43,22 +62,19 @@ const ImagesUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
       const isValidType = ["image/jpeg", "image/png", "image/webp"].includes(
         file.type
       );
-
       const isValidSize = file.size <= 5 * 1024 * 1024;
       return isValidType && isValidSize;
     });
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = reader.result as string;
-      const base64String = result.split(",")[1]; // Extract the base64 string
-      setValue("media.images", base64String); // <-- Sync with RHF
-    };
     const previewUrls = validFiles.map((file) => URL.createObjectURL(file));
 
-    setFiles(validFiles);
-    setPreviews(previewUrls);
-    setValue("media.images", validFiles);
+    // Append new files to existing ones
+    const newFiles = [...files, ...validFiles];
+    const newPreviews = [...previews, ...previewUrls];
+
+    setFiles(newFiles);
+    setPreviews(newPreviews);
+    setValue("media.images", newFiles);
   };
 
   const handleRemove = (index: number) => {
@@ -86,7 +102,7 @@ const ImagesUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
         defaultValue={[]}
         render={({ field, fieldState }) => (
           <>
-            {!files.length ? (
+            {!previews.length ? (
               <div className="mb-4">
                 <input
                   type="file"
@@ -105,7 +121,7 @@ const ImagesUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
             ) : (
               <div className="grid grid-cols-3 gap-4 mb-4">
                 {previews.map((src, i) => (
-                  <div key={src} className="relative">
+                  <div key={src + i} className="relative">
                     <img
                       src={src}
                       alt={`Preview ${i}`}
@@ -120,13 +136,32 @@ const ImagesUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
                     </button>
                   </div>
                 ))}
+
+                <div className="mb-4 flex items-center">
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    multiple
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="hidden"
+                  />
+                  <IconButton
+                    aria-label="Close"
+                    className="border-white rounded-full"
+                    onClick={() => fileInputRef.current?.click()}
+                    type="button"
+                  >
+                    <Plus className="w-5 h-5" color="white" />
+                  </IconButton>
+                </div>
               </div>
             )}
           </>
         )}
       />
 
-      {files.length > 0 && (
+      {previews.length > 0 && (
         <div className="flex justify-center">
           <ThemeButton
             text={"Upload"}

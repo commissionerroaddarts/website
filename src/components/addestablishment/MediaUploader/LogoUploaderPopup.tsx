@@ -87,7 +87,9 @@ const LogoUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
       file?.name ?? "cropped-image.png",
       { type: croppedBlob.type }
     );
-    setValue("file", croppedFile);
+    setValue("media.logo", croppedFile);
+    setFile(croppedFile);
+    setImageSrc(croppedFileUrl);
     setPreviewUrl(croppedFileUrl);
   };
   console.log(errors);

@@ -1,6 +1,8 @@
 "use client";
+import { insertBusinessPromotion } from "@/services/businessService";
 import { Box, Typography } from "@mui/material";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 const PromotionSpace = ({ checkOwner }: { readonly checkOwner: boolean }) => {
   const [editing, setEditing] = useState(false);
@@ -15,11 +17,22 @@ const PromotionSpace = ({ checkOwner }: { readonly checkOwner: boolean }) => {
     setEditing(true);
   };
 
-  const handleSave = (e: React.MouseEvent) => {
+  const handleSave = async (e: React.MouseEvent) => {
     e.stopPropagation();
     setPromotion(inputValue);
     setEditing(false);
     // Optionally, call an API to persist the promotion here
+    try {
+      const response = await insertBusinessPromotion(inputValue);
+      if (response.status === 200) {
+        toast.success("Promotion saved successfully");
+      } else {
+        toast.error("Failed to save promotion");
+      }
+    } catch (error) {
+      toast.error("Error saving promotion");
+      console.error("Error saving promotion:", error);
+    }
   };
 
   return (
@@ -42,6 +55,7 @@ const PromotionSpace = ({ checkOwner }: { readonly checkOwner: boolean }) => {
         >
           <input
             type="text"
+            name="promotionText"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             style={{

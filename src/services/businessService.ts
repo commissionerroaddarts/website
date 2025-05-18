@@ -119,3 +119,15 @@ export const deleteBusiness = async (businessId: string) => {
     throw error;
   }
 };
+
+export const insertBusinessPromotion = async (inputValue: string) => {
+  try {
+    const response = await axiosInstance.post(`${API_URL}/promotions`, {
+      promotion: inputValue,
+    });
+    return response;
+  } catch (error) {
+    console.error("Error inserting business promotion:", error);
+    throw error;
+  }
+};

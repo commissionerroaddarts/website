@@ -6,7 +6,7 @@ import { Box, Grid2, IconButton, Typography } from "@mui/material";
 import ThemeButton from "@/components/buttons/ThemeButton";
 import { useState } from "react";
 import LogoUploaderPopup from "../MediaUploader/LogoUploaderPopup";
-import { Upload, X } from "lucide-react";
+import { Plus, Upload, X } from "lucide-react";
 import SelectSearchDropDown from "@/components/global/SelectSearchDropDown";
 import { boardTypeOptions, categoryOptions } from "@/utils/dropdowns";
 import ImagesUploaderPopup from "../MediaUploader/ImagesUploader";
@@ -265,7 +265,13 @@ const UploadButtons = () => {
       {/* === LOGO === */}
       <Box className="flex flex-col items-center justify-center gap-2">
         {logo ? (
-          <Box className="flex flex-col items-center gap-2 relative">
+          <Box
+            className="flex flex-col items-center gap-2 relative p-5 rounded-2xl"
+            sx={{
+              background:
+                "linear-gradient(148.71deg, #200C27 2.12%, #6D3880 98.73%)",
+            }}
+          >
             <Typography variant="h6">Logo Preview</Typography>
             <div className="relative">
               <img
@@ -305,28 +311,40 @@ const UploadButtons = () => {
       )}
 
       {/* === MEDIA IMAGES === */}
-      <Box className="flex flex-col items-center justify-center gap-2">
+      <Box className="flex flex-col items-center gap-2 relative ">
         {images.length > 0 ? (
-          <Box className="flex flex-col items-center gap-2">
+          <Box
+            className="flex flex-col items-center gap-2 p-5 rounded-2xl justify-center"
+            sx={{
+              background:
+                "linear-gradient(148.71deg, #200C27 2.12%, #6D3880 98.73%)",
+            }}
+          >
             <Typography variant="h6">Images Preview</Typography>
-            <div className="flex gap-2 flex-wrap justify-center">
-              {images.map((img: File, idx: number) => (
-                <div key={img.name} className="relative">
-                  <img
-                    src={
-                      typeof img === "string" ? img : URL.createObjectURL(img)
-                    }
-                    alt={`Uploaded ${idx}`}
-                    className="w-24 h-24 object-contain "
-                  />
-                  <CloseIconButton onClick={() => removeImage(idx)} />
-                </div>
-              ))}
-            </div>
-            <ThemeButton
-              text="Add More"
-              onClickEvent={() => setUploadMedia(true)}
-            />
+            <Box className="flex  items-center gap-2 ">
+              <div className="flex gap-2 flex-wrap justify-center">
+                {images.map((img: File, idx: number) => (
+                  <div key={img.name} className="relative">
+                    <img
+                      src={
+                        typeof img === "string" ? img : URL.createObjectURL(img)
+                      }
+                      alt={`Uploaded ${idx}`}
+                      className="w-24 h-24 object-contain "
+                    />
+                    <CloseIconButton onClick={() => removeImage(idx)} />
+                  </div>
+                ))}
+              </div>
+
+              <IconButton
+                aria-label="Close"
+                className="border-white rounded-full"
+                onClick={() => setUploadMedia(true)}
+              >
+                <Plus className="w-5 h-5" color="white" />
+              </IconButton>
+            </Box>
           </Box>
         ) : (
           <>

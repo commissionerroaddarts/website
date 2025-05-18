@@ -265,20 +265,12 @@ const stepSchemas = [
       .array()
       .of(
         yup.object({
-          q: yup
-            .string()
-            .required("Question is required")
-            .min(10, "Question must be at least 10 characters long"),
-          a: yup
-            .string()
-            .required("Answer is required")
-            .min(10, "Answer must be at least 10 characters long"),
+          q: yup.string().required("Question is required"),
+          a: yup.string().required("Answer is required"),
         })
       )
       .notRequired(), // Make the whole array optional
   }),
-
-  // more steps schemas if needed
 ];
 
 export default function AddEstablishment({
@@ -409,6 +401,7 @@ export default function AddEstablishment({
           }
         }
       } catch (apiError) {
+        setIsLoading(false);
         console.error("Failed to add business:", apiError);
       }
       return;
@@ -431,6 +424,7 @@ export default function AddEstablishment({
           router.push(`/establishments/${business?._id}`); // Redirect to establishments page
         }
       } catch (apiError) {
+        setIsLoading(false);
         console.error("Failed to add business:", apiError);
       }
       return;
@@ -445,6 +439,7 @@ export default function AddEstablishment({
       }
     } catch (validationError: any) {
       if (validationError?.inner) {
+        setIsLoading(false);
         validationError?.inner.forEach((err: any) => {
           console.error(err);
           methods.setError(err.path, { type: "manual", message: err.message });

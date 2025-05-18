@@ -45,6 +45,7 @@ export default async function EstablishmentPage({
           <Box>
             {/* Header Section */}
             <EstablishmentHeader
+              id={business._id}
               name={business.name}
               tagline={business.tagline}
               shortDis={business.shortDis}

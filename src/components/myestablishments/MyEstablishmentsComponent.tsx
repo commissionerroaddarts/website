@@ -11,7 +11,9 @@ import { SearchX } from "lucide-react";
 import useDebounce from "@/hooks/useDebounce";
 import FilterSection from "@/components/allestablishmentspage/FilterSection";
 import { useAppState } from "@/hooks/useAppState";
-import { TabsComponent } from "../profilepage/TabsComponent";
+import { TabsComponent } from "@/components/profilepage/TabsComponent";
+import ThemeButton from "@/components/buttons/ThemeButton";
+import Link from "next/link";
 
 export default function MyEstablishmentsComponent() {
   const { user } = useAppState();
@@ -94,7 +96,12 @@ export default function MyEstablishmentsComponent() {
       <Container sx={{ flex: 1, py: 2 }}>
         <TabsComponent userDetails={userDetails} />
 
-        <Box sx={{ maxWidth: "90%", margin: "0 auto" }}>
+        <Box
+          sx={{
+            maxWidth: businesses.length > 2 ? "90%" : "60%",
+            margin: "0 auto",
+          }}
+        >
           {businesses.length > 2 && (
             <FilterSection
               isLoading={loading}
@@ -154,21 +161,15 @@ const NoBusinessesFound = ({
         background:
           "linear-gradient(152.76deg, #3F0F50 21.4%, #5D1178 54.49%, #200C27 85.73%)",
       }}
-      className="flex justify-center items-center flex-col py-4 gap-3   rounded-lg shadow-md"
+      className="flex justify-center items-center flex-col py-6 gap-3   rounded-4xl shadow-md"
     >
       <SearchX size={50} color="white" strokeWidth={2} />
       <h1 className="text-2xl md:text-4xl text-center font-bold capitalize ">
-        No results found!
+        You have no Listings yet!
       </h1>
-      <p>
-        Try searching:{" "}
-        <button
-          className="underline"
-          onClick={(e) => setFilterParams({ search: "Darts" })}
-        >
-          Darts
-        </button>
-      </p>
+      <Link href="/add-establishment" passHref>
+        <ThemeButton text="Add Listing Now" />
+      </Link>
     </Box>
   );
 };

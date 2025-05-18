@@ -6,11 +6,15 @@ import { PlusCircle, Trash } from "lucide-react";
 import ThemeOutlineButton from "@/components/buttons/ThemeOutlineButton";
 
 const Step5FaqForm = () => {
-  const { control } = useFormContext();
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext();
   const { fields, append, remove } = useFieldArray({
     control,
     name: "faqs", // 'faqs' must be an array in your form schema
   });
+  console.log(errors);
 
   const handleAddFaq = () => {
     const newFaq = { q: "", a: "" };
