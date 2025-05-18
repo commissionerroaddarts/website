@@ -20,7 +20,7 @@ const PromotionSpace = ({
 }: PromotionProps) => {
   const [editing, setEditing] = useState(false);
   const [promotionState, setPromotionState] = useState(
-    promotion?.title ?? "Update your current promotions here..."
+    promotion?.description ?? "Update your current promotions here..."
   );
   const [inputValue, setInputValue] = useState(promotionState);
 
@@ -116,7 +116,7 @@ const PromotionSpace = ({
               flex: 1,
             }}
           >
-            {promotion?.description}
+            {promotionState}
           </Typography>
           {checkOwner && (
             <button

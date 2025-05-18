@@ -85,16 +85,18 @@ export const updateBusiness = async (data: any) => {
     const { media, _id, ...rest } = data;
     const response = await axiosInstance.patch(`${API_URL}/${_id}`, rest);
     if (response.status === 200) {
-      if (media?.images) {
+      if (
+        Array.isArray(media?.images) &&
+        media.images.every((img: any) => img instanceof File) &&
+        media.logo instanceof File
+      ) {
         const formData = new FormData();
-        if (media?.images.length > 0) {
-          media?.images.forEach((file: File) => {
+        if (media.images.length > 0) {
+          media.images.forEach((file: File) => {
             formData.append("images", file);
           });
         }
-        if (media?.logo) {
-          formData.append("businessLogo", media.logo);
-        }
+        formData.append("businessLogo", media.logo);
         await axiosInstance.patch(`${API_URL}/media/${_id}`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",

@@ -25,7 +25,7 @@ export default async function EstablishmentPage({
   }
 
   return (
-    <div className="p-2 md:p-6 min-h-screen">
+    <div className="p-2  min-h-screen">
       <Grid2
         container
         spacing={6}

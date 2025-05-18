@@ -68,7 +68,7 @@ export default function EstablishmentHeader({
         <Box className="flex gap-2">
           <Link href={`/edit-establishment/${id}`}>
             <ThemeButton
-              text="Edit Detail"
+              text="Edit Details"
               endIcon={<Edit className="inline-block ml-1" size={25} />}
             />
           </Link>
