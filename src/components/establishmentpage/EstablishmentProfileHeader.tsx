@@ -4,12 +4,10 @@ import { Box, useTheme } from "@mui/material";
 import Image from "next/image";
 import { useAppState } from "@/hooks/useAppState";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { deleteBusiness } from "@/services/businessService";
-import { toast } from "react-toastify";
 import Link from "next/link";
 import ThemeButton from "../buttons/ThemeButton";
 import { Camera, Edit, Trash } from "lucide-react";
+import DeleteListingDialog from "../global/DeleteListingDialog";
 
 interface GalleryProps {
   readonly images: string[];
@@ -34,38 +32,25 @@ export default function EstablishmentProfileHeader({
   const { role } = userDetails || {};
   const isStoreOwner = role === "owner" || role === "admin";
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
-  const handleDelete = async (e: any) => {
+  const [openConfirm, setOpenConfirm] = useState(false);
+
+  const handleOpenConfirm = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
-    setLoading(true);
-    // Add confirmation dialog if needed
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this establishment?"
-    );
-    if (!confirmed) {
-      setLoading(false);
-      return;
-    }
-    try {
-      // Implement delete functionality here
-      // For example, you might call a delete API endpoint
-      const response = await deleteBusiness(id);
-      if (response.status === 200) {
-        toast.success("Establishment deleted successfully");
-        router.push("/profile/view-your-listings");
-      }
-    } catch (error) {
-      console.error("Error deleting establishment:", error);
-      toast.error("Failed to delete establishment");
-      setLoading(false);
-    }
+    setOpenConfirm(true);
   };
 
   if (!images || images.length === 0) return null;
 
   return (
     <>
+      <DeleteListingDialog
+        _id={id}
+        loading={loading}
+        setLoading={setLoading}
+        openConfirm={openConfirm}
+        setOpenConfirm={setOpenConfirm}
+      />
       {/* Banner with logo */}
       <div
         style={{
@@ -148,7 +133,7 @@ export default function EstablishmentProfileHeader({
               </Link>
 
               <ThemeButton
-                onClick={handleDelete}
+                onClick={handleOpenConfirm}
                 text={loading ? "Deleting" : "Delete"}
                 backgroundColor="darkred"
                 endIcon={<Trash className="inline-block ml-1" size={15} />}

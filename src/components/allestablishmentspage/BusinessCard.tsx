@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Card from "@mui/material/Card";
 import { FaMapMarkerAlt, FaClock, FaCheckCircle } from "react-icons/fa";
-import ThemeButton from "../buttons/ThemeButton";
+import ThemeButton from "@/components/buttons/ThemeButton";
 import Link from "next/link";
 import { useState } from "react";
 import BusinessMapPopup from "@/components/homepage/businesses/BusinessMapPopup";
@@ -12,11 +12,9 @@ import {
   StarRatingWithPopup,
 } from "@/components/global/StarRating";
 import { useAppState } from "@/hooks/useAppState";
-import { Box } from "@mui/material";
 import { Edit, Trash } from "lucide-react";
-import { deleteBusiness } from "@/services/businessService";
-import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
+import { Box } from "@mui/material";
+import DeleteListingDialog from "../global/DeleteListingDialog";
 
 interface RestaurantCardProps {
   readonly business: Business;
@@ -46,7 +44,8 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
     (role === "owner" || role === "admin") && userId === userDetails?._id;
   const [openMap, setOpenMap] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const router = useRouter();
+  const [openConfirm, setOpenConfirm] = useState<boolean>(false);
+
   if (
     !_id ||
     !shortDis ||
@@ -65,35 +64,21 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
   const handleMapOpen = () => setOpenMap(true);
   const handleMapClose = () => setOpenMap(false);
 
-  const handleDelete = async (e: any) => {
+  const handleOpenConfirm = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
-    setLoading(true);
-    // Add confirmation dialog if needed
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this establishment?"
-    );
-    if (!confirmed) {
-      setLoading(false);
-      return;
-    }
-    try {
-      // Implement delete functionality here
-      // For example, you might call a delete API endpoint
-      const response = await deleteBusiness(_id);
-      if (response.status === 200) {
-        toast.success("Establishment deleted successfully");
-        router.refresh();
-      }
-    } catch (error) {
-      console.error("Error deleting establishment:", error);
-      toast.error("Failed to delete establishment");
-      setLoading(false);
-    }
+    setOpenConfirm(true);
   };
 
   return (
     <>
+      <DeleteListingDialog
+        _id={_id}
+        loading={loading}
+        setLoading={setLoading}
+        openConfirm={openConfirm}
+        setOpenConfirm={setOpenConfirm}
+      />
       <Card className="!bg-[#2a1e2e] rounded-lg overflow-hidden flex flex-col justify-between h-full">
         <div>
           <div className="relative h-48">
@@ -110,7 +95,7 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
                 </Link>
 
                 <button
-                  onClick={handleDelete}
+                  onClick={handleOpenConfirm}
                   className="bg-red-500 cursor-pointer text-white text-xs px-2 py-1 rounded  flex items-center justify-around"
                 >
                   {loading ? "Deleting" : "Delete"}{" "}

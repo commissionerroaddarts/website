@@ -9,7 +9,6 @@ import {
   Chip,
 } from "@mui/material";
 import RoomIcon from "@mui/icons-material/Room";
-import CallIcon from "@mui/icons-material/Call";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { Business } from "@/types/business";
 import BusinessMapPopup from "./BusinessMapPopup";
@@ -22,10 +21,8 @@ import ThemeButton from "@/components/buttons/ThemeButton";
 import ThemeOutlineButton from "@/components/buttons/ThemeOutlineButton";
 import { Edit, Map, Trash } from "lucide-react";
 import { useAppState } from "@/hooks/useAppState";
-import { useRouter } from "next/navigation";
-import { deleteBusiness } from "@/services/businessService";
-import { toast } from "react-toastify";
 import PromotionSpace from "@/components/global/PromotionSpace";
+import DeleteListingDialog from "@/components/global/DeleteListingDialog";
 
 function BusinessCard({ business }: { readonly business: Business }) {
   // business
@@ -49,8 +46,9 @@ function BusinessCard({ business }: { readonly business: Business }) {
   const isStoreOwner = role === "owner" || role === "admin";
   const [openMap, setOpenMap] = useState(false);
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
+  const [openConfirm, setOpenConfirm] = useState(false);
   const checkOwner = isStoreOwner && userBusinessId === userId;
+
   const handleMapOpen = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
@@ -71,36 +69,21 @@ function BusinessCard({ business }: { readonly business: Business }) {
         return "#9e9e9e";
     }
   };
-
-  const handleDelete = async (e: any) => {
+  const handleOpenConfirm = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
-    setLoading(true);
-    // Add confirmation dialog if needed
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this establishment?"
-    );
-    if (!confirmed) {
-      setLoading(false);
-      return;
-    }
-    try {
-      // Implement delete functionality here
-      // For example, you might call a delete API endpoint
-      const response = await deleteBusiness(_id);
-      if (response.status === 200) {
-        toast.success("Establishment deleted successfully");
-        router.push("/profile/view-your-listings");
-      }
-    } catch (error) {
-      console.error("Error deleting establishment:", error);
-      toast.error("Failed to delete establishment");
-      setLoading(false);
-    }
+    setOpenConfirm(true);
   };
 
   return (
     <>
+      <DeleteListingDialog
+        _id={_id}
+        loading={loading}
+        setLoading={setLoading}
+        openConfirm={openConfirm}
+        setOpenConfirm={setOpenConfirm}
+      />
       <Card
         sx={{
           display: "flex",
@@ -152,7 +135,7 @@ function BusinessCard({ business }: { readonly business: Business }) {
                   </Link>
 
                   <button
-                    onClick={handleDelete}
+                    onClick={handleOpenConfirm}
                     className="bg-red-500 cursor-pointer text-white text-[0.7rem] px-4 py-2 rounded-full  flex items-center justify-around"
                   >
                     {loading ? "Deleting" : "Delete"}{" "}
@@ -234,7 +217,7 @@ function BusinessCard({ business }: { readonly business: Business }) {
             </Box>
             <ThemeOutlineButton
               icon={<Map />}
-              // onClick={handleMapOpen}
+              onClick={handleMapOpen}
               text="Show Map"
             />
           </Box>

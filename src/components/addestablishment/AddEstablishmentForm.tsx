@@ -397,8 +397,8 @@ export default function AddEstablishment({
             setTimeout(() => setShowConfetti(false), 5000);
             // Optionally reset the form or navigate to a success page
             methods.reset();
-            setIsLoading(false);
             router.push(`/establishments/${_id}`); // Redirect to establishments page
+            setIsLoading(false);
           }
         }
       } catch (apiError) {
