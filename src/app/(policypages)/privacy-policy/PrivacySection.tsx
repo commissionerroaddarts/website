@@ -1,6 +1,6 @@
 "use client";
 import { Container, Typography, Paper, Link, Box } from "@mui/material";
-import { Globe, Mail, Phone } from "lucide-react";
+import { Globe, Mail } from "lucide-react";
 
 const PrivacySection = () => {
   return (

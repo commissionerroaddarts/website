@@ -56,3 +56,22 @@ export const getPlans = async () => {
     throw new Error("Failed to fetch plans");
   }
 };
+
+export const upgradePlan = async ({
+  priceId,
+  stripeSubscriptionId,
+}: {
+  priceId: string;
+  stripeSubscriptionId: string;
+}) => {
+  try {
+    const response = await axiosInstance.post("/subscription/upgrade", {
+      priceId,
+      subscriptionId: stripeSubscriptionId,
+    });
+    return response;
+  } catch (error) {
+    console.error("Error upgrading plan:", error);
+    throw new Error("Failed to upgrade plan");
+  }
+};

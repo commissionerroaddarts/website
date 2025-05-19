@@ -20,8 +20,11 @@ export interface User {
   socials?: Record<string, string>; // Using a Record to represent a Map
   status?: "verified" | "unverified" | "deleted";
   role?: "admin" | "user" | "owner";
+  permissions?: {
+    maxListings: number;
+  };
   subscription?: UserSubscription;
-  subscriptionId?: string;
+  stripeSubscriptionId?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }

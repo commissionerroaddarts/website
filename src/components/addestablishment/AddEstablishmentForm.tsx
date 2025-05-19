@@ -9,12 +9,17 @@ import Step4Form from "./Steps/Step4Form";
 import Step3Form from "./Steps/Step3Form";
 import Step2Form from "./Steps/Step2Form";
 import Step5Form from "./Steps/Step5Form";
-import { insertBusiness, updateBusiness } from "@/services/businessService";
+import {
+  fetchBusinesses,
+  insertBusiness,
+  updateBusiness,
+} from "@/services/businessService";
 import { toast } from "react-toastify";
 import { redirect, useRouter } from "next/navigation";
 import { useAppState } from "@/hooks/useAppState";
 import Confetti from "react-confetti"; // 🎉 install it via `npm i react-confetti
 import { Business } from "@/types/business";
+import UpgradePlan from "@/components/modals/UpgradePlan";
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
 const SUPPORTED_FORMATS = ["image/jpeg", "image/png", "image/webp"];
 
@@ -66,52 +71,6 @@ const stepSchemas = [
         .string()
         .required("Price Category is required")
         .oneOf(["$", "$$", "$$$", "$$$$"], "Invalid price category"),
-      // min: yup
-      //   .number()
-      //   .required("Minimum Price is required")
-      //   .test(
-      //     "min-max-check",
-      //     "Minimum price must be less than maximum price",
-      //     function (value) {
-      //       const { max } = this.parent;
-      //       return max === undefined || value < max;
-      //     }
-      //   )
-      //   .test(
-      //     "category-min-check",
-      //     "Minimum price does not match the selected category",
-      //     function (value) {
-      //       const { category } = this.parent;
-      //       if (category === "$") return value >= 1 && value <= 10;
-      //       if (category === "$$") return value >= 11 && value <= 50;
-      //       if (category === "$$$") return value >= 51 && value <= 100;
-      //       if (category === "$$$$") return value >= 101;
-      //       return true;
-      //     }
-      //   ),
-      // max: yup
-      //   .number()
-      //   .required("Maximum Price is required")
-      //   .test(
-      //     "min-max-check",
-      //     "Maximum price must be greater than minimum price",
-      //     function (value) {
-      //       const { min } = this.parent;
-      //       return min === undefined || value > min;
-      //     }
-      //   )
-      //   .test(
-      //     "category-max-check",
-      //     "Maximum price does not match the selected category",
-      //     function (value) {
-      //       const { category } = this.parent;
-      //       if (category === "$") return value >= 1 && value <= 10;
-      //       if (category === "$$") return value >= 11 && value <= 50;
-      //       if (category === "$$$") return value >= 51 && value <= 100;
-      //       if (category === "$$$$") return value >= 101;
-      //       return true;
-      //     }
-      //   ),
     }),
     media: yup.object().shape({
       logo: yup
@@ -362,19 +321,52 @@ export default function AddEstablishment({
   const router = useRouter();
   const { user } = useAppState();
   const { userDetails } = user;
-  const { subscription } = userDetails || {};
+  const { subscription, permissions, _id } = userDetails || {};
+  const { plan } = subscription || {};
   const [currentStep, setCurrentStep] = useState(1);
   const totalSteps = 5;
   const [isLoading, setIsLoading] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const [closedDays, setClosedDays] = useState<Record<string, boolean>>({});
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    if (!subscription) {
+      redirect("/plans");
+    }
+  }, [subscription]);
+
+  useEffect(() => {
+    const evaluatePlanAccess = async () => {
+      console.log(_id, plan, permissions);
+      if (!_id || !plan || !permissions) return;
+
+      try {
+        const { data } = await fetchBusinesses(1, 10, {}, _id);
+        if (!data) return;
+
+        const businessCount = data?.length;
+        const maxListings = permissions.maxListings;
+
+        console.log(businessCount, maxListings);
+
+        if (plan === "Basic" && businessCount >= 1) {
+          setIsOpen(true);
+        } else if (plan === "Standard" && businessCount >= maxListings) {
+          setIsOpen(true);
+        } else {
+          setIsOpen(false);
+        }
+      } catch (err) {
+        console.error("Failed to evaluate plan access:", err);
+      }
+    };
+
+    evaluatePlanAccess();
+  }, [_id, plan, permissions]);
 
   if (business && business.userId !== userDetails?._id) {
     return <div>You are not authorized to edit this business</div>;
-  }
-
-  if (!subscription) {
-    redirect("/plans");
   }
 
   const handleStepSubmit = async (direction: "next" | "prev") => {
@@ -451,6 +443,12 @@ export default function AddEstablishment({
 
   return (
     <FormProvider {...methods}>
+      <UpgradePlan isOpen={isOpen} setIsOpen={setIsOpen} />
+      {isLoading &&
+        toast.info("Submitting your establishment... Please wait.", {
+          toastId: "loading-toast",
+          autoClose: false,
+        })}
       {showConfetti && <Confetti />}
       <AddEstablishmentLayout
         totalSteps={totalSteps}

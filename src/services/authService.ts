@@ -19,8 +19,12 @@ export const getUserDetails = async (dispatch: AppDispatch) => {
     const response = await axiosInstance.get("/auth/me");
     const userDetails = response.data.data.user; // Assuming the user details are in `response.data.user`
     const subscription = response.data.data?.subscription; // Assuming the subscription details are in `response.data.subscription`
+    const permissions = response.data.data?.permissions; // Assuming the permissions details are in `response.data.permissions`
     if (subscription) {
       userDetails["subscription"] = subscription; // Add subscription details to userDetails
+    }
+    if (permissions) {
+      userDetails["permissions"] = permissions; // Add permissions details to userDetails
     }
     dispatch(setUserDetails(userDetails)); // Store user details in Redux
     // return response.data; // Return the full response if needed
