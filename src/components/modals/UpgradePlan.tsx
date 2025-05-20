@@ -67,7 +67,7 @@ export default function UpgradePlan({
         return;
       }
 
-      redirect("/profile");
+      redirect("/add-establishment");
     } catch (err) {
       toast.error("An error occurred while upgrading");
       console.error(err);

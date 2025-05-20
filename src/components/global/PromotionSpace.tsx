@@ -51,33 +51,46 @@ const PromotionSpace = ({
   return (
     <Box
       sx={{
-        maxWidth: "45%",
-        backgroundColor: "#5A2A84",
+        maxWidth: "100%",
+        background:
+          " linear-gradient(133.79deg, rgba(211, 211, 211, 0.37) -25.05%, rgba(63, 15, 80, 0.42) 90.07%)",
         borderRadius: "20px",
         padding: "1rem",
         display: "flex",
         justifyContent: "center",
-        alignItems: "center",
+        alignItems: editing ? "start" : "center",
         marginTop: "10px",
-        minHeight: "60px",
+        minHeight: "100%",
+        border: "0.5px solid #FFFFFF",
       }}
     >
       {editing ? (
         <Box
-          sx={{ display: "flex", alignItems: "center", width: "100%", gap: 1 }}
+          sx={{
+            display: "flex",
+            alignItems: "start",
+            flexDirection: "column",
+            width: "100%",
+            gap: 1,
+          }}
         >
-          <input
-            type="text"
+          <textarea
             name="promotionText"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             style={{
               flex: 1,
-              borderRadius: "8px",
               border: "none",
-              padding: "0.5rem",
+              borderBottom: "1px solid white!important",
+              padding: "0.2rem",
               fontSize: "0.9rem",
+              width: "100%",
+              resize: "vertical",
+              color: "white",
+              outline: "none",
             }}
+            rows={6}
+            maxLength={200}
             autoFocus
             onClick={(e) => e.stopPropagation()}
           />
@@ -101,7 +114,8 @@ const PromotionSpace = ({
         <Box
           sx={{
             display: "flex",
-            alignItems: "center",
+            alignItems: "start",
+            flexDirection: "column",
             width: "100%",
             justifyContent: "space-between",
             gap: 1,
@@ -129,7 +143,6 @@ const PromotionSpace = ({
                 padding: "0.3rem 0.8rem",
                 cursor: "pointer",
                 fontWeight: "bold",
-                marginLeft: "0.5rem",
                 fontSize: "0.7rem",
               }}
             >

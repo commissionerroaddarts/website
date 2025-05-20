@@ -7,6 +7,7 @@ import {
   Typography,
   Box,
   Chip,
+  Grid2,
 } from "@mui/material";
 import RoomIcon from "@mui/icons-material/Room";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -95,8 +96,26 @@ function BusinessCard({ business }: { readonly business: Business }) {
           width: "100%",
           boxShadow: 3,
           gap: 1,
+          position: "relative",
         }}
       >
+        <Box
+          sx={{
+            position: "absolute",
+            top: 6,
+            right: -25,
+            background: "#EC6DFF",
+            color: "white",
+            px: 3,
+            py: 0.5,
+            fontSize: "0.8rem",
+            transform: "rotate(45deg)",
+            zIndex: 2,
+            boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+          }}
+        >
+          {status ?? "Unknown"}
+        </Box>
         {/* Image Section */}
         <CardMedia
           component="img"
@@ -117,110 +136,114 @@ function BusinessCard({ business }: { readonly business: Business }) {
             width: "100%",
           }}
         >
-          {/* Top Section */}
-          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Chip
-              label={category ?? "No Category"}
-              color="secondary"
-              sx={{ backgroundColor: "#5A2A84" }}
-            />
-            <Box className="relative flex gap-2">
-              {userBusinessId === userId && (
-                <>
-                  <Link
-                    href={`/edit-establishment/${_id}`}
-                    className="bg-purple-700 text-white text-[0.7rem] px-4 py-2 rounded-full flex items-center justify-around"
-                  >
-                    Edit <Edit className="inline-block ml-1" size={17} />
-                  </Link>
-
-                  <button
-                    onClick={handleOpenConfirm}
-                    className="bg-red-500 cursor-pointer text-white text-[0.7rem] px-4 py-2 rounded-full  flex items-center justify-around"
-                  >
-                    {loading ? "Deleting" : "Delete"}{" "}
-                    <Trash className="inline-block ml-1" size={17} />
-                  </button>
-                </>
-              )}
-              <Typography
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  padding: "0.5rem 1rem",
-                  borderRadius: "50px",
-                  fontSize: "0.7rem",
-                  background: getStatusColor(status),
-                }}
-                variant="h6"
-              >
-                <CheckCircleIcon sx={{ fontSize: 12, mr: 0.5 }} />{" "}
-                {status ?? "Unknown"}
-              </Typography>
-            </Box>
-          </Box>
-          <Box className="flex justify-between items-center">
-            <Box className="flex flex-col gap-1">
-              {/* Title */}
-              <Typography variant="h6" sx={{ mt: 1 }}>
-                {name ?? "Unnamed Business"}
-              </Typography>
-
-              {userDetails && isStoreOwner ? (
-                <StarRating rating={averageRating ?? 0} size="size-5" />
-              ) : (
-                <StarRatingWithPopup
-                  id={_id}
-                  averageRating={averageRating ?? 0}
-                />
-              )}
-
-              {/* Price and Location */}
-              <Typography sx={{ color: "#9b59b6", fontWeight: "bold" }}>
-                {price ? price?.category : "No Price Info"}
-              </Typography>
+          <Grid2 container spacing={4}>
+            <Grid2 size={{ xs: 12, md: 6 }}>
+              {/* Top Section */}
               <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  color: "#ccc",
-                  mt: 0.5,
-                }}
+                sx={{ display: "flex", justifyContent: "space-start", gap: 2 }}
               >
-                <RoomIcon sx={{ fontSize: 16, mr: 0.5 }} />
-                {location
-                  ? `${location?.city}, ${location?.state}, ${location?.country}`
-                  : "No Location Info"}
-              </Box>
-            </Box>
+                <Chip
+                  label={category ?? "No Category"}
+                  color="secondary"
+                  sx={{ backgroundColor: "#5A2A84" }}
+                />
+                <Box className="relative flex gap-2">
+                  {userBusinessId === userId && (
+                    <>
+                      <Link
+                        href={`/edit-establishment/${_id}`}
+                        className="bg-purple-700 text-white text-[0.7rem] px-4 py-2 rounded-full flex items-center justify-around"
+                      >
+                        Edit <Edit className="inline-block ml-1" size={17} />
+                      </Link>
 
-            <PromotionSpace
-              checkOwner={checkOwner}
-              businessId={_id}
-              promotion={promotion ?? null}
-            />
-          </Box>
-          {/* Buttons Section */}
-          <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
-            <Box className="flex gap-2">
-              <Link href={`/establishments/${business?._id}`} passHref prefetch>
-                {" "}
-                <ThemeButton text="View More" />
-              </Link>
-              <Link
-                href={`tel:${phone}`}
-                passHref
-                onClick={(e) => e.stopPropagation()}
+                      <button
+                        onClick={handleOpenConfirm}
+                        className="bg-red-500 cursor-pointer text-white text-[0.7rem] px-4 py-2 rounded-full  flex items-center justify-around"
+                      >
+                        {loading ? "Deleting" : "Delete"}{" "}
+                        <Trash className="inline-block ml-1" size={17} />
+                      </button>
+                    </>
+                  )}
+                </Box>
+              </Box>
+              <Box className="flex justify-between items-center">
+                <Box className="flex flex-col gap-1">
+                  {/* Title */}
+                  <Typography variant="h6" sx={{ mt: 1 }}>
+                    {name ?? "Unnamed Business"}
+                  </Typography>
+
+                  {userDetails && isStoreOwner ? (
+                    <StarRating rating={averageRating ?? 0} size="size-5" />
+                  ) : (
+                    <StarRatingWithPopup
+                      id={_id}
+                      averageRating={averageRating ?? 0}
+                    />
+                  )}
+
+                  {/* Price and Location */}
+                  <Typography sx={{ color: "#9b59b6", fontWeight: "bold" }}>
+                    {price ? price?.category : "No Price Info"}
+                  </Typography>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      color: "#ccc",
+                      gap: 1,
+                    }}
+                  >
+                    <Box className="flex ">
+                      <RoomIcon sx={{ fontSize: 16, mr: 0.5 }} />
+                      <Typography sx={{ fontSize: 12 }}>
+                        {location
+                          ? `${location?.city}, ${location?.state}, ${location?.country}`
+                          : "No Location Info"}
+                      </Typography>
+                    </Box>
+                    <button
+                      className="!text-[#EC6DFF] text-xs underline"
+                      onClick={handleMapOpen}
+                    >
+                      Show Map
+                    </button>
+                  </Box>
+                </Box>
+              </Box>
+              {/* Buttons Section */}
+              <Box
+                sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}
               >
-                <ThemeButton text="Call Us Now" backgroundColor="#5A2A84" />
-              </Link>
-            </Box>
-            <ThemeOutlineButton
-              icon={<Map />}
-              onClick={handleMapOpen}
-              text="Show Map"
-            />
-          </Box>
+                <Box className="flex gap-2">
+                  <Link
+                    href={`/establishments/${business?._id}`}
+                    passHref
+                    prefetch
+                  >
+                    {" "}
+                    <ThemeButton text="View More" />
+                  </Link>
+                  <Link
+                    href={`tel:${phone}`}
+                    passHref
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <ThemeButton text="Call Us Now" backgroundColor="#5A2A84" />
+                  </Link>
+                </Box>
+              </Box>
+            </Grid2>
+            <Grid2 size={{ xs: 12, md: 6 }}>
+              <PromotionSpace
+                checkOwner={checkOwner}
+                businessId={_id}
+                promotion={promotion ?? null}
+              />
+            </Grid2>
+          </Grid2>
         </CardContent>
       </Card>
 
