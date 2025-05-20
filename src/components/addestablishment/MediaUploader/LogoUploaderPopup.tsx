@@ -7,6 +7,7 @@ import LogoDropzone from "./FileDropzone";
 import LogoPreviewCropper from "./LogoPreview";
 import { Box, Dialog, Typography } from "@mui/material";
 import CloseIconButton from "@/components/global/CloseIconButton";
+import { toast } from "react-toastify";
 
 const LogoUploaderPopup = ({
   open,
@@ -44,6 +45,20 @@ const LogoUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
   const handleFileChange = (selectedFile: File) => {
     if (!selectedFile) return;
 
+    // File type validation
+    const allowedTypes = ["image/png", "image/jpg"];
+    if (!allowedTypes.includes(selectedFile.type)) {
+      toast.error("Invalid file format. Please upload a PNG or JPG  image.");
+      return;
+    }
+
+    // File size validation (e.g., 5MB max)
+    const maxSize = 5 * 1024 * 1024;
+    if (selectedFile.size > maxSize) {
+      toast.error("File size exceeds 5MB. Please upload a smaller image.");
+      return;
+    }
+
     const reader = new FileReader();
     reader.onload = () => setImageSrc(reader.result as string);
     reader.readAsDataURL(selectedFile);
@@ -73,6 +88,7 @@ const LogoUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
     setValue("media.logo", null);
     setPreviewUrl(null);
     setUploadProgress(0);
+    setFile(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }

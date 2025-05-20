@@ -266,8 +266,8 @@ body::-webkit-scrollbar-thumb {
 }
 
 .Toastify__toast--success {
-  background-color: #d1f7c4;
-  color: #1e4620;
+  background: linear-gradient(148.71deg, #200c27 2.12%, #6d3880 98.73%);
+  color: white;
 }
 
 .Toastify__toast--error {

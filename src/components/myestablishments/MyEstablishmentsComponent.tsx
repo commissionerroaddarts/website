@@ -82,12 +82,6 @@ export default function MyEstablishmentsComponent() {
     getBusinesses();
   };
 
-  useEffect(() => {
-    if (!userDetails) {
-      redirect("/login");
-    }
-  }, [userDetails]);
-
   return (
     <Box
       sx={{

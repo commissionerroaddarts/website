@@ -1,16 +1,14 @@
 "use client";
 import { Plan } from "@/types/plan";
-import { Dialog, DialogContent, Grid2, Typography } from "@mui/material";
+import { Dialog, DialogContent, Grid2 } from "@mui/material";
 import { useEffect, useState } from "react";
 import Preloader from "@/components/global/Preloader";
 import { getPlans, upgradePlan } from "@/services/planService";
-import { useAppDispatch } from "@/store";
 import ThemeButton from "../buttons/ThemeButton";
-import { selectPlan } from "@/store/slices/planSlice";
 import SelectSearchDropDown from "../global/SelectSearchDropDown";
 import { useAppState } from "@/hooks/useAppState";
 import { toast } from "react-toastify";
-import { redirect, useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 
 type BillingCycle = "monthly" | "yearly";
 
@@ -24,18 +22,10 @@ export default function UpgradePlan({
   const [plans, setPlans] = useState<Plan[]>([]);
   const [loading, setLoading] = useState(false);
   const [billingCycle, setBillingCycle] = useState<BillingCycle>("yearly");
-
-  const dispatch = useAppDispatch();
-  const router = useRouter();
   const { user } = useAppState();
   const userDetails = user?.userDetails;
   const stripeSubscriptionId = userDetails?.stripeSubscriptionId;
   const subscriptionPlanName = userDetails?.subscription?.plan;
-
-  useEffect(() => {
-    if (isOpen && !user?.isLoggedIn) router.push("/login");
-    else if (isOpen && !stripeSubscriptionId) router.push("/plans");
-  }, [isOpen, user?.isLoggedIn, stripeSubscriptionId, router]);
 
   useEffect(() => {
     const fetchPlans = async () => {

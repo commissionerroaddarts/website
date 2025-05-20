@@ -75,7 +75,7 @@ const LogoPreviewCropper: React.FC<LogoPreviewCropperProps> = ({
           )}
         </div>
         <button
-          className="ml-2 bg-[#ec6dff] rounded-full p-1 hover:bg-opacity-80 transition-colors"
+          className="ml-2 bg-[#ec6dff] cursor-pointer rounded-full p-1 hover:bg-opacity-80 transition-colors"
           onClick={onRemove}
         >
           <X className="h-4 w-4 text-white" />

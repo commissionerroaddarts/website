@@ -59,7 +59,7 @@ export const insertBusiness = async (data: any) => {
         Array.isArray(media?.images) &&
         media.images.some((img: any) => img instanceof File);
       const hasLogoFile = media?.logo instanceof File;
-
+      console.log(hasImageFiles, hasLogoFile);
       if (hasImageFiles || hasLogoFile) {
         const formData = new FormData();
         if (hasImageFiles) {

@@ -15,14 +15,14 @@ import {
   updateBusiness,
 } from "@/services/businessService";
 import { toast } from "react-toastify";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useAppState } from "@/hooks/useAppState";
 import Confetti from "react-confetti"; // 🎉 install it via `npm i react-confetti
 import { Business } from "@/types/business";
 import UpgradePlan from "@/components/modals/UpgradePlan";
 import { Dialog, DialogContent, Typography } from "@mui/material";
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
-const SUPPORTED_FORMATS = ["image/jpeg", "image/png", "image/webp"];
+const SUPPORTED_FORMATS = ["image/jpg", "image/png"];
 
 const stepSchemas = [
   yup.object().shape({
@@ -89,12 +89,21 @@ const stepSchemas = [
 
           const file = value as File;
           return file.size <= MAX_FILE_SIZE;
+        })
+        .test("fileOrUrl", "Only JPG/PNG images allowed", (value) => {
+          if (!value) return false;
+
+          if (typeof value === "string") return true; // Accept URL
+
+          return (
+            value instanceof File && SUPPORTED_FORMATS.includes(value.type)
+          );
         }),
 
       images: yup.array().of(
         yup
           .mixed()
-          .test("fileOrUrl", "Only JPG/PNG/WEBP images allowed", (value) => {
+          .test("fileOrUrl", "Only JPG/PNG images allowed", (value) => {
             if (!value) return false;
 
             if (typeof value === "string") return true; // Accept URL
@@ -330,15 +339,6 @@ export default function AddEstablishment({
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    if (!userDetails) {
-      redirect("/login");
-    }
-    if (!subscription) {
-      redirect("/plans");
-    }
-  }, [userDetails, subscription]);
-
-  useEffect(() => {
     const evaluatePlanAccess = async () => {
       if (!_id || !plan || !permissions) return;
 
@@ -382,7 +382,7 @@ export default function AddEstablishment({
           const { _id } = response.data;
           if (_id) {
             toast.success(
-              "🎉 Congratulations! Your business is now live on RoadDart. 🚀"
+              "Congratulations! Your business is now live on Road Darts!"
             );
             setShowConfetti(true);
             setTimeout(() => setShowConfetti(false), 5000);

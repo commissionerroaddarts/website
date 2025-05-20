@@ -6,6 +6,7 @@ import ThemeButton from "../../buttons/ThemeButton";
 import { Box, Dialog, IconButton } from "@mui/material";
 import { Plus, X } from "lucide-react";
 import CloseIconButton from "@/components/global/CloseIconButton";
+import { toast } from "react-toastify";
 
 const ImagesUploaderPopup = ({
   open,
@@ -58,13 +59,29 @@ const ImagesUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
 
     if (selectedFiles.length === 0) return;
 
-    const validFiles = selectedFiles.filter((file) => {
-      const isValidType = ["image/jpeg", "image/png", "image/webp"].includes(
-        file.type
-      );
-      const isValidSize = file.size <= 5 * 1024 * 1024;
-      return isValidType && isValidSize;
-    });
+    const invalidTypeFiles = selectedFiles.filter(
+      (file) => !["image/jpeg", "image/png"].includes(file.type.toLowerCase())
+    );
+    const invalidSizeFiles = selectedFiles.filter(
+      (file) => file.size > 5 * 1024 * 1024
+    );
+    const validFiles = selectedFiles.filter(
+      (file) =>
+        ["image/jpg", "image/png"].includes(file.type.toLowerCase()) &&
+        file.size <= 5 * 1024 * 1024
+    );
+
+    if (invalidTypeFiles.length > 0) {
+      toast.error("Invalid file format. Please upload a PNG or JPG  image.");
+    }
+    if (invalidSizeFiles.length > 0) {
+      toast.error("Some files exceed the 5MB size limit.");
+    }
+    if (validFiles.length === 0) {
+      // Reset file input so user can re-upload the same file if needed
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
+    }
 
     const previewUrls = validFiles.map((file) => URL.createObjectURL(file));
 
