@@ -35,7 +35,7 @@ const Step5FaqForm = () => {
       </Typography>
       {fields.length > 0 && (
         <Box
-          className={` px-10 w-[80%] mx-auto mt-10  ${
+          className={` px-10 w-full md:w-[80%]  mx-auto mt-10  ${
             fields.length > 1 ? "max-h-[45vh]  overflow-y-scroll " : ""
           }`}
         >
@@ -59,6 +59,7 @@ const Step5FaqForm = () => {
                     helperText={fieldState?.error?.message}
                     {...field}
                     fullWidth
+                    className="w-full"
                   />
                 )}
               />
@@ -74,6 +75,7 @@ const Step5FaqForm = () => {
                     helperText={fieldState?.error?.message}
                     {...field}
                     fullWidth
+                    className="w-full"
                   />
                 )}
               />
