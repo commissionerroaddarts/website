@@ -82,9 +82,11 @@ export default function MyEstablishmentsComponent() {
     getBusinesses();
   };
 
-  if (!_id) {
-    redirect("/login");
-  }
+  useEffect(() => {
+    if (!userDetails) {
+      redirect("/login");
+    }
+  }, [userDetails]);
 
   return (
     <Box
