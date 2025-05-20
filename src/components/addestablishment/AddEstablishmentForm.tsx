@@ -20,6 +20,7 @@ import { useAppState } from "@/hooks/useAppState";
 import Confetti from "react-confetti"; // 🎉 install it via `npm i react-confetti
 import { Business } from "@/types/business";
 import UpgradePlan from "@/components/modals/UpgradePlan";
+import { Dialog, DialogContent, Typography } from "@mui/material";
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
 const SUPPORTED_FORMATS = ["image/jpeg", "image/png", "image/webp"];
 
@@ -241,60 +242,102 @@ export default function AddEstablishment({
 }) {
   const methods = useForm<Business>({
     mode: "onBlur",
+    // defaultValues: {
+    //   name: business?.name ?? "",
+    //   tagline: business?.tagline ?? "",
+    //   phone: business?.phone ? business.phone.toString() : "",
+    //   website: business?.website,
+    //   shortDis: business?.shortDis ?? "",
+    //   tags: business?.tags || [],
+    //   category: business?.category ?? "",
+    //   bordtype: business?.bordtype ?? undefined,
+    //   agelimit: business?.agelimit ?? 0,
+    //   price: { category: business?.price?.category ?? "$" },
+    //   location: {
+    //     state: business?.location?.state ?? "",
+    //     city: business?.location?.city ?? "",
+    //     zipcode: business?.location?.zipcode ?? "90210",
+    //     country: business?.location?.country ?? "",
+    //     geotag: {
+    //       lat: business?.location?.geotag?.lat ?? 0,
+    //       lng: business?.location?.geotag?.lng ?? 0,
+    //     },
+    //   },
+    //   timings: {
+    //     mon: {
+    //       open: business?.timings?.mon?.open ?? "",
+    //       close: business?.timings?.mon?.close ?? "",
+    //     },
+    //     tue: {
+    //       open: business?.timings?.tue?.open ?? "",
+    //       close: business?.timings?.tue?.close ?? "",
+    //     },
+    //     wed: {
+    //       open: business?.timings?.wed?.open ?? "",
+    //       close: business?.timings?.wed?.close ?? "",
+    //     },
+    //     thu: {
+    //       open: business?.timings?.thu?.open ?? "",
+    //       close: business?.timings?.thu?.close ?? "",
+    //     },
+    //     fri: {
+    //       open: business?.timings?.fri?.open ?? "",
+    //       close: business?.timings?.fri?.close ?? "",
+    //     },
+    //     sat: {
+    //       open: business?.timings?.sat?.open ?? "",
+    //       close: business?.timings?.sat?.close ?? "",
+    //     },
+    //     sun: {
+    //       open: business?.timings?.sun?.open ?? "",
+    //       close: business?.timings?.sun?.close ?? "",
+    //     },
+    //   },
+    //   media: {
+    //     logo: business?.media?.logo ?? "",
+    //     images: business?.media?.images || [],
+    //   },
+    // },
     defaultValues: {
-      name: business?.name ?? "",
-      tagline: business?.tagline ?? "",
-      phone: business?.phone ? business.phone.toString() : "",
-      website: business?.website,
-      shortDis: business?.shortDis ?? "",
-      tags: business?.tags || [],
-      category: business?.category ?? "",
-      bordtype: business?.bordtype ?? undefined,
-      agelimit: business?.agelimit ?? 0,
-      price: { category: business?.price?.category ?? "$" },
+      name: "Bullseye Dart Club",
+      tagline: "Aim. Throw. Win.",
+      phone: "2125557890",
+      website: "https://www.bullseyedartclub.com",
+      shortDis:
+        "Join New York's premier dart club for weekly tournaments and casual games.",
+      tags: ["darts", "bar", "games", "tournament", "NYC", "nightlife"],
+      category: "Sports & Recreation",
+      bordtype: "Steel Tip" as "Steel Tip" | "Soft Tip" | "Both",
+      agelimit: 21,
+      price: {
+        category: "$" as "" | "$" | "$$" | "$$$" | "$$$$",
+      },
       location: {
-        state: business?.location?.state ?? "",
-        city: business?.location?.city ?? "",
-        zipcode: business?.location?.zipcode ?? "90210",
-        country: business?.location?.country ?? "",
+        state: "New York",
+        city: "New York City",
+        zipcode: "10001",
+        country: "USA",
         geotag: {
-          lat: business?.location?.geotag?.lat ?? 0,
-          lng: business?.location?.geotag?.lng ?? 0,
+          lat: 40.7128,
+          lng: -74.006,
         },
       },
       timings: {
-        mon: {
-          open: business?.timings?.mon?.open ?? "",
-          close: business?.timings?.mon?.close ?? "",
-        },
-        tue: {
-          open: business?.timings?.tue?.open ?? "",
-          close: business?.timings?.tue?.close ?? "",
-        },
-        wed: {
-          open: business?.timings?.wed?.open ?? "",
-          close: business?.timings?.wed?.close ?? "",
-        },
-        thu: {
-          open: business?.timings?.thu?.open ?? "",
-          close: business?.timings?.thu?.close ?? "",
-        },
-        fri: {
-          open: business?.timings?.fri?.open ?? "",
-          close: business?.timings?.fri?.close ?? "",
-        },
-        sat: {
-          open: business?.timings?.sat?.open ?? "",
-          close: business?.timings?.sat?.close ?? "",
-        },
-        sun: {
-          open: business?.timings?.sun?.open ?? "",
-          close: business?.timings?.sun?.close ?? "",
-        },
+        mon: { open: "05:00 PM", close: "11:00 PM" },
+        tue: { open: "05:00 PM", close: "11:00 PM" },
+        wed: { open: "05:00 PM", close: "11:00 PM" },
+        thu: { open: "05:00 PM", close: "12:00 AM" },
+        fri: { open: "05:00 PM", close: "01:00 AM" },
+        sat: { open: "03:00 PM", close: "01:00 AM" },
+        sun: { open: "03:00 PM", close: "10:00 PM" },
       },
       media: {
-        logo: business?.media?.logo ?? "",
-        images: business?.media?.images || [],
+        logo: "https://example.com/dartclub-logo.png",
+        images: [
+          "https://example.com/dart-room.jpg",
+          "https://example.com/players.jpg",
+          "https://example.com/tournament-night.jpg",
+        ],
       },
     },
   });
@@ -381,7 +424,7 @@ export default function AddEstablishment({
           const { _id } = response.data;
           if (_id) {
             toast.success(
-              "🎉 Congratulations! Your business is now live on RoadDart. Get ready to welcome new customers and grow your presence! 🚀"
+              "🎉 Congratulations! Your business is now live on RoadDart. 🚀"
             );
             setShowConfetti(true);
             setTimeout(() => setShowConfetti(false), 5000);
@@ -442,11 +485,24 @@ export default function AddEstablishment({
   return (
     <FormProvider {...methods}>
       <UpgradePlan isOpen={isOpen} setIsOpen={setIsOpen} />
-      {isLoading &&
-        toast.info("Submitting your establishment... Please wait...", {
-          toastId: "loading-toast",
-          autoClose: isLoading ? false : 3000,
-        })}
+      <Dialog
+        maxWidth="md"
+        open={isLoading}
+        onClose={() => setIsLoading(false)}
+        className="backdrop-blur-sm relative"
+      >
+        <DialogContent
+          sx={{
+            background:
+              "linear-gradient(148.71deg, #200C27 2.12%, #6D3880 98.73%)",
+            padding: "2.5rem",
+          }}
+        >
+          <Typography variant="h5" gutterBottom textAlign="center">
+            Submitting your establishment... Please wait...
+          </Typography>
+        </DialogContent>
+      </Dialog>
       {showConfetti && <Confetti />}
       <AddEstablishmentLayout
         totalSteps={totalSteps}
