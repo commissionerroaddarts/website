@@ -251,9 +251,7 @@ export default function AddEstablishment({
       category: business?.category ?? "",
       bordtype: business?.bordtype ?? undefined,
       agelimit: business?.agelimit ?? 0,
-      price: {
-        category: business?.price?.category ?? "$",
-      },
+      price: { category: business?.price?.category ?? "$" },
       location: {
         state: business?.location?.state ?? "",
         city: business?.location?.city ?? "",
@@ -331,14 +329,16 @@ export default function AddEstablishment({
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
+    if (!userDetails) {
+      redirect("/login");
+    }
     if (!subscription) {
       redirect("/plans");
     }
-  }, [subscription]);
+  }, [userDetails, subscription]);
 
   useEffect(() => {
     const evaluatePlanAccess = async () => {
-      console.log(_id, plan, permissions);
       if (!_id || !plan || !permissions) return;
 
       try {
@@ -347,8 +347,6 @@ export default function AddEstablishment({
 
         const businessCount = data?.length;
         const maxListings = permissions.maxListings;
-
-        console.log(businessCount, maxListings);
 
         if (plan === "Basic" && businessCount >= 1) {
           setIsOpen(true);
@@ -445,9 +443,9 @@ export default function AddEstablishment({
     <FormProvider {...methods}>
       <UpgradePlan isOpen={isOpen} setIsOpen={setIsOpen} />
       {isLoading &&
-        toast.info("Submitting your establishment... Please wait.", {
+        toast.info("Submitting your establishment... Please wait...", {
           toastId: "loading-toast",
-          autoClose: false,
+          autoClose: isLoading ? false : 3000,
         })}
       {showConfetti && <Confetti />}
       <AddEstablishmentLayout

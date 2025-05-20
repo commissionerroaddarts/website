@@ -55,14 +55,21 @@ export const insertBusiness = async (data: any) => {
     const response = await axiosInstance.post(`${API_URL}`, rest);
     if (response.status === 201) {
       const { _id: businessId } = response.data;
-      if (media?.images || media?.logo) {
+      const hasImageFiles =
+        Array.isArray(media?.images) &&
+        media.images.some((img: any) => img instanceof File);
+      const hasLogoFile = media?.logo instanceof File;
+
+      if (hasImageFiles || hasLogoFile) {
         const formData = new FormData();
-        if (media?.images.length > 0) {
-          media?.images.forEach((file: File) => {
-            formData.append("images", file);
+        if (hasImageFiles) {
+          media.images.forEach((file: File) => {
+            if (file instanceof File) {
+              formData.append("images", file);
+            }
           });
         }
-        if (media?.logo) {
+        if (hasLogoFile) {
           formData.append("businessLogo", media.logo);
         }
         await axiosInstance.patch(`${API_URL}/media/${businessId}`, formData, {
@@ -134,6 +141,39 @@ export const insertBusinessPromotion = async (
     return response.data;
   } catch (error) {
     console.error("Error inserting business promotion:", error);
+    throw error;
+  }
+};
+
+export const insertBusinessMedia = async (
+  businessId: string,
+  images: File[] | null,
+  logo: File | null
+) => {
+  try {
+    if (images || logo) {
+      const formData = new FormData();
+      if (images && images.length > 0) {
+        images.forEach((file: File) => {
+          formData.append("images", file);
+        });
+      }
+      if (logo) {
+        formData.append("businessLogo", logo);
+      }
+      const response = await axiosInstance.patch(
+        `${API_URL}/media/${businessId}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      return response;
+    }
+  } catch (error) {
+    console.error("Error inserting business media:", error);
     throw error;
   }
 };

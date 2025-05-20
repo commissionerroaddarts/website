@@ -280,9 +280,10 @@ body::-webkit-scrollbar-thumb {
   color: #613202;
 }
 
-.Toastify__toast--info {
-  background-color: #d0f0fd;
-  color: #034b75;
+.Toastify__toast--info,
+.Toastify__toast-theme--colored.Toastify__toast--info {
+  background-color: #3c285a;
+  color: white;
 }
 
 .Toastify__toast-icon {

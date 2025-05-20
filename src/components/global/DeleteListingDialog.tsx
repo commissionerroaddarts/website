@@ -1,7 +1,6 @@
 import React from "react";
 import { deleteBusiness } from "@/services/businessService";
 import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
 import {
   Box,
   Dialog,
@@ -26,14 +25,13 @@ const DeleteListingDialog = ({
   openConfirm,
   setOpenConfirm,
 }: Readonly<DeleteListingDialogProps>) => {
-  const router = useRouter();
   const handleConfirmDelete = async () => {
     setLoading(true);
     try {
       const response = await deleteBusiness(_id);
       if (response.status === 200) {
         toast.success("Establishment deleted successfully");
-        router.refresh();
+        window.location.reload();
       }
     } catch (error) {
       console.error("Error deleting establishment:", error);

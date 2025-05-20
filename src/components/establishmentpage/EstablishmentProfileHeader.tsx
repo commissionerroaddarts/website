@@ -1,13 +1,22 @@
 "use client";
 import { useMediaQuery } from "@mui/system";
-import { Box, useTheme } from "@mui/material";
+import { Box, IconButton, useTheme } from "@mui/material";
 import Image from "next/image";
 import { useAppState } from "@/hooks/useAppState";
 import { useState } from "react";
 import Link from "next/link";
 import ThemeButton from "../buttons/ThemeButton";
-import { Camera, Edit, Trash } from "lucide-react";
-import DeleteListingDialog from "../global/DeleteListingDialog";
+import { Camera, Edit, EditIcon, Trash } from "lucide-react";
+import DeleteListingDialog from "@/components/global/DeleteListingDialog";
+import LogoUploaderPopup from "@/components/addestablishment/MediaUploader/LogoUploaderPopup";
+import { FormProvider, useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { toast } from "react-toastify";
+import { insertBusinessMedia } from "@/services/businessService";
+import ImagesUploaderPopup from "../addestablishment/MediaUploader/ImagesUploader";
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
+const SUPPORTED_FORMATS = ["image/jpeg", "image/png", "image/webp"];
 
 interface GalleryProps {
   readonly images: string[];
@@ -16,6 +25,50 @@ interface GalleryProps {
   readonly name: string;
   readonly tagline: string;
 }
+
+const schema = yup.object().shape({
+  media: yup.object().shape({
+    logo: yup
+      .mixed()
+      .test("fileOrUrl", "Unsupported file format", (value: unknown) => {
+        if (!value) return true;
+
+        if (typeof value === "string") return true; // Accept URL
+
+        const file = value as File;
+        return SUPPORTED_FORMATS.includes(file.type);
+      })
+      .test("fileSize", "Max allowed size is 5MB", (value: unknown) => {
+        if (!value || typeof value === "string") return true;
+
+        const file = value as File;
+        return file.size <= MAX_FILE_SIZE;
+      }),
+
+    images: yup.array().of(
+      yup
+        .mixed()
+        .test(
+          "fileOrUrl",
+          "Only JPG/PNG/WEBP images allowed",
+          (value: unknown) => {
+            if (!value) return false;
+
+            if (typeof value === "string") return true; // Accept URL
+
+            return (
+              value instanceof File && SUPPORTED_FORMATS.includes(value.type)
+            );
+          }
+        )
+        .test("fileSize", "Each image must be under 5MB", (value: unknown) => {
+          if (!value || typeof value === "string") return true;
+
+          return value instanceof File && value.size <= MAX_FILE_SIZE;
+        })
+    ),
+  }),
+});
 
 export default function EstablishmentProfileHeader({
   images,
@@ -26,6 +79,16 @@ export default function EstablishmentProfileHeader({
 }: GalleryProps) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const methods = useForm({
+    mode: "onBlur",
+    defaultValues: {
+      media: {
+        logo: logo ?? "",
+        images: images ?? [],
+      },
+    },
+    resolver: yupResolver(schema),
+  });
 
   const { user } = useAppState();
   const { userDetails } = user;
@@ -33,6 +96,8 @@ export default function EstablishmentProfileHeader({
   const isStoreOwner = role === "owner" || role === "admin";
   const [loading, setLoading] = useState(false);
   const [openConfirm, setOpenConfirm] = useState(false);
+  const [uploadLogo, setUploadLogo] = useState(false);
+  const [uploadMedia, setUploadMedia] = useState(false);
 
   const handleOpenConfirm = (e: any) => {
     e.preventDefault();
@@ -40,10 +105,27 @@ export default function EstablishmentProfileHeader({
     setOpenConfirm(true);
   };
 
+  const handleInsertBusinessMedia = async (data: any) => {
+    try {
+      const response = await insertBusinessMedia(
+        id,
+        data.media.images,
+        data.media.logo
+      );
+      if (response?.status === 200) {
+        toast.success("Media updated successfully");
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      toast.error("Error submitting form");
+    }
+  };
+
   if (!images || images.length === 0) return null;
 
   return (
-    <>
+    <FormProvider {...methods}>
       <DeleteListingDialog
         _id={id}
         loading={loading}
@@ -68,17 +150,26 @@ export default function EstablishmentProfileHeader({
         />
 
         {isStoreOwner && (
-          <button
-            className="absolute top-2 right-2  px-3 py-1 text-sm rounded-full shadow hover:bg-opacity-100 transition flex items-center gap-2"
-            style={{
-              background:
-                "linear-gradient(148.71deg, #200C27 2.12%, #6D3880 98.73%)",
-            }}
-            onClick={() => console.log("Edit Cover Photo Clicked")}
-          >
-            <Camera className="inline-block mr-1" size={20} />
-            {images[0] ? "Edit Cover Photo" : "Add Cover Photo"}
-          </button>
+          <>
+            <button
+              className="absolute top-2 right-2  px-3 py-1 text-sm rounded-full shadow hover:bg-opacity-100 transition flex items-center gap-2"
+              style={{
+                background:
+                  "linear-gradient(148.71deg, #200C27 2.12%, #6D3880 98.73%)",
+              }}
+              onClick={() => setUploadMedia(true)}
+            >
+              <Camera className="inline-block mr-1" size={20} />
+              {images[0] ? "Edit Cover Photo" : "Add Cover Photo"}
+            </button>
+
+            {uploadMedia && (
+              <ImagesUploaderPopup
+                open={uploadMedia}
+                setOpen={setUploadMedia}
+              />
+            )}
+          </>
         )}
         <div
           style={{
@@ -93,7 +184,6 @@ export default function EstablishmentProfileHeader({
             style={{
               position: "relative",
               borderRadius: "50%",
-              overflow: "hidden",
               width: isMobile ? "80px" : "160px",
               height: isMobile ? "80px" : "160px",
               border: "4px solid white",
@@ -104,15 +194,31 @@ export default function EstablishmentProfileHeader({
               src={logo ?? "/images/banners/business-placeholder.png"}
               alt="Business Logo"
               fill
-              className="object-cover w-full h-full"
+              className="object-cover w-full h-full rounded-full"
             />
+
             {isStoreOwner && (
-              <button
-                className="absolute -top-10 -right-10 bg-white bg-opacity-90 text-lg z-[100] px-2 py-0.5 rounded-full shadow hover:bg-opacity-100 transition"
-                onClick={() => console.log("Edit Logo Clicked")}
-              >
-                {logo ? "Edit" : "Add"}
-              </button>
+              <>
+                <IconButton
+                  onClick={() => setUploadLogo(true)}
+                  sx={{
+                    position: "absolute",
+                    top: 0,
+                    right: 0,
+                    bgcolor: "background.paper",
+                    "&:hover": { bgcolor: "grey.200" },
+                  }}
+                >
+                  <EditIcon color="purple" size={20} />
+                </IconButton>
+
+                {uploadLogo && (
+                  <LogoUploaderPopup
+                    open={uploadLogo}
+                    setOpen={setUploadLogo}
+                  />
+                )}
+              </>
             )}
           </div>
 
@@ -142,6 +248,6 @@ export default function EstablishmentProfileHeader({
           )}
         </div>
       </div>
-    </>
+    </FormProvider>
   );
 }
