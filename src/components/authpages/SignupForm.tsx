@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Box,
   Typography,
@@ -76,11 +76,11 @@ const SignupForm = () => {
   // Redirect to dashboard if user is already logged in
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
-  if (isLoggedIn) {
-    router.push("/profile");
-    return null; // Prevent rendering the form if already logged in
-  }
-
+  useEffect(() => {
+    if (isLoggedIn) {
+      router.push("/profile");
+    }
+  }, [isLoggedIn]);
   // ✅ Form Submission Handler
   const onSubmit = async (data: SignupFormData) => {
     try {

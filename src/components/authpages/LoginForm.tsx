@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   Typography,
@@ -47,10 +47,11 @@ const LoginForm = () => {
   const page = search.get("page"); // Get the page from the URL
   const isFromBusinessPage = page === "main"; // Check if the page is the main business page
 
-  if (isLoggedIn) {
-    router.push("/profile");
-    return null;
-  }
+  useEffect(() => {
+    if (isLoggedIn) {
+      router.push("/profile");
+    }
+  }, [isLoggedIn]);
 
   // ✅ Form Submission Handler
   const onSubmit = async (data: LoginFormData) => {
