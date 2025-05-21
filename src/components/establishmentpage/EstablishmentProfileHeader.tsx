@@ -188,6 +188,12 @@ export default function EstablishmentProfileHeader({
               height: isMobile ? "80px" : "160px",
               border: "4px solid white",
               boxShadow: "0 4px 10px rgba(0,0,0,0.4)",
+              background:
+                logo &&
+                typeof logo === "string" &&
+                logo.toLowerCase().endsWith(".png")
+                  ? "white"
+                  : "transparent",
             }}
           >
             <Image

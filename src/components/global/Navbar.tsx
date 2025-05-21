@@ -31,6 +31,7 @@ import CardStaggerAnimation from "@/animations/sections/CardStaggerAnimation";
 import { Building } from "lucide-react";
 import ThemeButton from "@/components/buttons/ThemeButton";
 import CloseIconButton from "./CloseIconButton";
+import path from "path";
 
 const navbarVariants = {
   hidden: { opacity: 0, y: -20 },
@@ -158,29 +159,28 @@ function Navbar() {
         sx={{ zIndex: 10 }}
       >
         <Toolbar>
-          <Link href="/" passHref style={{ flexGrow: 1 }} prefetch>
-            <Box
-              sx={{
-                cursor: "pointer",
-                position: "relative", // <-- Required for Image with fill
-                width: { xs: "30%", sm: "10%", md: "15%" },
-                height: {
-                  xs: "80px",
-                  sm: "100px",
-                  md: "120px",
-                  lg: "130px",
-                  xl: "150px",
-                },
-              }}
-            >
-              <Image
-                src="/images/logos/road-darts-logo.png"
-                alt="Logo"
-                fill
-                style={{ objectFit: "contain" }}
-              />
-            </Box>
-          </Link>
+          <Box
+            sx={{
+              flexGrow: 1,
+              position: "relative", // <-- Required for Image with fill
+              width: { xs: "30%", sm: "10%", md: "15%" },
+              height: {
+                xs: "80px",
+                sm: "100px",
+                md: "120px",
+                lg: "130px",
+                xl: "150px",
+              },
+            }}
+          >
+            <Image
+              src="/images/logos/road-darts-logo.png"
+              alt="Logo"
+              fill
+              style={{ objectFit: "contain", cursor: "pointer" }}
+              onClick={() => router.push("/")}
+            />
+          </Box>
 
           {isMobile ? (
             <>
@@ -246,10 +246,17 @@ const ProfileLink = ({
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
+  const path = usePathname();
 
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
+
+  useEffect(() => {
+    handleMenuClose();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [path]);
+
   const menuItems = [
     {
       label: "View Profile",
