@@ -328,7 +328,7 @@ export default function AddEstablishment({
 
   const router = useRouter();
   const { user } = useAppState();
-  const { userDetails } = user;
+  const { userDetails, isLoggedIn } = user;
   const { subscription, permissions, _id } = userDetails || {};
   const { plan } = subscription || {};
   const [currentStep, setCurrentStep] = useState(1);

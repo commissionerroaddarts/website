@@ -162,24 +162,30 @@ function Navbar() {
           <Box
             sx={{
               flexGrow: 1,
-              position: "relative", // <-- Required for Image with fill
-              width: { xs: "30%", sm: "10%", md: "15%" },
-              height: {
-                xs: "80px",
-                sm: "100px",
-                md: "120px",
-                lg: "130px",
-                xl: "150px",
-              },
             }}
+            className="flex justify-start"
           >
-            <Image
-              src="/images/logos/road-darts-logo.png"
-              alt="Logo"
-              fill
-              style={{ objectFit: "contain", cursor: "pointer" }}
-              onClick={() => router.push("/")}
-            />
+            <Box
+              sx={{
+                position: "relative", // <-- Required for Image with fill
+                width: { xs: "30%", sm: "10%", md: "15%" },
+                height: {
+                  xs: "80px",
+                  sm: "100px",
+                  md: "120px",
+                  lg: "130px",
+                  xl: "150px",
+                },
+              }}
+            >
+              <Image
+                src="/images/logos/road-darts-logo.png"
+                alt="Logo"
+                fill
+                style={{ objectFit: "contain", cursor: "pointer" }}
+                onClick={() => router.push("/")}
+              />
+            </Box>
           </Box>
 
           {isMobile ? (

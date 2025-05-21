@@ -30,6 +30,9 @@ export const getUserDetails = async (dispatch: AppDispatch) => {
     // return response.data; // Return the full response if needed
   } catch (error: any) {
     console.error("Get user details error:", error);
+    if (window.location.pathname === "/add-establishment") {
+      window.location.href = "/plans";
+    }
   }
 };
 

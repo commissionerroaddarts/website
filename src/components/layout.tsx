@@ -16,7 +16,7 @@ import { Box } from "@mui/material";
 import ScrollToTop from "@/components/global/ScrollToTop";
 import { useMediaQuery } from "@mui/system";
 import EmailVerificationDialogs from "./homepage/EmailVerificationDialogs";
-import { toast } from "react-toastify";
+import Preloader from "./global/Preloader";
 
 interface LayoutProps {
   readonly children: ReactNode;
@@ -109,6 +109,7 @@ export default function Layout({ children }: LayoutProps) {
   const { isLoggedIn } = user;
   const duration = 3500; // Duration in milliseconds (3 seconds)
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -120,13 +121,21 @@ export default function Layout({ children }: LayoutProps) {
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
+        setLoading(true);
         await getUserDetails(dispatch);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching user details:", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchUserDetails();
   }, [dispatch, isLoggedIn]);
+
+  if (loading) {
+    return <Preloader />;
+  }
 
   return (
     <ThemeProvider theme={theme}>
