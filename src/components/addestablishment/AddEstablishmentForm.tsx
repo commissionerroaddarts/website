@@ -344,7 +344,7 @@ export default function AddEstablishment({
 
   useEffect(() => {
     if (!isUserLoggedIn) {
-      redirect("/login");
+      redirect("/plans");
     }
   }, [isUserLoggedIn]);
 
