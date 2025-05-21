@@ -145,22 +145,66 @@ export const insertBusinessPromotion = async (
   }
 };
 
-export const insertBusinessMedia = async (
+export const insertBusinessLogo = async (
   businessId: string,
-  images: File[] | null,
   logo: File | null
 ) => {
   try {
-    if (images || logo) {
+    if (logo) {
       const formData = new FormData();
-      if (images && images.length > 0) {
-        images.forEach((file: File) => {
-          formData.append("images", file);
-        });
-      }
-      if (logo) {
-        formData.append("businessLogo", logo);
-      }
+      formData.append("businessLogo", logo);
+
+      const response = await axiosInstance.patch(
+        `${API_URL}/media/${businessId}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      return response;
+    }
+  } catch (error) {
+    console.error("Error inserting business media:", error);
+    throw error;
+  }
+};
+
+export const insertBusinessCover = async (businessId: string, cover: File) => {
+  try {
+    if (cover) {
+      const formData = new FormData();
+      formData.append("images[]", cover);
+
+      const response = await axiosInstance.patch(
+        `${API_URL}/media/${businessId}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      return response;
+    }
+  } catch (error) {
+    console.error("Error inserting business media:", error);
+    throw error;
+  }
+};
+
+export const insertBusinessImages = async (
+  businessId: string,
+  images: File[] | null
+) => {
+  try {
+    if (images && images.length > 0) {
+      const formData = new FormData();
+      images.forEach((image) => {
+        formData.append("images", image);
+      });
+
       const response = await axiosInstance.patch(
         `${API_URL}/media/${businessId}`,
         formData,

@@ -22,7 +22,7 @@ import { Business } from "@/types/business";
 import UpgradePlan from "@/components/modals/UpgradePlan";
 import { Dialog, DialogContent, Typography } from "@mui/material";
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
-const SUPPORTED_FORMATS = ["image/jpg", "image/png"];
+const SUPPORTED_FORMATS = ["image/jpg", "image/png", "image/jpeg"];
 
 const stepSchemas = [
   yup.object().shape({

@@ -13,10 +13,14 @@ import { FormProvider, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
-import { insertBusinessMedia } from "@/services/businessService";
-import ImagesUploaderPopup from "../addestablishment/MediaUploader/ImagesUploader";
+import {
+  insertBusinessCover,
+  insertBusinessLogo,
+  insertBusinessImages,
+} from "@/services/businessService";
+import BannerImagePopup from "@/components/addestablishment/MediaUploader/BannerImageUploader";
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
-const SUPPORTED_FORMATS = ["image/jpeg", "image/png", "image/webp"];
+const SUPPORTED_FORMATS = ["image/jpeg", "image/png", "image/jpg"];
 
 interface GalleryProps {
   readonly images: string[];
@@ -50,7 +54,7 @@ const schema = yup.object().shape({
         .mixed()
         .test(
           "fileOrUrl",
-          "Only JPG/PNG/WEBP images allowed",
+          "Only JPG,PNG or JPEG images allowed",
           (value: unknown) => {
             if (!value) return false;
 
@@ -105,15 +109,24 @@ export default function EstablishmentProfileHeader({
     setOpenConfirm(true);
   };
 
-  const handleInsertBusinessMedia = async (data: any) => {
+  const handleInsertBusinessCover = async (cover: File) => {
     try {
-      const response = await insertBusinessMedia(
-        id,
-        data.media.images,
-        data.media.logo
-      );
+      const response = await insertBusinessCover(id, cover);
       if (response?.status === 200) {
-        toast.success("Media updated successfully");
+        toast.success("Cover photo updated successfully");
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      toast.error("Error submitting form");
+    }
+  };
+
+  const handleInsertBusinessLogo = async (logo: File) => {
+    try {
+      const response = await insertBusinessLogo(id, logo);
+      if (response?.status === 200) {
+        toast.success("Logo updated successfully");
         window.location.reload();
       }
     } catch (error) {
@@ -152,7 +165,7 @@ export default function EstablishmentProfileHeader({
         {isStoreOwner && (
           <>
             <button
-              className="absolute top-2 right-2  px-3 py-1 text-sm rounded-full shadow hover:bg-opacity-100 transition flex items-center gap-2"
+              className="absolute cursor-pointer top-2 right-2  px-3 py-1 text-sm rounded-full shadow hover:bg-opacity-100 transition flex items-center gap-2"
               style={{
                 background:
                   "linear-gradient(148.71deg, #200C27 2.12%, #6D3880 98.73%)",
@@ -164,9 +177,10 @@ export default function EstablishmentProfileHeader({
             </button>
 
             {uploadMedia && (
-              <ImagesUploaderPopup
+              <BannerImagePopup
                 open={uploadMedia}
                 setOpen={setUploadMedia}
+                handleInsertBusinessCover={handleInsertBusinessCover}
               />
             )}
           </>
@@ -222,6 +236,7 @@ export default function EstablishmentProfileHeader({
                   <LogoUploaderPopup
                     open={uploadLogo}
                     setOpen={setUploadLogo}
+                    handleInsertBusinessLogo={handleInsertBusinessLogo}
                   />
                 )}
               </>

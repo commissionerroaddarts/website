@@ -81,7 +81,17 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
       />
       <Card className="!bg-[#2a1e2e] rounded-lg overflow-hidden flex flex-col justify-between h-full">
         <div>
-          <div className="relative h-48">
+          <div
+            className="relative h-48"
+            style={{
+              background:
+                media?.logo &&
+                typeof media?.logo === "string" &&
+                media?.logo.toLowerCase().endsWith(".png")
+                  ? "white"
+                  : "transparent",
+            }}
+          >
             {isStoreOwner && (
               <Box
                 className="absolute top-2 right-2 flex flex-col gap-2"

@@ -48,7 +48,7 @@ const LogoDropzone: React.FC<LogoDropzoneProps> = ({
         type="file"
         ref={fileInputRef}
         className="hidden"
-        accept="image/*"
+        accept="image/jpeg, image/png, image/jpg"
         onChange={handleFileChange}
       />
     </div>

@@ -14,6 +14,7 @@ import { useAppState } from "@/hooks/useAppState";
 import { TabsComponent } from "@/components/profilepage/TabsComponent";
 import ThemeButton from "@/components/buttons/ThemeButton";
 import Link from "next/link";
+import { toast } from "react-toastify";
 
 export default function MyEstablishmentsComponent() {
   const { user } = useAppState();
@@ -50,6 +51,10 @@ export default function MyEstablishmentsComponent() {
 
     try {
       const { data } = await fetchBusinesses(1, 10, validFilterParams, _id);
+      if (!data || data.length === 0) {
+        toast.error("No establishments found");
+        redirect("/add-establishment");
+      }
       setBusinesses(data);
     } catch (error) {
       console.error("Failed to fetch businesses:", error);

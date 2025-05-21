@@ -12,9 +12,11 @@ import { toast } from "react-toastify";
 const LogoUploaderPopup = ({
   open,
   setOpen,
+  handleInsertBusinessLogo,
 }: {
   open: boolean;
   setOpen: (arg: boolean) => void;
+  handleInsertBusinessLogo?: (file: File) => Promise<void>;
 }) => {
   return (
     <Dialog
@@ -25,12 +27,21 @@ const LogoUploaderPopup = ({
       className=" rounded-3xl backdrop-blur-sm relative"
     >
       <CloseIconButton onClick={() => setOpen(false)} />
-      <LogoUploader setOpen={setOpen} />
+      <LogoUploader
+        setOpen={setOpen}
+        handleInsertBusinessLogo={handleInsertBusinessLogo}
+      />
     </Dialog>
   );
 };
 
-const LogoUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
+const LogoUploader = ({
+  setOpen,
+  handleInsertBusinessLogo,
+}: {
+  setOpen: (arg: boolean) => void;
+  handleInsertBusinessLogo?: (file: File) => Promise<void>;
+}) => {
   const {
     control,
     setValue,
@@ -46,9 +57,11 @@ const LogoUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
     if (!selectedFile) return;
 
     // File type validation
-    const allowedTypes = ["image/png", "image/jpg"];
+    const allowedTypes = ["image/png", "image/jpg", "image/jpeg"];
     if (!allowedTypes.includes(selectedFile.type)) {
-      toast.error("Invalid file format. Please upload a PNG or JPG  image.");
+      toast.error(
+        "Invalid file format. Please upload a PNG , JPG or JPEG image."
+      );
       return;
     }
 
@@ -154,7 +167,13 @@ const LogoUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
         <div className="flex justify-center">
           <ThemeButton
             text={"Upload"}
-            onClick={() => setOpen(false)}
+            onClick={
+              handleInsertBusinessLogo
+                ? async () => {
+                    if (file) await handleInsertBusinessLogo(file);
+                  }
+                : () => setOpen(false)
+            }
             className="w-full"
           />
         </div>

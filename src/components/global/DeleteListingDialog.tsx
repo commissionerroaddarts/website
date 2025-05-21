@@ -9,6 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import ThemeButton from "@/components/buttons/ThemeButton";
+import { usePathname, useRouter } from "next/navigation";
 
 interface DeleteListingDialogProps {
   loading: boolean;
@@ -25,13 +26,19 @@ const DeleteListingDialog = ({
   openConfirm,
   setOpenConfirm,
 }: Readonly<DeleteListingDialogProps>) => {
+  const path = usePathname();
+  const router = useRouter();
   const handleConfirmDelete = async () => {
     setLoading(true);
     try {
       const response = await deleteBusiness(_id);
       if (response.status === 200) {
         toast.success("Establishment deleted successfully");
-        window.location.reload();
+        if (path === "/profile/view-your-listings") {
+          window.location.reload();
+        } else {
+          router.push("/profile/view-your-listings");
+        }
       }
     } catch (error) {
       console.error("Error deleting establishment:", error);

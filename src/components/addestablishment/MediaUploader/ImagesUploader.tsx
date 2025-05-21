@@ -60,15 +60,19 @@ const ImagesUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
     if (selectedFiles.length === 0) return;
 
     const invalidTypeFiles = selectedFiles.filter(
-      (file) => !["image/jpeg", "image/png"].includes(file.type.toLowerCase())
+      (file) =>
+        !["image/jpeg", "image/png", "image/jpeg"].includes(
+          file.type.toLowerCase()
+        )
     );
     const invalidSizeFiles = selectedFiles.filter(
       (file) => file.size > 5 * 1024 * 1024
     );
     const validFiles = selectedFiles.filter(
       (file) =>
-        ["image/jpg", "image/png"].includes(file.type.toLowerCase()) &&
-        file.size <= 5 * 1024 * 1024
+        ["image/jpg", "image/png", "image/jpeg"].includes(
+          file.type.toLowerCase()
+        ) && file.size <= 5 * 1024 * 1024
     );
 
     if (invalidTypeFiles.length > 0) {
@@ -125,7 +129,7 @@ const ImagesUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
                   type="file"
                   ref={fileInputRef}
                   multiple
-                  accept="image/*"
+                  accept="image/jpeg, image/png, image/jpg"
                   onChange={handleFileChange}
                   className="hidden"
                 />
