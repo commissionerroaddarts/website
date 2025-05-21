@@ -5,7 +5,7 @@ import { TabsComponent } from "./TabsComponent";
 import { useAppState } from "@/hooks/useAppState";
 import EditProfile from "./tabs/EditProfile";
 import { User } from "@/types/user";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProfileImageEditor from "./tabs/ProfileImageEditor";
 import Preloader from "@/components/global/Preloader";
 import { toast } from "react-toastify";
@@ -13,10 +13,18 @@ import { updateUserProfileImage } from "@/services/userService";
 import ThemeButton from "../buttons/ThemeButton";
 import { getUserDetails, verifyEmail } from "@/services/authService";
 import { useAppDispatch } from "@/store";
+import { useRouter } from "next/navigation";
 
 export default function AccountManagementPage() {
   const { user } = useAppState();
-  const { userDetails } = user;
+  const { isLoggedIn, userDetails } = user;
+  const router = useRouter(); // Assuming you're using Next.js router
+  const isUserLoggedIn = isLoggedIn && userDetails?._id; // Check if the user is logged in
+  useEffect(() => {
+    if (isUserLoggedIn) {
+      router.push("/profile");
+    }
+  }, [isUserLoggedIn, router]);
   if (!userDetails) {
     return <Preloader />;
   }

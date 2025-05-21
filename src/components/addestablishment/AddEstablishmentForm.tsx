@@ -15,7 +15,7 @@ import {
   updateBusiness,
 } from "@/services/businessService";
 import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useAppState } from "@/hooks/useAppState";
 import Confetti from "react-confetti"; // 🎉 install it via `npm i react-confetti
 import { Business } from "@/types/business";
@@ -338,6 +338,16 @@ export default function AddEstablishment({
   const [closedDays, setClosedDays] = useState<Record<string, boolean>>({});
   const [isOpen, setIsOpen] = useState(false);
 
+  const isUserLoggedIn = isLoggedIn && userDetails?._id;
+  const isUserBusinessOwner =
+    isUserLoggedIn && business && business.userId === userDetails?._id;
+
+  useEffect(() => {
+    if (!isUserLoggedIn) {
+      redirect("/login");
+    }
+  }, [isUserLoggedIn]);
+
   useEffect(() => {
     const evaluatePlanAccess = async () => {
       if (!_id || !plan || !permissions) return;
@@ -364,7 +374,7 @@ export default function AddEstablishment({
     evaluatePlanAccess();
   }, [_id, plan, permissions]);
 
-  if (business && business.userId !== userDetails?._id) {
+  if (!isUserBusinessOwner && isEdit) {
     return <div>You are not authorized to edit this business</div>;
   }
 

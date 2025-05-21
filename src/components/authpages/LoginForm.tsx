@@ -38,7 +38,7 @@ const LoginForm = () => {
     resolver: yupResolver(schema),
   });
   const { user, plan } = useAppState(); // Assuming you have a custom hook to get user state
-  const { isLoggedIn } = user; // Assuming userDetails contains the user data
+  const { isLoggedIn, userDetails } = user; // Assuming userDetails contains the user data
   const { selectedPlan } = plan; // Assuming you have a custom hook to get user state
   const dispatch = useAppDispatch();
   const router = useRouter(); // Assuming you're using Next.js router
@@ -47,11 +47,12 @@ const LoginForm = () => {
   const page = search.get("page"); // Get the page from the URL
   const isFromBusinessPage = page === "main"; // Check if the page is the main business page
 
+  const isUserLoggedIn = isLoggedIn && userDetails?._id; // Check if the user is logged in
   useEffect(() => {
-    if (isLoggedIn) {
+    if (isUserLoggedIn) {
       router.push("/profile");
     }
-  }, [isLoggedIn]);
+  }, [isUserLoggedIn, router]);
 
   // ✅ Form Submission Handler
   const onSubmit = async (data: LoginFormData) => {
