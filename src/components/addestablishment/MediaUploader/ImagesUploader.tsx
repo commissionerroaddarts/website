@@ -7,6 +7,7 @@ import { Box, Dialog, IconButton } from "@mui/material";
 import { Plus, X } from "lucide-react";
 import CloseIconButton from "@/components/global/CloseIconButton";
 import { toast } from "react-toastify";
+import imageCompression from "browser-image-compression";
 
 const ImagesUploaderPopup = ({
   open,
@@ -54,43 +55,50 @@ const ImagesUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
     }
   }, [getValues]);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = Array.from(e.target.files || []);
-
     if (selectedFiles.length === 0) return;
 
     const invalidTypeFiles = selectedFiles.filter(
       (file) =>
-        !["image/jpeg", "image/png", "image/jpeg"].includes(
+        !["image/jpeg", "image/png", "image/jpg"].includes(
           file.type.toLowerCase()
         )
     );
-    const invalidSizeFiles = selectedFiles.filter(
-      (file) => file.size > 5 * 1024 * 1024
-    );
-    const validFiles = selectedFiles.filter(
-      (file) =>
-        ["image/jpg", "image/png", "image/jpeg"].includes(
-          file.type.toLowerCase()
-        ) && file.size <= 5 * 1024 * 1024
-    );
 
     if (invalidTypeFiles.length > 0) {
-      toast.error("Invalid file format. Please upload a PNG or JPG  image.");
+      toast.error("Invalid file format. Please upload PNG or JPG images.");
     }
-    if (invalidSizeFiles.length > 0) {
-      toast.error("Some files exceed the 5MB size limit.");
+
+    const validFiles = selectedFiles.filter((file) =>
+      ["image/jpeg", "image/png", "image/jpg"].includes(file.type.toLowerCase())
+    );
+
+    // Compress valid files
+    const compressedFiles: File[] = [];
+    const previewUrls: string[] = [];
+
+    for (const file of validFiles) {
+      try {
+        const compressed = await imageCompression(file, {
+          maxSizeMB: 1, // limit ~1MB
+          maxWidthOrHeight: 1920,
+          useWebWorker: true,
+        });
+        compressedFiles.push(compressed);
+        previewUrls.push(URL.createObjectURL(compressed));
+      } catch (err) {
+        console.error("Compression error:", err);
+        toast.error("Error compressing image");
+      }
     }
-    if (validFiles.length === 0) {
-      // Reset file input so user can re-upload the same file if needed
+
+    if (compressedFiles.length === 0) {
       if (fileInputRef.current) fileInputRef.current.value = "";
       return;
     }
 
-    const previewUrls = validFiles.map((file) => URL.createObjectURL(file));
-
-    // Append new files to existing ones
-    const newFiles = [...files, ...validFiles];
+    const newFiles = [...files, ...compressedFiles];
     const newPreviews = [...previews, ...previewUrls];
 
     setFiles(newFiles);

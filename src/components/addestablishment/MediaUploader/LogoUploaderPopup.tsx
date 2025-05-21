@@ -8,6 +8,7 @@ import LogoPreviewCropper from "./LogoPreview";
 import { Box, Dialog, Typography } from "@mui/material";
 import CloseIconButton from "@/components/global/CloseIconButton";
 import { toast } from "react-toastify";
+import imageCompression from "browser-image-compression";
 
 const LogoUploaderPopup = ({
   open,
@@ -53,35 +54,50 @@ const LogoUploader = ({
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
 
-  const handleFileChange = (selectedFile: File) => {
+  const handleFileChange = async (selectedFile: File) => {
     if (!selectedFile) return;
 
-    // File type validation
     const allowedTypes = ["image/png", "image/jpg", "image/jpeg"];
     if (!allowedTypes.includes(selectedFile.type)) {
       toast.error(
-        "Invalid file format. Please upload a PNG , JPG or JPEG image."
+        "Invalid file format. Please upload a PNG, JPG, or JPEG image."
       );
       return;
     }
 
-    // File size validation (e.g., 5MB max)
-    const maxSize = 5 * 1024 * 1024;
+    const maxSize = 5 * 1024 * 1024; // 5MB
     if (selectedFile.size > maxSize) {
       toast.error("File size exceeds 5MB. Please upload a smaller image.");
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = () => setImageSrc(reader.result as string);
-    reader.readAsDataURL(selectedFile);
+    try {
+      // Compression options
+      const options = {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 1024,
+        useWebWorker: true,
+      };
 
-    setFile(selectedFile); // <-- Local state
-    setValue("media.logo", selectedFile); // <-- Sync with RHF
+      const compressedFile = await imageCompression(selectedFile, options);
 
-    const fileUrl = URL.createObjectURL(selectedFile);
-    setPreviewUrl(fileUrl);
-    simulateUpload();
+      // Optional preview
+      const fileUrl = URL.createObjectURL(compressedFile);
+      setPreviewUrl(fileUrl);
+
+      // Sync compressed file with RHF and local state
+      setFile(compressedFile);
+      setValue("media.logo", compressedFile);
+
+      const reader = new FileReader();
+      reader.onload = () => setImageSrc(reader.result as string);
+      reader.readAsDataURL(compressedFile);
+
+      simulateUpload();
+    } catch (error) {
+      console.error("Compression failed:", error);
+      toast.error("Failed to compress the image.");
+    }
   };
 
   const simulateUpload = () => {
@@ -121,7 +137,6 @@ const LogoUploader = ({
     setImageSrc(croppedFileUrl);
     setPreviewUrl(croppedFileUrl);
   };
-  console.log(errors);
 
   return (
     <Box

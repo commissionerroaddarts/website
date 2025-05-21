@@ -28,6 +28,7 @@
     "@vis.gl/react-google-maps": "^1.5.2",
     "autoprefixer": "^10.4.21",
     "axios": "^1.8.4",
+    "browser-image-compression": "^2.0.2",
     "dayjs": "^1.11.13",
     "dotenv": "^16.4.7",
     "framer-motion": "^12.6.0",
