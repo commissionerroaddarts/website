@@ -9,7 +9,7 @@ export async function middleware(req: NextRequest) {
 
   if (!refreshToken) {
     // Redirect to specific login page based on route
-    if (pathname.startsWith("/add-listing")) {
+    if (pathname.startsWith("/add-establishment")) {
       return NextResponse.redirect(new URL("/plans", req.url));
     }
 
