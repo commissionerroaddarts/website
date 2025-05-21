@@ -82,7 +82,7 @@ const ImagesUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
       try {
         const compressed = await imageCompression(file, {
           maxSizeMB: 1, // limit ~1MB
-          maxWidthOrHeight: 1920,
+          maxWidthOrHeight: 1024, // limit to 1024px
           useWebWorker: true,
         });
         compressedFiles.push(compressed);
