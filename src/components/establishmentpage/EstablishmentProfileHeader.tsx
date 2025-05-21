@@ -135,8 +135,6 @@ export default function EstablishmentProfileHeader({
     }
   };
 
-  if (!images || images.length === 0) return null;
-
   return (
     <FormProvider {...methods}>
       <DeleteListingDialog
