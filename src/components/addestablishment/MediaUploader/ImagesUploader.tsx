@@ -95,11 +95,17 @@ const ImagesUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
 
     for (const file of validFiles) {
       try {
+        const fileSizeMB = file.size / (1024 * 1024);
+        const shouldCompress = fileSizeMB > 0.3; // Only compress if bigger than 300KB
+
         const compressed = await imageCompression(file, {
-          maxSizeMB: 0.5,
-          maxWidthOrHeight: 1024,
+          maxSizeMB: shouldCompress ? 0.4 : fileSizeMB, // target ~400KB
+          maxWidthOrHeight: 1024, // Resize large images down to reduce size
           useWebWorker: true,
+          initialQuality: 0.9, // High starting quality (0 to 1)
+          alwaysKeepResolution: false, // Let the lib resize
         });
+
         compressedFiles.push(compressed);
         previewUrls.push(URL.createObjectURL(compressed));
       } catch (err) {

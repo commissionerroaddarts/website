@@ -78,11 +78,15 @@ const LogoUploader = ({
     }
 
     try {
-      // Compression options
+      const fileSizeMB = selectedFile.size / (1024 * 1024);
+      const shouldCompress = fileSizeMB > 0.3; // Only compress if bigger than 300KB
+
       const options = {
-        maxSizeMB: 1,
-        maxWidthOrHeight: 1024,
+        maxSizeMB: shouldCompress ? 0.4 : fileSizeMB, // target ~400KB
+        maxWidthOrHeight: 1024, // Resize large images down to reduce size
         useWebWorker: true,
+        initialQuality: 0.9, // High starting quality (0 to 1)
+        alwaysKeepResolution: false, // Let the lib resize
       };
 
       const compressedFile = await imageCompression(selectedFile, options);
