@@ -33,8 +33,11 @@ export default async function EstablishmentPage({
       >
         <EstablishmentProfileHeader
           id={business._id}
-          images={business.media?.images ?? []}
-          logo={business.media?.logo ?? ""}
+          media={{
+            logo: business.media?.logo,
+            images: business.media?.images ?? [],
+            cover: business.media?.cover,
+          }}
           name={business.name}
           tagline={business.tagline}
         />

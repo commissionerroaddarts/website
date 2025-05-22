@@ -27,6 +27,30 @@ export const mediaSchema = yup.object().shape({
       const file = value as Blob;
       return file.size <= MAX_FILE_SIZE;
     }),
+  cover: yup
+    .mixed()
+    .nullable()
+    .notRequired()
+    .test("is-empty", "Skip if empty", (value) => {
+      return (
+        !value ||
+        value === "" ||
+        typeof value === "string" ||
+        value instanceof Blob
+      );
+    })
+    .test("fileType", "Unsupported file format", (value) => {
+      if (!value || typeof value === "string") return true;
+
+      const file = value as Blob;
+      return SUPPORTED_FORMATS.includes(file.type);
+    })
+    .test("fileSize", "Max allowed size is 5MB", (value) => {
+      if (!value || typeof value === "string") return true;
+
+      const file = value as Blob;
+      return file.size <= MAX_FILE_SIZE;
+    }),
 
   images: yup
     .array()

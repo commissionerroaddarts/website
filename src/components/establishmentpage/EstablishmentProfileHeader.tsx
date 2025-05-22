@@ -16,19 +16,20 @@ import { toast } from "react-toastify";
 import {
   insertBusinessCover,
   insertBusinessLogo,
-  insertBusinessImages,
+  // insertBusinessImages,
 } from "@/services/businessService";
 import BannerImagePopup from "@/components/addestablishment/MediaUploader/BannerImageUploader";
 import { mediaSchema } from "@/yupSchemas/mediaSchema";
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
-const SUPPORTED_FORMATS = ["image/jpeg", "image/png", "image/jpg"];
 
 interface GalleryProps {
-  readonly images: string[];
   readonly id: string;
-  readonly logo: string;
   readonly name: string;
   readonly tagline: string;
+  readonly media?: {
+    logo?: string;
+    images: string[];
+    cover?: string;
+  };
 }
 
 const schema = yup.object().shape({
@@ -36,11 +37,10 @@ const schema = yup.object().shape({
 });
 
 export default function EstablishmentProfileHeader({
-  images,
   id,
-  logo,
   name,
   tagline,
+  media,
 }: GalleryProps) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -48,8 +48,9 @@ export default function EstablishmentProfileHeader({
     mode: "onBlur",
     defaultValues: {
       media: {
-        logo: logo ?? "",
-        images: images ?? [],
+        logo: media?.logo ?? "",
+        cover: media?.cover ?? "",
+        images: media?.images ?? [],
       },
     },
     resolver: yupResolver(schema),
@@ -63,6 +64,11 @@ export default function EstablishmentProfileHeader({
   const [openConfirm, setOpenConfirm] = useState(false);
   const [uploadLogo, setUploadLogo] = useState(false);
   const [uploadMedia, setUploadMedia] = useState(false);
+  const [loadingUpload, setLoadingUpload] = useState({
+    images: false,
+    logo: false,
+    cover: false,
+  });
 
   const handleOpenConfirm = (e: any) => {
     e.preventDefault();
@@ -72,6 +78,7 @@ export default function EstablishmentProfileHeader({
 
   const handleInsertBusinessCover = async (cover: File) => {
     try {
+      setLoadingUpload((prev) => ({ ...prev, cover: true }));
       const response = await insertBusinessCover(id, cover);
       if (response?.status === 200) {
         toast.success("Cover photo updated successfully");
@@ -80,11 +87,14 @@ export default function EstablishmentProfileHeader({
     } catch (error) {
       console.error("Error submitting form:", error);
       toast.error("Error submitting form");
+
+      setLoadingUpload((prev) => ({ ...prev, cover: false }));
     }
   };
 
   const handleInsertBusinessLogo = async (logo: File) => {
     try {
+      setLoadingUpload((prev) => ({ ...prev, logo: true }));
       const response = await insertBusinessLogo(id, logo);
       if (response?.status === 200) {
         toast.success("Logo updated successfully");
@@ -93,6 +103,7 @@ export default function EstablishmentProfileHeader({
     } catch (error) {
       console.error("Error submitting form:", error);
       toast.error("Error submitting form");
+      setLoadingUpload((prev) => ({ ...prev, logo: false }));
     }
   };
 
@@ -115,7 +126,7 @@ export default function EstablishmentProfileHeader({
         }}
       >
         <Image
-          src={images[0] ?? "/images/banners/img-placeholder-dark.jpg"}
+          src={media?.cover ?? "/images/banners/img-placeholder-dark.jpg"}
           alt="Cover Banner"
           fill
           className="object-cover w-full h-full rounded-xl"
@@ -132,7 +143,7 @@ export default function EstablishmentProfileHeader({
               onClick={() => setUploadMedia(true)}
             >
               <Camera className="inline-block mr-1" size={20} />
-              {images[0] ? "Edit Cover Photo" : "Add Cover Photo"}
+              {media?.cover ? "Edit Cover Photo" : "Add Cover Photo"}
             </button>
 
             {uploadMedia && (
@@ -140,6 +151,7 @@ export default function EstablishmentProfileHeader({
                 open={uploadMedia}
                 setOpen={setUploadMedia}
                 handleInsertBusinessCover={handleInsertBusinessCover}
+                loadingUpload={loadingUpload.cover}
               />
             )}
           </>
@@ -162,15 +174,15 @@ export default function EstablishmentProfileHeader({
               border: "4px solid white",
               boxShadow: "0 4px 10px rgba(0,0,0,0.4)",
               background:
-                logo &&
-                typeof logo === "string" &&
-                logo.toLowerCase().endsWith(".png")
+                media?.logo &&
+                typeof media?.logo === "string" &&
+                media?.logo.toLowerCase().endsWith(".png")
                   ? "white"
                   : "transparent",
             }}
           >
             <Image
-              src={logo ?? "/images/banners/business-placeholder.png"}
+              src={media?.logo ?? "/images/banners/business-placeholder.png"}
               alt="Business Logo"
               fill
               className="object-cover w-full h-full rounded-full"
@@ -196,6 +208,7 @@ export default function EstablishmentProfileHeader({
                     open={uploadLogo}
                     setOpen={setUploadLogo}
                     handleInsertBusinessLogo={handleInsertBusinessLogo}
+                    loadingUpload={loadingUpload.logo}
                   />
                 )}
               </>

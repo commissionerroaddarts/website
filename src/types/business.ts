@@ -77,6 +77,7 @@ export interface Business {
     images?: string[];
     video?: string;
     logo?: string;
+    cover?: string;
   };
   shortDis: string;
   location?: Location;

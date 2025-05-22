@@ -14,10 +14,12 @@ const LogoUploaderPopup = ({
   open,
   setOpen,
   handleInsertBusinessLogo,
+  loadingUpload,
 }: {
   open: boolean;
   setOpen: (arg: boolean) => void;
   handleInsertBusinessLogo?: (file: File) => Promise<void>;
+  loadingUpload?: boolean;
 }) => {
   return (
     <Dialog
@@ -31,6 +33,7 @@ const LogoUploaderPopup = ({
       <LogoUploader
         setOpen={setOpen}
         handleInsertBusinessLogo={handleInsertBusinessLogo}
+        loadingUpload={loadingUpload}
       />
     </Dialog>
   );
@@ -39,9 +42,11 @@ const LogoUploaderPopup = ({
 const LogoUploader = ({
   setOpen,
   handleInsertBusinessLogo,
+  loadingUpload,
 }: {
   setOpen: (arg: boolean) => void;
   handleInsertBusinessLogo?: (file: File) => Promise<void>;
+  loadingUpload?: boolean;
 }) => {
   const {
     control,
@@ -197,7 +202,8 @@ const LogoUploader = ({
       {file && (
         <div className="flex justify-center">
           <ThemeButton
-            text={loading ? "Uploading" : "Upload"}
+            text={loading || loadingUpload ? "Uploading" : "Upload"}
+            disabled={loading || loadingUpload}
             onClick={
               handleInsertBusinessLogo
                 ? async () => {

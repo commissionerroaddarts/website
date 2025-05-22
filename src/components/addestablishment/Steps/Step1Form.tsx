@@ -10,6 +10,7 @@ import { Plus, Upload, X } from "lucide-react";
 import SelectSearchDropDown from "@/components/global/SelectSearchDropDown";
 import { boardTypeOptions, categoryOptions } from "@/utils/dropdowns";
 import ImagesUploaderPopup from "../MediaUploader/ImagesUploader";
+import BannerImagePopup from "../MediaUploader/BannerImageUploader";
 
 const priceCategories = [
   { label: "Budget ($)", value: "$" },
@@ -243,6 +244,7 @@ export default function Step1Form() {
 const UploadButtons = () => {
   const [uploadLogo, setUploadLogo] = useState(false);
   const [uploadMedia, setUploadMedia] = useState(false);
+  const [uploadCover, setUploadCover] = useState(false);
 
   const {
     formState: { errors },
@@ -251,10 +253,12 @@ const UploadButtons = () => {
   } = useFormContext();
 
   const logo = watch("media.logo");
+  const cover = watch("media.cover");
   const images = watch("media.images") ?? [];
 
   // Remove functions
   const removeLogo = () => setValue("media.logo", null);
+  const removeCoverPhoto = () => setValue("media.cover", null);
   const removeImage = (index: number) => {
     const updatedImages = images.filter((_: any, i: number) => i !== index);
     setValue("media.images", updatedImages);
@@ -308,6 +312,54 @@ const UploadButtons = () => {
 
       {uploadLogo && (
         <LogoUploaderPopup open={uploadLogo} setOpen={setUploadLogo} />
+      )}
+
+      {/* === COVER PHOTO === */}
+      <Box className="flex flex-col items-center justify-center gap-2">
+        {cover ? (
+          <Box
+            className="flex flex-col items-center gap-2 relative p-5 rounded-2xl"
+            sx={{
+              background:
+                "linear-gradient(148.71deg, #200C27 2.12%, #6D3880 98.73%)",
+            }}
+          >
+            <Typography variant="h6">Cover Photo Preview</Typography>
+            <div className="relative">
+              <img
+                src={
+                  typeof cover === "string" && cover.includes("http")
+                    ? cover
+                    : URL.createObjectURL(cover)
+                }
+                alt="Business cover"
+                className="w-24 h-24 object-contain "
+              />
+              <CloseIconButton onClick={removeCoverPhoto} />
+            </div>
+          </Box>
+        ) : (
+          <>
+            <ThemeButton
+              text="Upload Cover Photo"
+              type="button"
+              icon={<Upload className="w-5 h-5" />}
+              onClickEvent={() => setUploadCover(true)}
+            />
+            {typeof errors?.media === "object" &&
+              errors.media !== null &&
+              "cover" in errors.media &&
+              typeof errors.media.cover?.message === "string" && (
+                <Typography color="error" variant="body2" className="mt-2">
+                  {errors?.media?.cover?.message}
+                </Typography>
+              )}
+          </>
+        )}
+      </Box>
+
+      {uploadCover && (
+        <BannerImagePopup open={uploadCover} setOpen={setUploadCover} />
       )}
 
       {/* === MEDIA IMAGES === */}

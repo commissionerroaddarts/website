@@ -59,6 +59,7 @@ export const insertBusiness = async (data: any) => {
         Array.isArray(media?.images) &&
         media.images.some((img: any) => img instanceof Blob);
       const hasLogoFile = media?.logo instanceof Blob;
+      const hasCoverFile = media?.cover instanceof Blob;
       if (hasImageFiles || hasLogoFile) {
         const formData = new FormData();
         if (hasImageFiles) {
@@ -70,6 +71,9 @@ export const insertBusiness = async (data: any) => {
         }
         if (hasLogoFile) {
           formData.append("businessLogo", media.logo);
+        }
+        if (hasCoverFile) {
+          formData.append("businessCover", media.cover);
         }
         await axiosInstance.patch(`${API_URL}/media/${businessId}`, formData, {
           headers: {
@@ -94,12 +98,14 @@ export const updateBusiness = async (data: any) => {
 
     // Step 2: Handle media separately
     if (response.status === 200 && media) {
-      const { images = [], logo } = media;
+      const { images = [], logo, cover } = media;
 
       const newImages = images.filter((img: any) => img instanceof Blob);
       const isNewLogo = logo instanceof Blob;
+      const isNewCover = cover instanceof Blob;
       const imagesFormData = new FormData();
       const logoFormData = new FormData();
+      const coverFormData = new FormData();
 
       if (newImages.length > 0) {
         // Append new image files
@@ -117,6 +123,16 @@ export const updateBusiness = async (data: any) => {
         logoFormData.append("businessLogo", logo);
 
         await axiosInstance.patch(`${API_URL}/media/${_id}`, logoFormData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+      }
+
+      if (isNewCover) {
+        coverFormData.append("businessCover", cover);
+
+        await axiosInstance.patch(`${API_URL}/media/${_id}`, coverFormData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -187,7 +203,7 @@ export const insertBusinessCover = async (businessId: string, cover: File) => {
   try {
     if (cover) {
       const formData = new FormData();
-      formData.append("images[]", cover);
+      formData.append("businessCover", cover);
 
       const response = await axiosInstance.patch(
         `${API_URL}/media/${businessId}`,

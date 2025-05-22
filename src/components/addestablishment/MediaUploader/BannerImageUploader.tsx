@@ -12,10 +12,12 @@ const BannerImagePopup = ({
   open,
   setOpen,
   handleInsertBusinessCover,
+  loadingUpload,
 }: {
   open: boolean;
   setOpen: (arg: boolean) => void;
   handleInsertBusinessCover?: (file: File) => Promise<void>;
+  loadingUpload?: boolean;
 }) => {
   return (
     <Dialog
@@ -26,16 +28,22 @@ const BannerImagePopup = ({
       className="rounded-3xl backdrop-blur-sm relative"
     >
       <CloseIconButton onClick={() => setOpen(false)} />
-      <BannerUploader setOpen={setOpen} />
+      <BannerUploader
+        setOpen={setOpen}
+        handleInsertBusinessCover={handleInsertBusinessCover}
+        loadingUpload={loadingUpload}
+      />
     </Dialog>
   );
 };
 const BannerUploader = ({
   setOpen,
   handleInsertBusinessCover,
+  loadingUpload,
 }: {
   setOpen: (arg: boolean) => void;
   handleInsertBusinessCover?: (file: File) => Promise<void>;
+  loadingUpload?: boolean;
 }) => {
   const { control, setValue, getValues } = useFormContext();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -43,7 +51,7 @@ const BannerUploader = ({
   const [preview, setPreview] = useState<string | null>(null);
 
   useEffect(() => {
-    const existingImage = getValues("media.images")?.[0];
+    const existingImage = getValues("media.cover");
 
     if (existingImage) {
       if (existingImage instanceof File) {
@@ -77,13 +85,13 @@ const BannerUploader = ({
 
     setFile(selectedFile);
     setPreview(URL.createObjectURL(selectedFile));
-    setValue("media.images", [selectedFile]); // 👈 set as array
+    setValue("media.cover", selectedFile); // 👈 set as array
   };
 
   const handleRemove = () => {
     setFile(null);
     setPreview(null);
-    setValue("media.images", []); // 👈 empty array
+    setValue("media.cover", null); // 👈 empty array
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
@@ -142,11 +150,15 @@ const BannerUploader = ({
       {preview && (
         <div className="flex justify-center w-full">
           <ThemeButton
-            text="Save"
+            text={loadingUpload ? "Saving..." : "Save"}
+            disabled={loadingUpload}
             onClick={
               handleInsertBusinessCover
                 ? async () => {
-                    if (file) await handleInsertBusinessCover(file);
+                    if (file) {
+                      await handleInsertBusinessCover(file);
+                      setOpen(false);
+                    }
                   }
                 : () => setOpen(false)
             }
