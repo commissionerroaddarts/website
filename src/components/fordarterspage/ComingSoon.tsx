@@ -39,13 +39,13 @@ const ComingSoon = () => {
               For Darters
             </Typography> */}
             <Typography
-              variant="h5"
+              variant="h6"
               sx={{ mb: 2, color: "white" }}
               textAlign={"center"}
               textTransform={"uppercase"}
             >
-              On the road or close to home? Post a match request to the Road
-              Darts community.
+              On the road or close to home?
+              <br /> Post a match request to the Road Darts community.
             </Typography>
             <Chip
               label="Coming Soon"
