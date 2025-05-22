@@ -102,7 +102,7 @@ export default function EstablishmentGallery({
 
         {/* Show More Button */}
         {images.length > 4 && (
-          <Grid2 size={{ xs: 12, md: 6 }}>
+          <Grid2 size={{ xs: 12 }}>
             <ThemeOutlineButton
               onClick={() => handleOpen(4)}
               text={`Show More Images (${images.length - 4} more)`}
