@@ -204,17 +204,24 @@ export default function AddEstablishment({
   readonly business?: Readonly<Business>;
   readonly isEdit?: boolean;
 }) {
-  const saveToStorage = (data: any) =>
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
-
-  const loadFromStorage = () => {
-    const data = localStorage.getItem(LOCAL_STORAGE_KEY);
-    return data ? JSON.parse(data) : null;
+  const saveToStorage = (data: any) => {
+    if (typeof window !== "undefined" && window.localStorage) {
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
+    }
   };
 
-  const clearStorage = () => localStorage.removeItem(LOCAL_STORAGE_KEY);
+  const loadFromStorage = () => {
+    if (typeof window !== "undefined" && window.localStorage) {
+      const data = localStorage.getItem(LOCAL_STORAGE_KEY);
+      return data ? JSON.parse(data) : null;
+    }
+  };
 
-  console.log({ business });
+  const clearStorage = () => {
+    if (typeof window !== "undefined" && window.localStorage) {
+      localStorage.removeItem(LOCAL_STORAGE_KEY);
+    }
+  };
 
   const methods = useForm<Business>({
     mode: "onBlur",
@@ -322,7 +329,6 @@ export default function AddEstablishment({
   const [isLoading, setIsLoading] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const [closedDays, setClosedDays] = useState<Record<string, boolean>>({});
-  console.log({ closedDays });
   const [isOpen, setIsOpen] = useState(false);
 
   const isUserLoggedIn = isLoggedIn && userDetails?._id;
