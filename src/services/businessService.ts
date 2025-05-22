@@ -89,26 +89,43 @@ export const updateBusiness = async (data: any) => {
   try {
     const { media, _id, ...rest } = data;
 
-    // First, update the business data (non-media)
+    // Step 1: Update business non-media fields
     const response = await axiosInstance.patch(`${API_URL}/${_id}`, rest);
 
-    // If success, check and upload only new media files (Blobs)
+    // Step 2: Handle media separately
     if (response.status === 200 && media) {
       const { images = [], logo } = media;
 
-      // Filter new image files (Blob) vs existing (string URLs)
       const newImages = images.filter((img: any) => img instanceof Blob);
+      const existingImages = images.filter(
+        (img: any) => typeof img === "string"
+      );
       const isNewLogo = logo instanceof Blob;
+      const existingLogo = typeof logo === "string" ? logo : null;
 
-      if (newImages.length > 0 || isNewLogo) {
+      if (
+        newImages.length > 0 ||
+        isNewLogo ||
+        existingImages.length > 0 ||
+        existingLogo
+      ) {
         const formData = new FormData();
 
+        // Append existing image URLs
+        existingImages.forEach((url: string) => {
+          formData.append("images", url); // Make sure your backend supports this
+        });
+
+        // Append new image files
         newImages.forEach((file: Blob) => {
           formData.append("images", file);
         });
 
+        // Logo handling
         if (isNewLogo) {
           formData.append("businessLogo", logo);
+        } else if (existingLogo) {
+          formData.append("businessLogo", existingLogo);
         }
 
         await axiosInstance.patch(`${API_URL}/media/${_id}`, formData, {
