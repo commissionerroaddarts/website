@@ -38,21 +38,26 @@ const ComingSoon = () => {
             >
               For Darters
             </Typography> */}
+            <Chip
+              label="Coming Soon"
+              color="secondary"
+              sx={{
+                fontWeight: 600,
+                fontSize: 35,
+                mb: 2,
+                padding: "2rem 3rem",
+              }}
+              size="medium"
+            />
             <Typography
               variant="h6"
-              sx={{ mb: 2, color: "white" }}
+              sx={{ color: "white!important", fontSize: 17 }}
               textAlign={"center"}
               textTransform={"uppercase"}
             >
               On the road or close to home?
               <br /> Post a match request to the Road Darts community.
             </Typography>
-            <Chip
-              label="Coming Soon"
-              color="secondary"
-              sx={{ fontWeight: 600, fontSize: 16 }}
-              size="medium"
-            />
           </CardContent>
         </Card>
       </motion.div>

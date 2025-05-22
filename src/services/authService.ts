@@ -94,7 +94,7 @@ export const resetPassword = async (newPassword: string, token: string) => {
 
 export const verifyEmail = async (data: { email: string }) => {
   try {
-    const response = await axiosInstance.post("/auth/tempverify", data);
+    const response = await axiosInstance.post("/auth/resend", data);
     return response; // Expected { message: "Email verification link sent!" }
   } catch (error: any) {
     console.error("Email verification error:", error);
