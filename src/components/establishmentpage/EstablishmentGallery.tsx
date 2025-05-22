@@ -9,15 +9,11 @@ import "slick-carousel/slick/slick-theme.css";
 
 interface ImageGalleryProps {
   images: string[];
-  gridType?: "default" | "2x2";
-  maxImages?: number;
   height?: string;
 }
 
 export default function EstablishmentGallery({
   images,
-  gridType = "default",
-  maxImages = 6,
   height = "200px",
 }: Readonly<ImageGalleryProps>) {
   const [open, setOpen] = useState(false);
@@ -53,6 +49,7 @@ export default function EstablishmentGallery({
         borderRadius: "1rem",
         width: "100%",
         cursor: "pointer",
+        padding: 0,
       }}
     >
       <Image
@@ -61,6 +58,29 @@ export default function EstablishmentGallery({
         fill
         className="object-cover w-full h-full"
       />
+      {/* Hover Overlay */}
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          height: "100%",
+          width: "100%",
+          backgroundColor: "rgba(0,0,0,0.4)",
+          color: "white",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          opacity: 0,
+          transition: "opacity 0.3s",
+          fontSize: "1rem",
+          fontWeight: 500,
+          zIndex: 100,
+        }}
+        className="hover:opacity-100"
+      >
+        Click to view
+      </div>
     </Button>
   );
 
@@ -69,11 +89,25 @@ export default function EstablishmentGallery({
   return (
     <>
       <Grid2 container spacing={2}>
-        {images.slice(0, 4).map((img, idx) => (
-          <Grid2 key={img + idx} size={{ xs: 12, sm: 6 }}>
+        {images.slice(1, 5).map((img, idx) => (
+          <Grid2 key={img + idx} size={{ xs: 12, md: 6 }}>
             {renderImage(img, idx)}
           </Grid2>
         ))}
+
+        {/* Show More Button */}
+        {images.length > 3 && (
+          <Grid2 size={{ xs: 12, md: 6 }}>
+            <Button
+              variant="outlined"
+              fullWidth
+              onClick={() => handleOpen(4)}
+              sx={{ mt: 2, borderRadius: "0.75rem" }}
+            >
+              Show More Images ({images.length - 4} more)
+            </Button>
+          </Grid2>
+        )}
       </Grid2>
 
       {/* Modal Slider */}

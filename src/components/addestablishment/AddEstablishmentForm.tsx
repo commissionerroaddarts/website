@@ -342,6 +342,7 @@ export default function AddEstablishment({
 
         // Call the API service method to insert business
         const response = await insertBusiness(values);
+        console.log("Response from insertBusiness:", { values, response });
         if (response.status === 201) {
           const { _id } = response.data;
           if (_id) {

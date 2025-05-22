@@ -45,7 +45,7 @@ export default async function EstablishmentPage({
                 <h2 className="text-white text-xl font-semibold mb-2">
                   Description
                 </h2>
-                <p className="text-gray-300">{business.shortDis}</p>
+                <p className="text-gray-300 capitalize">{business.shortDis}</p>
               </div>
               {(business.media?.images?.length ?? 0) > 1 && (
                 <EstablishmentGallery images={business.media?.images ?? []} />

@@ -51,20 +51,20 @@ export const fetchBusinesses = async (
 
 export const insertBusiness = async (data: any) => {
   try {
+    console.log({ data });
     const { media, ...rest } = data;
     const response = await axiosInstance.post(`${API_URL}`, rest);
     if (response.status === 201) {
       const { _id: businessId } = response.data;
       const hasImageFiles =
         Array.isArray(media?.images) &&
-        media.images.some((img: any) => img instanceof File);
-      const hasLogoFile = media?.logo instanceof File;
-      console.log(hasImageFiles, hasLogoFile);
+        media.images.some((img: any) => img instanceof Blob);
+      const hasLogoFile = media?.logo instanceof Blob;
       if (hasImageFiles || hasLogoFile) {
         const formData = new FormData();
         if (hasImageFiles) {
           media.images.forEach((file: File) => {
-            if (file instanceof File) {
+            if (file instanceof Blob) {
               formData.append("images", file);
             }
           });
@@ -94,12 +94,12 @@ export const updateBusiness = async (data: any) => {
     if (response.status === 200) {
       if (
         Array.isArray(media?.images) &&
-        media.images.every((img: any) => img instanceof File) &&
-        media.logo instanceof File
+        media.images.every((img: any) => img instanceof Blob) &&
+        media.logo instanceof Blob
       ) {
         const formData = new FormData();
         if (media.images.length > 0) {
-          media.images.forEach((file: File) => {
+          media.images.forEach((file: Blob) => {
             formData.append("images", file);
           });
         }

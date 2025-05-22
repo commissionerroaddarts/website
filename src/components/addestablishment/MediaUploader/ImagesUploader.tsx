@@ -114,13 +114,13 @@ const ImagesUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
       setLoading(false);
       return;
     }
+    setFiles((prevFiles) => {
+      const updatedFiles = [...prevFiles, ...compressedFiles];
+      setValue("media.images", updatedFiles);
+      return updatedFiles;
+    });
 
-    const newFiles = [...files, ...compressedFiles];
-    const newPreviews = [...previews, ...previewUrls];
-
-    setFiles(newFiles);
-    setPreviews(newPreviews);
-    setValue("media.images", newFiles);
+    setPreviews((prevPreviews) => [...prevPreviews, ...previewUrls]);
     setLoading(false);
   };
 
@@ -163,6 +163,7 @@ const ImagesUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
                   onClick={() => fileInputRef.current?.click()}
                   type="button"
                   text={loading ? "Selecting..." : "Select Images"}
+                  disabled={loading}
                 />
               </div>
             ) : (
@@ -198,6 +199,7 @@ const ImagesUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
                     className="border-white rounded-full"
                     onClick={() => fileInputRef.current?.click()}
                     type="button"
+                    disabled={loading}
                   >
                     <Plus className="w-5 h-5" color="white" />
                   </IconButton>
@@ -211,9 +213,10 @@ const ImagesUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
       {previews.length > 0 && (
         <div className="flex justify-center">
           <ThemeButton
-            text={"Upload"}
+            text={loading ? "Uploading..." : "Upload"}
             onClick={() => setOpen(false)}
             className="w-full"
+            disabled={loading}
           />
         </div>
       )}

@@ -118,7 +118,7 @@ export default function Step3Form({
         {sameHours ? (
           <Box display="flex" gap={2} mb={3}>
             <TimePicker
-              label="With Time Clock"
+              label="Opening Time"
               viewRenderers={{
                 hours: renderTimeViewClock,
                 minutes: renderTimeViewClock,
@@ -172,7 +172,7 @@ export default function Step3Form({
               const errorClose = fieldErrors.timings?.[dayKey]?.close;
 
               return (
-                <Grid2 size={{ xs: 12, md: 6 }} key={day.value}>
+                <Grid2 size={{ xs: 12 }} key={day.value}>
                   <Box className="flex gap-3 items-center mb-3">
                     <Typography color="textSecondary" gutterBottom>
                       {day.label}

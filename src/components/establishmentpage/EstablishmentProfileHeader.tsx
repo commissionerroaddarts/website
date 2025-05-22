@@ -205,7 +205,7 @@ export default function EstablishmentProfileHeader({
 
           <div className="flex flex-col gap-2 mb-5">
             <h1 className="text-white text-3xl font-bold">{name}</h1>
-            <p className="text-gray-400 text-sm">{tagline}</p>
+            <p className="text-gray-400 text-sm capitalize">{tagline}</p>
           </div>
         </div>
 
