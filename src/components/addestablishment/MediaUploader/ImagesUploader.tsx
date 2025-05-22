@@ -96,7 +96,7 @@ const ImagesUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
     for (const file of validFiles) {
       try {
         const compressed = await imageCompression(file, {
-          maxSizeMB: 1,
+          maxSizeMB: 0.1,
           maxWidthOrHeight: 1024,
           useWebWorker: true,
         });
