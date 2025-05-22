@@ -7,6 +7,7 @@ import { Box, Dialog } from "@mui/material";
 import { X } from "lucide-react";
 import CloseIconButton from "@/components/global/CloseIconButton";
 import { toast } from "react-toastify";
+import imageCompression from "browser-image-compression";
 
 const BannerImagePopup = ({
   open,
@@ -49,6 +50,7 @@ const BannerUploader = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const existingImage = getValues("media.cover");
@@ -63,7 +65,7 @@ const BannerUploader = ({
     }
   }, [getValues]);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (!selectedFile) return;
 
@@ -83,9 +85,29 @@ const BannerUploader = ({
       return;
     }
 
-    setFile(selectedFile);
-    setPreview(URL.createObjectURL(selectedFile));
-    setValue("media.cover", selectedFile); // 👈 set as array
+    try {
+      setLoading(true);
+      const fileSizeMB = selectedFile.size / (1024 * 1024);
+      const shouldCompress = fileSizeMB > 0.3; // Only compress if bigger than 300KB
+
+      const options = {
+        maxSizeMB: shouldCompress ? 0.4 : fileSizeMB, // target ~400KB
+        maxWidthOrHeight: 1024, // Resize large images down to reduce size
+        useWebWorker: true,
+        initialQuality: 0.9, // High starting quality (0 to 1)
+        alwaysKeepResolution: false, // Let the lib resize
+      };
+
+      const compressedFile = await imageCompression(selectedFile, options);
+
+      setFile(compressedFile);
+      setPreview(URL.createObjectURL(compressedFile));
+      setValue("media.cover", compressedFile); // 👈 set as array
+      setLoading(false);
+    } catch (error) {
+      console.error("Error compressing image:", error);
+      toast.error("Error compressing image. Please try again.");
+    }
   };
 
   const handleRemove = () => {
@@ -107,7 +129,7 @@ const BannerUploader = ({
       </h1>
 
       <Controller
-        name="images[0]" // 👈 points to first item
+        name="media.cover" // 👈 points to first item
         control={control}
         defaultValue={null}
         render={({ field, fieldState }) => (

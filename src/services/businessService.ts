@@ -60,7 +60,7 @@ export const insertBusiness = async (data: any) => {
         media.images.some((img: any) => img instanceof Blob);
       const hasLogoFile = media?.logo instanceof Blob;
       const hasCoverFile = media?.cover instanceof Blob;
-      if (hasImageFiles || hasLogoFile) {
+      if (hasImageFiles || hasLogoFile || hasCoverFile) {
         const formData = new FormData();
         if (hasImageFiles) {
           media.images.forEach((file: File) => {
