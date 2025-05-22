@@ -225,19 +225,6 @@ const PlanCard = ({ plan }: PlanCardProps) => {
                     }}
                   />
                   <span>{feature?.name}</span>
-
-                  {feature?.name ===
-                    "Direct messaging with potential customers" && (
-                    <Chip
-                      label="Coming Soon"
-                      size="small"
-                      color="warning"
-                      sx={{
-                        fontSize: "0.7rem",
-                        height: 20,
-                      }}
-                    />
-                  )}
                 </Typography>
               </motion.div>
             ))}
