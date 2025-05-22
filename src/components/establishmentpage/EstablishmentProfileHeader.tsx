@@ -59,7 +59,8 @@ export default function EstablishmentProfileHeader({
   const { user } = useAppState();
   const { userDetails } = user;
   const { role } = userDetails || {};
-  const isStoreOwner = role === "owner" || role === "admin";
+  const isStoreOwner =
+    (role === "owner" || role === "admin") && userDetails?._id === id;
   const [loading, setLoading] = useState(false);
   const [openConfirm, setOpenConfirm] = useState(false);
   const [uploadLogo, setUploadLogo] = useState(false);

@@ -40,6 +40,7 @@ const navbarVariants = {
 
 const baseNavLinks = [
   { href: "/", label: "Home" },
+  { href: "/for-darters", label: "For Darters" },
   { href: "/about", label: "About" },
   { href: "/contact-us", label: "Contact" },
   { href: "/add-establishment", label: "Add Listing" },

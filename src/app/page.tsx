@@ -69,4 +69,10 @@ const categories = [
     name: "Las Vegas",
     imageUrl: "/images/listings/category/c5.png",
   },
+  //add San Diego
+  {
+    id: 7,
+    name: "San Diego",
+    imageUrl: "/images/listings/category/c6.png",
+  },
 ];

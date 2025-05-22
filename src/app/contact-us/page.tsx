@@ -10,8 +10,8 @@ export const metadata = generateMetadata({
   image: "/images/banners/banner-icon.png",
 });
 
-const page = () => {
+const ContactUsPage = () => {
   return <ContactUsSection />;
 };
 
-export default page;
+export default ContactUsPage;

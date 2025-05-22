@@ -36,10 +36,23 @@ export const getUserDetails = async (dispatch: AppDispatch) => {
   }
 };
 
-export const registerUser = async (data: SignupFormData) => {
+export const registerUser = async (
+  data: SignupFormData,
+  dispatch: AppDispatch
+) => {
   try {
     const response = await axiosInstance.post("/auth/signup", data);
-    console.log(response);
+    const userDetails = response.data.data.user; // Assuming the user details are in `response.data.user`
+    const subscription = response.data.data?.subscription; // Assuming the subscription details are in `response.data.subscription`
+    const permissions = response.data.data?.permissions; // Assuming the permissions details are in `response.data.permissions`
+    if (subscription) {
+      userDetails["subscription"] = subscription; // Add subscription details to userDetails
+    }
+    if (permissions) {
+      userDetails["permissions"] = permissions; // Add permissions details to userDetails
+    }
+    dispatch(setUserDetails(userDetails)); // Store user details in Redux
+
     return response; // Expected { message: "Signup successful!" }
   } catch (error: any) {
     throw new Error(error?.response?.data?.error?.message ?? "Signup failed");

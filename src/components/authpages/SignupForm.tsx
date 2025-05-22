@@ -22,6 +22,7 @@ import { Google } from "@mui/icons-material";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAppState } from "@/hooks/useAppState";
 import ReCAPTCHA from "react-google-recaptcha";
+import { useAppDispatch } from "@/store";
 
 // ✅ Validation Schema
 const schema = yup.object().shape({
@@ -76,7 +77,7 @@ const SignupForm = () => {
   // Redirect to dashboard if user is already logged in
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
-
+  const dispatch = useAppDispatch();
   const isUserLoggedIn = isLoggedIn && userDetails?._id !== undefined;
 
   useEffect(() => {
@@ -100,7 +101,7 @@ const SignupForm = () => {
         return;
       }
 
-      const response = await registerUser(data);
+      const response = await registerUser(data, dispatch);
       if (response?.status === 201) {
         toast.success(
           response?.data?.message ??
@@ -112,6 +113,9 @@ const SignupForm = () => {
           }
           if (selectedPlan) {
             router.push("/checkout"); // Redirect to login page after successful signup
+          }
+          if (!selectedPlan && !sessionId) {
+            router.push("/"); // Redirect to login page after successful signup
           }
         }, 2000);
       }
