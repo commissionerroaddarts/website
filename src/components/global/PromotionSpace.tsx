@@ -22,7 +22,9 @@ const PromotionSpace = ({
   const [promotionState, setPromotionState] = useState(
     promotion?.description ?? "Update your current promotions here..."
   );
-  const [inputValue, setInputValue] = useState(promotionState);
+  const [inputValue, setInputValue] = useState(
+    promotion?.description !== "" ? promotion?.description : ""
+  );
 
   const handleEdit = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -78,6 +80,7 @@ const PromotionSpace = ({
             name="promotionText"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
+            placeholder="Update your current promotions here..."
             style={{
               flex: 1,
               border: "none",
