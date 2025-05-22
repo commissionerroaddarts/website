@@ -21,8 +21,7 @@ import Confetti from "react-confetti"; // 🎉 install it via `npm i react-confe
 import { Business } from "@/types/business";
 import UpgradePlan from "@/components/modals/UpgradePlan";
 import { Dialog, DialogContent, Typography } from "@mui/material";
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
-const SUPPORTED_FORMATS = ["image/jpg", "image/png", "image/jpeg"];
+import { mediaSchema } from "@/yupSchemas/mediaSchema";
 
 const stepSchemas = [
   yup.object().shape({
@@ -73,52 +72,7 @@ const stepSchemas = [
         .required("Price Category is required")
         .oneOf(["$", "$$", "$$$", "$$$$"], "Invalid price category"),
     }),
-    media: yup.object().shape({
-      logo: yup
-        .mixed()
-        .test("fileOrUrl", "Unsupported file format", (value) => {
-          if (!value) return true;
-
-          if (typeof value === "string") return true; // Accept URL
-
-          const file = value as File;
-          return SUPPORTED_FORMATS.includes(file.type);
-        })
-        .test("fileSize", "Max allowed size is 5MB", (value) => {
-          if (!value || typeof value === "string") return true;
-
-          const file = value as File;
-          return file.size <= MAX_FILE_SIZE;
-        })
-        .test("fileOrUrl", "Only JPG/PNG images allowed", (value) => {
-          if (!value) return false;
-
-          if (typeof value === "string") return true; // Accept URL
-
-          return (
-            value instanceof File && SUPPORTED_FORMATS.includes(value.type)
-          );
-        }),
-
-      images: yup.array().of(
-        yup
-          .mixed()
-          .test("fileOrUrl", "Only JPG/PNG images allowed", (value) => {
-            if (!value) return false;
-
-            if (typeof value === "string") return true; // Accept URL
-
-            return (
-              value instanceof File && SUPPORTED_FORMATS.includes(value.type)
-            );
-          })
-          .test("fileSize", "Each image must be under 5MB", (value) => {
-            if (!value || typeof value === "string") return true;
-
-            return value instanceof File && value.size <= MAX_FILE_SIZE;
-          })
-      ),
-    }),
+    media: mediaSchema,
   }),
   yup.object().shape({
     location: yup.object().shape({
@@ -303,7 +257,7 @@ export default function AddEstablishment({
         },
       },
       media: {
-        logo: business?.media?.logo ?? "",
+        logo: business?.media?.logo ?? undefined,
         images: business?.media?.images || [],
       },
     },

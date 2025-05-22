@@ -240,8 +240,18 @@ body::-webkit-scrollbar-thumb {
   transform: translate(-50%, -50%) !important;
   width: auto;
   max-width: 95%;
-  z-index: 9999;
-  /* Add a blurred background overlay */
+  z-index: 10001;
+  position: fixed !important;
+}
+
+/* Blurred overlay behind toast */
+.toast-blur-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(32, 12, 39, 0.5);
+  backdrop-filter: blur(8px);
+  pointer-events: auto;
 }
 
 .Toastify__toast {

@@ -53,21 +53,27 @@ const LogoUploader = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleFileChange = async (selectedFile: File) => {
     if (!selectedFile) return;
+    setLoading(true);
 
     const allowedTypes = ["image/png", "image/jpg", "image/jpeg"];
     if (!allowedTypes.includes(selectedFile.type)) {
       toast.error(
         "Invalid file format. Please upload a PNG, JPG, or JPEG image."
       );
+      setLoading(false);
+      setFile(null);
       return;
     }
 
     const maxSize = 5 * 1024 * 1024; // 5MB
     if (selectedFile.size > maxSize) {
       toast.error("File size exceeds 5MB. Please upload a smaller image.");
+      setLoading(false);
+      setFile(null);
       return;
     }
 
@@ -85,6 +91,8 @@ const LogoUploader = ({
       const fileUrl = URL.createObjectURL(compressedFile);
       setPreviewUrl(fileUrl);
 
+      setLoading(false);
+
       // Sync compressed file with RHF and local state
       setFile(compressedFile);
       setValue("media.logo", compressedFile);
@@ -97,6 +105,10 @@ const LogoUploader = ({
     } catch (error) {
       console.error("Compression failed:", error);
       toast.error("Failed to compress the image.");
+      setLoading(false);
+      setFile(null);
+      setPreviewUrl(null);
+      return;
     }
   };
 
@@ -181,7 +193,7 @@ const LogoUploader = ({
       {file && (
         <div className="flex justify-center">
           <ThemeButton
-            text={"Upload"}
+            text={loading ? "Uploading" : "Upload"}
             onClick={
               handleInsertBusinessLogo
                 ? async () => {

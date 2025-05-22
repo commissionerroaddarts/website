@@ -9,6 +9,13 @@ import CloseIconButton from "@/components/global/CloseIconButton";
 import { toast } from "react-toastify";
 import imageCompression from "browser-image-compression";
 
+function blobToFile(blob: Blob, fileName: string): File {
+  return new File([blob], fileName, {
+    type: blob.type || "image/png", // fallback type
+    lastModified: Date.now(),
+  });
+}
+
 const ImagesUploaderPopup = ({
   open,
   setOpen,
@@ -32,32 +39,37 @@ const ImagesUploaderPopup = ({
 const ImagesUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
   const { control, setValue, getValues } = useFormContext();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [files, setFiles] = useState<File[]>([]);
+  const [files, setFiles] = useState<Blob[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   // Show already uploaded images from form context on mount
   React.useEffect(() => {
     const existingImages = getValues("media.images");
-    if (
-      existingImages &&
-      Array.isArray(existingImages) &&
-      existingImages.length > 0
-    ) {
-      // If images are File objects, generate previews; if strings (URLs/base64), use directly
-      const previewUrls = existingImages.map((img: any) => {
-        if (img instanceof File) {
-          return URL.createObjectURL(img);
+
+    if (existingImages && Array.isArray(existingImages)) {
+      const validFiles = existingImages.map((img: any, i: number) => {
+        // If Blob but not File
+        if (img instanceof Blob && !(img instanceof File)) {
+          return blobToFile(img, `image_${i + 1}.png`);
         }
-        return img; // assume it's a URL or base64 string
+        return img;
       });
-      setFiles(existingImages.filter((img: any) => img instanceof File));
+
+      const previewUrls = validFiles.map((img: any) =>
+        typeof img === "string" ? img : URL.createObjectURL(img)
+      );
+
+      setFiles(validFiles.filter((f: any) => f instanceof File));
       setPreviews(previewUrls);
+      setValue("media.images", validFiles); // update form values
     }
   }, [getValues]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = Array.from(e.target.files || []);
     if (selectedFiles.length === 0) return;
+    setLoading(true);
 
     const invalidTypeFiles = selectedFiles.filter(
       (file) =>
@@ -67,7 +79,9 @@ const ImagesUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
     );
 
     if (invalidTypeFiles.length > 0) {
-      toast.error("Invalid file format. Please upload PNG or JPG images.");
+      toast.error("Invalid file format. Please upload PNG,JPG or JPEG images.");
+      setLoading(false);
+      return;
     }
 
     const validFiles = selectedFiles.filter((file) =>
@@ -75,7 +89,7 @@ const ImagesUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
     );
 
     // Compress valid files
-    const compressedFiles: File[] = [];
+    const compressedFiles: Blob[] = [];
     const previewUrls: string[] = [];
 
     for (const file of validFiles) {
@@ -90,11 +104,14 @@ const ImagesUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
       } catch (err) {
         console.error("Compression error:", err);
         toast.error("Error compressing image");
+        setLoading(false);
+        return;
       }
     }
 
     if (compressedFiles.length === 0) {
       if (fileInputRef.current) fileInputRef.current.value = "";
+      setLoading(false);
       return;
     }
 
@@ -104,6 +121,7 @@ const ImagesUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
     setFiles(newFiles);
     setPreviews(newPreviews);
     setValue("media.images", newFiles);
+    setLoading(false);
   };
 
   const handleRemove = (index: number) => {
@@ -144,7 +162,7 @@ const ImagesUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
                 <ThemeButton
                   onClick={() => fileInputRef.current?.click()}
                   type="button"
-                  text="Select Images"
+                  text={loading ? "Selecting..." : "Select Images"}
                 />
               </div>
             ) : (

@@ -19,6 +19,7 @@ import {
   insertBusinessImages,
 } from "@/services/businessService";
 import BannerImagePopup from "@/components/addestablishment/MediaUploader/BannerImageUploader";
+import { mediaSchema } from "@/yupSchemas/mediaSchema";
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
 const SUPPORTED_FORMATS = ["image/jpeg", "image/png", "image/jpg"];
 
@@ -31,47 +32,7 @@ interface GalleryProps {
 }
 
 const schema = yup.object().shape({
-  media: yup.object().shape({
-    logo: yup
-      .mixed()
-      .test("fileOrUrl", "Unsupported file format", (value: unknown) => {
-        if (!value) return true;
-
-        if (typeof value === "string") return true; // Accept URL
-
-        const file = value as File;
-        return SUPPORTED_FORMATS.includes(file.type);
-      })
-      .test("fileSize", "Max allowed size is 5MB", (value: unknown) => {
-        if (!value || typeof value === "string") return true;
-
-        const file = value as File;
-        return file.size <= MAX_FILE_SIZE;
-      }),
-
-    images: yup.array().of(
-      yup
-        .mixed()
-        .test(
-          "fileOrUrl",
-          "Only JPG,PNG or JPEG images allowed",
-          (value: unknown) => {
-            if (!value) return false;
-
-            if (typeof value === "string") return true; // Accept URL
-
-            return (
-              value instanceof File && SUPPORTED_FORMATS.includes(value.type)
-            );
-          }
-        )
-        .test("fileSize", "Each image must be under 5MB", (value: unknown) => {
-          if (!value || typeof value === "string") return true;
-
-          return value instanceof File && value.size <= MAX_FILE_SIZE;
-        })
-    ),
-  }),
+  media: mediaSchema,
 });
 
 export default function EstablishmentProfileHeader({
@@ -94,6 +55,7 @@ export default function EstablishmentProfileHeader({
     resolver: yupResolver(schema),
   });
 
+  console.log({ images, logo });
   const { user } = useAppState();
   const { userDetails } = user;
   const { role } = userDetails || {};
