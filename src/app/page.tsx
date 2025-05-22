@@ -56,22 +56,17 @@ const categories = [
   },
   {
     id: 4,
-    name: "Houston",
-    imageUrl: "/images/listings/category/c4.png",
-  },
-  {
-    id: 5,
     name: "San Antonio",
     imageUrl: "/images/listings/category/c1.png",
   },
   {
-    id: 6,
+    id: 5,
     name: "Las Vegas",
     imageUrl: "/images/listings/category/c5.png",
   },
   //add San Diego
   {
-    id: 7,
+    id: 6,
     name: "San Diego",
     imageUrl: "/images/listings/category/c6.jpg",
   },
