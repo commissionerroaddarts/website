@@ -99,15 +99,13 @@ export default function MyEstablishmentsComponent() {
             margin: "0 auto",
           }}
         >
-          {businesses.length > 2 && (
-            <FilterSection
-              isLoading={loading}
-              filters={filterParams}
-              setFilters={setFilterParams}
-              updateQuery={updateQuery}
-              isFilteration={false}
-            />
-          )}
+          <FilterSection
+            isLoading={loading}
+            filters={filterParams}
+            setFilters={setFilterParams}
+            updateQuery={updateQuery}
+            isFilteration={false}
+          />
           {(() => {
             if (loading) {
               return (

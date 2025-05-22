@@ -58,10 +58,22 @@ export const logoutUser = async (dispatch: AppDispatch) => {
 
 export const forgotPassword = async (data: { email: string }) => {
   try {
-    const response = await axiosInstance.post("/auth/forget-password", data);
+    const response = await axiosInstance.post("/auth/forgot-password", data);
     return response; // Expected { message: "Password reset link sent!" }
   } catch (error: any) {
     console.error("Forgot password error:", error);
+  }
+};
+
+export const resetPassword = async (newPassword: string, token: string) => {
+  try {
+    const response = await axiosInstance.post(
+      `/auth/reset-password?token=${token}`,
+      { data: { newPassword } }
+    );
+    return response; // Expected { message: "Password reset successful!" }
+  } catch (error: any) {
+    console.error("Reset password error:", error);
   }
 };
 

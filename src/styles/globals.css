@@ -278,6 +278,7 @@ body::-webkit-scrollbar-thumb {
 .Toastify__toast--success,
 .Toastify__toast-theme--colored.Toastify__toast--success {
   background: linear-gradient(148.71deg, #200c27 2.12%, #6d3880 98.73%);
+  padding: 1.5rem 2rem;
   color: white;
 }
 

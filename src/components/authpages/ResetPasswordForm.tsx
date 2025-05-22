@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { Box, Typography, Container, Paper, Grid2 } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -10,7 +10,8 @@ import CustomInput from "@/components/global/CustomInput";
 import ThemeButton from "@/components/buttons/ThemeButton";
 import Link from "next/link";
 import { PasswordChange } from "@/types/user";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter, useSearchParams } from "next/navigation";
+import { resetPassword } from "@/services/authService";
 
 // ✅ Validation Schema
 const schema = yup.object().shape({
@@ -40,17 +41,22 @@ const ResetPasswordForm = () => {
   });
 
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token");
+
+  useEffect(() => {
+    if (!token || token === "") {
+      redirect("/forget-password");
+    }
+  }, [token]);
 
   // ✅ Form Submission Handler
   const onSubmit = async (data: any) => {
     try {
-      const updatedPassword: PasswordChange = {
-        newPassword: data.password,
-      };
-
-      const response = await updateUserPassword(updatedPassword);
-      if (response.status === 200) {
-        toast.success(response.data.message);
+      if (!data.password) return;
+      const response = await resetPassword(data.password, token ?? "");
+      if (response?.status === 200) {
+        toast.success(response?.data.message);
         router.push("/login");
       }
     } catch (error) {

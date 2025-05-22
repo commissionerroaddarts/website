@@ -10,6 +10,7 @@ import { ForgotPasswordFormData } from "@/types/auth";
 import CustomInput from "@/components/global/CustomInput";
 import ThemeButton from "@/components/buttons/ThemeButton";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 // ✅ Validation Schema
 const schema = yup.object().shape({
@@ -25,6 +26,7 @@ const ForgotPasswordForm = () => {
     resolver: yupResolver(schema),
   });
 
+  const router = useRouter();
   // ✅ Form Submission Handler
   const onSubmit = async (data: ForgotPasswordFormData) => {
     try {
@@ -36,6 +38,7 @@ const ForgotPasswordForm = () => {
       }
 
       toast.success("Password reset link sent to your email.");
+      router.push("/login");
     } catch (error: any) {
       console.error(error);
       toast.error(

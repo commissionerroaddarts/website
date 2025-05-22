@@ -1,6 +1,7 @@
 import ResetPasswordForm from "@/components/authpages/ResetPasswordForm";
+import Preloader from "@/components/global/Preloader";
 import { generateMetadata } from "@/utils/metaData";
-import React from "react";
+import React, { Suspense } from "react";
 
 export const metadata = generateMetadata({
   title: "Reset Password",
@@ -10,7 +11,11 @@ export const metadata = generateMetadata({
 });
 
 const ResetPasswordPage = () => {
-  return <ResetPasswordForm />;
+  return (
+    <Suspense fallback={<Preloader />}>
+      <ResetPasswordForm />
+    </Suspense>
+  );
 };
 
 export default ResetPasswordPage;
