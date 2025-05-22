@@ -347,7 +347,11 @@ export default function AddEstablishment({
   const [closedDays, setClosedDays] = useState<Record<string, boolean>>({});
   const [isOpen, setIsOpen] = useState(false);
 
-  const isUserLoggedIn = isLoggedIn && userDetails?._id;
+  const isUserLoggedIn =
+    isLoggedIn &&
+    userDetails?._id &&
+    userDetails?.subscription &&
+    userDetails?.permissions;
   const isUserBusinessOwner =
     isUserLoggedIn && business && business.userId === userDetails?._id;
 
