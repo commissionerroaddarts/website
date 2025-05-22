@@ -79,8 +79,6 @@ const SignupForm = () => {
 
   const isUserLoggedIn = isLoggedIn && userDetails?._id !== undefined;
 
-  console.log(isUserLoggedIn, isLoggedIn, userDetails?._id);
-
   useEffect(() => {
     if (isUserLoggedIn) {
       router.push("/profile");
@@ -109,10 +107,11 @@ const SignupForm = () => {
             `We have sent a verification email at ${data.email}`
         );
         setTimeout(() => {
+          if (sessionId) {
+            router.push("/add-establishment"); // Redirect to login page after successful signup
+          }
           if (selectedPlan) {
             router.push("/checkout"); // Redirect to login page after successful signup
-          } else {
-            router.push("/login"); // Redirect to login page after successful signup
           }
         }, 2000);
       }

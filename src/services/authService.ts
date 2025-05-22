@@ -90,7 +90,7 @@ export const verifyEmail = async (data: { email: string }) => {
 
 export const recaptchaVerify = async (token: string) => {
   try {
-    const response = await axiosInstance.post(
+    const response = await axiosInstance.get(
       `/auth/verify-captcha?token=${token}`
     );
     return response; // Expected { message: "reCAPTCHA verified!" }
