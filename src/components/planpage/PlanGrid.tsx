@@ -105,7 +105,7 @@ const PlanCard = ({ plan }: PlanCardProps) => {
           padding: "10px",
           boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.5)",
           border: plan.featured ? "2px solid #8224E3" : "none",
-          height: { xs: "auto", md: 730 },
+          height: { xs: "auto", md: 760 },
           display: "flex",
           flexDirection: "column",
           position: "relative", // Needed for ribbon positioning

@@ -73,6 +73,6 @@ const categories = [
   {
     id: 7,
     name: "San Diego",
-    imageUrl: "/images/listings/category/c6.png",
+    imageUrl: "/images/listings/category/c6.jpg",
   },
 ];
