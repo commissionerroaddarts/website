@@ -85,24 +85,32 @@ export const insertBusiness = async (data: any) => {
     throw error;
   }
 };
-
 export const updateBusiness = async (data: any) => {
   try {
     const { media, _id, ...rest } = data;
+
+    // First, update the business data (non-media)
     const response = await axiosInstance.patch(`${API_URL}/${_id}`, rest);
-    if (response.status === 200) {
-      if (
-        Array.isArray(media?.images) &&
-        media.images.every((img: any) => img instanceof Blob) &&
-        media.logo instanceof Blob
-      ) {
+
+    // If success, check and upload only new media files (Blobs)
+    if (response.status === 200 && media) {
+      const { images = [], logo } = media;
+
+      // Filter new image files (Blob) vs existing (string URLs)
+      const newImages = images.filter((img: any) => img instanceof Blob);
+      const isNewLogo = logo instanceof Blob;
+
+      if (newImages.length > 0 || isNewLogo) {
         const formData = new FormData();
-        if (media.images.length > 0) {
-          media.images.forEach((file: Blob) => {
-            formData.append("images", file);
-          });
+
+        newImages.forEach((file: Blob) => {
+          formData.append("images", file);
+        });
+
+        if (isNewLogo) {
+          formData.append("businessLogo", logo);
         }
-        formData.append("businessLogo", media.logo);
+
         await axiosInstance.patch(`${API_URL}/media/${_id}`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",

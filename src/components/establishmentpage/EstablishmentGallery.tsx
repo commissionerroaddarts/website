@@ -96,7 +96,7 @@ export default function EstablishmentGallery({
         ))}
 
         {/* Show More Button */}
-        {images.length > 3 && (
+        {images.length > 4 && (
           <Grid2 size={{ xs: 12, md: 6 }}>
             <Button
               variant="outlined"
