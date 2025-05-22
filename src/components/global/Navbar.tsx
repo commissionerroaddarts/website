@@ -169,13 +169,13 @@ function Navbar() {
             <Box
               sx={{
                 position: "relative", // <-- Required for Image with fill
-                width: { xs: "30%", sm: "10%", md: "15%" },
+                width: { xs: "30%", sm: "10%", md: "20%" },
                 height: {
-                  xs: "80px",
-                  sm: "100px",
-                  md: "120px",
-                  lg: "130px",
-                  xl: "150px",
+                  xs: "100px",
+                  sm: "120px",
+                  md: "140px",
+                  lg: "150px",
+                  xl: "200px",
                 },
               }}
             >

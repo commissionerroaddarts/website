@@ -108,7 +108,7 @@ const SignupForm = () => {
             `We have sent a verification email at ${data.email}`
         );
         setTimeout(() => {
-          if (sessionId) {
+          if (sessionId || userDetails?.subscription) {
             router.push("/add-establishment"); // Redirect to login page after successful signup
           }
           if (selectedPlan) {
