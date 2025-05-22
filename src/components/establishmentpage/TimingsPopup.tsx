@@ -168,7 +168,11 @@ function OpeningHoursDialog({
                   {day.label}
                 </span>
                 <span className="text-white text-sm md:text-xl font-sans">
-                  {timings[day.value]?.open} - {timings[day.value]?.close}
+                  {timings[day.value]?.open === "closed"
+                    ? "Closed"
+                    : `${timings[day.value]?.open} - ${
+                        timings[day.value]?.close
+                      }`}
                 </span>
               </div>
             ))}
