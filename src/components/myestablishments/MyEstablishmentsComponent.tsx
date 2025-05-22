@@ -51,10 +51,6 @@ export default function MyEstablishmentsComponent() {
 
     try {
       const { data } = await fetchBusinesses(1, 10, validFilterParams, _id);
-      if (!data || data.length === 0) {
-        toast.error("No establishments found");
-        redirect("/add-establishment");
-      }
       setBusinesses(data);
     } catch (error) {
       console.error("Failed to fetch businesses:", error);
