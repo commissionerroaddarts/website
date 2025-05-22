@@ -206,7 +206,22 @@ export default function AddEstablishment({
 }) {
   const saveToStorage = (data: any) => {
     if (typeof window !== "undefined" && window.localStorage) {
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
+      // Remove or serialize File/Blob objects before saving
+      const replacer = (_key: string, value: any) => {
+        if (
+          (typeof File !== "undefined" && value instanceof File) ||
+          (typeof Blob !== "undefined" && value instanceof Blob)
+        ) {
+          // Store only metadata or null for files/blobs
+          if (typeof File !== "undefined" && value instanceof File) {
+            return { name: value.name, size: value.size, type: value.type };
+          }
+          // For Blob, omit 'name'
+          return { size: value.size, type: value.type };
+        }
+        return value;
+      };
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data, replacer));
     }
   };
 
@@ -298,7 +313,7 @@ export default function AddEstablishment({
 
   useEffect(() => {
     const subscription = methods.watch((value) => {
-      saveToStorage(value);
+      saveToStorage(JSON.stringify(value));
     });
 
     return () => subscription.unsubscribe(); // cleanup
