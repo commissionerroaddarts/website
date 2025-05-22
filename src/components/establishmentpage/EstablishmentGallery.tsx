@@ -6,6 +6,7 @@ import Slider from "react-slick";
 import CloseIconButton from "@/components/global/CloseIconButton";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import ThemeOutlineButton from "@/components/buttons/ThemeOutlineButton";
 
 interface ImageGalleryProps {
   images: string[];
@@ -50,6 +51,10 @@ export default function EstablishmentGallery({
         width: "100%",
         cursor: "pointer",
         padding: 0,
+        backgroundColor:
+          img && typeof img === "string" && img.toLowerCase().endsWith(".png")
+            ? "white"
+            : "transparent",
       }}
     >
       <Image
@@ -98,14 +103,10 @@ export default function EstablishmentGallery({
         {/* Show More Button */}
         {images.length > 4 && (
           <Grid2 size={{ xs: 12, md: 6 }}>
-            <Button
-              variant="outlined"
-              fullWidth
+            <ThemeOutlineButton
               onClick={() => handleOpen(4)}
-              sx={{ mt: 2, borderRadius: "0.75rem" }}
-            >
-              Show More Images ({images.length - 4} more)
-            </Button>
+              text={`Show More Images (${images.length - 4} more)`}
+            />
           </Grid2>
         )}
       </Grid2>
@@ -135,9 +136,8 @@ export default function EstablishmentGallery({
                 key={img + idx}
                 src={img}
                 alt={`Zoomed Image ${idx + 1}`}
-                width={800}
-                height={600}
-                className="w-full h-full object-contain"
+                fill
+                className=" object-contain"
               />
             ))}
           </Slider>

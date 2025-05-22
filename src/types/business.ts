@@ -54,6 +54,7 @@ export interface Socials {
 export interface FAQ {
   q: string;
   a: string;
+  _id?: string;
 }
 
 export interface Price {

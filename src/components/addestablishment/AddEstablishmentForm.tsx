@@ -283,7 +283,7 @@ export default function AddEstablishment({
             youtube: business?.socials?.youtube ?? undefined,
             tiktok: business?.socials?.tiktok ?? undefined,
           },
-          faqs: business?.faqs ?? [],
+          faqs: (business?.faqs ?? []).map(({ _id, ...rest }) => rest),
         },
   });
   const { formState } = methods; // Access formState to track dirty state
