@@ -97,38 +97,26 @@ export const updateBusiness = async (data: any) => {
       const { images = [], logo } = media;
 
       const newImages = images.filter((img: any) => img instanceof Blob);
-      const existingImages = images.filter(
-        (img: any) => typeof img === "string"
-      );
       const isNewLogo = logo instanceof Blob;
-      const existingLogo = typeof logo === "string" ? logo : null;
+      const imagesFormData = new FormData();
+      const logoFormData = new FormData();
 
-      if (
-        newImages.length > 0 ||
-        isNewLogo ||
-        existingImages.length > 0 ||
-        existingLogo
-      ) {
-        const formData = new FormData();
-
-        // Append existing image URLs
-        existingImages.forEach((url: string) => {
-          formData.append("images", url); // Make sure your backend supports this
-        });
-
+      if (newImages.length > 0) {
         // Append new image files
         newImages.forEach((file: Blob) => {
-          formData.append("images", file);
+          imagesFormData.append("images", file);
         });
+        await axiosInstance.patch(`${API_URL}/upload/${_id}`, imagesFormData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+      }
+      // Logo handling
+      if (isNewLogo) {
+        logoFormData.append("businessLogo", logo);
 
-        // Logo handling
-        if (isNewLogo) {
-          formData.append("businessLogo", logo);
-        } else if (existingLogo) {
-          formData.append("businessLogo", existingLogo);
-        }
-
-        await axiosInstance.patch(`${API_URL}/media/${_id}`, formData, {
+        await axiosInstance.patch(`${API_URL}/media/${_id}`, logoFormData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
