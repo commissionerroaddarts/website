@@ -105,7 +105,7 @@ const ProfileImage = ({ userDetails }: { userDetails: User }) => {
         verificationResponse?.status === 200 ||
         verificationResponse?.status === 201
       ) {
-        toast.success("Verified successfully!");
+        toast.success("Email verified successfully!");
       }
     } catch (error: any) {
       toast.error(error?.message ?? "Failed to verify.");

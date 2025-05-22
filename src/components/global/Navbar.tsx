@@ -31,7 +31,6 @@ import CardStaggerAnimation from "@/animations/sections/CardStaggerAnimation";
 import { Building } from "lucide-react";
 import ThemeButton from "@/components/buttons/ThemeButton";
 import CloseIconButton from "./CloseIconButton";
-import path from "path";
 
 const navbarVariants = {
   hidden: { opacity: 0, y: -20 },

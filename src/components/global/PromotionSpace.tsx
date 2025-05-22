@@ -34,11 +34,14 @@ const PromotionSpace = ({
 
   const handleSave = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    setPromotionState(inputValue);
+    setPromotionState(inputValue ?? "");
     setEditing(false);
     // Optionally, call an API to persist the promotion here
     try {
-      const response = await insertBusinessPromotion(inputValue, businessId);
+      const response = await insertBusinessPromotion(
+        inputValue ?? "",
+        businessId
+      );
       if (response.success) {
         toast.success("Promotion saved successfully");
       } else {
