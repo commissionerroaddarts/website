@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Box, Card, CardContent, Grid2, Typography } from "@mui/material";
+import { Box, Card, CardContent, Chip, Grid2, Typography } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ThemeButton from "@/components/buttons/ThemeButton";
 import ThemeOutlineButton from "@/components/buttons/ThemeOutlineButton";
@@ -214,17 +214,30 @@ const PlanCard = ({ plan }: PlanCardProps) => {
               >
                 <Typography
                   display="flex"
-                  alignItems="start"
+                  alignItems="center"
                   mb={1}
                   textAlign="left"
+                  gap={1} // adds spacing between icon/text/chip
                 >
                   <CheckCircleIcon
                     sx={{
                       color: !plan.featured ? "white" : "#8224E3",
-                      marginRight: "8px",
                     }}
-                  />{" "}
-                  {feature?.name}
+                  />
+                  <span>{feature?.name}</span>
+
+                  {feature?.name ===
+                    "Direct messaging with potential customers" && (
+                    <Chip
+                      label="Coming Soon"
+                      size="small"
+                      color="warning"
+                      sx={{
+                        fontSize: "0.7rem",
+                        height: 20,
+                      }}
+                    />
+                  )}
                 </Typography>
               </motion.div>
             ))}

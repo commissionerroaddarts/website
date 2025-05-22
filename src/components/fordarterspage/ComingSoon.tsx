@@ -28,28 +28,30 @@ const ComingSoon = () => {
               "linear-gradient(148.71deg, #200C27 2.12%, #6D3880 98.73%)",
           }}
         >
-          <CardContent>
-            <Typography
+          <CardContent className="flex flex-col items-center">
+            {/* <Typography
               variant="h3"
-              component="h1"
               gutterBottom
               color="white"
               fontWeight={700}
+              textAlign={"center"}
             >
               For Darters
-            </Typography>
-            <Typography variant="h6" color="text.secondary" gutterBottom>
-              Easy League & Group Boards
-            </Typography>
-            <Typography variant="body1" sx={{ mb: 2 }}>
-              Setup in Minutes, Play for Seasons...
-              <br />
-              <strong>No Setup Fees, Just Darts!</strong>
+            </Typography> */}
+            <Typography
+              variant="h5"
+              sx={{ mb: 2, color: "white" }}
+              textAlign={"center"}
+              textTransform={"uppercase"}
+            >
+              On the road or close to home? Post a match request to the Road
+              Darts community.
             </Typography>
             <Chip
               label="Coming Soon"
               color="secondary"
               sx={{ fontWeight: 600, fontSize: 16 }}
+              size="medium"
             />
           </CardContent>
         </Card>

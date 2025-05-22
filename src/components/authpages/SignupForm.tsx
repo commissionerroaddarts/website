@@ -115,7 +115,7 @@ const SignupForm = () => {
             router.push("/checkout"); // Redirect to login page after successful signup
           }
           if (!selectedPlan && !sessionId) {
-            router.push("/"); // Redirect to login page after successful signup
+            router.push("/plans"); // Redirect to login page after successful signup
           }
         }, 2000);
       }

@@ -42,9 +42,9 @@ export const registerUser = async (
 ) => {
   try {
     const response = await axiosInstance.post("/auth/signup", data);
-    const userDetails = response.data.data.user; // Assuming the user details are in `response.data.user`
-    const subscription = response.data.data?.subscription; // Assuming the subscription details are in `response.data.subscription`
-    const permissions = response.data.data?.permissions; // Assuming the permissions details are in `response.data.permissions`
+    const userDetails = response.data.data; // Assuming the user details are in `response.data.user`
+    const subscription = response.data?.subscription; // Assuming the subscription details are in `response.data.subscription`
+    const permissions = response.data?.permissions; // Assuming the permissions details are in `response.data.permissions`
     if (subscription) {
       userDetails["subscription"] = subscription; // Add subscription details to userDetails
     }
