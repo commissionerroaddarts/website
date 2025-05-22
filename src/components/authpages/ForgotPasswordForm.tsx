@@ -33,7 +33,10 @@ const ForgotPasswordForm = () => {
       const response = await forgotPassword(data);
 
       if (response?.status !== 200) {
-        toast.error("Failed to send reset link. Please try again.");
+        toast.error(
+          response?.data.message ??
+            "Failed to send reset link. Please try again."
+        );
         return;
       }
 

@@ -19,7 +19,7 @@ export default function AccountManagementPage() {
   const { user } = useAppState();
   const { isLoggedIn, userDetails } = user;
   const router = useRouter(); // Assuming you're using Next.js router
-  const isUserLoggedIn = isLoggedIn && userDetails?._id; // Check if the user is logged in
+  const isUserLoggedIn = isLoggedIn && userDetails?._id !== undefined; // Check if the user is logged in
   useEffect(() => {
     if (isUserLoggedIn) {
       router.push("/profile");

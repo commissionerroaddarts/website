@@ -47,7 +47,7 @@ const LoginForm = () => {
   const page = search.get("page"); // Get the page from the URL
   const isFromBusinessPage = page === "main"; // Check if the page is the main business page
 
-  const isUserLoggedIn = isLoggedIn && userDetails?._id; // Check if the user is logged in
+  const isUserLoggedIn = isLoggedIn && userDetails?._id !== undefined; // Check if the user is logged in
   useEffect(() => {
     if (isUserLoggedIn) {
       router.push("/profile");

@@ -5,11 +5,9 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { toast } from "react-toastify";
-import { updateUserPassword } from "@/services/userService"; // API Service
 import CustomInput from "@/components/global/CustomInput";
 import ThemeButton from "@/components/buttons/ThemeButton";
 import Link from "next/link";
-import { PasswordChange } from "@/types/user";
 import { redirect, useRouter, useSearchParams } from "next/navigation";
 import { resetPassword } from "@/services/authService";
 
@@ -55,10 +53,15 @@ const ResetPasswordForm = () => {
     try {
       if (!data.password) return;
       const response = await resetPassword(data.password, token ?? "");
-      if (response?.status === 200) {
-        toast.success(response?.data.message);
-        router.push("/login");
+      if (response?.status !== 200) {
+        toast.error(
+          response?.data.message ??
+            "Failed to reset password. Please try again."
+        );
+        return;
       }
+      toast.success(response?.data.message);
+      router.push("/login");
     } catch (error) {
       console.error("Error updating profile:", error);
     }

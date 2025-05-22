@@ -72,15 +72,21 @@ const SignupForm = () => {
   const router = useRouter();
   const { user, plan } = useAppState(); // Assuming you have a custom hook to get user state
   const { selectedPlan, email } = plan; // Assuming you have a custom hook to get user state
-  const { isLoggedIn } = user; // Assuming you have a custom hook to get user state
+  const { isLoggedIn, userDetails } = user; // Assuming you have a custom hook to get user state
   // Redirect to dashboard if user is already logged in
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
+
+  const isUserLoggedIn = isLoggedIn && userDetails?._id !== undefined;
+
+  console.log(isUserLoggedIn, isLoggedIn, userDetails?._id);
+
   useEffect(() => {
-    if (isLoggedIn) {
+    if (isUserLoggedIn) {
       router.push("/profile");
     }
-  }, [isLoggedIn]);
+  }, [isUserLoggedIn]);
+
   // ✅ Form Submission Handler
   const onSubmit = async (data: SignupFormData) => {
     try {
