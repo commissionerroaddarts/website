@@ -22,7 +22,7 @@ const schema = yup
   })
   .test("at-least-one", "At least one field must be filled", (obj) => {
     const hasOne = obj.search === "" || obj.category === "" || obj.city === "";
-    console.log(hasOne, obj);
+
     return hasOne;
   });
 

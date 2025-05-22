@@ -53,7 +53,6 @@ const ResetPasswordForm = () => {
         toast.success(response.data.message);
         router.push("/login");
       }
-      console.log("Profile updated successfully:", response);
     } catch (error) {
       console.error("Error updating profile:", error);
     }

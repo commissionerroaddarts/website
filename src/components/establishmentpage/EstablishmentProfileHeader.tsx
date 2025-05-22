@@ -55,7 +55,6 @@ export default function EstablishmentProfileHeader({
     resolver: yupResolver(schema),
   });
 
-  console.log({ images, logo });
   const { user } = useAppState();
   const { userDetails } = user;
   const { role } = userDetails || {};

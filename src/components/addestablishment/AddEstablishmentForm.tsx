@@ -22,6 +22,7 @@ import { Business } from "@/types/business";
 import UpgradePlan from "@/components/modals/UpgradePlan";
 import { Dialog, DialogContent, Typography } from "@mui/material";
 import { mediaSchema } from "@/yupSchemas/mediaSchema";
+const LOCAL_STORAGE_KEY = "addEstablishmentFormData";
 
 const stepSchemas = [
   yup.object().shape({
@@ -203,67 +204,98 @@ export default function AddEstablishment({
   readonly business?: Readonly<Business>;
   readonly isEdit?: boolean;
 }) {
+  const saveToStorage = (data: any) =>
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
+
+  const loadFromStorage = () => {
+    const data = localStorage.getItem(LOCAL_STORAGE_KEY);
+    return data ? JSON.parse(data) : null;
+  };
+
+  const clearStorage = () => localStorage.removeItem(LOCAL_STORAGE_KEY);
+
+  console.log({ business });
+
   const methods = useForm<Business>({
     mode: "onBlur",
-    defaultValues: {
-      name: business?.name ?? "",
-      tagline: business?.tagline ?? "",
-      phone: business?.phone ? business.phone.toString() : "",
-      website: business?.website,
-      shortDis: business?.shortDis ?? "",
-      tags: business?.tags || [],
-      category: business?.category ?? "",
-      bordtype: business?.bordtype ?? undefined,
-      agelimit: business?.agelimit ?? 0,
-      price: { category: business?.price?.category ?? "$" },
-      location: {
-        state: business?.location?.state ?? "",
-        city: business?.location?.city ?? "",
-        zipcode: business?.location?.zipcode ?? "90210",
-        country: business?.location?.country ?? "",
-        geotag: {
-          lat: business?.location?.geotag?.lat ?? 0,
-          lng: business?.location?.geotag?.lng ?? 0,
+    defaultValues: !isEdit
+      ? loadFromStorage()
+      : {
+          name: business?.name ?? "",
+          tagline: business?.tagline ?? "",
+          phone: business?.phone ? business.phone.toString() : "",
+          website: business?.website,
+          shortDis: business?.shortDis ?? "",
+          tags: business?.tags || [],
+          category: business?.category ?? "",
+          bordtype: business?.bordtype ?? undefined,
+          agelimit: business?.agelimit ?? 0,
+          price: { category: business?.price?.category ?? "$" },
+          location: {
+            state: business?.location?.state ?? "",
+            city: business?.location?.city ?? "",
+            zipcode: business?.location?.zipcode ?? "90210",
+            country: business?.location?.country ?? "",
+            geotag: {
+              lat: business?.location?.geotag?.lat ?? 0,
+              lng: business?.location?.geotag?.lng ?? 0,
+            },
+          },
+          timings: {
+            mon: {
+              open: business?.timings?.mon?.open ?? "",
+              close: business?.timings?.mon?.close ?? "",
+            },
+            tue: {
+              open: business?.timings?.tue?.open ?? "",
+              close: business?.timings?.tue?.close ?? "",
+            },
+            wed: {
+              open: business?.timings?.wed?.open ?? "",
+              close: business?.timings?.wed?.close ?? "",
+            },
+            thu: {
+              open: business?.timings?.thu?.open ?? "",
+              close: business?.timings?.thu?.close ?? "",
+            },
+            fri: {
+              open: business?.timings?.fri?.open ?? "",
+              close: business?.timings?.fri?.close ?? "",
+            },
+            sat: {
+              open: business?.timings?.sat?.open ?? "",
+              close: business?.timings?.sat?.close ?? "",
+            },
+            sun: {
+              open: business?.timings?.sun?.open ?? "",
+              close: business?.timings?.sun?.close ?? "",
+            },
+          },
+          media: {
+            logo: business?.media?.logo ?? undefined,
+            images: business?.media?.images || [],
+          },
+          socials: {
+            facebook: business?.socials?.facebook ?? undefined,
+            instagram: business?.socials?.instagram ?? undefined,
+            twitter: business?.socials?.twitter ?? undefined,
+            linkedin: business?.socials?.linkedin ?? undefined,
+            youtube: business?.socials?.youtube ?? undefined,
+            tiktok: business?.socials?.tiktok ?? undefined,
+          },
+          faqs: business?.faqs ?? [],
         },
-      },
-      timings: {
-        mon: {
-          open: business?.timings?.mon?.open ?? "",
-          close: business?.timings?.mon?.close ?? "",
-        },
-        tue: {
-          open: business?.timings?.tue?.open ?? "",
-          close: business?.timings?.tue?.close ?? "",
-        },
-        wed: {
-          open: business?.timings?.wed?.open ?? "",
-          close: business?.timings?.wed?.close ?? "",
-        },
-        thu: {
-          open: business?.timings?.thu?.open ?? "",
-          close: business?.timings?.thu?.close ?? "",
-        },
-        fri: {
-          open: business?.timings?.fri?.open ?? "",
-          close: business?.timings?.fri?.close ?? "",
-        },
-        sat: {
-          open: business?.timings?.sat?.open ?? "",
-          close: business?.timings?.sat?.close ?? "",
-        },
-        sun: {
-          open: business?.timings?.sun?.open ?? "",
-          close: business?.timings?.sun?.close ?? "",
-        },
-      },
-      media: {
-        logo: business?.media?.logo ?? undefined,
-        images: business?.media?.images || [],
-      },
-    },
   });
   const { formState } = methods; // Access formState to track dirty state
   const { isDirty } = formState;
+
+  useEffect(() => {
+    const subscription = methods.watch((value) => {
+      saveToStorage(value);
+    });
+
+    return () => subscription.unsubscribe(); // cleanup
+  }, [methods]);
 
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
@@ -290,6 +322,7 @@ export default function AddEstablishment({
   const [isLoading, setIsLoading] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const [closedDays, setClosedDays] = useState<Record<string, boolean>>({});
+  console.log({ closedDays });
   const [isOpen, setIsOpen] = useState(false);
 
   const isUserLoggedIn = isLoggedIn && userDetails?._id;
@@ -332,76 +365,79 @@ export default function AddEstablishment({
     return <div>You are not authorized to edit this business</div>;
   }
 
-  const handleStepSubmit = async (direction: "next" | "prev") => {
-    const currentSchema = stepSchemas[currentStep - 1]; // currentStep is 1-based
-    if (direction === "next" && currentStep === totalSteps && !isEdit) {
-      try {
-        setIsLoading(true);
-        const values = methods.getValues();
-        await currentSchema.validate(values, { abortEarly: false });
+  const handleStepSubmit = async (targetStep: number | "next" | "prev") => {
+    const currentIndex = currentStep - 1;
+    const currentSchema = stepSchemas[currentIndex];
+    const values = methods.getValues();
 
-        // Call the API service method to insert business
-        const response = await insertBusiness(values);
-        console.log("Response from insertBusiness:", { values, response });
-        if (response.status === 201) {
-          const { _id } = response.data;
-          if (_id) {
-            toast.success(
-              "Congratulations! Your business is now live on Road Darts!"
-            );
+    // Determine actual next step number
+    const nextStep =
+      typeof targetStep === "number"
+        ? targetStep
+        : targetStep === "next"
+        ? currentStep + 1
+        : currentStep - 1;
+
+    // If we're submitting on the final step
+    const isFinalStep = nextStep > totalSteps;
+
+    // Run validation only if going forward or submitting
+    if (targetStep !== "prev") {
+      try {
+        await currentSchema.validate(values, { abortEarly: false });
+      } catch (validationError: any) {
+        if (validationError?.inner) {
+          validationError.inner.forEach((err: any) => {
+            methods.setError(err.path, {
+              type: "manual",
+              message: err.message,
+            });
+          });
+        }
+        setIsLoading(false);
+        return;
+      }
+    }
+
+    // Handle final submission
+    if (isFinalStep) {
+      setIsLoading(true);
+      try {
+        const payload = isEdit ? { ...values, _id: business?._id } : values;
+
+        const response = isEdit
+          ? await updateBusiness(payload)
+          : await insertBusiness(payload);
+
+        if (response?.status === 201 || response?.data?.success) {
+          toast.success(
+            response?.data?.message ??
+              (isEdit
+                ? "Business updated successfully!"
+                : "Congratulations! Your business is now live on Road Darts!")
+          );
+
+          if (!isEdit) {
             setShowConfetti(true);
             setTimeout(() => setShowConfetti(false), 5000);
-            // Optionally reset the form or navigate to a success page
-            methods.reset();
-            router.push(`/establishments/${_id}`); // Redirect to establishments page
-            setIsLoading(false);
+            clearStorage();
           }
-        }
-      } catch (apiError) {
-        setIsLoading(false);
-        console.error("Failed to add business:", apiError);
-      }
-      return;
-    } else if (direction === "next" && currentStep === totalSteps && isEdit) {
-      try {
-        setIsLoading(true);
-        const values = methods.getValues();
-        await currentSchema.validate(values, { abortEarly: false });
 
-        const updatedValues = { ...values, _id: business?._id };
-        // Call the API service method to insert business
-        const response = await updateBusiness(updatedValues);
-        if (response?.data?.success) {
-          toast.success(
-            response?.data?.message ?? "Business updated successfully!"
-          );
-          // Optionally reset the form or navigate to a success page
           methods.reset();
-          setIsLoading(false);
-          router.push(`/establishments/${business?._id}`); // Redirect to establishments page
+          router.push(`/establishments/${business?._id ?? response.data._id}`);
         }
-      } catch (apiError) {
+      } catch (error) {
+        console.error("Submission error:", error);
+      } finally {
         setIsLoading(false);
-        console.error("Failed to add business:", apiError);
       }
+
       return;
     }
-    try {
-      if (direction === "next") {
-        const values = methods.getValues();
-        await currentSchema.validate(values, { abortEarly: false });
-        setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
-      } else {
-        setCurrentStep((prev) => Math.max(prev - 1, 1));
-      }
-    } catch (validationError: any) {
-      if (validationError?.inner) {
-        setIsLoading(false);
-        validationError?.inner.forEach((err: any) => {
-          console.error(err);
-          methods.setError(err.path, { type: "manual", message: err.message });
-        });
-      }
+
+    // Set step if within valid bounds
+    if (nextStep >= 1 && nextStep <= totalSteps) {
+      setCurrentStep(nextStep);
     }
   };
 

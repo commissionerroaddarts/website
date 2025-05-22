@@ -29,7 +29,6 @@ const EstablishmentMapLocation = ({
   const [routes, setRoutes] = useState<google.maps.DirectionsRoute[]>([]);
   const [routeIndex, setRouteIndex] = useState(0);
   const mapRef = useRef<google.maps.Map | null>(null);
-  console.log(mapRef);
 
   const coordinates = location?.geotag
     ? { lat: location.geotag.lat, lng: location.geotag.lng }

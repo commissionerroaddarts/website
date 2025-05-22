@@ -79,7 +79,9 @@ const ImagesUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
     );
 
     if (invalidTypeFiles.length > 0) {
-      toast.error("Invalid file format. Please upload PNG,JPG or JPEG images.");
+      toast.error(
+        "Invalid file format. Please upload PNG, JPG, or JPEG images."
+      );
       setLoading(false);
       return;
     }
@@ -88,15 +90,14 @@ const ImagesUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
       ["image/jpeg", "image/png", "image/jpg"].includes(file.type.toLowerCase())
     );
 
-    // Compress valid files
     const compressedFiles: Blob[] = [];
     const previewUrls: string[] = [];
 
     for (const file of validFiles) {
       try {
         const compressed = await imageCompression(file, {
-          maxSizeMB: 1, // limit ~1MB
-          maxWidthOrHeight: 1024, // limit to 1024px
+          maxSizeMB: 1,
+          maxWidthOrHeight: 1024,
           useWebWorker: true,
         });
         compressedFiles.push(compressed);
@@ -114,11 +115,16 @@ const ImagesUploader = ({ setOpen }: { setOpen: (arg: boolean) => void }) => {
       setLoading(false);
       return;
     }
-    setFiles((prevFiles) => {
-      const updatedFiles = [...prevFiles, ...compressedFiles];
-      setValue("media.images", updatedFiles);
-      return updatedFiles;
-    });
+
+    // ✅ Separate existing images (string URLs)
+    const existing = getValues("media.images") ?? [];
+    const existingUrls = existing.filter(
+      (item: any) => typeof item === "string"
+    );
+    const updatedFiles = [...compressedFiles]; // only new blobs
+
+    setFiles((prevFiles) => [...prevFiles, ...updatedFiles]); // only blobs
+    setValue("media.images", [...existingUrls, ...updatedFiles]); // mix of URL + new
 
     setPreviews((prevPreviews) => [...prevPreviews, ...previewUrls]);
     setLoading(false);

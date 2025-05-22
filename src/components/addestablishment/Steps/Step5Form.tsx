@@ -14,7 +14,6 @@ const Step5FaqForm = () => {
     control,
     name: "faqs", // 'faqs' must be an array in your form schema
   });
-  console.log(errors);
 
   const handleAddFaq = () => {
     const newFaq = { q: "", a: "" };

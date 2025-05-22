@@ -51,7 +51,6 @@ const AccountSettings = () => {
         toast.success(response.data.message);
         router.refresh();
       }
-      console.log("Profile updated successfully:", response);
     } catch (error) {
       console.error("Error updating profile:", error);
     }

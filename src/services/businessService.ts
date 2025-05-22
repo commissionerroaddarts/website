@@ -51,7 +51,6 @@ export const fetchBusinesses = async (
 
 export const insertBusiness = async (data: any) => {
   try {
-    console.log({ data });
     const { media, ...rest } = data;
     const response = await axiosInstance.post(`${API_URL}`, rest);
     if (response.status === 201) {

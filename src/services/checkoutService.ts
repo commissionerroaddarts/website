@@ -12,7 +12,6 @@ export const checkoutService = async (preDetails: {
   plan: string;
 }) => {
   try {
-    console.log("preDetails", preDetails);
     const response = await axiosInstance.post(
       "/subscription/checkout",
       preDetails

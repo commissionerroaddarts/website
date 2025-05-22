@@ -108,7 +108,6 @@ function VerificationForm({
       // Handle verification logic here
 
       onVerified();
-      console.log("Verifying code:", fullCode);
     }
   };
 
