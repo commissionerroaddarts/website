@@ -23,6 +23,7 @@ import { mediaSchema } from "@/yupSchemas/mediaSchema";
 
 interface GalleryProps {
   readonly id: string;
+  readonly businessUserId: string;
   readonly name: string;
   readonly tagline: string;
   readonly media?: {
@@ -38,6 +39,7 @@ const schema = yup.object().shape({
 
 export default function EstablishmentProfileHeader({
   id,
+  businessUserId,
   name,
   tagline,
   media,
@@ -60,7 +62,8 @@ export default function EstablishmentProfileHeader({
   const { userDetails } = user;
   const { role } = userDetails || {};
   const isStoreOwner =
-    (role === "owner" || role === "admin") && userDetails?._id === id;
+    (role === "owner" || role === "admin") &&
+    userDetails?._id === businessUserId;
   const [loading, setLoading] = useState(false);
   const [openConfirm, setOpenConfirm] = useState(false);
   const [uploadLogo, setUploadLogo] = useState(false);

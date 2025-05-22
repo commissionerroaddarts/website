@@ -33,6 +33,7 @@ export default async function EstablishmentPage({
       >
         <EstablishmentProfileHeader
           id={business._id}
+          businessUserId={business.userId}
           media={{
             logo: business.media?.logo,
             images: business.media?.images ?? [],
