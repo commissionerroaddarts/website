@@ -136,8 +136,9 @@ export default function EstablishmentGallery({
                 key={img + idx}
                 src={img}
                 alt={`Zoomed Image ${idx + 1}`}
-                fill
-                className=" object-contain"
+                width={800}
+                height={600}
+                className="w-full h-full object-contain"
               />
             ))}
           </Slider>
