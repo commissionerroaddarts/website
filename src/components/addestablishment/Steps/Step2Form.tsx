@@ -23,8 +23,7 @@ export default function Step2Form() {
     watch,
     formState: { errors },
   } = useFormContext();
-  const location = watch("location");
-  const { geotag } = location;
+  const { geotag } = watch("location") ?? {};
   const [autocomplete, setAutocomplete] = useState<any>(null);
   const [center, setCenter] = useState(
     geotag ?? { lat: 33.00122, lng: -117.06517 }
