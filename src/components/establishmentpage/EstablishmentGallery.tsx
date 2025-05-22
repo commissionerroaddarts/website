@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Grid2, Button, Dialog, DialogContent } from "@mui/material";
+import { Grid2, Button, Dialog, DialogContent, Box } from "@mui/material";
 import Image from "next/image";
 import Slider from "react-slick";
 import CloseIconButton from "@/components/global/CloseIconButton";
@@ -94,14 +94,14 @@ export default function EstablishmentGallery({
   return (
     <>
       <Grid2 container spacing={2}>
-        {images.slice(1, 5).map((img, idx) => (
+        {images.slice(0, 4).map((img, idx) => (
           <Grid2 key={img + idx} size={{ xs: 12, md: 6 }}>
             {renderImage(img, idx)}
           </Grid2>
         ))}
 
         {/* Show More Button */}
-        {images.length > 4 && (
+        {images.length > 3 && (
           <Grid2 size={{ xs: 12 }}>
             <ThemeOutlineButton
               onClick={() => handleOpen(4)}
@@ -121,27 +121,45 @@ export default function EstablishmentGallery({
           background: "transparent",
           backdropFilter: "blur(10px)",
         }}
+        className="gallery-slider"
       >
         <DialogContent
           sx={{
             padding: 0,
             overflow: "hidden",
-            height: { xs: "30vh", md: "70vh" },
           }}
         >
           <CloseIconButton onClick={handleClose} />
-          <Slider {...sliderSettings}>
-            {images.map((img, idx) => (
-              <Image
-                key={img + idx}
-                src={img}
-                alt={`Zoomed Image ${idx + 1}`}
-                width={800}
-                height={600}
-                className="w-full h-full object-contain"
-              />
-            ))}
-          </Slider>
+          <div style={{ height: "100%", position: "relative" }}>
+            <Slider {...sliderSettings}>
+              {images.map((img, idx) => (
+                <Box
+                  key={img + idx}
+                  sx={{
+                    height: { xs: "30vh", md: "70vh" },
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    position: "relative",
+                    backgroundColor:
+                      img &&
+                      typeof img === "string" &&
+                      img.toLowerCase().endsWith(".png")
+                        ? "white"
+                        : "black",
+                  }}
+                >
+                  <Image
+                    src={img}
+                    alt={`Zoomed Image ${idx + 1}`}
+                    fill
+                    className=" object-contain"
+                  />
+                </Box>
+              ))}
+            </Slider>
+          </div>
         </DialogContent>
       </Dialog>
     </>

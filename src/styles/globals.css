@@ -325,3 +325,13 @@ body::-webkit-scrollbar-thumb {
     font-size: 1.2em;
   }
 }
+
+.gallery-slider .slick-arrow {
+  z-index: 2000 !important;
+}
+.gallery-slider .slick-dots {
+  z-index: 2000 !important;
+  position: absolute;
+  bottom: 0 !important;
+  background-color: black !important;
+}
