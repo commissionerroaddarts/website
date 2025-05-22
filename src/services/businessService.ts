@@ -249,3 +249,17 @@ export const insertBusinessImages = async (
     throw error;
   }
 };
+
+export const removeBusinessImage = async (url: string, businessId: string) => {
+  try {
+    console.log(url);
+    const response = await axiosInstance.delete(
+      `${API_URL}/media/${businessId}`,
+      { url }
+    );
+    return response;
+  } catch (error) {
+    console.error("Error deleting business media:", error);
+    throw error;
+  }
+};

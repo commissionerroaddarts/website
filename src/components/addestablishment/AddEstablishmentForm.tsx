@@ -296,6 +296,7 @@ export default function AddEstablishment({
           media: {
             logo: business?.media?.logo ?? undefined,
             images: business?.media?.images || [],
+            cover: business?.media?.cover ?? undefined,
           },
           socials: {
             facebook: business?.socials?.facebook ?? undefined,
@@ -491,7 +492,9 @@ export default function AddEstablishment({
         isLoading={isLoading}
         isEdit={isEdit}
       >
-        {currentStep === 1 && <Step1Form />}
+        {currentStep === 1 && (
+          <Step1Form isEdit={isEdit} businessId={business?._id} />
+        )}
         {currentStep === 2 && <Step2Form />}
         {currentStep === 3 && (
           <Step3Form closedDays={closedDays} setClosedDays={setClosedDays} />

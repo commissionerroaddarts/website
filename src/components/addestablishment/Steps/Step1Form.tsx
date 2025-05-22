@@ -11,6 +11,7 @@ import SelectSearchDropDown from "@/components/global/SelectSearchDropDown";
 import { boardTypeOptions, categoryOptions } from "@/utils/dropdowns";
 import ImagesUploaderPopup from "../MediaUploader/ImagesUploader";
 import BannerImagePopup from "../MediaUploader/BannerImageUploader";
+import { removeBusinessImage } from "@/services/businessService";
 
 const priceCategories = [
   { label: "Budget ($)", value: "$" },
@@ -19,7 +20,13 @@ const priceCategories = [
   { label: "Exclusive ($$$$)", value: "$$$$" },
 ];
 
-export default function Step1Form() {
+export default function Step1Form({
+  isEdit,
+  businessId,
+}: {
+  readonly isEdit: boolean;
+  readonly businessId?: string;
+}) {
   const { control, setValue } = useFormContext(); // Notice: useFormContext instead of useForm!
 
   return (
@@ -32,7 +39,7 @@ export default function Step1Form() {
 
       <Grid2 container spacing={2} className="mb-8">
         <Grid2 size={{ xs: 12 }}>
-          <UploadButtons />
+          <UploadButtons isEdit={isEdit} businessId={businessId} />
         </Grid2>
         {/* Business Name */}
         <Grid2 size={{ xs: 12, sm: 6 }}>
@@ -241,7 +248,13 @@ export default function Step1Form() {
   );
 }
 
-const UploadButtons = () => {
+const UploadButtons = ({
+  isEdit,
+  businessId,
+}: {
+  isEdit: boolean;
+  businessId?: string;
+}) => {
   const [uploadLogo, setUploadLogo] = useState(false);
   const [uploadMedia, setUploadMedia] = useState(false);
   const [uploadCover, setUploadCover] = useState(false);
@@ -259,9 +272,20 @@ const UploadButtons = () => {
   // Remove functions
   const removeLogo = () => setValue("media.logo", null);
   const removeCoverPhoto = () => setValue("media.cover", null);
-  const removeImage = (index: number) => {
-    const updatedImages = images.filter((_: any, i: number) => i !== index);
-    setValue("media.images", updatedImages);
+  const removeImage = async (index: number) => {
+    try {
+      const updatedImages = images.filter((_: any, i: number) => i !== index);
+      setValue("media.images", updatedImages);
+      if (isEdit && businessId) {
+        const selectedImage = images[index];
+        if (typeof selectedImage === "string") {
+          const response = await removeBusinessImage(selectedImage, businessId);
+          console.log({ response });
+        }
+      }
+    } catch (error) {
+      console.error("Error removing images", error);
+    }
   };
 
   return (
@@ -373,7 +397,7 @@ const UploadButtons = () => {
             }}
           >
             <Typography variant="h6">Images Preview</Typography>
-            <Box className="flex  items-center gap-2 ">
+            <Box className="flex items-center gap-2 ">
               <div className="flex gap-2 flex-wrap justify-center">
                 {images.map((img: File, idx: number) => (
                   <div key={img.name} className="relative">
