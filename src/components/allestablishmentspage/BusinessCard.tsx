@@ -132,7 +132,7 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
                 {tags.map((tag) => (
                   <span
                     key={tag}
-                    className="bg-[#3a2a3e] capitalize text-white text-xs py-1 rounded-full"
+                    className="bg-[#3a2a3e] capitalize text-white text-xs px-3 py-1 rounded-full"
                   >
                     {tag}
                   </span>
