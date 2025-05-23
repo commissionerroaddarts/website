@@ -174,15 +174,12 @@ function BusinessCard({ business }: { readonly business: Business }) {
                     {name ?? "Unnamed Business"}
                   </Typography>
 
-                  <div className="flex gap-2 items-center mb-2">
-                    <CircleDot
-                      className="text-gray"
-                      style={{ fontSize: 15, marginRight: 0.5 }}
-                    />
-                    <span className="text-gray" style={{ fontSize: 14 }}>
+                  {bordtype && (
+                    <span className="bg-[#3a2a3e] capitalize text-white text-xs px-3 py-1 rounded-full">
+                      Board Type:{""}
                       {bordtype}
                     </span>
-                  </div>
+                  )}
 
                   {userDetails && isStoreOwner ? (
                     <StarRating rating={averageRating ?? 0} size="size-5" />

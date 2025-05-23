@@ -12,7 +12,7 @@ import {
   StarRatingWithPopup,
 } from "@/components/global/StarRating";
 import { useAppState } from "@/hooks/useAppState";
-import { CircleDot, Edit, Trash } from "lucide-react";
+import { Edit, Trash } from "lucide-react";
 import { Box } from "@mui/material";
 import DeleteListingDialog from "../global/DeleteListingDialog";
 
@@ -161,10 +161,12 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
             )}
 
             {/* Location */}
-            <div className="flex items-center mb-2">
-              <CircleDot className="h-4 w-4 text-gray mr-2" />
-              <span className="text-gray text-sm">{bordtype}</span>
-            </div>
+            {bordtype && (
+              <span className="bg-[#3a2a3e] capitalize text-white text-xs px-3 py-1 rounded-full">
+                Board Type:{""}
+                {bordtype}
+              </span>
+            )}
 
             {/* Location */}
             <div className="flex items-center mb-2">

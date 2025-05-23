@@ -226,7 +226,8 @@ export default function EstablishmentProfileHeader({
               <h1 className="text-white text-3xl font-bold">{name}</h1>
               {bordtype && bordtype !== "" && (
                 <span className="bg-[#3a2a3e] capitalize text-white text-xs px-3 py-1 rounded-full">
-                  Board Type: {bordtype}
+                  Board Type:{""}
+                  {bordtype}
                 </span>
               )}
               {/* <h5 className="text-white text-xl">({bordtype})</h5> */}
