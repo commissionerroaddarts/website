@@ -19,7 +19,7 @@ export default function MainEvents() {
   const [events, setEvents] = useState<Event[]>([]); // Single object state for all filters
   const search = searchParams.get("search") ?? "";
   const category = searchParams.get("category") ?? "";
-  const boardtype = searchParams.get("boardtype") ?? "";
+  const bordtype = searchParams.get("boardtype") ?? "";
   const city = searchParams.get("city") ?? "";
   const state = searchParams.get("state") ?? "";
   const zipcode = searchParams.get("zipcode") ?? "";
@@ -31,7 +31,7 @@ export default function MainEvents() {
   const [filterParams, setFilterParams] = useState<FilterValues>({
     search,
     category,
-    boardtype,
+    bordtype,
     city,
     state,
     zipcode,

@@ -145,7 +145,7 @@ const FilterSidebar: React.FC<SidebarProps> = ({
         <Box mb={3}>
           <SelectSearchDropDown
             label="Board Type"
-            name="boardtype"
+            name="bordtype"
             options={boardTypeOptions}
             value={filters.bordtype ?? ""}
             onChange={handleFilterChange}
