@@ -103,7 +103,7 @@ const EditProfile = ({ user }: { user: User }) => {
   const {
     control,
     handleSubmit,
-    reset,
+
     formState: { errors, isSubmitting, isDirty },
   } = useForm({
     defaultValues: {
@@ -153,12 +153,8 @@ const EditProfile = ({ user }: { user: User }) => {
         toast.error("Failed to update profile. Please try again.");
         return;
       }
-      if (response) {
-        toast.success("Profile updated successfully!");
-        return;
-      }
       toast.success("Profile updated successfully!");
-      reset(updatedUser); // Optional
+      window.location.reload();
     } catch (error) {
       console.error("Error updating profile:", error);
     }

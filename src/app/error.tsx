@@ -13,7 +13,7 @@ const GlobalError: React.FC<ErrorProps> = ({ error, reset }) => {
   const router = useRouter();
   const reload = () => {
     startTransition(() => {
-      router.refresh();
+      window.location.reload();
       reset();
     });
   };

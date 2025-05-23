@@ -9,7 +9,6 @@ import { updateUserPassword } from "@/services/userService";
 import { PasswordChange } from "@/types/user";
 import { TabsComponent } from "../TabsComponent";
 import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
 import { useAppState } from "@/hooks/useAppState";
 const schema = yup.object().shape({
   password: yup
@@ -36,7 +35,6 @@ const AccountSettings = () => {
   } = useForm({
     resolver: yupResolver(schema),
   });
-  const router = useRouter();
   const { user } = useAppState();
   const { userDetails } = user;
 
@@ -49,8 +47,10 @@ const AccountSettings = () => {
       const response = await updateUserPassword(updatedPassword);
       if (response.status === 200) {
         toast.success(response.data.message);
-        router.refresh();
+        window.location.reload();
       }
+
+      toast.error("Error resetting password");
     } catch (error) {
       console.error("Error updating profile:", error);
     }

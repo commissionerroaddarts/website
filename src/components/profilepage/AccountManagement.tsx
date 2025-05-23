@@ -11,8 +11,7 @@ import Preloader from "@/components/global/Preloader";
 import { toast } from "react-toastify";
 import { updateUserProfileImage } from "@/services/userService";
 import ThemeButton from "../buttons/ThemeButton";
-import { getUserDetails, verifyEmail } from "@/services/authService";
-import { useAppDispatch } from "@/store";
+import { verifyEmail } from "@/services/authService";
 import { useRouter } from "next/navigation";
 
 export default function AccountManagementPage() {
@@ -20,11 +19,13 @@ export default function AccountManagementPage() {
   const { isLoggedIn, userDetails } = user;
   const router = useRouter(); // Assuming you're using Next.js router
   const isUserLoggedIn = isLoggedIn && userDetails?._id !== undefined; // Check if the user is logged in
+
   useEffect(() => {
-    if (isUserLoggedIn) {
-      router.push("/profile");
+    if (!isUserLoggedIn) {
+      router.push("/login");
     }
   }, [isUserLoggedIn, router]);
+
   if (!userDetails) {
     return <Preloader />;
   }
@@ -72,7 +73,6 @@ const ProfileImage = ({ userDetails }: { userDetails: User }) => {
   const [profileImage, setProfileImage] = useState<string>(
     userDetails?.profileImg ?? "/placeholder.svg"
   );
-  const dispatch = useAppDispatch();
   const handleSave = async (blob: Blob, fileUrl: string) => {
     setProfileImage(fileUrl);
     // You can also send `blob` to backend via FormData
@@ -85,9 +85,8 @@ const ProfileImage = ({ userDetails }: { userDetails: User }) => {
       formData.append("profileImg", file); // Now sending as a File
       const response = await updateUserProfileImage(formData);
       if (response.success) {
-        await getUserDetails(dispatch);
         toast.success("Profile image updated successfully!");
-        return;
+        window.location.reload();
       }
       toast.error("Failed to update profile image.");
     } catch (error) {

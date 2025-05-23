@@ -10,7 +10,6 @@ import {
   Grid2,
 } from "@mui/material";
 import RoomIcon from "@mui/icons-material/Room";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { Business } from "@/types/business";
 import BusinessMapPopup from "./BusinessMapPopup";
 import Link from "next/link";
@@ -19,8 +18,7 @@ import {
   StarRatingWithPopup,
 } from "@/components/global/StarRating";
 import ThemeButton from "@/components/buttons/ThemeButton";
-import ThemeOutlineButton from "@/components/buttons/ThemeOutlineButton";
-import { Edit, Map, Trash } from "lucide-react";
+import { CircleDot, Edit, Trash } from "lucide-react";
 import { useAppState } from "@/hooks/useAppState";
 import PromotionSpace from "@/components/global/PromotionSpace";
 import DeleteListingDialog from "@/components/global/DeleteListingDialog";
@@ -39,6 +37,7 @@ function BusinessCard({ business }: { readonly business: Business }) {
     averageRating,
     userId: userBusinessId,
     promotion,
+    bordtype,
   } = business;
 
   const { user } = useAppState();
@@ -104,7 +103,7 @@ function BusinessCard({ business }: { readonly business: Business }) {
             position: "absolute",
             top: 6,
             right: -25,
-            background: "#EC6DFF",
+            background: getStatusColor(status),
             color: "white",
             px: 3,
             py: 0.5,
@@ -184,6 +183,15 @@ function BusinessCard({ business }: { readonly business: Business }) {
                     />
                   )}
 
+                  <div className="flex items-center mb-2">
+                    <CircleDot
+                      className="text-gray"
+                      style={{ fontSize: 16, marginRight: 0.5 }}
+                    />
+                    <span className="text-gray" style={{ fontSize: 12 }}>
+                      {bordtype}
+                    </span>
+                  </div>
                   {/* Price and Location */}
                   <Typography sx={{ color: "#9b59b6", fontWeight: "bold" }}>
                     {price ? price?.category : "No Price Info"}

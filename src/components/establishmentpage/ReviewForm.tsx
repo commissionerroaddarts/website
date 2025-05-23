@@ -127,7 +127,7 @@ export default function ReviewForm({
       if (res.success) {
         toast.success("Review posted successfully!");
         fetchReviews();
-        router.refresh();
+        window.location.reload();
       }
     } catch (error) {
       console.error(error);
@@ -151,7 +151,7 @@ export default function ReviewForm({
     }
     if (res.success) {
       toast.success("Review updated successfully!");
-      router.refresh();
+      window.location.reload();
     }
   };
 
@@ -167,8 +167,7 @@ export default function ReviewForm({
     }
     if (res.success) {
       toast.success("Review deleted successfully!");
-
-      router.refresh();
+      window.location.reload();
     }
   };
 
