@@ -163,8 +163,7 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
             {/* Location */}
             {bordtype && (
               <span className="bg-[#3a2a3e] capitalize text-white text-xs px-3 py-1 rounded-full">
-                Board Type:{""}
-                {bordtype}
+                Board Type: {bordtype}
               </span>
             )}
 
