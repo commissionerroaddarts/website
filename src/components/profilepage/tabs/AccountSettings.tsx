@@ -45,12 +45,12 @@ const AccountSettings = () => {
       };
 
       const response = await updateUserPassword(updatedPassword);
-      if (response.status === 200) {
-        toast.success(response.data.message);
-        window.location.reload();
+      if (response.status !== 200) {
+        toast.error("Error resetting password");
+        return;
       }
-
-      toast.error("Error resetting password");
+      toast.success(response.data.message);
+      window.location.reload();
     } catch (error) {
       console.error("Error updating profile:", error);
     }

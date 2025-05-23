@@ -174,6 +174,16 @@ function BusinessCard({ business }: { readonly business: Business }) {
                     {name ?? "Unnamed Business"}
                   </Typography>
 
+                  <div className="flex gap-2 items-center mb-2">
+                    <CircleDot
+                      className="text-gray"
+                      style={{ fontSize: 15, marginRight: 0.5 }}
+                    />
+                    <span className="text-gray" style={{ fontSize: 14 }}>
+                      {bordtype}
+                    </span>
+                  </div>
+
                   {userDetails && isStoreOwner ? (
                     <StarRating rating={averageRating ?? 0} size="size-5" />
                   ) : (
@@ -183,15 +193,6 @@ function BusinessCard({ business }: { readonly business: Business }) {
                     />
                   )}
 
-                  <div className="flex items-center mb-2">
-                    <CircleDot
-                      className="text-gray"
-                      style={{ fontSize: 16, marginRight: 0.5 }}
-                    />
-                    <span className="text-gray" style={{ fontSize: 12 }}>
-                      {bordtype}
-                    </span>
-                  </div>
                   {/* Price and Location */}
                   <Typography sx={{ color: "#9b59b6", fontWeight: "bold" }}>
                     {price ? price?.category : "No Price Info"}
