@@ -84,11 +84,13 @@ const ProfileImage = ({ userDetails }: { userDetails: User }) => {
       const formData = new FormData();
       formData.append("profileImg", file); // Now sending as a File
       const response = await updateUserProfileImage(formData);
-      if (response.success) {
-        toast.success("Profile image updated successfully!");
-        window.location.reload();
+      if (!response.success) {
+        toast.error("Failed to update profile image.");
+        return;
       }
-      toast.error("Failed to update profile image.");
+
+      toast.success("Profile image updated successfully!");
+      window.location.reload();
     } catch (error) {
       console.error("Error saving image:", error);
     }
