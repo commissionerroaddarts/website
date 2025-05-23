@@ -49,8 +49,6 @@ function HomeBanner() {
           left: 0,
           right: 0,
           bottom: 0,
-          // background:
-          //   "radial-gradient(circle, rgba(2,0,36,0) 0%, rgba(121,9,102,0.1) 22%, rgba(201,0,255,0.1) 100%);",
           zIndex: 0,
         },
       }}
@@ -87,7 +85,7 @@ function HomeBanner() {
             variants={itemVariants}
             initial="hidden"
             animate="visible"
-            className="h-full w-full mb-2 text-white font-bold text-4xl sm:text-5xl xl:text-6xl"
+            className="h-full w-full mb-2 text-white font-bold text-3xl sm:text-4xl xl:text-5xl"
           >
             Stay Sharp, Be Social, Throw Anywhere!
           </motion.div>

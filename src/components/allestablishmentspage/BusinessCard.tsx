@@ -12,7 +12,7 @@ import {
   StarRatingWithPopup,
 } from "@/components/global/StarRating";
 import { useAppState } from "@/hooks/useAppState";
-import { Edit, Trash } from "lucide-react";
+import { CircleDot, Edit, Trash } from "lucide-react";
 import { Box } from "@mui/material";
 import DeleteListingDialog from "../global/DeleteListingDialog";
 
@@ -34,6 +34,7 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
     shortDis,
     averageRating,
     userId,
+    bordtype,
     // totalReviews,
   } = business;
 
@@ -49,7 +50,6 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
   if (
     !_id ||
     !shortDis ||
-    !media ||
     !category ||
     !status ||
     !name ||
@@ -128,7 +128,7 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
           <div className="p-4 flex-grow">
             {/* Tags and Open Status */}
             <div className="flex justify-between items-center mb-4">
-              <div className="flex gap-2">
+              <div className="flex gap-2 flex-wrap">
                 {tags.map((tag) => (
                   <span
                     key={tag}
@@ -162,6 +162,12 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
 
             {/* Location */}
             <div className="flex items-center mb-2">
+              <CircleDot className="h-4 w-4 text-gray mr-2" />
+              <span className="text-gray text-sm">{bordtype}</span>
+            </div>
+
+            {/* Location */}
+            <div className="flex items-center mb-2">
               <FaMapMarkerAlt className="h-4 w-4 text-gray mr-2" />
               <span className="text-gray text-sm">
                 {location?.state} {location?.city} , {location?.zipcode}
@@ -169,10 +175,7 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
             </div>
 
             {/* Description */}
-            <p className="text-gray text-xs mb-4">
-              {shortDis}
-              <span className="text-primary ml-1 cursor-pointer">more</span>
-            </p>
+            <p className="text-gray text-xs mb-4">{shortDis}</p>
           </div>
         </div>
 

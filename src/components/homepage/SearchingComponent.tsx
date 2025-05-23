@@ -12,24 +12,24 @@ import { Close } from "@mui/icons-material";
 import { useForm, Controller } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { categoryOptions } from "@/utils/dropdowns";
+import { boardTypeOptions } from "@/utils/dropdowns";
 
 const schema = yup
   .object({
     search: yup.string().optional(),
-    category: yup.string().optional(),
+    bordtype: yup.string().optional(),
     city: yup.string().optional(),
   })
   .test("at-least-one", "At least one field must be filled", (obj) => {
-    const hasOne = obj.search === "" || obj.category === "" || obj.city === "";
+    const hasOne = obj.search === "" || obj.city === "" || obj.bordtype === "";
 
     return hasOne;
   });
 
 type FormValues = {
   search?: string;
-  category?: string;
   city?: string;
+  bordtype?: string;
 };
 
 const SearchComponent: React.FC = () => {
@@ -46,7 +46,7 @@ const SearchComponent: React.FC = () => {
     resolver: yupResolver(schema),
     defaultValues: {
       search: "",
-      category: "",
+      bordtype: "",
       city: "",
     },
   });
@@ -54,12 +54,12 @@ const SearchComponent: React.FC = () => {
   const filters = watch();
 
   const handleSearch = (data: FormValues) => {
-    const { search, category, city } = data;
+    const { search, city, bordtype } = data;
 
     let query = "/establishments?";
     if (search) query += `search=${search}&`;
-    if (category) query += `category=${category}&`;
     if (city) query += `city=${city}`;
+    if (bordtype) query += `boardtype=${bordtype}`;
     router.push(query);
   };
 
@@ -149,18 +149,18 @@ const SearchComponent: React.FC = () => {
             )}
           />
 
-          {/* Category Dropdown */}
+          {/* Board Type Dropdown */}
           <Controller
-            name="category"
+            name="bordtype"
             control={control}
             render={({ field, fieldState }) => (
               <SelectSearchDropDown
-                options={categoryOptions}
-                label="Category"
+                options={boardTypeOptions}
+                label="Board Type"
                 value={field.value ?? ""}
                 error={!!fieldState.error}
                 helperText={fieldState.error?.message}
-                onChange={(e) => setValue("category", e.target.value)}
+                onChange={(e) => setValue("bordtype", e.target.value)}
               />
             )}
           />

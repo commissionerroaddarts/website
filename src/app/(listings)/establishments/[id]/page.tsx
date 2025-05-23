@@ -41,6 +41,7 @@ export default async function EstablishmentPage({
           }}
           name={business.name}
           tagline={business.tagline}
+          bordtype={business.bordtype}
         />
         <Grid2 size={{ xs: 12, md: 6 }}>
           <Box>

@@ -55,6 +55,7 @@ const EstablishmentReview = ({ id }: { id: string }) => {
   return (
     <Box
       style={{
+        margin: "2rem 0",
         padding: "2rem",
         borderRadius: "1rem",
         background:

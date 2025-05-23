@@ -31,6 +31,7 @@ interface GalleryProps {
     images: string[];
     cover?: string;
   };
+  readonly bordtype?: string;
 }
 
 const schema = yup.object().shape({
@@ -43,6 +44,7 @@ export default function EstablishmentProfileHeader({
   name,
   tagline,
   media,
+  bordtype,
 }: GalleryProps) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -220,7 +222,15 @@ export default function EstablishmentProfileHeader({
           </div>
 
           <div className="flex flex-col gap-2 mb-5">
-            <h1 className="text-white text-3xl font-bold">{name}</h1>
+            <div className="flex gap-2 items-center">
+              <h1 className="text-white text-3xl font-bold">{name}</h1>
+              {bordtype && bordtype !== "" && (
+                <span className="bg-[#3a2a3e] capitalize text-white text-xs px-3 py-1 rounded-full">
+                  Board Type: {bordtype}
+                </span>
+              )}
+              {/* <h5 className="text-white text-xl">({bordtype})</h5> */}
+            </div>
             <p className="text-gray-400 text-sm capitalize">{tagline}</p>
           </div>
         </div>

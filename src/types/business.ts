@@ -114,7 +114,7 @@ export interface ApiResponse {
 export interface FilterValues {
   search?: string | null;
   category?: string | null;
-  boardtype?: string | null;
+  bordtype?: string | null;
   city?: string | null;
   state?: string | null;
   zipcode?: string | null;

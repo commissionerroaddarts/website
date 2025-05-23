@@ -5,6 +5,7 @@ import { Box } from "@mui/material";
 import EstablishmentMapLocation from "@/components/modals/EstablishmentMapLocation";
 import { CircleDollarSign, Globe, MapPinned, Phone } from "lucide-react";
 import Link from "next/link";
+import { FaClock } from "react-icons/fa";
 
 interface EstablishmentLocationProps {
   readonly business: Business;
@@ -13,11 +14,8 @@ interface EstablishmentLocationProps {
 export default function EstablishmentLocation({
   business,
 }: Readonly<EstablishmentLocationProps>) {
-  const { location, phone, website, timings, price, socials } = business;
-
-  const coordinates: [number, number] = location?.geotag
-    ? [location.geotag.lat, location.geotag.lng]
-    : [0, 0]; // Default coordinates if geotag is not provided
+  const { location, phone, website, timings, price, socials, tags, status } =
+    business;
 
   return (
     <div
@@ -40,6 +38,8 @@ export default function EstablishmentLocation({
           city={location?.city}
           state={location?.state}
           country={location?.country}
+          tags={tags}
+          status={status}
         />
 
         {/* Timings */}
@@ -59,6 +59,8 @@ const BasicDetails = ({
   state,
   city,
   country,
+  tags,
+  status,
 }: {
   phone?: string;
   website?: string;
@@ -66,9 +68,31 @@ const BasicDetails = ({
   city?: string;
   state?: string;
   country?: string;
+  tags?: string[];
+  status?: string;
 }) => {
   return (
     <Box className="p-4 flex flex-col gap-4 " sx={{ margin: 0 }}>
+      {/* Tags and Open Status */}
+      <div className="flex justify-between items-center ">
+        {tags && tags.length > 0 && (
+          <div className="flex gap-2 flex-wrap">
+            {tags.map((tag) => (
+              <span
+                key={tag}
+                className="bg-[#200c27] capitalize text-white text-xs px-3 py-1 rounded-full"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+        <div className="flex items-center">
+          <FaClock className="h-4 w-4 text-primary mr-1" />
+          <span className="text-primary text-xs">{status}</span>
+        </div>
+      </div>
+
       <div className="flex items-center gap-2">
         <MapPinned color="white" size={25} />
         <span>{`${city}${state ? `, ${state}` : ""}, ${country}`} </span>

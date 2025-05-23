@@ -69,7 +69,7 @@ const FilterSidebar: React.FC<SidebarProps> = ({
   const handleRemoveFilters = () => {
     setFilters({
       category: null,
-      boardtype: null,
+      bordtype: null,
       city: null,
       state: null,
       zipcode: null,
@@ -147,7 +147,7 @@ const FilterSidebar: React.FC<SidebarProps> = ({
             label="Board Type"
             name="boardtype"
             options={boardTypeOptions}
-            value={filters.boardtype ?? ""}
+            value={filters.bordtype ?? ""}
             onChange={handleFilterChange}
           />
         </Box>

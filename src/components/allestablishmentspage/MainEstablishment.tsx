@@ -19,7 +19,7 @@ export default function MainEstablishment() {
   const [businesses, setBusinesses] = useState<Business[]>([]); // Single object state for all filters
   const search = searchParams.get("search") ?? null;
   const category = searchParams.get("category") ?? null;
-  const boardtype = searchParams.get("boardtype") ?? null;
+  const bordtype = searchParams.get("boardtype") ?? null;
   const city = searchParams.get("city") ?? null;
   const state = searchParams.get("state") ?? null;
   const zipcode = searchParams.get("zipcode") ?? null;
@@ -28,7 +28,7 @@ export default function MainEstablishment() {
   const [filterParams, setFilterParams] = useState<FilterValues>({
     search,
     category,
-    boardtype,
+    bordtype,
     city,
     state,
     zipcode,
