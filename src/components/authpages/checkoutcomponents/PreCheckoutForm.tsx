@@ -57,6 +57,17 @@ const PreCheckoutForm = ({
         redirect("/plans");
       }
       setLoading(true);
+
+      if (
+        selectedPlan?.name !== "Standard Plan" &&
+        data.promoCode &&
+        data.promoCode.toUpperCase() === "FREEAD365"
+      ) {
+        toast.error("Invalid promo code");
+        setLoading(false);
+        return;
+      }
+
       if (
         data.promoCode &&
         !promoCodes.includes(data.promoCode.toUpperCase())
