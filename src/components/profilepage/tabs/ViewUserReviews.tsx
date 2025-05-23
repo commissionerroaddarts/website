@@ -120,25 +120,26 @@ const ViewUserReviews = () => {
             mx: "auto",
           }}
         >
+          <Typography
+            variant="h5"
+            fontWeight="bold"
+            color="text.primary"
+            textAlign="center"
+            mb={4}
+          >
+            My Reviews
+          </Typography>
+
+          <FilterSection
+            isLoading={loading}
+            filters={filterParams}
+            setFilters={setFilterParams}
+            updateQuery={updateQuery}
+            isFilteration={false}
+          />
+
           {userReviews.length > 0 ? (
             <>
-              <Typography
-                variant="h5"
-                fontWeight="bold"
-                color="text.primary"
-                textAlign="center"
-                mb={4}
-              >
-                My Reviews
-              </Typography>
-
-              <FilterSection
-                isLoading={loading}
-                filters={filterParams}
-                setFilters={setFilterParams}
-                updateQuery={updateQuery}
-                isFilteration={false}
-              />
               {/* Reviews list */}
               <div className="space-y-6 mt-6">
                 {userReviews.map((review: any) => (
