@@ -177,7 +177,7 @@ function BusinessCard({ business }: { readonly business: Business }) {
                   {bordtype && (
                     <div className="flex items-center mb-2 gap-1">
                       <CircleDot size={20} />
-                      <span className="bg-[#3a2a3e] capitalize text-white text-xs  py-1 rounded-full">
+                      <span className=" capitalize text-white text-xs  py-1 rounded-full">
                         Board Type: {bordtype}
                       </span>
                     </div>
