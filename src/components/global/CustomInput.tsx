@@ -36,26 +36,24 @@ const CustomInput: React.FC<CustomInputProps> = ({
   };
 
   const formatPhone = (value: string): string => {
-    const digits = value.replace(/\D/g, ""); // Remove non-digits
+    // Remove all non-digit characters
+    const digits = value.replace(/\D/g, "");
 
-    if (digits.length === 0) return ""; // 🔥 Fix: clear everything if no digits
+    // Strip leading '1' if present (country code)
+    const normalized = digits.startsWith("1") ? digits.slice(1) : digits;
 
-    const cleaned =
-      digits.startsWith("1") && digits.length > 10 ? digits.slice(1) : digits;
+    // Format only if we have digits to format
+    if (normalized.length === 0) return "";
 
-    if (cleaned.length <= 3) {
-      return `(${cleaned}`;
-    } else if (cleaned.length <= 6) {
-      return `(${cleaned.slice(0, 3)}) ${cleaned.slice(3)}`;
-    } else if (cleaned.length <= 10) {
-      return `(${cleaned.slice(0, 3)}) ${cleaned.slice(3, 6)}-${cleaned.slice(
-        6
-      )}`;
+    if (normalized.length <= 3) {
+      return `(${normalized}`;
+    } else if (normalized.length <= 6) {
+      return `(${normalized.slice(0, 3)}) ${normalized.slice(3)}`;
     } else {
-      return `+1 (${cleaned.slice(0, 3)}) ${cleaned.slice(
+      return `(${normalized.slice(0, 3)}) ${normalized.slice(
         3,
         6
-      )}-${cleaned.slice(6, 10)}`;
+      )}-${normalized.slice(6, 10)}`;
     }
   };
 
