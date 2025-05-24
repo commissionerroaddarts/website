@@ -23,6 +23,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useAppState } from "@/hooks/useAppState";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useAppDispatch } from "@/store";
+import { phoneSchema } from "@/yupSchemas/phoneSchema";
 
 // ✅ Validation Schema
 const schema = yup.object().shape({
@@ -42,13 +43,7 @@ const schema = yup.object().shape({
     .string()
     .email("Invalid email format")
     .required("Email is required"),
-  phone: yup
-    .string()
-    .required("Phone number is required")
-    .matches(
-      /^\d{10,15}$/,
-      "Phone number must be between 10 and 15 digits and contain only numbers"
-    ),
+  phone: phoneSchema,
   password: yup
     .string()
     .required("Password is required")
@@ -198,7 +193,7 @@ const SignupForm = () => {
                     {...field}
                     error={!!errors.email}
                     defaultValue={email ?? ""}
-                    disabled={email ? true : false}
+                    disabled={!!email}
                     helperText={errors.email?.message}
                   />
                 )}
@@ -213,6 +208,7 @@ const SignupForm = () => {
                 render={({ field }) => (
                   <CustomInput
                     label="Phone Number"
+                    type="tel"
                     {...field}
                     error={!!errors.phone}
                     helperText={errors.phone?.message}

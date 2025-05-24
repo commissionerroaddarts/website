@@ -8,6 +8,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { updateUserProfile } from "@/services/userService";
 import { toast } from "react-toastify";
+import { phoneSchema } from "@/yupSchemas/phoneSchema";
 
 const phoneRegex = /^(\+?\d{1,4}[\s-])?(?!0+\s+,?$)\d{10,14}$/; // Handles intl formats
 const nameRegex = /^[A-Za-z\s\-']+$/; // Allows letters, spaces, hyphens, apostrophes
@@ -39,14 +40,7 @@ const schema = yup.object().shape({
     .email("Invalid email address")
     .required("Email is required"),
 
-  phone: yup
-    .string()
-    .nullable()
-    .required("Phone Number is Required")
-    .matches(phoneRegex, {
-      message: "Invalid phone number format",
-      excludeEmptyString: true,
-    }),
+  phone: phoneSchema,
 
   country: yup
     .string()
@@ -227,6 +221,7 @@ const EditProfile = ({ user }: { user: User }) => {
               render={({ field }) => (
                 <CustomInput
                   label="Your Phone Number"
+                  type="tel"
                   fullWidth
                   variant="outlined"
                   error={!!errors.phone}

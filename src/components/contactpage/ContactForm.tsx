@@ -15,6 +15,7 @@ import { setInquiryData } from "@/store/slices/inquirySlice";
 import { useAppDispatch } from "@/store";
 import ReCAPTCHA from "react-google-recaptcha";
 import { recaptchaVerify } from "@/services/authService";
+import { phoneSchema } from "@/yupSchemas/phoneSchema";
 
 // ✅ Schema unchanged
 const schema = yup.object().shape({
@@ -30,10 +31,7 @@ const schema = yup.object().shape({
     .matches(/^[a-zA-Z]+$/)
     .min(2)
     .max(50),
-  phone: yup
-    .string()
-    .required("Phone number is required")
-    .matches(/^\d{10,15}$/),
+  phone: phoneSchema,
   email: yup.string().email("Email is required").required().max(100),
   message: yup.string().required("Message is required").min(10).max(500),
 });
@@ -129,6 +127,7 @@ const ContactForm = () => {
                 render={({ field }) => (
                   <CustomInput
                     label="Phone Number"
+                    type="tel"
                     {...field}
                     error={!!errors.phone}
                     helperText={errors.phone?.message}

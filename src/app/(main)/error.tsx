@@ -1,7 +1,6 @@
 "use client";
 import ThemeButton from "@/components/buttons/ThemeButton";
 import { Box, Typography } from "@mui/material";
-import { useRouter } from "next/navigation";
 import React, { startTransition } from "react";
 
 interface ErrorProps {
@@ -10,7 +9,6 @@ interface ErrorProps {
 }
 
 const GlobalError: React.FC<ErrorProps> = ({ error, reset }) => {
-  const router = useRouter();
   const reload = () => {
     startTransition(() => {
       window.location.reload();

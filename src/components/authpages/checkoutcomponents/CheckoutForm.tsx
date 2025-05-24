@@ -9,11 +9,12 @@ import BillingInfoSection from "./BillingInfoSection";
 import { toast } from "react-toastify";
 import { useState } from "react";
 import PaymentForm from "./PaymentFormSection";
+import { phoneSchema } from "@/yupSchemas/phoneSchema";
 
 const schema = yup.object({
   fullName: yup.string().required("Full Name is required"),
   email: yup.string().email().required("Email is required"),
-  phone: yup.string().required("Phone number is required"),
+  phone: phoneSchema,
   zip: yup.string().required("ZIP Code is required"),
 });
 

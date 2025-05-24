@@ -22,6 +22,7 @@ import { Business } from "@/types/business";
 import UpgradePlan from "@/components/modals/UpgradePlan";
 import { Dialog, DialogContent, Typography } from "@mui/material";
 import { mediaSchema } from "@/yupSchemas/mediaSchema";
+import { phoneSchema } from "@/yupSchemas/phoneSchema";
 const LOCAL_STORAGE_KEY = "addEstablishmentFormData";
 
 const stepSchemas = [
@@ -36,19 +37,35 @@ const stepSchemas = [
       .required("Business Tagline is required")
       .min(5, "Business Tagline must be at least 5 characters long")
       .max(150, "Business Tagline cannot exceed 150 characters"),
-    phone: yup
-      .string()
-      .matches(/^\d+$/, "Phone Number must be numeric")
-      .required("Business Phone Number is required")
-      .length(10, "Phone Number must be exactly 10 digits"),
+    phone: phoneSchema,
     website: yup
       .string()
       .nullable()
       .notRequired()
-      .url("Must be a valid URL")
-      .matches(
-        /^(https?:\/\/)?(www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$/,
-        "Website URL must be valid and properly formatted"
+      .test(
+        "is-valid-url",
+        "Must be a valid URL (e.g., example.com or example.com/page)",
+        (value) => {
+          if (!value) return true;
+
+          // Prepend protocol if missing
+          const withProtocol =
+            value.startsWith("http://") || value.startsWith("https://")
+              ? value
+              : `https://${value}`;
+
+          try {
+            const url = new URL(withProtocol);
+
+            // Must include a valid hostname with at least one dot (e.g., "example.com")
+            const isValidDomain = /^[a-zA-Z0-9-]+(\.[a-zA-Z]{2,})+$/.test(
+              url.hostname
+            );
+            return isValidDomain;
+          } catch {
+            return false;
+          }
+        }
       ),
     shortDis: yup
       .string()

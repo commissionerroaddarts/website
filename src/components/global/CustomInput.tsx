@@ -35,12 +35,49 @@ const CustomInput: React.FC<CustomInputProps> = ({
     setShowPassword((prev) => !prev);
   };
 
+  const formatPhone = (value: string): string => {
+    const digits = value.replace(/\D/g, ""); // Remove non-digits
+
+    if (digits.length === 0) return ""; // 🔥 Fix: clear everything if no digits
+
+    const cleaned =
+      digits.startsWith("1") && digits.length > 10 ? digits.slice(1) : digits;
+
+    if (cleaned.length <= 3) {
+      return `(${cleaned}`;
+    } else if (cleaned.length <= 6) {
+      return `(${cleaned.slice(0, 3)}) ${cleaned.slice(3)}`;
+    } else if (cleaned.length <= 10) {
+      return `(${cleaned.slice(0, 3)}) ${cleaned.slice(3, 6)}-${cleaned.slice(
+        6
+      )}`;
+    } else {
+      return `+1 (${cleaned.slice(0, 3)}) ${cleaned.slice(
+        3,
+        6
+      )}-${cleaned.slice(6, 10)}`;
+    }
+  };
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    let { value } = event.target;
+
+    if (isPhoneField) {
+      value = formatPhone(value);
+      // Create a synthetic event for controlled forms
+      event.target.value = value;
+    }
+
+    onChange?.(event);
+  };
+
   const isPasswordField = type === "password";
+  const isPhoneField = type === "tel" || label.toLowerCase().includes("phone");
 
   return (
     <TextField
       fullWidth
-      onChange={onChange}
+      onChange={handleInputChange}
       placeholder={label}
       variant="outlined"
       multiline={multiline}

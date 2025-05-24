@@ -46,6 +46,7 @@ const BillingInfoSection = ({
           <CustomInput
             {...field}
             label="Phone Number"
+            type="tel"
             error={!!errors.phone}
             helperText={errors.phone?.message}
             border="1px solid white"
