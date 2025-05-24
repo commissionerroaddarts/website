@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { ActionBar } from "./ActionBar";
 import { Grid2 } from "@mui/material";
