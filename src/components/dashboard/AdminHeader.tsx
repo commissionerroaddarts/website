@@ -1,23 +1,43 @@
 "use client";
-import { Bell, Settings, ChevronDown } from "lucide-react";
-import Avatar from "@mui/material/Avatar";
-import Typography from "@mui/material/Typography";
+import { Bell, Settings } from "lucide-react";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { logoutUser } from "@/services/authService";
+import { useAppDispatch } from "@/store";
+import { ProfileLink } from "../global/Navbar";
 
-export default function AdminHeader() {
+import { User } from "@/types/user";
+
+export default function AdminHeader({
+  userDetails,
+}: {
+  readonly userDetails: User;
+}) {
   const router = useRouter();
+  const dispatch = useAppDispatch();
+
+  const logoutHandler = async () => {
+    try {
+      //call the logout function from your auth service
+      await logoutUser(dispatch);
+      // Redirect to the login page or home page after logout
+      router.push("/login");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+
+  if (!userDetails?._id) {
+    return null; // Return null if userDetails is not available
+  }
+
   return (
     <Box
       component="header"
-      display="flex"
-      alignItems="center"
-      justifyContent="space-between"
-      p={2}
-      borderBottom="1px solid #2d272f"
+      className="flex items-center justify-between border-b border-gray-300 py-2 mx-5"
     >
       <Box
         sx={{
@@ -53,15 +73,12 @@ export default function AdminHeader() {
         <IconButton>
           <Settings style={{ color: "white", width: 20, height: 20 }} />
         </IconButton>
-        <Stack direction="row" alignItems="center" spacing={1}>
-          <Avatar
-            src="/placeholder.svg?height=32&width=32"
-            sx={{ width: 32, height: 32, bgcolor: "#8224e3" }}
-          >
-            JD
-          </Avatar>
-          <ChevronDown style={{ color: "white", width: 16, height: 16 }} />
-        </Stack>
+
+        <ProfileLink
+          userDetails={userDetails}
+          logoutHandler={logoutHandler}
+          router={router}
+        />
       </Stack>
     </Box>
   );

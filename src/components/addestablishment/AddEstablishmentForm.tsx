@@ -363,6 +363,8 @@ export default function AddEstablishment({
   const [showConfetti, setShowConfetti] = useState(false);
   const [closedDays, setClosedDays] = useState<Record<string, boolean>>({});
   const [isOpen, setIsOpen] = useState(false);
+  const [maxListings, setMaxListings] = useState(0);
+  const [businessCount, setBusinessCount] = useState(0);
 
   const isUserLoggedIn =
     isLoggedIn &&
@@ -388,13 +390,14 @@ export default function AddEstablishment({
 
         const businessCount = data?.length;
         const maxListings = permissions.maxListings;
+        console.log(
+          `User has ${businessCount} listings, max allowed is ${maxListings}`
+        );
+        setBusinessCount(businessCount);
+        setMaxListings(maxListings);
 
-        if (plan === "Basic" && businessCount >= 1) {
+        if (businessCount >= maxListings) {
           setIsOpen(true);
-        } else if (plan === "Standard" && businessCount >= maxListings) {
-          setIsOpen(true);
-        } else {
-          setIsOpen(false);
         }
       } catch (err) {
         console.error("Failed to evaluate plan access:", err);
@@ -486,7 +489,12 @@ export default function AddEstablishment({
 
   return (
     <FormProvider {...methods}>
-      <UpgradePlan isOpen={isOpen} setIsOpen={setIsOpen} />
+      <UpgradePlan
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        maxListings={maxListings}
+        businessCount={businessCount}
+      />
       <Dialog
         maxWidth="md"
         open={isLoading}
@@ -501,7 +509,7 @@ export default function AddEstablishment({
           }}
         >
           <Typography variant="h5" gutterBottom textAlign="center">
-            Submitting your establishment... Please wait...
+            Submitting your establishment...
           </Typography>
         </DialogContent>
       </Dialog>

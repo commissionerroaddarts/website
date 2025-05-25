@@ -236,7 +236,7 @@ function Navbar() {
   );
 }
 
-const ProfileLink = ({
+export const ProfileLink = ({
   userDetails,
   logoutHandler,
   router,

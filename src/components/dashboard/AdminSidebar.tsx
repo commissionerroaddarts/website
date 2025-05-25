@@ -1,5 +1,6 @@
-import { Button } from "@mui/material";
+import { Box } from "@mui/material";
 import { LogOut } from "lucide-react";
+import ThemeOutlineButton from "../buttons/ThemeOutlineButton";
 
 interface SidebarProps {
   readonly activeItem?: string;
@@ -12,51 +13,51 @@ export default function AdminSidebar({
     {
       id: "establishment",
       label: "Establishment Management",
-      icon: "👥",
+      icon: "",
     },
     {
       id: "review",
       label: "Review Moderation",
-      icon: "📋",
+      icon: "",
     },
     {
       id: "advertisement",
       label: "Advertisement Management",
-      icon: "📢",
+      icon: "",
     },
     {
       id: "user",
       label: "User Management",
-      icon: "👤",
+      icon: "",
     },
   ];
 
   return (
-    <aside className="w-64 p-4 space-y-2">
-      {menuItems.map((item) => (
-        <Button
-          key={item.id}
-          className={`w-full justify-start text-white rounded-full ${
-            activeItem === item.id
-              ? "bg-[#ec6dff] hover:bg-[#ec6dff]/80"
-              : "bg-transparent hover:bg-[#2d272f]"
-          }`}
-          variant={activeItem === item.id ? "contained" : "text"}
-        >
-          <span className="mr-2">{item.icon}</span>
-          {item.label}
-        </Button>
-      ))}
+    <aside className="w-72  min-h-screen">
+      <Box className="flex flex-col justify-between">
+        <div className="flex flex-col gap-2">
+          {menuItems.map((item) => (
+            <button
+              key={item.id}
+              className={`flex gap-2 w-full px-5 py-4 !text-white rounded-full ${
+                activeItem === item.id
+                  ? "bg-[#ec6dff] hover:bg-[#ec6dff]/80"
+                  : "bg-transparent hover:bg-[#2d272f]"
+              }`}
+            >
+              {item.icon && <span>{item.icon}</span>}
+              {item.label}
+            </button>
+          ))}
+        </div>
 
-      <div className="pt-8">
-        <Button
-          variant="outlined"
-          className="w-full justify-start text-white border-[#8224e3] hover:bg-[#2d272f] rounded-full"
-        >
-          <LogOut className="mr-2 h-4 w-4" />
-          Logout
-        </Button>
-      </div>
+        <div className="pt-8 pl-4">
+          <ThemeOutlineButton
+            icon={<LogOut className="w-4 h-4" />}
+            text="Logout"
+          />
+        </div>
+      </Box>
     </aside>
   );
 }

@@ -6,7 +6,7 @@ import {
 } from "@stripe/react-stripe-js";
 import { checkoutService } from "@/services/checkoutService";
 import { useState } from "react";
-import PreCheckoutForm from "@/components/authpages/checkoutcomponents/PreCheckoutForm"; // Adjust path
+import PreCheckoutForm from "@/components/authpages/PreCheckoutForm"; // Adjust path
 import Confetti from "react-confetti"; // 🎉 install it via `npm i react-confetti`
 import { useAppState } from "@/hooks/useAppState";
 import { useAppDispatch } from "@/store";

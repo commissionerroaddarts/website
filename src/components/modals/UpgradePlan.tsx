@@ -15,9 +15,13 @@ type BillingCycle = "monthly" | "yearly";
 export default function UpgradePlan({
   isOpen,
   setIsOpen,
+  maxListings,
+  businessCount,
 }: {
   readonly isOpen: boolean;
   readonly setIsOpen: (value: boolean) => void;
+  readonly maxListings: number;
+  readonly businessCount: number;
 }) {
   const [plans, setPlans] = useState<Plan[]>([]);
   const [loading, setLoading] = useState(false);
@@ -99,12 +103,13 @@ export default function UpgradePlan({
             You've reached your current plan's limit!
           </h1>
 
-          <button className="border-2 border-white/30 rounded-full py-4 px-12 text-2xl font-semibold mb-10 hover:bg-white/10 transition-colors">
+          <p className="border-2 border-white/30 rounded-full py-4 px-12 text-2xl font-semibold mb-10 hover:bg-white/10 transition-colors">
             Upgrade Now to Continue
-          </button>
+          </p>
 
           <p className="text-xl text-center mb-2">
-            You're currently on the Free Trial - 3 of 3 listings used.
+            You're currently on the Free Trial - {businessCount} of{" "}
+            {maxListings} listings used.
           </p>
           <p className="text-xl text-center mb-12">
             Upgrade your plan to add more Establishments and unlock advanced
