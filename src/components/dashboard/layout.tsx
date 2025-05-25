@@ -3,7 +3,7 @@ import { useState, ReactNode, useEffect } from "react";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import theme from "@/theme/theme";
-import { usePathname, useRouter } from "next/navigation"; // Correct hook
+import { useRouter } from "next/navigation"; // Correct hook
 import { getUserDetails } from "@/services/authService";
 import { useAppDispatch } from "@/store";
 import { useAppState } from "@/hooks/useAppState";
@@ -19,8 +19,6 @@ interface LayoutProps {
 }
 
 export default function AdminDashboardLayout({ children }: LayoutProps) {
-  const pathname = usePathname(); // Get the current path
-  const isHomePage = pathname === "/";
   const dispatch = useAppDispatch(); // Get the dispatch function from Redux store
   const { user } = useAppState();
   const { isLoggedIn, userDetails } = user;
@@ -43,13 +41,6 @@ export default function AdminDashboardLayout({ children }: LayoutProps) {
     fetchUserDetails();
   }, [dispatch, isLoggedIn]);
 
-  // useEffect(() => {
-  //   if (!isUserLoggedIn && !loading) {
-  //     // Redirect to login page if user is not logged in
-  //     router.push("/login");
-  //   }
-  // }, [isUserLoggedIn, router, loading]);
-
   if (loading) {
     return <Preloader />;
   }
@@ -58,20 +49,19 @@ export default function AdminDashboardLayout({ children }: LayoutProps) {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Box className="flex flex-col justify-between min-h-screen ">
-        {!isHomePage && <AdminHeader userDetails={userDetails!} />}
+        <AdminHeader userDetails={userDetails!} />
         <div className="flex gap-5 m-5">
           <AdminSidebar activeItem="establishment" />
           <main
             className="flex-1 p-6 min-h-screen rounded-lg"
             style={{
               background:
-                " linear-gradient(141.69deg, #462253 2.85%, #381A43 31.47%, #50275E 35.95%, #200C27 63.45%, #50275E 98.41%)",
+                "linear-gradient(141.69deg, #462253 2.85%, #381A43 31.47%, #50275E 35.95%, #200C27 63.45%, #50275E 98.41%)",
             }}
           >
             {children}
           </main>
         </div>
-
         <Footer />
       </Box>
       <ScrollToTop /> {/* ← Add this here */}

@@ -1,13 +1,13 @@
-import Providers from "../providers";
-import Layout from "@/components/layout";
+import Providers from "@/app/providers";
 import "@/styles/globals.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Preloader from "@/components/global/Preloader";
 import { generateMetadata } from "@/utils/metaData";
+import Layout from "@/components/layout";
 
 export const metadata = generateMetadata({
-  title: "Road Darts - The Ultimate Game",
+  title: "Road Darts - Admin Dashboard",
   description: "Play and enjoy Road Darts with friends!",
   url: "/",
   image: "/images/og-image.png",
@@ -27,7 +27,7 @@ export default function RootLayout({
           <Providers>
             <ToastContainer
               position="top-center"
-              autoClose={2000}
+              autoClose={1500}
               hideProgressBar={true}
               newestOnTop
               rtl={false}

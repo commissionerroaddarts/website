@@ -1,10 +1,10 @@
-import Providers from "@/app/providers";
 import "@/styles/globals.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Preloader from "@/components/global/Preloader";
 import { generateMetadata } from "@/utils/metaData";
 import AdminDashboardLayout from "@/components/dashboard/layout";
+import Providers from "@/app/providers";
 
 export const metadata = generateMetadata({
   title: "Road Darts - Admin Dashboard",
