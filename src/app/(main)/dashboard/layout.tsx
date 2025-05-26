@@ -15,10 +15,10 @@ export const metadata = generateMetadata({
 
 export default function RootDashboardLayout({
   children,
-  modal,
-}: {
+}: // modal,
+{
   readonly children: React.ReactNode;
-  readonly modal: React.ReactNode;
+  // readonly modal: React.ReactNode;
 }) {
   return (
     <html lang="en">
@@ -34,7 +34,7 @@ export default function RootDashboardLayout({
               theme="colored"
             />
             <AdminDashboardLayout>
-              {modal}
+              {/* {modal} */}
               {children}
             </AdminDashboardLayout>
           </Providers>
