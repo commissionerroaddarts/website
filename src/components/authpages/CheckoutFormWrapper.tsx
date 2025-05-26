@@ -36,7 +36,9 @@ export default function CheckoutFormWrapper() {
     if (!priceId) return;
 
     try {
-      const email = isLoggedIn ? userEmail ?? "" : data.email ?? "";
+      const email = isLoggedIn
+        ? userEmail?.toLowerCase() ?? ""
+        : data.email?.toLowerCase() ?? "";
       dispatch(setEmail(email));
       dispatch(setPromoCode(data.promoCode ?? ""));
       const formData = {

@@ -81,7 +81,11 @@ const PreCheckoutForm = ({
       }
 
       // Your logic here (e.g., API call)
-      onSuccess(data); // Call the onSuccess function with the form data
+      const formData = {
+        ...data,
+        email: data.email?.toLowerCase() ?? "",
+      };
+      onSuccess(formData); // Call the onSuccess function with the form data
       setLoading(false);
     } catch (error: any) {
       setLoading(false);
