@@ -98,7 +98,7 @@ const SignupForm = () => {
 
       const formData = {
         ...data,
-        email: data.email.toLowerCase(), // Normalize email to lowercase
+        email: email.toLowerCase() ?? data.email.toLowerCase(), // Normalize email to lowercase
       };
 
       const response = await registerUser(formData, dispatch);
