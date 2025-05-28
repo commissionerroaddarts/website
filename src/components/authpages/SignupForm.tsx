@@ -98,9 +98,9 @@ const SignupForm = () => {
 
       const formData = {
         ...data,
-        email: email.toLowerCase() ?? data.email.toLowerCase(), // Normalize email to lowercase
+        email: data.email.toLowerCase(), // Normalize email to lowercase
       };
-
+      console.log(formData, email);
       const response = await registerUser(formData, dispatch);
       if (response?.status === 201) {
         toast.success(
