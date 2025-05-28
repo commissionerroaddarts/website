@@ -7,7 +7,7 @@ import { generateMetadata } from "@/utils/metaData";
 import Layout from "@/components/layout";
 
 export const metadata = generateMetadata({
-  title: "Road Darts - Admin Dashboard",
+  title: "Road Darts",
   description: "Play and enjoy Road Darts with friends!",
   url: "/",
   image: "/images/og-image.png",

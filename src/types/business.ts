@@ -7,6 +7,7 @@ export interface Location {
   city?: string;
   country?: string;
   zipcode?: string;
+  address?: string; // Optional field for full address
 }
 
 export interface LocationError {

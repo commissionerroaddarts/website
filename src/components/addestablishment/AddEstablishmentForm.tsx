@@ -94,6 +94,15 @@ const stepSchemas = [
   }),
   yup.object().shape({
     location: yup.object().shape({
+      address: yup
+        .string()
+        .required("Address is required")
+        .min(5, "Address must be at least 5 characters long")
+        .max(200, "Address cannot exceed 200 characters"),
+      country: yup
+        .string()
+        .required("Country is required")
+        .min(2, "Country must be at least 2 characters long"),
       state: yup
         .string()
         .required("State is required")
@@ -357,7 +366,7 @@ export default function AddEstablishment({
   const { userDetails, isLoggedIn } = user;
   const { subscription, permissions, _id } = userDetails || {};
   const { plan } = subscription || {};
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(2);
   const totalSteps = 5;
   const [isLoading, setIsLoading] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);

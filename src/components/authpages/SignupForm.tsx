@@ -108,15 +108,10 @@ const SignupForm = () => {
             `We have sent a verification email at ${data.email}`
         );
         setTimeout(() => {
-          if (sessionId || userDetails?.subscription) {
-            router.push("/add-establishment"); // Redirect to login page after successful signup
-          }
           if (selectedPlan) {
             router.push("/checkout"); // Redirect to login page after successful signup
           }
-          if (!selectedPlan && !sessionId) {
-            router.push("/plans"); // Redirect to login page after successful signup
-          }
+          router.push("/add-establishment"); // Redirect to login page after successful signup
         }, 2000);
       }
       // Handle post-signup actions here (e.g., redirect, store token)

@@ -1,14 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import { FieldErrors, useFormContext } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { Controller, useFormContext } from "react-hook-form";
 import {
   useLoadScript,
   GoogleMap,
   Marker,
   Autocomplete,
 } from "@react-google-maps/api";
-import { Box, Typography, CircularProgress } from "@mui/material";
+import { Box, Typography, CircularProgress, Grid2 } from "@mui/material";
 import CustomInput from "@/components/global/CustomInput";
 import { Search } from "lucide-react";
 
@@ -19,11 +19,18 @@ export default function Step2Form() {
   });
 
   const {
+    control,
     setValue,
     watch,
     formState: { errors },
   } = useFormContext();
   const { geotag } = watch("location") ?? {};
+  const address = watch("location.address");
+  const city = watch("location.city");
+  const state = watch("location.state");
+  const zipcode = watch("location.zipcode");
+  const country = watch("location.country");
+
   const [autocomplete, setAutocomplete] = useState<any>(null);
   const [center, setCenter] = useState(
     geotag ?? { lat: 33.00122, lng: -117.06517 }
@@ -58,7 +65,7 @@ export default function Step2Form() {
         });
 
         if (addressComponents.country)
-          setValue("location.country", addressComponents.country);
+          setValue("location.country", addressComponents.country ?? "USA");
         if (addressComponents.state)
           setValue("location.state", addressComponents.state);
         if (addressComponents.city)
@@ -68,6 +75,34 @@ export default function Step2Form() {
       }
     }
   };
+
+  useEffect(() => {
+    const fullAddress = [address, city, state, zipcode, country]
+      .filter(Boolean)
+      .join(", ");
+
+    if (isLoaded && fullAddress) {
+      const timeoutId = setTimeout(() => {
+        const geocoder = new window.google.maps.Geocoder();
+        geocoder.geocode({ address: fullAddress }, (results, status) => {
+          if (status === "OK" && results?.[0]) {
+            const location = results[0].geometry.location;
+            const lat = location.lat();
+            const lng = location.lng();
+
+            setValue("location.geotag.lat", lat);
+            setValue("location.geotag.lng", lng);
+            setCenter({ lat, lng });
+            setMarkerPosition({ lat, lng });
+          } else {
+            console.warn("Geocode failed: ", status);
+          }
+        });
+      }, 1000); // debounce delay
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [address, city, state, zipcode, country, isLoaded]);
 
   if (!isLoaded) return <CircularProgress />;
 
@@ -117,16 +152,34 @@ export default function Step2Form() {
         </GoogleMap>
       </Box>
 
-      {/* <Grid2 container spacing={2} mb={8}>
-        <Grid2 size={{ xs: 12, md: 6 }}>
+      <Grid2 container spacing={2} mb={8}>
+        <Grid2 size={{ xs: 12 }}>
           <Controller
-            name="location.country"
+            name="location.address"
             control={control}
             render={({ field, fieldState }) => (
               <CustomInput
-                label="Country"
+                label="Address"
                 {...field}
-                placeholder="Country"
+                placeholder="Address Line"
+                error={!!fieldState.error}
+                helperText={fieldState.error?.message}
+                fullWidth
+                variant="outlined"
+              />
+            )}
+          />
+        </Grid2>
+
+        <Grid2 size={{ xs: 12, md: 6 }}>
+          <Controller
+            name="location.city"
+            control={control}
+            render={({ field, fieldState }) => (
+              <CustomInput
+                label="City"
+                {...field}
+                placeholder="City"
                 error={!!fieldState.error}
                 helperText={fieldState.error?.message}
                 fullWidth
@@ -152,23 +205,7 @@ export default function Step2Form() {
             )}
           />
         </Grid2>
-        <Grid2 size={{ xs: 12, md: 6 }}>
-          <Controller
-            name="location.city"
-            control={control}
-            render={({ field, fieldState }) => (
-              <CustomInput
-                label="City"
-                {...field}
-                placeholder="City"
-                error={!!fieldState.error}
-                helperText={fieldState.error?.message}
-                fullWidth
-                variant="outlined"
-              />
-            )}
-          />
-        </Grid2>
+
         <Grid2 size={{ xs: 12, md: 6 }}>
           <Controller
             name="location.zipcode"
@@ -186,7 +223,24 @@ export default function Step2Form() {
             )}
           />
         </Grid2>
-      </Grid2> */}
+        <Grid2 size={{ xs: 12, md: 6 }}>
+          <Controller
+            name="location.country"
+            control={control}
+            render={({ field, fieldState }) => (
+              <CustomInput
+                label="Country"
+                {...field}
+                placeholder="Country"
+                error={!!fieldState.error}
+                helperText={fieldState.error?.message}
+                fullWidth
+                variant="outlined"
+              />
+            )}
+          />
+        </Grid2>
+      </Grid2>
     </Box>
   );
 }
