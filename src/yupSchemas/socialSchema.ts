@@ -20,7 +20,7 @@ export const socialSchema = yup.object().shape({
     .string()
     .url("Invalid Twitter URL")
     .matches(
-      /^(https?:\/\/)?(www\.)?twitter\.com\/[a-zA-Z0-9(.?)]/,
+      /^(https?:\/\/)?(www\.)?x\.com\/[a-zA-Z0-9(.?)]/,
       "Invalid Twitter URL"
     )
     .nullable(),

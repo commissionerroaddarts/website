@@ -12,10 +12,18 @@ import { Box, Typography, CircularProgress, Grid2 } from "@mui/material";
 import CustomInput from "@/components/global/CustomInput";
 import { Search } from "lucide-react";
 
+const libraries: (
+  | "places"
+  | "drawing"
+  | "geometry"
+  | "localContext"
+  | "visualization"
+)[] = ["places"]; // Define this once at module level
+
 export default function Step2Form() {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? "",
-    libraries: ["places"],
+    libraries,
   });
 
   const {
@@ -40,6 +48,7 @@ export default function Step2Form() {
   const onPlaceChanged = () => {
     if (autocomplete !== null) {
       const place = autocomplete.getPlace();
+      console.log("Selected Place: ", place);
 
       if (place.geometry?.location) {
         const lat = place.geometry.location.lat();
@@ -62,8 +71,6 @@ export default function Step2Form() {
             addressComponents.city = component.long_name;
           if (types.includes("postal_code"))
             addressComponents.zipcode = component.long_name;
-          if (types.includes("route") || types.includes("street_address"))
-            addressComponents.address = component.long_name;
         });
 
         if (addressComponents.country)
@@ -74,8 +81,8 @@ export default function Step2Form() {
           setValue("location.city", addressComponents.city);
         if (addressComponents.zipcode)
           setValue("location.zipcode", addressComponents.zipcode ?? "90210");
-        if (addressComponents.address)
-          setValue("location.address", addressComponents.address);
+        if (place.formatted_address)
+          setValue("location.address", place.formatted_address);
       }
     }
   };

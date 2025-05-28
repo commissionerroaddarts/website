@@ -38,6 +38,7 @@ export default function EstablishmentLocation({
           city={location?.city}
           state={location?.state}
           country={location?.country}
+          address={location?.address}
           tags={tags}
           status={status}
         />
@@ -61,6 +62,7 @@ const BasicDetails = ({
   country,
   tags,
   status,
+  address,
 }: {
   phone?: string;
   website?: string;
@@ -70,6 +72,7 @@ const BasicDetails = ({
   country?: string;
   tags?: string[];
   status?: string;
+  address?: string;
 }) => {
   return (
     <Box className="p-4 flex flex-col gap-4 " sx={{ margin: 0 }}>
@@ -95,7 +98,13 @@ const BasicDetails = ({
 
       <div className="flex items-center gap-2">
         <MapPinned color="white" size={25} />
-        <span>{`${city}${state ? `, ${state}` : ""}, ${country}`} </span>
+        {address ? (
+          <span>
+            {address.length > 50 ? `${address.substring(0, 50)}...` : address}
+          </span>
+        ) : (
+          <span>{`${city}${state ? `, ${state}` : ""}, ${country}`} </span>
+        )}
       </div>
 
       <div className="flex items-center gap-2 flex-wrap">
