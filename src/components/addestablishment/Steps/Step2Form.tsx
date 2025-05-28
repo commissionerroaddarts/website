@@ -62,6 +62,8 @@ export default function Step2Form() {
             addressComponents.city = component.long_name;
           if (types.includes("postal_code"))
             addressComponents.zipcode = component.long_name;
+          if (types.includes("route") || types.includes("street_address"))
+            addressComponents.address = component.long_name;
         });
 
         if (addressComponents.country)
@@ -72,6 +74,8 @@ export default function Step2Form() {
           setValue("location.city", addressComponents.city);
         if (addressComponents.zipcode)
           setValue("location.zipcode", addressComponents.zipcode ?? "90210");
+        if (addressComponents.address)
+          setValue("location.address", addressComponents.address);
       }
     }
   };
