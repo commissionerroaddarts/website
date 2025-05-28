@@ -23,6 +23,10 @@ import UpgradePlan from "@/components/modals/UpgradePlan";
 import { Dialog, DialogContent, Typography } from "@mui/material";
 import { mediaSchema } from "@/yupSchemas/mediaSchema";
 import { phoneSchema } from "@/yupSchemas/phoneSchema";
+import { socialSchema } from "@/yupSchemas/socialSchema";
+import { faqSchema } from "@/yupSchemas/faqSchema";
+import { timingsSchema } from "@/yupSchemas/timingsSchema";
+import { locationSchema } from "@/yupSchemas/locationSchema";
 const LOCAL_STORAGE_KEY = "addEstablishmentFormData";
 
 const stepSchemas = [
@@ -93,133 +97,16 @@ const stepSchemas = [
     media: mediaSchema,
   }),
   yup.object().shape({
-    location: yup.object().shape({
-      address: yup
-        .string()
-        .required("Address is required")
-        .min(5, "Address must be at least 5 characters long")
-        .max(200, "Address cannot exceed 200 characters"),
-      country: yup
-        .string()
-        .required("Country is required")
-        .min(2, "Country must be at least 2 characters long"),
-      state: yup
-        .string()
-        .required("State is required")
-        .min(2, "State must be at least 2 characters long"),
-      city: yup
-        .string()
-        .required("City is required")
-        .min(2, "City must be at least 2 characters long"),
-      zipcode: yup.string().optional(),
-      geotag: yup.object().shape({
-        lat: yup
-          .number()
-          .required("Latitude is required")
-          .min(-90, "Latitude must be between -90 and 90")
-          .max(90, "Latitude must be between -90 and 90"),
-        lng: yup
-          .number()
-          .required("Longitude is required")
-          .min(-180, "Longitude must be between -180 and 180")
-          .max(180, "Longitude must be between -180 and 180"),
-      }),
-    }),
+    location: locationSchema,
   }),
   yup.object().shape({
-    timings: yup.object().shape({
-      mon: yup.object().shape({
-        open: yup.string().required("Open time is required"),
-        close: yup.string().required("Close time is required"),
-      }),
-      tue: yup.object().shape({
-        open: yup.string().required("Open time is required"),
-        close: yup.string().required("Close time is required"),
-      }),
-      wed: yup.object().shape({
-        open: yup.string().required("Open time is required"),
-        close: yup.string().required("Close time is required"),
-      }),
-      thu: yup.object().shape({
-        open: yup.string().required("Open time is required"),
-        close: yup.string().required("Close time is required"),
-      }),
-      fri: yup.object().shape({
-        open: yup.string().required("Open time is required"),
-        close: yup.string().required("Close time is required"),
-      }),
-      sat: yup.object().shape({
-        open: yup.string().required("Open time is required"),
-        close: yup.string().required("Close time is required"),
-      }),
-      sun: yup.object().shape({
-        open: yup.string().required("Open time is required"),
-        close: yup.string().required("Close time is required"),
-      }),
-    }),
+    timings: timingsSchema,
   }),
   yup.object().shape({
-    socials: yup.object().shape({
-      facebook: yup
-        .string()
-        .url("Invalid Facebook URL")
-        .matches(
-          /^(https?:\/\/)?(www\.)?facebook\.com\/[a-zA-Z0-9(.?)]+/,
-          "Invalid Facebook URL"
-        )
-        .nullable(),
-      instagram: yup
-        .string()
-        .url("Invalid Instagram URL")
-        .matches(
-          /^(https?:\/\/)?(www\.)?instagram\.com\/[a-zA-Z0-9(.?)]/,
-          "Invalid Instagram URL"
-        )
-        .nullable(),
-      twitter: yup
-        .string()
-        .url("Invalid Twitter URL")
-        .matches(
-          /^(https?:\/\/)?(www\.)?twitter\.com\/[a-zA-Z0-9(.?)]/,
-          "Invalid Twitter URL"
-        )
-        .nullable(),
-      linkedin: yup
-        .string()
-        .url("Invalid LinkedIn URL")
-        .matches(
-          /^(https?:\/\/)?(www\.)?linkedin\.com\/[a-zA-Z0-9(.?)]+/,
-          "Invalid LinkedIn URL"
-        )
-        .nullable(),
-      youtube: yup
-        .string()
-        .url("Invalid YouTube URL")
-        .matches(
-          /^(https?:\/\/)?(www\.)?youtube\.com\/[a-zA-Z0-9(.?)]/,
-          "Invalid YouTube URL"
-        )
-        .nullable(),
-      tiktok: yup
-        .string()
-        .url("Invalid TikTok URL")
-        .matches(
-          /^(https?:\/\/)?(www\.)?tiktok\.com\/[a-zA-Z0-9(.?)]+/,
-          "Invalid TikTok URL"
-        )
-        .nullable(),
-    }),
+    socials: socialSchema,
   }),
   yup.object().shape({
-    faqs: yup
-      .array()
-      .of(
-        yup.object({
-          q: yup.string().required("Question is required"),
-          a: yup.string().required("Answer is required"),
-        })
-      )
-      .notRequired(), // Make the whole array optional
+    faqs: faqSchema,
   }),
 ];
 
