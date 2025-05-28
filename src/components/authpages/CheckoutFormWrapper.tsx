@@ -40,6 +40,9 @@ export default function CheckoutFormWrapper() {
         ? userEmail?.toLowerCase() ?? ""
         : data.email?.toLowerCase() ?? "";
       dispatch(setEmail(email));
+      if (typeof window !== "undefined") {
+        localStorage.setItem("checkoutEmail", email);
+      }
       dispatch(setPromoCode(data.promoCode ?? ""));
       const formData = {
         promoCode: data.promoCode?.toUpperCase() ?? "",

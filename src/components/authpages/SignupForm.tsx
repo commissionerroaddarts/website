@@ -56,19 +56,34 @@ const schema = yup.object().shape({
 });
 
 const SignupForm = () => {
+  const { user, plan } = useAppState(); // Assuming you have a custom hook to get user state
+  const { selectedPlan, email } = plan; // Assuming you have a custom hook to get user state
+  const { isLoggedIn, userDetails } = user; // Assuming you have a custom hook to get user state
+
+  const getCheckoutEmail = () => {
+    if (email) {
+      return email;
+    }
+    if (typeof window !== "undefined") {
+      const storedEmail = localStorage.getItem("checkoutEmail");
+      return storedEmail ?? undefined;
+    }
+    return undefined;
+  };
+
   const {
     handleSubmit,
     control,
     formState: { errors, isSubmitting },
   } = useForm<SignupFormData>({
+    defaultValues: {
+      email: getCheckoutEmail(),
+    },
     resolver: yupResolver(schema),
   });
   const recaptchaRef = useRef<ReCAPTCHA>(null);
   const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
   const router = useRouter();
-  const { user, plan } = useAppState(); // Assuming you have a custom hook to get user state
-  const { selectedPlan, email } = plan; // Assuming you have a custom hook to get user state
-  const { isLoggedIn, userDetails } = user; // Assuming you have a custom hook to get user state
   // Redirect to dashboard if user is already logged in
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
@@ -83,6 +98,7 @@ const SignupForm = () => {
 
   // ✅ Form Submission Handler
   const onSubmit = async (data: SignupFormData) => {
+    console.log("Form Data:", data);
     try {
       if (!recaptchaToken) {
         toast.error("Please verify reCAPTCHA");
@@ -100,7 +116,6 @@ const SignupForm = () => {
         ...data,
         email: data.email.toLowerCase(), // Normalize email to lowercase
       };
-      console.log(formData, email);
       const response = await registerUser(formData, dispatch);
       if (response?.status === 201) {
         toast.success(
