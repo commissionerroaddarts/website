@@ -12,18 +12,10 @@ import { Box, Typography, CircularProgress, Grid2 } from "@mui/material";
 import CustomInput from "@/components/global/CustomInput";
 import { Search } from "lucide-react";
 
-const libraries: (
-  | "places"
-  | "drawing"
-  | "geometry"
-  | "localContext"
-  | "visualization"
-)[] = ["places"]; // Define this once at module level
-
 export default function Step2Form() {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? "",
-    libraries,
+    libraries: ["places"],
   });
 
   const {
