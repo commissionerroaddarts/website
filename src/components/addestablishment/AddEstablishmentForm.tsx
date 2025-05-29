@@ -78,8 +78,8 @@ const stepSchemas = [
       .max(500, "Short Description cannot exceed 500 characters"),
     tags: yup
       .array()
+      .optional()
       .of(yup.string().min(2, "Each tag must be at least 2 characters long"))
-      .min(1, "At least one tag is required")
       .max(10, "You can add up to 10 tags"),
     category: yup.string().required("Category is required"),
     bordtype: yup.string().required("Board Type is required"),
@@ -93,6 +93,13 @@ const stepSchemas = [
         .string()
         .required("Price Category is required")
         .oneOf(["$", "$$", "$$$", "$$$$"], "Invalid price category"),
+    }),
+    promotion: yup.object().shape({
+      title: yup.string().optional(),
+      description: yup
+        .string()
+        .optional()
+        .max(250, "Promotion description cannot exceed 500 characters"),
     }),
     media: mediaSchema,
   }),
@@ -166,6 +173,10 @@ export default function AddEstablishment({
           bordtype: business?.bordtype ?? undefined,
           agelimit: business?.agelimit ?? 0,
           price: { category: business?.price?.category ?? "$" },
+          promotion: {
+            title: business?.promotion?.title ?? "",
+            description: business?.promotion?.description ?? "",
+          },
           location: {
             state: business?.location?.state ?? "",
             city: business?.location?.city ?? "",
@@ -278,7 +289,7 @@ export default function AddEstablishment({
 
   useEffect(() => {
     const evaluatePlanAccess = async () => {
-      if (!_id || !plan || !permissions) return;
+      if (!_id || !plan || !permissions || isEdit) return;
 
       try {
         const { data } = await fetchBusinesses(1, 10, {}, _id);

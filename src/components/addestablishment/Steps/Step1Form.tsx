@@ -220,6 +220,46 @@ export default function Step1Form({
           />
         </Grid2>
       </Grid2>
+
+      {/* Pricing Details */}
+      <Box mb={4}>
+        <Typography variant="h5" textAlign="center" gutterBottom mb={2}>
+          Promotions
+        </Typography>
+
+        {/* Promotional Field */}
+        <Grid2 size={{ xs: 12 }}>
+          <Controller
+            name="promotion"
+            control={control}
+            render={({ field, fieldState }) => (
+              <CustomInput
+                {...field}
+                multiline
+                rows={4}
+                label="Add a Promotion"
+                placeholder="Add a Promotion (e.g., 20% off this week!)"
+                error={!!fieldState.error}
+                helperText={fieldState.error?.message}
+                onChange={(e) => setValue("promotion", e.target.value)}
+                value={field.value}
+                sx={{
+                  maxWidth: "100%",
+                  background:
+                    " linear-gradient(133.79deg, rgba(211, 211, 211, 0.37) -25.05%, rgba(63, 15, 80, 0.42) 90.07%)",
+                  borderRadius: "20px",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "start",
+                  minHeight: "100%",
+                  border: "0.5px solid #FFFFFF",
+                }}
+              />
+            )}
+          />
+        </Grid2>
+      </Box>
+
       {/* Pricing Details */}
       <Box mb={4}>
         <Typography variant="h5" textAlign="center" gutterBottom mb={2}>
