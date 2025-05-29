@@ -230,7 +230,7 @@ export default function Step1Form({
         {/* Promotional Field */}
         <Grid2 size={{ xs: 12 }}>
           <Controller
-            name="promotion"
+            name="promotion.description"
             control={control}
             render={({ field, fieldState }) => (
               <CustomInput
@@ -241,7 +241,9 @@ export default function Step1Form({
                 placeholder="Add a Promotion (e.g., 20% off this week!)"
                 error={!!fieldState.error}
                 helperText={fieldState.error?.message}
-                onChange={(e) => setValue("promotion", e.target.value)}
+                onChange={(e) =>
+                  setValue("promotion.description", e.target.value)
+                }
                 value={field.value}
                 sx={{
                   maxWidth: "100%",
