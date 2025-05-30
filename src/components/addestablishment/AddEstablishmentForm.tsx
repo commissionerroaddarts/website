@@ -175,7 +175,7 @@ export default function AddEstablishment({
           price: { category: business?.price?.category ?? "$" },
           promotion: {
             title: business?.promotion?.title ?? "Promotion Space",
-            description: business?.promotion?.description ?? "",
+            description: business?.promotion?.description ?? undefined,
           },
           location: {
             state: business?.location?.state ?? "",
