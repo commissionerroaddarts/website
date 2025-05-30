@@ -180,7 +180,7 @@ export default function AddEstablishment({
           location: {
             state: business?.location?.state ?? "",
             city: business?.location?.city ?? "",
-            zipcode: business?.location?.zipcode ?? "90210",
+            zipcode: business?.location?.zipcode ?? undefined,
             country: business?.location?.country ?? "",
             geotag: {
               lat: business?.location?.geotag?.lat ?? 0,

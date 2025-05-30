@@ -4,7 +4,13 @@ import TimingsPopup from "./TimingsPopup";
 import SocialIcons from "@/components/global/SocialIcons";
 import { Box } from "@mui/material";
 import EstablishmentMapLocation from "@/components/modals/EstablishmentMapLocation";
-import { CircleDollarSign, Globe, MapPinned, Phone } from "lucide-react";
+import {
+  CircleDollarSign,
+  Globe,
+  MapPinned,
+  PersonStanding,
+  Phone,
+} from "lucide-react";
 import Link from "next/link";
 import { FaClock } from "react-icons/fa";
 import PromotionSpace from "@/components/global/PromotionSpace";
@@ -29,6 +35,7 @@ export default function EstablishmentLocation({
     _id,
     promotion,
     userId,
+    agelimit,
   } = business;
 
   const { user } = useAppState();
@@ -46,7 +53,7 @@ export default function EstablishmentLocation({
         minHeight="30vh"
       />
       <div
-        className="  rounded-lg space-y-4 mt-5"
+        className="rounded-lg space-y-4 mt-5"
         style={{
           background:
             "linear-gradient(152.76deg, #3F0F50 21.4%, #5D1178 54.49%, #200C27 85.73%)",
@@ -59,6 +66,7 @@ export default function EstablishmentLocation({
         <div className="text-white space-y-4 font-light">
           {/* Basic Details */}
           <BasicDetails
+            agelimit={agelimit}
             phone={phone}
             website={website}
             price={price || {}}
@@ -83,6 +91,7 @@ export default function EstablishmentLocation({
 
 const BasicDetails = ({
   phone,
+  agelimit,
   website,
   price,
   state,
@@ -92,6 +101,7 @@ const BasicDetails = ({
   status,
   address,
 }: {
+  agelimit?: number;
   phone?: string;
   website?: string;
   price?: Price;
@@ -133,6 +143,11 @@ const BasicDetails = ({
         ) : (
           <span>{`${city}${state ? `, ${state}` : ""}, ${country}`} </span>
         )}
+      </div>
+
+      <div className="flex items-center gap-2 flex-wrap">
+        <PersonStanding color="white" size={25} />
+        <span>Age Limit: {agelimit}+</span>
       </div>
 
       <div className="flex items-center gap-2 flex-wrap">

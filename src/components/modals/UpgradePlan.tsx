@@ -1,6 +1,6 @@
 "use client";
 import { Plan } from "@/types/plan";
-import { Dialog, DialogContent, Grid2, Backdrop } from "@mui/material";
+import { Dialog, DialogContent, Grid2, Backdrop, Box } from "@mui/material";
 import { useEffect, useState } from "react";
 import Preloader from "@/components/global/Preloader";
 import { getPlans, upgradePlan } from "@/services/planService";
@@ -8,7 +8,9 @@ import ThemeButton from "../buttons/ThemeButton";
 import SelectSearchDropDown from "../global/SelectSearchDropDown";
 import { useAppState } from "@/hooks/useAppState";
 import { toast } from "react-toastify";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
+import { clearPlan } from "@/store/slices/planSlice";
+import { useAppDispatch } from "@/store";
 
 type BillingCycle = "monthly" | "yearly";
 
@@ -30,6 +32,8 @@ export default function UpgradePlan({
   const userDetails = user?.userDetails;
   const stripeSubscriptionId = userDetails?.stripeSubscriptionId;
   const subscriptionPlanName = userDetails?.subscription?.plan;
+  const router = useRouter();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     const fetchPlans = async () => {
@@ -85,6 +89,10 @@ export default function UpgradePlan({
     return planIndex >= currentPlanIndex;
   });
 
+  const handleGoBackProfile = () => {
+    router.back();
+  };
+
   return (
     <Dialog
       open={isOpen}
@@ -109,20 +117,27 @@ export default function UpgradePlan({
             "linear-gradient(151.12deg, rgba(127, 50, 153, 0.83) -10.86%, #15051B 94.14%)",
         }}
       >
-        <div className="text-white flex flex-col items-center p-4">
-          <h1 className="text-4xl font-bold text-center mb-8">
+        <div className="text-white flex flex-col items-center ">
+          <Box className="absolute top-4 left-2">
+            <ThemeButton
+              text="Go Back"
+              onClick={handleGoBackProfile}
+              fontSize="1rem"
+            />
+          </Box>
+          <h1 className="text-2xl font-bold text-center mb-2">
             You've reached your current plan's limit!
           </h1>
-
-          <p className="border-2 border-white/30 rounded-full py-4 px-12 text-2xl font-semibold mb-10 hover:bg-white/10 transition-colors">
+          {/* 
+          <p className="border-2 border-white/30 rounded-full py-4 px-12 text-2xl font-semibold mb-5 hover:bg-white/10 transition-colors">
             Upgrade Now to Continue
-          </p>
+          </p> */}
 
-          <p className="text-xl text-center mb-2">
+          <p className="text-sm text-center ">
             You're currently on the Free Trial - {businessCount} of{" "}
             {maxListings} listings used.
           </p>
-          <p className="text-xl text-center mb-12">
+          <p className="text-sm text-center mb-4">
             Upgrade your plan to add more Establishments and unlock advanced
             features.
           </p>
@@ -172,7 +187,7 @@ function PlanCard({
 
   return (
     <div
-      className={`w-full mb-6 rounded-3xl overflow-hidden `}
+      className={`w-full mb-2 rounded-3xl overflow-hidden `}
       style={{
         background: " rgba(99, 33, 121, 1)",
       }}
@@ -194,16 +209,16 @@ function PlanCard({
           border: isCurrentPlan ? "3px solid rgba(236, 109, 255, 1)" : "none",
         }}
       >
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-3xl font-bold">{title}</h2>
+        <div className="flex justify-between items-center ">
+          <h2 className="text-xl font-bold">{title}</h2>
           <div className="text-right">
-            <span className="text-3xl font-bold">${price}</span>
-            <span className="text-lg">/{duration}</span>
+            <span className="text-xl font-bold">${price}</span>
+            <span className="text-sm">/{duration}</span>
           </div>
         </div>
         <Grid2 container spacing={2}>
           <Grid2 size={{ xs: 12, sm: isCurrentPlan ? 12 : 6 }}>
-            <p className="text-lg">{description}</p>
+            <p className="text-sm">{description}</p>
           </Grid2>
           {!isCurrentPlan && (
             <Grid2 size={{ xs: 12, sm: 6 }}>

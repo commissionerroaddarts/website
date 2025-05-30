@@ -18,7 +18,7 @@ import {
   StarRatingWithPopup,
 } from "@/components/global/StarRating";
 import ThemeButton from "@/components/buttons/ThemeButton";
-import { CircleDot, Edit, Trash } from "lucide-react";
+import { CircleDot, Edit, PersonStanding, Trash } from "lucide-react";
 import { useAppState } from "@/hooks/useAppState";
 import PromotionSpace from "@/components/global/PromotionSpace";
 import DeleteListingDialog from "@/components/global/DeleteListingDialog";
@@ -38,6 +38,7 @@ function BusinessCard({ business }: { readonly business: Business }) {
     userId: userBusinessId,
     promotion,
     bordtype,
+    agelimit,
   } = business;
 
   const { user } = useAppState();
@@ -118,7 +119,7 @@ function BusinessCard({ business }: { readonly business: Business }) {
         {/* Image Section */}
         <CardMedia
           component="img"
-          sx={{ width: 250, height: 300, borderRadius: 2 }}
+          sx={{ width: 220, height: 300, borderRadius: 2, objectFit: "cover" }}
           image={
             media?.logo ??
             media?.images?.[0] ??
@@ -175,10 +176,18 @@ function BusinessCard({ business }: { readonly business: Business }) {
                   </Typography>
 
                   {bordtype && (
-                    <div className="flex items-center mb-2 gap-1">
+                    <div className="flex items-center  gap-1">
                       <CircleDot size={17} />
                       <span className=" capitalize text-white text-xs  py-1 rounded-full">
                         Board Type: {bordtype}
+                      </span>
+                    </div>
+                  )}
+                  {agelimit && (
+                    <div className="flex items-center  gap-1">
+                      <PersonStanding color="white" size={17} />
+                      <span className="capitalize text-white text-xs  py-1 rounded-full">
+                        Age Limit: {agelimit}+
                       </span>
                     </div>
                   )}

@@ -12,7 +12,7 @@ import {
   StarRatingWithPopup,
 } from "@/components/global/StarRating";
 import { useAppState } from "@/hooks/useAppState";
-import { CircleDot, Edit, Trash } from "lucide-react";
+import { CircleDot, Edit, PersonStanding, Trash } from "lucide-react";
 import { Box } from "@mui/material";
 import DeleteListingDialog from "../global/DeleteListingDialog";
 
@@ -35,6 +35,7 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
     averageRating,
     userId,
     bordtype,
+    agelimit,
     // totalReviews,
   } = business;
 
@@ -160,10 +161,19 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
             )}
 
             {bordtype && (
-              <div className="flex items-center mb-2 gap-1">
+              <div className="flex items-center  gap-1">
                 <CircleDot size={17} />
                 <span className="capitalize text-white text-xs  py-1 rounded-full">
                   Board Type: {bordtype}
+                </span>
+              </div>
+            )}
+
+            {agelimit && (
+              <div className="flex items-center  gap-1">
+                <PersonStanding color="white" size={17} />
+                <span className="capitalize text-white text-xs  py-1 rounded-full">
+                  Age Limit: {agelimit}+
                 </span>
               </div>
             )}
