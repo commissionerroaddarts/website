@@ -1,6 +1,6 @@
 "use client";
 import { Plan } from "@/types/plan";
-import { Dialog, DialogContent, Grid2 } from "@mui/material";
+import { Dialog, DialogContent, Grid2, Backdrop } from "@mui/material";
 import { useEffect, useState } from "react";
 import Preloader from "@/components/global/Preloader";
 import { getPlans, upgradePlan } from "@/services/planService";
@@ -88,9 +88,20 @@ export default function UpgradePlan({
   return (
     <Dialog
       open={isOpen}
-      onClose={() => setIsOpen(false)}
       fullWidth
       maxWidth="md"
+      disableEscapeKeyDown
+      hideBackdrop={false} // keep it visible, just lock it
+      onClose={undefined} // this is important: explicitly do NOT define it
+      slots={{ backdrop: Backdrop }}
+      slotProps={{
+        backdrop: {
+          style: { pointerEvents: "none" }, // disables interaction with backdrop
+        },
+        paper: {
+          onClick: (e: any) => e.stopPropagation(), // prevent bubbling inside
+        },
+      }}
     >
       <DialogContent
         sx={{

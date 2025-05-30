@@ -38,7 +38,7 @@ export default function EstablishmentLocation({
   const checkOwner = isStoreOwner && userBusinessId === userId;
 
   return (
-    <>
+    <div className="mt-0 md:mt-[4.5rem]">
       <PromotionSpace
         businessId={_id}
         checkOwner={checkOwner}
@@ -77,7 +77,7 @@ export default function EstablishmentLocation({
           <SocialIcons socials={socials || {}} />
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

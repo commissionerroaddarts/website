@@ -2,7 +2,14 @@
 
 import { Controller, useFormContext } from "react-hook-form";
 import CustomInput from "@/components/global/CustomInput";
-import { Box, Grid2, IconButton, Typography } from "@mui/material";
+import {
+  Autocomplete,
+  Box,
+  Grid2,
+  IconButton,
+  TextField,
+  Typography,
+} from "@mui/material";
 import ThemeButton from "@/components/buttons/ThemeButton";
 import { useState } from "react";
 import LogoUploaderPopup from "../MediaUploader/LogoUploaderPopup";
@@ -123,22 +130,39 @@ export default function Step1Form({
             name="tags"
             control={control}
             render={({ field, fieldState }) => (
-              <CustomInput
-                {...field}
-                label="Tags"
-                placeholder="Enter tags separated by commas"
-                error={!!fieldState.error}
-                helperText={fieldState.error?.message}
-                onChange={(e) => {
-                  const tags = e.target.value
-                    .split(",")
-                    .map((tag) => tag.trim())
-                    .filter((tag) => tag.length > 0); // Prevent empty strings
-
-                  setValue("tags", tags);
-                }}
-                value={field.value?.join(", ") ?? ""}
-                fullWidth
+              <Autocomplete
+                multiple
+                freeSolo
+                options={[]} // No predefined options
+                value={field.value ?? []}
+                onChange={(_, newValue) => field.onChange(newValue)}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    placeholder="Type and press enter"
+                    error={!!fieldState.error}
+                    helperText={fieldState.error?.message}
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        background: "rgba(22, 12, 24, 0.4)",
+                        borderRadius: "50px",
+                        outline: "none",
+                        border: "none",
+                        "&.Mui-disabled": {
+                          color: "#f0f0f0",
+                          WebkitTextFillColor: "#a0a0a0",
+                        },
+                      },
+                      "& .MuiInputBase-input::placeholder": {
+                        color: "rgba(150, 150, 150, 1)",
+                      },
+                      "& .Mui-disabled .MuiInputBase-input": {
+                        color: "#a0a0a0",
+                        WebkitTextFillColor: "#a0a0a0",
+                      },
+                    }}
+                  />
+                )}
               />
             )}
           />
