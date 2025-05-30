@@ -9,7 +9,9 @@ import { PreCheckoutFormData } from "@/types/auth";
 import CustomInput from "@/components/global/CustomInput";
 import ThemeButton from "@/components/buttons/ThemeButton";
 import { useAppState } from "@/hooks/useAppState";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
+import { useAppDispatch } from "@/store";
+import { clearPlan } from "@/store/slices/planSlice";
 
 // ✅ Schema (Email + PromoCode)
 const getSchema = (
@@ -33,6 +35,8 @@ const PreCheckoutForm = ({
   const { plan, user } = useAppState(); // Assuming you have a custom hook to get user state
   const { selectedPlan } = plan; // Assuming you have a custom hook to get user state
   const { isLoggedIn } = user;
+  const router = useRouter();
+  const dispatch = useAppDispatch();
   const {
     handleSubmit,
     control,
@@ -91,6 +95,11 @@ const PreCheckoutForm = ({
       setLoading(false);
       toast.error(error?.response?.data?.error ?? "Failed to apply promo code");
     }
+  };
+
+  const handleGoBackPlans = () => {
+    dispatch(clearPlan());
+    router.push("/plans");
   };
 
   return (
@@ -180,16 +189,28 @@ const PreCheckoutForm = ({
                   </Grid2>
                   {/* Submit Button */}
                   <Grid2 size={{ xs: 12 }}>
-                    <ThemeButton
-                      text={
-                        isSubmitting || loading
-                          ? "Applying..."
-                          : "Apply Code or Continue"
-                      }
-                      type="submit"
-                      disabled={isSubmitting || loading}
-                      style={{ width: "100%" }}
-                    />
+                    <Box className="flex gap-2 items-center">
+                      <ThemeButton
+                        text={"Go Back To Plans"}
+                        type="button"
+                        onClick={handleGoBackPlans}
+                        disabled={isSubmitting || loading}
+                        fontSize="0.8rem"
+                        backgroundColor="#D500F9"
+                        style={{ width: "100%" }}
+                      />
+                      <ThemeButton
+                        text={
+                          isSubmitting || loading
+                            ? "Applying..."
+                            : "Apply Code or Continue"
+                        }
+                        type="submit"
+                        fontSize="0.8rem"
+                        disabled={isSubmitting || loading}
+                        style={{ width: "100%" }}
+                      />
+                    </Box>
                   </Grid2>
                 </Grid2>
               </form>

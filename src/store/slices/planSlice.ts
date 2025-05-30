@@ -22,6 +22,8 @@ const planSlice = createSlice({
     },
     clearPlan: (state) => {
       state.selectedPlan = null;
+      state.email = "";
+      state.promoCode = "";
     },
     setPromoCode: (state, action: PayloadAction<string>) => {
       state.promoCode = action.payload;
