@@ -11,12 +11,14 @@ interface PromotionProps {
     title?: string;
     description?: string;
   } | null;
+  readonly minHeight?: string;
 }
 
 const PromotionSpace = ({
   checkOwner,
   businessId,
   promotion,
+  minHeight,
 }: PromotionProps) => {
   const [editing, setEditing] = useState(false);
   const [promotionState, setPromotionState] = useState(
@@ -65,7 +67,7 @@ const PromotionSpace = ({
         justifyContent: "center",
         alignItems: editing ? "start" : "center",
         marginTop: "10px",
-        minHeight: "100%",
+        minHeight: minHeight ?? "100%",
         border: "0.5px solid #FFFFFF",
       }}
     >

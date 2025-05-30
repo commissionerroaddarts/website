@@ -129,12 +129,14 @@ export default function Step1Form({
                 placeholder="Enter tags separated by commas"
                 error={!!fieldState.error}
                 helperText={fieldState.error?.message}
-                onChange={(e) =>
-                  setValue(
-                    "tags",
-                    e.target.value.split(",").map((tag) => tag.trim())
-                  )
-                }
+                onChange={(e) => {
+                  const tags = e.target.value
+                    .split(",")
+                    .map((tag) => tag.trim())
+                    .filter((tag) => tag.length > 0); // Prevent empty strings
+
+                  setValue("tags", tags);
+                }}
                 value={field.value?.join(", ") ?? ""}
                 fullWidth
               />
@@ -437,7 +439,7 @@ const UploadButtons = ({
       )}
 
       {/* === MEDIA IMAGES === */}
-      <Box className="flex flex-col items-center gap-2 relative ">
+      <Box className="flex flex-col justify-center items-center gap-2 relative ">
         {images.length > 0 ? (
           <Box
             className="flex flex-col items-center gap-2 p-5 rounded-2xl justify-center"

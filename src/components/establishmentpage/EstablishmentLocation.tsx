@@ -1,3 +1,4 @@
+"use client";
 import { Business, Price } from "@/types/business";
 import TimingsPopup from "./TimingsPopup";
 import SocialIcons from "@/components/global/SocialIcons";
@@ -6,6 +7,8 @@ import EstablishmentMapLocation from "@/components/modals/EstablishmentMapLocati
 import { CircleDollarSign, Globe, MapPinned, Phone } from "lucide-react";
 import Link from "next/link";
 import { FaClock } from "react-icons/fa";
+import PromotionSpace from "@/components/global/PromotionSpace";
+import { useAppState } from "@/hooks/useAppState";
 
 interface EstablishmentLocationProps {
   readonly business: Business;
@@ -14,42 +17,67 @@ interface EstablishmentLocationProps {
 export default function EstablishmentLocation({
   business,
 }: Readonly<EstablishmentLocationProps>) {
-  const { location, phone, website, timings, price, socials, tags, status } =
-    business;
+  const {
+    location,
+    phone,
+    website,
+    timings,
+    price,
+    socials,
+    tags,
+    status,
+    _id,
+    promotion,
+    userId,
+  } = business;
+
+  const { user } = useAppState();
+  const { userDetails } = user;
+  const { _id: userBusinessId, role } = userDetails || {};
+  const isStoreOwner = role === "owner" || role === "admin";
+  const checkOwner = isStoreOwner && userBusinessId === userId;
 
   return (
-    <div
-      className="  rounded-lg space-y-4"
-      style={{
-        background:
-          "linear-gradient(152.76deg, #3F0F50 21.4%, #5D1178 54.49%, #200C27 85.73%)",
-      }}
-    >
-      {/* Map */}
-      <EstablishmentMapLocation location={location || {}} />
+    <>
+      <PromotionSpace
+        businessId={_id}
+        checkOwner={checkOwner}
+        promotion={promotion ?? null}
+        minHeight="30vh"
+      />
+      <div
+        className="  rounded-lg space-y-4 mt-5"
+        style={{
+          background:
+            "linear-gradient(152.76deg, #3F0F50 21.4%, #5D1178 54.49%, #200C27 85.73%)",
+        }}
+      >
+        {/* Map */}
+        <EstablishmentMapLocation location={location || {}} />
 
-      {/* Details */}
-      <div className="text-white space-y-4 font-light">
-        {/* Basic Details */}
-        <BasicDetails
-          phone={phone}
-          website={website}
-          price={price || {}}
-          city={location?.city}
-          state={location?.state}
-          country={location?.country}
-          address={location?.address}
-          tags={tags}
-          status={status}
-        />
+        {/* Details */}
+        <div className="text-white space-y-4 font-light">
+          {/* Basic Details */}
+          <BasicDetails
+            phone={phone}
+            website={website}
+            price={price || {}}
+            city={location?.city}
+            state={location?.state}
+            country={location?.country}
+            address={location?.address}
+            tags={tags}
+            status={status}
+          />
 
-        {/* Timings */}
-        <TimingsPopup timings={timings || {}} />
+          {/* Timings */}
+          <TimingsPopup timings={timings || {}} />
 
-        {/* Social Icons */}
-        <SocialIcons socials={socials || {}} />
+          {/* Social Icons */}
+          <SocialIcons socials={socials || {}} />
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

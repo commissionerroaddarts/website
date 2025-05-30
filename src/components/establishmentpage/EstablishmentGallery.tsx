@@ -59,7 +59,7 @@ export default function EstablishmentGallery({
         src={img}
         alt={`Image ${index + 1}`}
         fill
-        className="object-contain"
+        className="object-contain rounded-none"
       />
 
       {/* Hover Overlay */}
