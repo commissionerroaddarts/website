@@ -15,7 +15,7 @@ interface ImageGalleryProps {
 
 export default function EstablishmentGallery({
   images,
-  height = "200px",
+  height = "300px",
 }: Readonly<ImageGalleryProps>) {
   const [open, setOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -38,33 +38,33 @@ export default function EstablishmentGallery({
     arrows: true,
     dots: true,
   };
-
   const renderImage = (img: string, index: number) => (
     <Button
       key={img + index}
       onClick={() => handleOpen(index)}
       style={{
         position: "relative",
-        height,
-        overflow: "hidden",
-        borderRadius: "1rem",
         width: "100%",
-        cursor: "pointer",
         padding: 0,
         backgroundColor:
           img && typeof img === "string" && img.toLowerCase().endsWith(".png")
             ? "white"
             : "transparent",
+        aspectRatio: "4 / 3", // or any aspect ratio you want
+        overflow: "hidden",
+        cursor: "pointer",
       }}
     >
       <Image
         src={img}
         alt={`Image ${index + 1}`}
         fill
-        className="object-cover w-full h-full"
+        className="object-contain"
       />
+
       {/* Hover Overlay */}
       <div
+        className="hover:opacity-100"
         style={{
           position: "absolute",
           top: 0,
@@ -82,7 +82,6 @@ export default function EstablishmentGallery({
           fontWeight: 500,
           zIndex: 100,
         }}
-        className="hover:opacity-100"
       >
         Click to view
       </div>

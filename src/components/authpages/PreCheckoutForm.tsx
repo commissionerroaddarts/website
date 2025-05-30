@@ -109,7 +109,7 @@ const PreCheckoutForm = ({
               <Typography variant="h5" mb={1} textAlign="center">
                 Unlock Free Trial with Promo Code
               </Typography>
-              <Typography
+              {/* <Typography
                 variant="body1"
                 mb={2}
                 textAlign="center"
@@ -128,6 +128,16 @@ const PreCheckoutForm = ({
                 </strong>{" "}
                 plan. It's the perfect way to explore all features with zero
                 upfront cost.
+              </Typography> */}
+
+              <Typography
+                variant="body1"
+                mb={2}
+                textAlign="center"
+                sx={{ opacity: 0.8 }}
+              >
+                Unlock Up to 1 month of free access with your promo code on the
+                Basic Plan and Discounted Price on Standard and Premium Plan.
               </Typography>
 
               <form onSubmit={handleSubmit(onSubmit)}>

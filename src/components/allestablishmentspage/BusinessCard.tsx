@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import Card from "@mui/material/Card";
-import { FaMapMarkerAlt, FaClock, FaCheckCircle } from "react-icons/fa";
+import { FaMapMarkerAlt, FaClock } from "react-icons/fa";
 import ThemeButton from "@/components/buttons/ThemeButton";
 import Link from "next/link";
 import { useState } from "react";
@@ -146,7 +146,6 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
 
             {/* Restaurant Name */}
             <div className="flex items-center mb-1">
-              <FaCheckCircle className="h-4 w-4 text-green-bright mr-2" />
               <h3 className="text-white font-medium text-2xl">{name}</h3>
             </div>
 
@@ -173,7 +172,8 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
             <div className="flex items-center mb-2">
               <FaMapMarkerAlt className="h-4 w-4 text-gray mr-2" />
               <span className="text-gray text-sm">
-                {location?.state} {location?.city} , {location?.zipcode}
+                {location?.address ??
+                  `${location?.city}, ${location?.state}, ${location?.country}`}
               </span>
             </div>
 

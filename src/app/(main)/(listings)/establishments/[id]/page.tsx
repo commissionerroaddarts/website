@@ -4,8 +4,8 @@ import { Box, Grid2 } from "@mui/material";
 import EstablishmentFAQ from "@/components/establishmentpage/EstablishmentFAQ";
 import EstablishmentReview from "@/components/establishmentpage/EstablishmentReview";
 import EstablishmentLocation from "@/components/establishmentpage/EstablishmentLocation";
-import { Business } from "@/types/business";
 import EstablishmentProfileHeader from "@/components/establishmentpage/EstablishmentProfileHeader";
+import { notFound } from "next/navigation";
 
 export default async function EstablishmentPage({
   params,
@@ -13,13 +13,21 @@ export default async function EstablishmentPage({
   readonly params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const fetchBusiness = async () => {
-    const res = await fetch(`${baseUrl}/businesses/${id}`);
-    const data = await res.json();
-    return data;
-  };
 
-  const business: Business = await fetchBusiness();
+  const res = await fetch(`${baseUrl}/businesses/${id}`, {
+    cache: "no-store",
+  });
+
+  if (!res.ok) {
+    return notFound(); // Automatically shows the 404 page
+  }
+
+  const business = await res.json();
+
+  if (business?.message === "Business not found") {
+    return notFound();
+  }
+
   if (!business) {
     return <div>Business not found</div>;
   }

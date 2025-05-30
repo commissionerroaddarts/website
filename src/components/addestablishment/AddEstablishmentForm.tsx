@@ -85,8 +85,8 @@ const stepSchemas = [
     bordtype: yup.string().required("Board Type is required"),
     agelimit: yup
       .number()
-      .min(0, "Age Limit cannot be negative")
-      .max(120, "Age Limit cannot exceed 120 years")
+      .min(18, "Age Limit must be above 18 years")
+      .max(100, "Age Limit cannot exceed 100 years")
       .required("Age Limit is required"),
     price: yup.object().shape({
       category: yup
@@ -174,7 +174,7 @@ export default function AddEstablishment({
           agelimit: business?.agelimit ?? 0,
           price: { category: business?.price?.category ?? "$" },
           promotion: {
-            title: business?.promotion?.title ?? "",
+            title: business?.promotion?.title ?? "Promotion Space",
             description: business?.promotion?.description ?? "",
           },
           location: {
@@ -416,7 +416,9 @@ export default function AddEstablishment({
           }}
         >
           <Typography variant="h5" gutterBottom textAlign="center">
-            Submitting your establishment...
+            {isEdit
+              ? "Updating your establishment..."
+              : "Submitting your establishment..."}
           </Typography>
         </DialogContent>
       </Dialog>

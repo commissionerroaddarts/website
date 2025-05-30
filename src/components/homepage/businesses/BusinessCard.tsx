@@ -118,7 +118,7 @@ function BusinessCard({ business }: { readonly business: Business }) {
         {/* Image Section */}
         <CardMedia
           component="img"
-          sx={{ width: 250, height: 250, borderRadius: 2 }}
+          sx={{ width: 250, height: 300, borderRadius: 2 }}
           image={
             media?.logo ??
             media?.images?.[0] ??
@@ -207,9 +207,8 @@ function BusinessCard({ business }: { readonly business: Business }) {
                     <Box className="flex ">
                       <RoomIcon sx={{ fontSize: 16, mr: 0.5 }} />
                       <Typography sx={{ fontSize: 12 }}>
-                        {location
-                          ? `${location?.city}, ${location?.state}, ${location?.country}`
-                          : "No Location Info"}
+                        {location?.address ??
+                          `${location?.city}, ${location?.state}, ${location?.country}`}
                       </Typography>
                     </Box>
                     <button

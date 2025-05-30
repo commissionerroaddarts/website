@@ -206,7 +206,7 @@ export default function EstablishmentProfileHeader({
                     "&:hover": { bgcolor: "grey.200" },
                   }}
                 >
-                  <EditIcon color="purple" size={20} />
+                  <EditIcon color="purple" size={isMobile ? 15 : 20} />
                 </IconButton>
 
                 {uploadLogo && (
@@ -222,7 +222,7 @@ export default function EstablishmentProfileHeader({
           </div>
 
           <div className="flex flex-col gap-2 mb-5">
-            <div className="flex gap-2 items-center">
+            <div className="flex gap-2 items-center flex-wrap">
               <h1 className="text-white text-3xl font-bold">{name}</h1>
               {bordtype && bordtype !== "" && (
                 <span className="bg-[#3a2a3e] capitalize text-white text-xs px-3 py-1 rounded-full">

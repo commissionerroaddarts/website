@@ -150,12 +150,20 @@ export default function Step1Form({
               <CustomInput
                 {...field}
                 label="Age Limit"
-                onChange={(e) => setValue("agelimit", e.target.value)}
-                value={field.value === 0 ? undefined : field.value}
                 type="number"
+                slotProps={{
+                  htmlInput: {
+                    min: 18,
+                  },
+                }}
+                onChange={(e) => {
+                  const value = Math.max(18, Number(e.target.value));
+                  setValue("agelimit", value);
+                }}
+                value={field.value === 0 ? "" : field.value}
                 error={!!fieldState.error}
                 helperText={fieldState.error?.message}
-                placeholder="Enter minimum age (e.g., 18)"
+                placeholder="Patrons must be 18+, enter minimum age (e.g., 18)"
                 fullWidth
               />
             )}

@@ -84,7 +84,6 @@ export default function EventCard({ event }: RestaurantCardProps) {
 
             {/* Restaurant Name */}
             <div className="flex items-center mb-1">
-              <FaCheckCircle className="h-4 w-4 text-green-bright mr-2" />
               <h3 className="text-white font-medium text-2xl">{name}</h3>
             </div>
 
@@ -191,7 +190,7 @@ const RatingStars = ({
           </span>
         ) : (
           <span className="text-gray text-xs ml-2">
-            Rate the throwing experience!
+            Star ratings reflect throwing conditions
           </span>
         )}
       </div>

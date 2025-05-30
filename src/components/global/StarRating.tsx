@@ -94,7 +94,7 @@ export const StarRatingWithPopup = ({
           </span>
         ) : (
           <span className="text-gray text-xs ml-2">
-            Rate the throwing experience!
+            Star ratings reflect throwing conditions
           </span>
         )}
       </div>
