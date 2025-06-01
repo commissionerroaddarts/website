@@ -129,9 +129,6 @@ body::-webkit-scrollbar-thumb {
 .gm-style-iw-chr {
   display: none !important;
 }
-.gm-style-iw-d {
-  overflow: hidden !important;
-}
 
 /* Style the dropdown container */
 .pac-container {

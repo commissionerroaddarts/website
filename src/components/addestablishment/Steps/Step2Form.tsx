@@ -11,6 +11,7 @@ import {
 import { Box, Typography, CircularProgress, Grid2 } from "@mui/material";
 import CustomInput from "@/components/global/CustomInput";
 import { Search } from "lucide-react";
+import { googleMapStyles } from "@/utils/googleMapStyles";
 
 export default function Step2Form() {
   const { isLoaded } = useLoadScript({
@@ -149,6 +150,11 @@ export default function Step2Form() {
           center={center}
           zoom={15}
           mapContainerStyle={{ width: "100%", height: "100%" }}
+          options={{
+            disableDefaultUI: true,
+            styles: googleMapStyles,
+            zoomControl: true,
+          }}
         >
           <Marker position={markerPosition} />
         </GoogleMap>

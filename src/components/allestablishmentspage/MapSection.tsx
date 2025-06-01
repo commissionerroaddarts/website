@@ -12,6 +12,7 @@ import { Business } from "@/types/business";
 import { Event } from "@/types/event";
 import { Box } from "@mui/material";
 import Image from "next/image";
+import { googleMapStyles } from "@/utils/googleMapStyles";
 
 interface Props {
   businesses: Business[] | Event[];
@@ -133,6 +134,11 @@ const MapSection = ({ businesses, isLoading }: Props) => {
               : defaultCenter
           }
           zoom={mapZoom}
+          options={{
+            disableDefaultUI: true,
+            styles: googleMapStyles,
+            zoomControl: true,
+          }}
           onClick={() => setActiveMarker(null)}
         >
           {businessLocations.length > 0 && (

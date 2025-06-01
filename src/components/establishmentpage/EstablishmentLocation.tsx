@@ -36,6 +36,7 @@ export default function EstablishmentLocation({
     promotion,
     userId,
     agelimit,
+    media,
   } = business;
 
   const { user } = useAppState();
@@ -45,7 +46,7 @@ export default function EstablishmentLocation({
   const checkOwner = isStoreOwner && userBusinessId === userId;
 
   return (
-    <div className="mt-0 md:mt-[4.5rem]">
+    <div className={`mt-0 ${media?.images?.length ? "md:mt-[4.5rem]" : ""}`}>
       <PromotionSpace
         businessId={_id}
         checkOwner={checkOwner}

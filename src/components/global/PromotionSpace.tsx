@@ -22,7 +22,7 @@ const PromotionSpace = ({
 }: PromotionProps) => {
   const [editing, setEditing] = useState(false);
   const [promotionState, setPromotionState] = useState(
-    promotion?.description ?? "Update your current promotions here..."
+    promotion?.description ?? ""
   );
   const [inputValue, setInputValue] = useState(
     promotion?.description !== "" ? promotion?.description : ""
@@ -134,7 +134,17 @@ const PromotionSpace = ({
             sx={{
               color: "#fff",
               fontWeight: "bold",
-              fontSize: "0.8rem",
+              fontSize: (() => {
+                const wordCount = (inputValue ?? "")
+                  .trim()
+                  .split(/\s+/)
+                  .filter(Boolean).length;
+
+                if (wordCount < 10) return "2rem";
+                if (wordCount < 20) return "1.5rem";
+                if (wordCount < 30) return "1.2rem";
+                return "0.85rem";
+              })(),
               flex: 1,
             }}
           >

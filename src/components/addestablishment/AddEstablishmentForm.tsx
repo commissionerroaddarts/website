@@ -92,6 +92,7 @@ export default function AddEstablishment({
             city: business?.location?.city ?? undefined,
             zipcode: business?.location?.zipcode ?? undefined,
             country: business?.location?.country ?? undefined,
+            address: business?.location?.address ?? undefined,
             geotag: {
               lat: business?.location?.geotag?.lat ?? undefined,
               lng: business?.location?.geotag?.lng ?? undefined,
@@ -127,6 +128,7 @@ export default function AddEstablishment({
               close: business?.timings?.sun?.close ?? "",
             },
           },
+          amenities: business?.amenities ?? undefined,
           media: {
             logo: business?.media?.logo ?? undefined,
             images: business?.media?.images || [],

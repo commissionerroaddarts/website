@@ -37,10 +37,7 @@ export default function AddEstablishmentLayout({
       <div className="text-center mb-8 relative">
         {isEdit && (
           <div className="absolute -top-2 left-0 z-10">
-            <ThemeButton
-              text="Back to Establishment"
-              onClick={() => router.back()}
-            />
+            <ThemeButton text="Go Back" onClick={() => router.back()} />
           </div>
         )}
         <h1 className="text-3xl font-bold mb-2">

@@ -4,6 +4,7 @@ import React, { useCallback, useRef } from "react";
 import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import { Box } from "@mui/material";
 import { Location } from "@/types/business";
+import { googleMapStyles } from "@/utils/googleMapStyles";
 
 interface EstablishmentMapLocationProps {
   location: Location | null;
@@ -11,7 +12,7 @@ interface EstablishmentMapLocationProps {
 
 const containerStyle = {
   width: "100%",
-  height: "70vh",
+  height: "30vh",
   borderRadius: "8px 8px 0 0",
 };
 
@@ -85,21 +86,16 @@ const EstablishmentMapLocation = ({
 
   return (
     <Box>
-      {/* <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleGetDirections}
-          >
-            Get Directions
-          </Button>
-        </Stack> */}
-
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={coordinates}
         zoom={14}
         onLoad={handleLoad}
+        options={{
+          disableDefaultUI: true,
+          styles: googleMapStyles,
+          zoomControl: true,
+        }}
       >
         <Marker position={coordinates} />
       </GoogleMap>
