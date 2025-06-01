@@ -34,6 +34,7 @@ const LogoPreviewCropper: React.FC<LogoPreviewCropperProps> = ({
 
   const handleSave = async () => {
     if (imageSrc && croppedAreaPixels) {
+      setZoom(1);
       const { blob, fileUrl } = await getCroppedImg(
         imageSrc,
         croppedAreaPixels

@@ -147,7 +147,10 @@ const BasicDetails = ({
 
       <div className="flex items-center gap-2 flex-wrap">
         <PersonStanding color="white" size={25} />
-        <span>Age Limit: {agelimit}+</span>
+        <span>
+          {" "}
+          {agelimit ? "Age Limit: " + agelimit + "+" : "No Age Limit"}
+        </span>
       </div>
 
       <div className="flex items-center gap-2 flex-wrap">

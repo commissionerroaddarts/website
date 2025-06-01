@@ -169,14 +169,12 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
               </div>
             )}
 
-            {agelimit && (
-              <div className="flex items-center  gap-1">
-                <PersonStanding color="white" size={17} />
-                <span className="capitalize text-white text-xs  py-1 rounded-full">
-                  Age Limit: {agelimit}+
-                </span>
-              </div>
-            )}
+            <div className="flex items-center  gap-1">
+              <PersonStanding color="white" size={17} />
+              <span className="capitalize text-white text-xs  py-1 rounded-full">
+                {agelimit ? "Age Limit: " + agelimit + "+" : "No Age Limit"}{" "}
+              </span>
+            </div>
 
             {/* Location */}
             <div className="flex items-center mb-2">

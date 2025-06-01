@@ -5,6 +5,7 @@ import { socialSchema } from "@/yupSchemas/socialSchema";
 import { faqSchema } from "@/yupSchemas/faqSchema";
 import { timingsSchema } from "@/yupSchemas/timingsSchema";
 import { locationSchema } from "@/yupSchemas/locationSchema";
+import { amenitiesSchema } from "@/yupSchemas/amenitiesSchema";
 export const stepSchemas = [
   yup.object().shape({
     name: yup
@@ -98,6 +99,9 @@ export const stepSchemas = [
   }),
   yup.object().shape({
     timings: timingsSchema,
+  }),
+  yup.object().shape({
+    amenities: amenitiesSchema,
   }),
   yup.object().shape({
     socials: socialSchema,

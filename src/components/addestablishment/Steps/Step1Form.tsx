@@ -188,7 +188,7 @@ export default function Step1Form({
                   const value = Math.max(18, Number(e.target.value));
                   field.onChange(value); // <- use field.onChange instead of setValue
                 }}
-                value={noAgeLimit ? "" : field.value || ""}
+                value={noAgeLimit ? "" : field.value ?? ""}
                 error={!!fieldState.error}
                 helperText={fieldState.error?.message}
                 placeholder={
@@ -214,7 +214,7 @@ export default function Step1Form({
                   onChange={(e) => {
                     field.onChange(e.target.checked);
                     if (e.target.checked) {
-                      setValue("agelimit", null); // clear age limit when no limit is on
+                      setValue("agelimit", isEdit ? null : undefined); // clear age limit when no limit is on
                       clearErrors("agelimit"); // ✅ Clear validation error
                     }
                   }}

@@ -8,6 +8,7 @@ import Step4Form from "./Steps/Step4Form";
 import Step3Form from "./Steps/Step3Form";
 import Step2Form from "./Steps/Step2Form";
 import Step5Form from "./Steps/Step5Form";
+import Step6Form from "./Steps/Step6Form";
 import {
   fetchBusinesses,
   insertBusiness,
@@ -21,6 +22,7 @@ import { Business } from "@/types/business";
 import UpgradePlan from "@/components/modals/UpgradePlan";
 import { Dialog, DialogContent, Typography } from "@mui/material";
 import { stepSchemas } from "@/yupSchemas/mainBusinessSchema";
+import { getNextStep, validateStep } from "@/utils/addEstablishmentHelpers";
 
 const LOCAL_STORAGE_KEY = "addEstablishmentFormData";
 
@@ -79,6 +81,7 @@ export default function AddEstablishment({
           category: business?.category ?? "",
           bordtype: business?.bordtype ?? undefined,
           agelimit: business?.agelimit ?? undefined,
+          noAgeLimit: !business?.agelimit,
           price: { category: business?.price?.category ?? "$" },
           promotion: {
             title: business?.promotion?.title ?? "Promotion Space",
@@ -172,7 +175,7 @@ export default function AddEstablishment({
   const { subscription, permissions, _id } = userDetails || {};
   const { plan } = subscription || {};
   const [currentStep, setCurrentStep] = useState(1);
-  const totalSteps = 5;
+  const totalSteps = 6;
   const [isLoading, setIsLoading] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const [closedDays, setClosedDays] = useState<Record<string, boolean>>({});
@@ -222,77 +225,62 @@ export default function AddEstablishment({
     return <div>You are not authorized to edit this business</div>;
   }
 
+  // Helper: Handle final submission
+  const submitForm = async (values: any) => {
+    setIsLoading(true);
+    try {
+      const payload = isEdit ? { ...values, _id: business?._id } : values;
+      const response = isEdit
+        ? await updateBusiness(payload)
+        : await insertBusiness(payload);
+
+      if (response?.status === 201 || response?.data?.success) {
+        toast.success(
+          response?.data?.message ??
+            (isEdit
+              ? "Business updated successfully!"
+              : "Congratulations! Your business is now live on Road Darts!")
+        );
+
+        if (!isEdit) {
+          setShowConfetti(true);
+          setTimeout(() => setShowConfetti(false), 5000);
+          clearStorage();
+        }
+
+        methods.reset();
+        router.push(`/establishments/${business?._id ?? response.data._id}`);
+      }
+    } catch (error) {
+      console.error("Submission error:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleStepSubmit = async (targetStep: number | "next" | "prev") => {
     const currentIndex = currentStep - 1;
     const currentSchema = stepSchemas[currentIndex];
     const values = methods.getValues();
-
-    // Determine actual next step number
-    const nextStep =
-      typeof targetStep === "number"
-        ? targetStep
-        : targetStep === "next"
-        ? currentStep + 1
-        : currentStep - 1;
-
-    // If we're submitting on the final step
+    const nextStep = getNextStep(targetStep, currentStep);
     const isFinalStep = nextStep > totalSteps;
 
-    // Run validation only if going forward or submitting
+    // Only validate if moving forward or submitting
     if (targetStep !== "prev") {
-      try {
-        await currentSchema.validate(values, { abortEarly: false });
-      } catch (validationError: any) {
-        if (validationError?.inner) {
-          validationError.inner.forEach((err: any) => {
-            methods.setError(err.path, {
-              type: "manual",
-              message: err.message,
-            });
-          });
-        }
-        setIsLoading(false);
-        return;
-      }
+      const isValid = await validateStep(
+        currentSchema,
+        values,
+        setIsLoading,
+        methods
+      );
+      if (!isValid) return;
     }
 
-    // Handle final submission
     if (isFinalStep) {
-      setIsLoading(true);
-      try {
-        const payload = isEdit ? { ...values, _id: business?._id } : values;
-
-        const response = isEdit
-          ? await updateBusiness(payload)
-          : await insertBusiness(payload);
-
-        if (response?.status === 201 || response?.data?.success) {
-          toast.success(
-            response?.data?.message ??
-              (isEdit
-                ? "Business updated successfully!"
-                : "Congratulations! Your business is now live on Road Darts!")
-          );
-
-          if (!isEdit) {
-            setShowConfetti(true);
-            setTimeout(() => setShowConfetti(false), 5000);
-            clearStorage();
-          }
-
-          methods.reset();
-          router.push(`/establishments/${business?._id ?? response.data._id}`);
-        }
-      } catch (error) {
-        console.error("Submission error:", error);
-      } finally {
-        setIsLoading(false);
-      }
-
+      await submitForm(values);
       return;
     }
 
-    // Set step if within valid bounds
     if (nextStep >= 1 && nextStep <= totalSteps) {
       setCurrentStep(nextStep);
     }
@@ -343,6 +331,7 @@ export default function AddEstablishment({
         )}
         {currentStep === 4 && <Step4Form />}
         {currentStep === 5 && <Step5Form />}
+        {currentStep === 6 && <Step6Form />}
       </AddEstablishmentLayout>
     </FormProvider>
   );

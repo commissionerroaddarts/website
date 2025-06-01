@@ -4,6 +4,7 @@ import { ReactNode } from "react";
 import StepsIndicator from "./StepsIndicator";
 import ThemeButton from "@/components/buttons/ThemeButton";
 import { MoveLeft, MoveRight } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface AddEstablishmentLayoutProps {
   readonly children: ReactNode;
@@ -22,6 +23,7 @@ export default function AddEstablishmentLayout({
   isLoading = false,
   isEdit,
 }: AddEstablishmentLayoutProps) {
+  const router = useRouter();
   const handleNext = () => {
     onStepSubmit("next");
   };
@@ -32,7 +34,15 @@ export default function AddEstablishmentLayout({
 
   return (
     <div className="max-w-4xl mx-auto">
-      <div className="text-center mb-8">
+      <div className="text-center mb-8 relative">
+        {isEdit && (
+          <div className="absolute -top-2 left-0 z-10">
+            <ThemeButton
+              text="Back to Establishment"
+              onClick={() => router.back()}
+            />
+          </div>
+        )}
         <h1 className="text-3xl font-bold mb-2">
           {!isEdit ? "Add New Establishments" : "Edit Establishment"}
         </h1>
@@ -70,7 +80,7 @@ export default function AddEstablishmentLayout({
             )}
             <ThemeButton
               text={
-                currentStep === 5
+                currentStep === 6
                   ? isLoading
                     ? "Submitting..."
                     : "Submit"
@@ -104,7 +114,7 @@ export default function AddEstablishmentLayout({
                 text="Submit"
                 type="submit"
                 onClickEvent={
-                  () => onStepSubmit(6) // pass target step directly
+                  () => onStepSubmit(7) // pass target step directly
                 }
                 disabled={isLoading}
                 backgroundColor="#6D3890"

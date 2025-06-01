@@ -1,102 +1,71 @@
-"use client";
-import { Box, Typography } from "@mui/material";
-import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import CustomInput from "@/components/global/CustomInput";
-import { PlusCircle, Trash } from "lucide-react";
-import ThemeOutlineButton from "@/components/buttons/ThemeOutlineButton";
+import { Box, Grid2, Typography } from "@mui/material";
+import React from "react";
+import { Controller, useFormContext } from "react-hook-form";
 
-const Step5FaqForm = () => {
+const socialMediaFields = [
+  {
+    name: "socials.facebook",
+    label: "Facebook URL",
+    placeholder: "https://facebook.com/yourpage",
+  },
+  {
+    name: "socials.instagram",
+    label: "Instagram URL",
+    placeholder: "https://instagram.com/yourhandle",
+  },
+  {
+    name: "socials.twitter",
+    label: "Twitter URL",
+    placeholder: "https://x.com/yourhandle",
+  },
+  {
+    name: "socials.linkedin",
+    label: "LinkedIn URL",
+    placeholder: "https://linkedin.com/in/yourprofile",
+  },
+  {
+    name: "socials.youtube",
+    label: "YouTube URL",
+    placeholder: "https://youtube.com/yourchannel",
+  },
+  {
+    name: "socials.tiktok",
+    label: "TikTok URL",
+    placeholder: "https://tiktok.com/@yourhandle",
+  },
+];
+
+const Step5Form = () => {
   const { control } = useFormContext();
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "faqs", // 'faqs' must be an array in your form schema
-  });
-
-  const handleAddFaq = () => {
-    const newFaq = { q: "", a: "" };
-    append(newFaq);
-  };
-
-  const handleRemoveFaq = (index: number) => {
-    remove(index);
-  };
 
   return (
-    <Box mb={5} className="flex justify-center flex-col items-center">
-      <Typography variant="h5" textAlign="center">
-        Venue Frequently Asked Questions (FAQs){" "}
+    <Box>
+      <Typography variant="h5" textAlign="center" gutterBottom mb={5}>
+        Connect Social Media
       </Typography>
-      <Typography>
-        List of Questions Frequently asked about your establishment.
-      </Typography>
-      {fields.length > 0 && (
-        <Box
-          className={` px-10 w-full md:w-[80%]  mx-auto mt-10  ${
-            fields.length > 1 ? "max-h-[45vh]  overflow-y-scroll " : ""
-          }`}
-        >
-          {fields.map((item, index) => (
-            <Box
-              key={item.id}
-              display="flex"
-              flexDirection="column"
-              gap={2}
-              mb={3}
-              width="100%"
-              maxWidth="100%"
-            >
-              <Controller
-                name={`faqs.${index}.q`}
-                control={control}
-                render={({ field, fieldState }) => (
-                  <CustomInput
-                    label={`Question ${index + 1}`}
-                    error={!!fieldState.error}
-                    helperText={fieldState?.error?.message}
-                    {...field}
-                    fullWidth
-                    className="w-full"
-                  />
-                )}
-              />
-              <Controller
-                name={`faqs.${index}.a`}
-                control={control}
-                render={({ field, fieldState }) => (
-                  <CustomInput
-                    multiline
-                    rows={4}
-                    label={`Answer`}
-                    error={!!fieldState.error}
-                    helperText={fieldState?.error?.message}
-                    {...field}
-                    fullWidth
-                    className="w-full"
-                  />
-                )}
-              />
-              <Box className="flex justify-center  gap-3 ">
-                {fields.length > 0 && (
-                  <ThemeOutlineButton
-                    text={`Remove FAQ ${index + 1}`}
-                    onClickEvent={() => handleRemoveFaq(index)}
-                    icon={<Trash />}
-                    className=" w-full"
-                  />
-                )}
-              </Box>
-            </Box>
-          ))}
-        </Box>
-      )}
-      <ThemeOutlineButton
-        text={fields.length > 0 ? "Add Another FAQ" : "Add FAQ"}
-        icon={<PlusCircle color="white" />}
-        onClickEvent={handleAddFaq}
-        applyMargin={fields.length === 0}
-      />
+      <Grid2 container spacing={2}>
+        {socialMediaFields.map(({ name, label, placeholder }) => (
+          <Grid2 key={name} size={{ xs: 12, md: 6 }}>
+            <Controller
+              name={name}
+              control={control}
+              render={({ field, fieldState }) => (
+                <CustomInput
+                  label={label}
+                  placeholder={placeholder}
+                  fullWidth
+                  error={!!fieldState.error}
+                  helperText={fieldState.error?.message}
+                  {...field}
+                />
+              )}
+            />
+          </Grid2>
+        ))}
+      </Grid2>
     </Box>
   );
 };
 
-export default Step5FaqForm;
+export default Step5Form;

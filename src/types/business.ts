@@ -70,14 +70,14 @@ export interface Validation {
 }
 
 export interface Business {
-  _id: string;
+  _id: string; // Use string | undefined to handle cases where _id might not be set
   userId: string; // Uncomment if userId is needed
   name: string;
   tagline: string;
   media?: {
-    images?: string[];
+    images?: string[]; // Array of image URLs or File objects
     video?: string;
-    logo?: string;
+    logo?: string; // Single logo URL or File object
     cover?: string;
   };
   shortDis: string;
@@ -88,6 +88,7 @@ export interface Business {
   socials?: Socials;
   faqs?: FAQ[];
   price?: Price;
+  noAgeLimit?: boolean;
   agelimit?: number;
   category: string;
   tags?: string[];
@@ -95,6 +96,7 @@ export interface Business {
     title?: string;
     description?: string;
   };
+  amenities?: Amenities;
   status?: "Active" | "Closed Down" | "Coming Soon" | "Under Remodel";
   validation?: Validation;
   bordtype?: "Steel Tip" | "Soft Tip" | "Both";
@@ -102,6 +104,20 @@ export interface Business {
   totalReviews?: number;
   createdAt?: Date;
   updatedAt?: Date;
+}
+
+export interface Amenities {
+  wheelchairAccessible: boolean;
+  validatedParking: boolean;
+  smokingOutsideOnly: boolean;
+  outdoorSeating: boolean;
+  heatedOutdoorSeating: boolean;
+  bikeParking: boolean;
+  acceptsCreditCards: boolean;
+  freeWiFi: boolean;
+  tv: boolean;
+  happyHourSpecials: boolean;
+  coveredOutdoorSeating: boolean;
 }
 
 export interface ApiResponse {
