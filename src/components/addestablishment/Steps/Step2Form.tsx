@@ -40,7 +40,6 @@ export default function Step2Form() {
   const onPlaceChanged = () => {
     if (autocomplete !== null) {
       const place = autocomplete.getPlace();
-      console.log("Selected Place: ", place);
 
       if (place.geometry?.location) {
         const lat = place.geometry.location.lat();

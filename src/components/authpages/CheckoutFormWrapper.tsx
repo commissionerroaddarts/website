@@ -54,6 +54,9 @@ export default function CheckoutFormWrapper() {
 
       if (clientSecret) {
         if (data?.promoCode !== "") {
+          if (typeof window !== "undefined") {
+            localStorage.removeItem("checkoutEmail");
+          }
           setShowConfetti(true);
           setTimeout(() => setShowConfetti(false), 5000);
         }

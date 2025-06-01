@@ -121,6 +121,11 @@ const CustomInput: React.FC<CustomInputProps> = ({
         "& .Mui-disabled .MuiInputBase-input": {
           color: "#a0a0a0",
           WebkitTextFillColor: "#a0a0a0",
+          backgroundColor: "rgba(22, 12, 24, 0.9)",
+          borderRadius: multiline
+            ? borderRadiusPixels ?? "25px"
+            : borderRadiusPixels ?? "50px",
+          cursor: "not-allowed",
         },
       }}
       {...rest}

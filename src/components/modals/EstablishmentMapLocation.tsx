@@ -1,13 +1,8 @@
 "use client";
 
-import React, { useCallback, useRef, useState } from "react";
-import {
-  GoogleMap,
-  Marker,
-  DirectionsRenderer,
-  useJsApiLoader,
-} from "@react-google-maps/api";
-import { Box, Button, Stack, Typography } from "@mui/material";
+import React, { useCallback, useRef } from "react";
+import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
+import { Box } from "@mui/material";
 import { Location } from "@/types/business";
 
 interface EstablishmentMapLocationProps {
@@ -23,11 +18,6 @@ const containerStyle = {
 const EstablishmentMapLocation = ({
   location,
 }: EstablishmentMapLocationProps) => {
-  const [showDirections, setShowDirections] = useState(false);
-  const [directionsResponse, setDirectionsResponse] =
-    useState<google.maps.DirectionsResult | null>(null);
-  const [routes, setRoutes] = useState<google.maps.DirectionsRoute[]>([]);
-  const [routeIndex, setRouteIndex] = useState(0);
   const mapRef = useRef<google.maps.Map | null>(null);
 
   const coordinates = location?.geotag
@@ -38,50 +28,60 @@ const EstablishmentMapLocation = ({
     mapRef.current = map;
   }, []);
 
-  // const handleGetDirections = async () => {
-  //   if (!coordinates) return;
-
-  //   try {
-  //     const pos = await new Promise<GeolocationPosition>((resolve, reject) =>
-  //       navigator.geolocation.getCurrentPosition(resolve, reject)
-  //     );
-
-  //     const origin = {
-  //       lat: pos.coords.latitude,
-  //       lng: pos.coords.longitude,
-  //     };
-
-  //     const directionsService = new google.maps.DirectionsService();
-  //     const result = await directionsService.route({
-  //       origin,
-  //       destination: coordinates,
-  //       travelMode: google.maps.TravelMode.DRIVING,
-  //       provideRouteAlternatives: true,
-  //     });
-
-  //     if (result.routes.length > 0) {
-  //       setDirectionsResponse(result);
-  //       setRoutes(result.routes);
-  //       setRouteIndex(0);
-  //       setShowDirections(true);
-  //     } else {
-  //       throw new Error("No route found");
-  //     }
-  //   } catch (err) {
-  //     console.warn("Directions error:", err);
-  //   }
-  // };
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? "",
   });
 
   if (loadError) return <div>Map cannot be loaded right now, sorry.</div>;
-  if (!isLoaded) return <div>Loading Map...</div>;
+  if (!isLoaded)
+    return (
+      <div className="w-full flex justify-center items-center h-20">
+        <svg
+          className="animate-spin h-10 w-10 text-purple-500"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            className="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            strokeWidth="4"
+            fill="none"
+          />
+          <path
+            className="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 1 1 16 0A8 8 0 0 1 4 12zm2.5-1h9a2.5 2.5 0 1 1-5 0h-4a2.5 2.5 0 0 1-4.5-1z"
+          />
+        </svg>
+      </div>
+    );
 
-  if (!coordinates) return <Typography>Loading Map...</Typography>;
-
-  const selectedRoute = routes[routeIndex];
-  const legs = selectedRoute?.legs?.[0];
+  if (!coordinates)
+    return (
+      <div className="w-full flex justify-center items-center h-20">
+        <svg
+          className="animate-spin h-10 w-10 text-purple-500"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            className="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            strokeWidth="4"
+            fill="none"
+          />
+          <path
+            className="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 1 1 16 0A8 8 0 0 1 4 12zm2.5-1h9a2.5 2.5 0 1 1-5 0h-4a2.5 2.5 0 0 1-4.5-1z"
+          />
+        </svg>
+      </div>
+    );
 
   return (
     <Box>
@@ -102,46 +102,7 @@ const EstablishmentMapLocation = ({
         onLoad={handleLoad}
       >
         <Marker position={coordinates} />
-        {showDirections && directionsResponse && (
-          <DirectionsRenderer
-            directions={directionsResponse}
-            routeIndex={routeIndex}
-            options={{ suppressMarkers: false }}
-          />
-        )}
       </GoogleMap>
-
-      {legs && (
-        <Box sx={{ mt: 2, p: 2, bgcolor: "grey.200", borderRadius: 2 }}>
-          <Typography variant="h6">{selectedRoute.summary}</Typography>
-          <Typography>
-            {legs.start_address.split(",")[0]} →{" "}
-            {legs.end_address.split(",")[0]}
-          </Typography>
-          <Typography>Distance: {legs.distance?.text}</Typography>
-          <Typography>Duration: {legs.duration?.text}</Typography>
-
-          {routes.length > 1 && (
-            <>
-              <Typography variant="subtitle1" sx={{ mt: 2 }}>
-                Other Routes:
-              </Typography>
-              <Stack spacing={1}>
-                {routes.map((route, idx) => (
-                  <Button
-                    key={route.summary + idx}
-                    variant={idx === routeIndex ? "contained" : "outlined"}
-                    size="small"
-                    onClick={() => setRouteIndex(idx)}
-                  >
-                    {route.summary}
-                  </Button>
-                ))}
-              </Stack>
-            </>
-          )}
-        </Box>
-      )}
     </Box>
   );
 };
