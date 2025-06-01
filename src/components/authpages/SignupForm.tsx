@@ -98,7 +98,6 @@ const SignupForm = () => {
 
   // ✅ Form Submission Handler
   const onSubmit = async (data: SignupFormData) => {
-    console.log("Form Data:", data);
     try {
       if (!recaptchaToken) {
         toast.error("Please verify reCAPTCHA");
@@ -118,6 +117,9 @@ const SignupForm = () => {
       };
       const response = await registerUser(formData, dispatch);
       if (response?.status === 201) {
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("checkoutEmail");
+        }
         toast.success(
           response?.data?.message ??
             `We have sent a verification email at ${data.email}`

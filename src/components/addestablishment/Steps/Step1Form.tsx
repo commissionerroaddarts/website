@@ -7,6 +7,7 @@ import {
   Box,
   Grid2,
   IconButton,
+  Switch,
   TextField,
   Typography,
 } from "@mui/material";
@@ -34,8 +35,8 @@ export default function Step1Form({
   readonly isEdit: boolean;
   readonly businessId?: string;
 }) {
-  const { control, setValue } = useFormContext(); // Notice: useFormContext instead of useForm!
-
+  const { control, setValue, watch, clearErrors } = useFormContext(); // Notice: useFormContext instead of useForm!
+  const noAgeLimit = watch("noAgeLimit");
   return (
     <Box>
       <Typography variant="h5" textAlign="center" gutterBottom mb={2}>
@@ -139,7 +140,7 @@ export default function Step1Form({
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    placeholder="Type and press enter"
+                    placeholder="Enter tags (e.g., food, drinks) and press enter"
                     error={!!fieldState.error}
                     helperText={fieldState.error?.message}
                     sx={{
@@ -168,7 +169,7 @@ export default function Step1Form({
           />
         </Grid2>
         {/* Age Limit Field */}
-        <Grid2 size={{ xs: 12, md: 6 }}>
+        <Grid2 size={{ xs: 12, md: 6 }} className="flex items-center gap-2">
           <Controller
             name="agelimit"
             control={control}
@@ -177,6 +178,7 @@ export default function Step1Form({
                 {...field}
                 label="Age Limit"
                 type="number"
+                disabled={noAgeLimit}
                 slotProps={{
                   htmlInput: {
                     min: 18,
@@ -184,17 +186,44 @@ export default function Step1Form({
                 }}
                 onChange={(e) => {
                   const value = Math.max(18, Number(e.target.value));
-                  setValue("agelimit", value);
+                  field.onChange(value); // <- use field.onChange instead of setValue
                 }}
-                value={field.value === 0 ? "" : field.value}
+                value={noAgeLimit ? "" : field.value || ""}
                 error={!!fieldState.error}
                 helperText={fieldState.error?.message}
-                placeholder="Patrons must be 18+, enter minimum age (e.g., 18)"
+                placeholder={
+                  noAgeLimit
+                    ? "No Age Limit"
+                    : "Patrons must be 18+, enter age limit"
+                }
                 fullWidth
               />
             )}
           />
+
+          {/* Toggle Switch */}
+          <div className="flex flex-grow items-center gap-2">
+            <span className="text-sm text-white">No Limit</span>
+            <Controller
+              name="noAgeLimit"
+              control={control}
+              render={({ field }) => (
+                <Switch
+                  size="small"
+                  checked={field.value}
+                  onChange={(e) => {
+                    field.onChange(e.target.checked);
+                    if (e.target.checked) {
+                      setValue("agelimit", null); // clear age limit when no limit is on
+                      clearErrors("agelimit"); // ✅ Clear validation error
+                    }
+                  }}
+                />
+              )}
+            />
+          </div>
         </Grid2>
+
         {/* Category Dropdown */}
         <Grid2 size={{ xs: 12, md: 6 }}>
           <Controller
@@ -355,8 +384,7 @@ const UploadButtons = ({
       if (isEdit && businessId) {
         const selectedImage = images[index];
         if (typeof selectedImage === "string") {
-          const response = await removeBusinessImage(selectedImage, businessId);
-          console.log({ response });
+          await removeBusinessImage(selectedImage, businessId);
         }
       }
     } catch (error) {

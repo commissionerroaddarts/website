@@ -1,7 +1,7 @@
 // app/establishments/page.tsx
 "use client";
 
-import { useSearchParams, useRouter, redirect } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Box, Container } from "@mui/material";
 import BusinessGrid from "@/components/allestablishmentspage/EstablishmentPageGrid";
@@ -14,7 +14,6 @@ import { useAppState } from "@/hooks/useAppState";
 import { TabsComponent } from "@/components/profilepage/TabsComponent";
 import ThemeButton from "@/components/buttons/ThemeButton";
 import Link from "next/link";
-import { toast } from "react-toastify";
 
 export default function MyEstablishmentsComponent() {
   const { user } = useAppState();
@@ -137,7 +136,7 @@ export default function MyEstablishmentsComponent() {
                 <BusinessGrid businesses={businesses} isLoading={loading} />
               );
             }
-            return <NoBusinessesFound setFilterParams={setFilterParams} />;
+            return <NoBusinessesFound />;
           })()}
         </Box>
       </Container>
@@ -145,11 +144,7 @@ export default function MyEstablishmentsComponent() {
   );
 }
 
-const NoBusinessesFound = ({
-  setFilterParams,
-}: {
-  setFilterParams: (params: FilterValues) => void;
-}) => {
+const NoBusinessesFound = () => {
   return (
     <Box
       sx={{
