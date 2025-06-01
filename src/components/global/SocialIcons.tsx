@@ -7,13 +7,15 @@ import {
   YouTube as YouTubeIcon,
   LinkedIn as LinkedInIcon,
 } from "@mui/icons-material";
-import SvgIcon from "@mui/material/SvgIcon";
 
 const TiktokIcon = (props: any) => (
-  <SvgIcon {...props}>
-    {/* TikTok SVG path (simplified) */}
-    <path d="M12 2v3.5c1.2.7 2.6 1 4 1V10c-1.4 0-2.8-.3-4-1v7a4 4 0 1 1-4-4h1.5a2.5 2.5 0 1 0 2.5 2.5V2h1Z" />
-  </SvgIcon>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 448 512"
+    style={{ color: "white", width: "20px", fill: "white" }}
+  >
+    <path d="M448 209.9a210.1 210.1 0 0 1 -122.8-39.3V349.4A162.6 162.6 0 1 1 185 188.3V278.2a74.6 74.6 0 1 0 52.2 71.2V0l88 0a121.2 121.2 0 0 0 1.9 22.2h0A122.2 122.2 0 0 0 381 102.4a121.4 121.4 0 0 0 67 20.1z" />
+  </svg>
 );
 
 const SocialIcons = ({ socials }: { socials: Socials }) => {
@@ -75,14 +77,13 @@ const SocialIcons = ({ socials }: { socials: Socials }) => {
         </a>
       )}
       {socials?.tiktok && (
-        <a href={socials.tiktok} target="_blank" rel="noopener noreferrer">
-          <TiktokIcon
-            sx={{
-              color: "white",
-              fontSize: 30,
-              cursor: "pointer",
-            }}
-          />
+        <a
+          href={socials.tiktok}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center"
+        >
+          <TiktokIcon />
         </a>
       )}
     </div>
