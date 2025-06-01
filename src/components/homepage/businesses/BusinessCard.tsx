@@ -183,14 +183,14 @@ function BusinessCard({ business }: { readonly business: Business }) {
                       </span>
                     </div>
                   )}
-                  {agelimit && (
-                    <div className="flex items-center  gap-1">
-                      <PersonStanding color="white" size={17} />
-                      <span className="capitalize text-white text-xs  py-1 rounded-full">
-                        Age Limit: {agelimit}+
-                      </span>
-                    </div>
-                  )}
+                  <div className="flex items-center  gap-1">
+                    <PersonStanding color="white" size={17} />
+                    <span className="capitalize text-white text-xs  py-1 rounded-full">
+                      {agelimit
+                        ? "Age Limit: " + agelimit + "+"
+                        : "No Age Limit"}{" "}
+                    </span>
+                  </div>
 
                   {userDetails && isStoreOwner ? (
                     <StarRating rating={averageRating ?? 0} size="size-5" />

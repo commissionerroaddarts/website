@@ -146,7 +146,8 @@ const BannerUploader = ({
                 <ThemeButton
                   onClick={() => fileInputRef.current?.click()}
                   type="button"
-                  text="Select Cover Photo"
+                  disabled={loading}
+                  text={loading ? "Selecting" : "Select Cover Photo"}
                 />
               </div>
             ) : (

@@ -6,6 +6,7 @@ import EstablishmentReview from "@/components/establishmentpage/EstablishmentRev
 import EstablishmentLocation from "@/components/establishmentpage/EstablishmentLocation";
 import EstablishmentProfileHeader from "@/components/establishmentpage/EstablishmentProfileHeader";
 import { notFound } from "next/navigation";
+import AmenitiesSection from "@/components/establishmentpage/AmenitiesSection";
 
 export default async function EstablishmentPage({
   params,
@@ -31,6 +32,9 @@ export default async function EstablishmentPage({
   if (!business) {
     return <div>Business not found</div>;
   }
+
+  const isBusinessHasAmenities =
+    Object.keys(business.amenities ?? {}).length > 0;
 
   return (
     <div className="p-2  min-h-screen">
@@ -60,6 +64,9 @@ export default async function EstablishmentPage({
                 </h2>
                 <p className="text-gray-300 capitalize">{business.shortDis}</p>
               </div>
+              {isBusinessHasAmenities && (
+                <AmenitiesSection amenities={business.amenities} />
+              )}
               {(business.media?.images?.length ?? 0) > 1 && (
                 <EstablishmentGallery images={business.media?.images ?? []} />
               )}

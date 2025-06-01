@@ -173,23 +173,33 @@ const LogoUploader = ({
       <Controller
         name="media.logo"
         control={control}
-        render={() =>
-          !file ? (
-            <LogoDropzone
-              onFileSelect={handleFileChange}
-              fileInputRef={fileInputRef}
-            />
-          ) : (
-            <LogoPreviewCropper
-              imageSrc={imageSrc}
-              fileName={file.name}
-              previewUrl={previewUrl}
-              uploadProgress={uploadProgress}
-              onRemove={handleRemove}
-              onSave={handleSaveCroppedImage}
-            />
-          )
-        }
+        render={() => {
+          let content;
+          if (!file) {
+            if (!loading) {
+              content = (
+                <LogoDropzone
+                  onFileSelect={handleFileChange}
+                  fileInputRef={fileInputRef}
+                />
+              );
+            } else {
+              content = <span>Loading...</span>;
+            }
+          } else {
+            content = (
+              <LogoPreviewCropper
+                imageSrc={imageSrc}
+                fileName={file.name}
+                previewUrl={previewUrl}
+                uploadProgress={uploadProgress}
+                onRemove={handleRemove}
+                onSave={handleSaveCroppedImage}
+              />
+            );
+          }
+          return content;
+        }}
       />
       {typeof errors?.media === "object" &&
         errors.media !== null &&

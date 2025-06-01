@@ -1,4 +1,4 @@
-import { ApiResponse, FilterValues } from "@/types/business";
+import { ApiResponse, Business, FilterValues } from "@/types/business";
 import { baseUrl } from "@/constants/baseUrl";
 import axiosInstance from "@/utils/axiosInstance";
 
@@ -49,40 +49,43 @@ export const fetchBusinesses = async (
   }
 };
 
-export const insertBusiness = async (data: any) => {
+const uploadBusinessMedia = async (media: any, businessId: string) => {
+  const hasImageFiles =
+    Array.isArray(media?.images) &&
+    media.images.some((img: any) => img instanceof Blob);
+  const hasLogoFile = media?.logo instanceof Blob;
+  const hasCoverFile = media?.cover instanceof Blob;
+  if (hasImageFiles || hasLogoFile || hasCoverFile) {
+    const formData = new FormData();
+    if (hasImageFiles) {
+      media?.images?.forEach((file: any) => {
+        if (file instanceof Blob) {
+          formData.append("images", file);
+        }
+      });
+    }
+    if (hasLogoFile && media?.logo) {
+      formData.append("businessLogo", media.logo);
+    }
+    if (hasCoverFile && media?.cover) {
+      formData.append("businessCover", media.cover);
+    }
+    await axiosInstance.patch(`${API_URL}/media/${businessId}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  }
+};
+
+export const insertBusiness = async (data: Business) => {
   try {
-    const { media, ...rest } = data;
+    const { media, noAgeLimit, ...rest } = data;
     const response = await axiosInstance.post(`${API_URL}`, rest);
     if (response.status === 201) {
       const { _id: businessId } = response.data;
-      const hasImageFiles =
-        Array.isArray(media?.images) &&
-        media.images.some((img: any) => img instanceof Blob);
-      const hasLogoFile = media?.logo instanceof Blob;
-      const hasCoverFile = media?.cover instanceof Blob;
-      if (hasImageFiles || hasLogoFile || hasCoverFile) {
-        const formData = new FormData();
-        if (hasImageFiles) {
-          media.images.forEach((file: File) => {
-            if (file instanceof Blob) {
-              formData.append("images", file);
-            }
-          });
-        }
-        if (hasLogoFile) {
-          formData.append("businessLogo", media.logo);
-        }
-        if (hasCoverFile) {
-          formData.append("businessCover", media.cover);
-        }
-        await axiosInstance.patch(`${API_URL}/media/${businessId}`, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
-      }
+      await uploadBusinessMedia(media, businessId);
     }
-
     return response;
   } catch (error) {
     console.error("Error inserting business:", error);
@@ -91,7 +94,7 @@ export const insertBusiness = async (data: any) => {
 };
 export const updateBusiness = async (data: any) => {
   try {
-    const { media, _id, ...rest } = data;
+    const { media, _id, noAgeLimit, ...rest } = data;
 
     // Step 1: Update business non-media fields
     const response = await axiosInstance.patch(`${API_URL}/${_id}`, rest);

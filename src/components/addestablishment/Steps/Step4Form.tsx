@@ -1,70 +1,55 @@
-import CustomInput from "@/components/global/CustomInput";
-import { Box, Grid2, Typography } from "@mui/material";
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
+import { FormControlLabel, Switch, Grid2, Typography } from "@mui/material";
 
-const socialMediaFields = [
+const amenitiesList = [
   {
-    name: "socials.facebook",
-    label: "Facebook URL",
-    placeholder: "https://facebook.com/yourpage",
+    name: "wheelchairAccessible",
+    label: "Is your venue wheelchair accessible?",
   },
-  {
-    name: "socials.instagram",
-    label: "Instagram URL",
-    placeholder: "https://instagram.com/yourhandle",
-  },
-  {
-    name: "socials.twitter",
-    label: "Twitter URL",
-    placeholder: "https://x.com/yourhandle",
-  },
-  {
-    name: "socials.linkedin",
-    label: "LinkedIn URL",
-    placeholder: "https://linkedin.com/in/yourprofile",
-  },
-  {
-    name: "socials.youtube",
-    label: "YouTube URL",
-    placeholder: "https://youtube.com/yourchannel",
-  },
-  {
-    name: "socials.tiktok",
-    label: "TikTok URL",
-    placeholder: "https://tiktok.com/@yourhandle",
-  },
+  { name: "validatedParking", label: "Do you offer validated parking?" },
+  { name: "smokingOutsideOnly", label: "Is smoking allowed outside only?" },
+  { name: "outdoorSeating", label: "Do you have outdoor seating?" },
+  { name: "heatedOutdoorSeating", label: "Is the outdoor seating heated?" },
+  { name: "bikeParking", label: "Do you provide bike parking?" },
+  { name: "acceptsCreditCards", label: "Do you accept credit cards?" },
+  { name: "freeWiFi", label: "Is free Wi-Fi available?" },
+  { name: "tv", label: "Is there a TV available?" },
+  { name: "happyHourSpecials", label: "Do you offer happy hour specials?" },
+  { name: "coveredOutdoorSeating", label: "Is the outdoor seating covered?" },
 ];
 
 const Step4Form = () => {
   const { control } = useFormContext();
 
   return (
-    <Box>
-      <Typography variant="h5" textAlign="center" gutterBottom mb={5}>
-        Connect Social Media
+    <div>
+      <Typography variant="h5" gutterBottom>
+        Amenities
       </Typography>
       <Grid2 container spacing={2}>
-        {socialMediaFields.map(({ name, label, placeholder }) => (
-          <Grid2 key={name} size={{ xs: 12, md: 6 }}>
+        {amenitiesList.map((amenity) => (
+          <Grid2 size={{ xs: 12, md: 6 }} key={amenity.name}>
             <Controller
-              name={name}
+              name={`amenities.${amenity.name}`}
               control={control}
-              render={({ field, fieldState }) => (
-                <CustomInput
-                  label={label}
-                  placeholder={placeholder}
-                  fullWidth
-                  error={!!fieldState.error}
-                  helperText={fieldState.error?.message}
-                  {...field}
+              defaultValue={false}
+              render={({ field }) => (
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={field.value}
+                      onChange={(e) => field.onChange(e.target.checked)}
+                    />
+                  }
+                  label={amenity.label}
                 />
               )}
             />
           </Grid2>
         ))}
       </Grid2>
-    </Box>
+    </div>
   );
 };
 
