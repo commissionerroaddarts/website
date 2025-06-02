@@ -13,6 +13,9 @@ interface Props {
   updateQuery: () => void;
   isLoading: boolean;
   isFilteration?: boolean;
+  isSavedVenues?: boolean;
+  savedVenuesActive?: boolean;
+  setSavedVenuesActive?: (arg: boolean) => void;
 }
 
 const FilterSection = ({
@@ -21,6 +24,9 @@ const FilterSection = ({
   updateQuery,
   isLoading,
   isFilteration = true,
+  isSavedVenues,
+  setSavedVenuesActive,
+  savedVenuesActive,
 }: Props) => {
   const [openSidebar, setOpenSidebar] = useState(false);
   const closeSidebar = () => {
@@ -66,29 +72,12 @@ const FilterSection = ({
   return (
     <div className="bg-[#3a2a3e] bg-opacity-50 rounded-lg p-4 mb-8 container mx-auto">
       <div className="flex flex-col md:flex-row gap-4">
-        {isFilteration && (
-          <>
-            <ThemeButton
-              text="Filter"
-              startIcon={handleFilterIcon()}
-              onClick={() => setOpenSidebar(true)}
-            />
-
-            <FilterSidebar
-              filters={filters}
-              setFilters={setFilters}
-              open={openSidebar}
-              onClose={closeSidebar}
-              updateQuery={updateQuery}
-            />
-          </>
-        )}
         <form
           onSubmit={(e) => {
             e.preventDefault();
             updateQuery();
           }}
-          className="flex flex-col md:flex-row gap-4 w-full"
+          className="flex flex-col md:flex-row gap-4 w-full flex-grow"
         >
           <div className="flex-grow">
             <CustomInput
@@ -105,6 +94,30 @@ const FilterSection = ({
           </div>
           <ThemeButton text="Search" type="submit" />
         </form>
+        {isFilteration && (
+          <>
+            <div className="flex flex-col md:flex-row gap-4 md:min-w-[28%]">
+              <ThemeButton
+                text="Filter"
+                startIcon={handleFilterIcon()}
+                onClick={() => setOpenSidebar(true)}
+              />
+              {isSavedVenues && setSavedVenuesActive && (
+                <ThemeButton
+                  text={savedVenuesActive ? "All Venues" : "Saved Venues"}
+                  onClick={() => setSavedVenuesActive(!savedVenuesActive)}
+                />
+              )}
+            </div>
+            <FilterSidebar
+              filters={filters}
+              setFilters={setFilters}
+              open={openSidebar}
+              onClose={closeSidebar}
+              updateQuery={updateQuery}
+            />
+          </>
+        )}
       </div>
     </div>
   );

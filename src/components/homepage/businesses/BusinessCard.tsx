@@ -171,7 +171,11 @@ function BusinessCard({ business }: { readonly business: Business }) {
               <Box className="flex justify-between items-center">
                 <Box className="flex flex-col gap-1">
                   {/* Title */}
-                  <Typography variant="h6" sx={{ mt: 1 }}>
+                  <Typography
+                    variant="h6"
+                    sx={{ mt: 1 }}
+                    className="capitalize"
+                  >
                     {name ?? "Unnamed Business"}
                   </Typography>
 

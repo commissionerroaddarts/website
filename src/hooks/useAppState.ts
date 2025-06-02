@@ -6,6 +6,7 @@ export const useAppState = () => {
   const business = useSelector((state: RootState) => state.business);
   const plan = useSelector((state: RootState) => state.plan);
   const inquiry = useSelector((state: RootState) => state.inquiry);
+  const wishlist = useSelector((state: RootState) => state.wishlist);
 
-  return { user, business, plan, inquiry };
+  return { user, business, plan, inquiry, wishlist };
 };

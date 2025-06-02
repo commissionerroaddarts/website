@@ -11,12 +11,19 @@ import { fetchBusinesses } from "@/services/businessService";
 import { Business, FilterValues } from "@/types/business";
 import { SearchX } from "lucide-react";
 import useDebounce from "@/hooks/useDebounce";
+import { useAppState } from "@/hooks/useAppState";
+import LoadingIndicator from "../global/LoadingIndicator";
 
 export default function MainEstablishment() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { wishlist } = useAppState();
+  const { items } = wishlist;
+  const isSavedVenues = items && items.length > 0;
+  const [savedVenuesActive, setSavedVenuesActive] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [businesses, setBusinesses] = useState<Business[]>([]); // Single object state for all filters
+  const [allBusinesses, setAllBusinesses] = useState<Business[]>([]);
   const search = searchParams.get("search") ?? null;
   const category = searchParams.get("category") ?? null;
   const bordtype = searchParams.get("boardtype") ?? null;
@@ -41,6 +48,18 @@ export default function MainEstablishment() {
     getBusinesses();
   }, [debouncedSearch, filterParams?.category]);
 
+  useEffect(() => {
+    if (savedVenuesActive && businesses?.length > 0) {
+      const filteredSavedBusinesses = businesses.filter((b) =>
+        items.includes(b._id)
+      );
+      setBusinesses(filteredSavedBusinesses);
+    } else {
+      // Restore all businesses when savedVenuesActive is false
+      setBusinesses(allBusinesses);
+    }
+  }, [savedVenuesActive]);
+
   const getBusinesses = async () => {
     setLoading(true);
     // Create a cleaned version of filterParams
@@ -57,6 +76,7 @@ export default function MainEstablishment() {
 
     try {
       const { data } = await fetchBusinesses(1, 10, validFilterParams);
+      setAllBusinesses(data);
       setBusinesses(data);
     } catch (error) {
       console.error("Failed to fetch businesses:", error);
@@ -97,32 +117,13 @@ export default function MainEstablishment() {
         filters={filterParams}
         setFilters={setFilterParams}
         updateQuery={updateQuery}
+        isSavedVenues={isSavedVenues}
+        setSavedVenuesActive={setSavedVenuesActive}
+        savedVenuesActive={savedVenuesActive}
       />
       {(() => {
         if (loading) {
-          return (
-            <div className="w-full flex justify-center items-center h-20">
-              <svg
-                className="animate-spin h-10 w-10 text-purple-500"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  strokeWidth="4"
-                  fill="none"
-                />
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 1 1 16 0A8 8 0 0 1 4 12zm2.5-1h9a2.5 2.5 0 1 1-5 0h-4a2.5 2.5 0 0 1-4.5-1z"
-                />
-              </svg>
-            </div>
-          );
+          return <LoadingIndicator />;
         }
         if (businesses.length > 0) {
           return <BusinessGrid businesses={businesses} isLoading={loading} />;

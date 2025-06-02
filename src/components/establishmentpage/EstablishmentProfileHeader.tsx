@@ -6,7 +6,7 @@ import { useAppState } from "@/hooks/useAppState";
 import { useState } from "react";
 import Link from "next/link";
 import ThemeButton from "../buttons/ThemeButton";
-import { Camera, Edit, EditIcon, Trash } from "lucide-react";
+import { Camera, Edit, EditIcon, Heart, Trash } from "lucide-react";
 import DeleteListingDialog from "@/components/global/DeleteListingDialog";
 import LogoUploaderPopup from "@/components/addestablishment/MediaUploader/LogoUploaderPopup";
 import { FormProvider, useForm } from "react-hook-form";
@@ -20,6 +20,13 @@ import {
 } from "@/services/businessService";
 import BannerImagePopup from "@/components/addestablishment/MediaUploader/BannerImageUploader";
 import { mediaSchema } from "@/yupSchemas/mediaSchema";
+import { useRouter } from "next/navigation";
+import { useAppDispatch } from "@/store";
+import {
+  addBusinessDetails,
+  addToWishlist,
+  removeFromWishlist,
+} from "@/store/slices/wishlistSlice";
 
 interface GalleryProps {
   readonly id: string;
@@ -59,13 +66,15 @@ export default function EstablishmentProfileHeader({
     },
     resolver: yupResolver(schema),
   });
-
-  const { user } = useAppState();
+  const router = useRouter();
+  const { user, wishlist } = useAppState();
   const { userDetails } = user;
   const { role } = userDetails || {};
   const isStoreOwner =
     (role === "owner" || role === "admin") &&
     userDetails?._id === businessUserId;
+  const { items } = wishlist;
+  const isAlreadyAddedToWishlist = items?.includes(id);
   const [loading, setLoading] = useState(false);
   const [openConfirm, setOpenConfirm] = useState(false);
   const [uploadLogo, setUploadLogo] = useState(false);
@@ -75,6 +84,7 @@ export default function EstablishmentProfileHeader({
     logo: false,
     cover: false,
   });
+  const dispatch = useAppDispatch();
 
   const handleOpenConfirm = (e: any) => {
     e.preventDefault();
@@ -110,6 +120,14 @@ export default function EstablishmentProfileHeader({
       console.error("Error submitting form:", error);
       toast.error("Error submitting form");
       setLoadingUpload((prev) => ({ ...prev, logo: false }));
+    }
+  };
+
+  const handleWishlist = () => {
+    if (isAlreadyAddedToWishlist) {
+      dispatch(removeFromWishlist(id));
+    } else {
+      dispatch(addToWishlist(id));
     }
   };
 
@@ -223,7 +241,9 @@ export default function EstablishmentProfileHeader({
 
           <div className="flex flex-col gap-2 mb-5">
             <div className="flex gap-2 items-center flex-wrap">
-              <h1 className="text-white text-3xl font-bold">{name}</h1>
+              <h1 className="text-white text-3xl font-bold capitalize">
+                {name}
+              </h1>
               {bordtype && bordtype !== "" && (
                 <span className="bg-[#3a2a3e] capitalize text-white text-xs px-3 py-1 rounded-full">
                   Board Type: {bordtype}
@@ -236,7 +256,7 @@ export default function EstablishmentProfileHeader({
         </div>
 
         <div className="absolute -bottom-20  right-0 p-4 gap-2 hidden md:flex">
-          {isStoreOwner && (
+          {isStoreOwner ? (
             <Box className="flex gap-2">
               <Link href={`/edit-establishment/${id}`}>
                 <ThemeButton
@@ -250,6 +270,31 @@ export default function EstablishmentProfileHeader({
                 text={loading ? "Deleting" : "Delete"}
                 backgroundColor="darkred"
                 endIcon={<Trash className="inline-block ml-1" size={15} />}
+              />
+            </Box>
+          ) : (
+            <Box className="flex gap-2">
+              <ThemeButton
+                backgroundColor="#5409DA"
+                fontSize="0.8rem"
+                text={isAlreadyAddedToWishlist ? "Unsave Venue" : "Save Venue"}
+                onClick={handleWishlist}
+                endIcon={
+                  <Heart
+                    color="white"
+                    fill={isAlreadyAddedToWishlist ? "white" : "none"}
+                    size={17}
+                  />
+                }
+              />
+              <ThemeButton
+                fontSize="0.8rem"
+                text="Send a Message"
+                onClick={() => {
+                  dispatch(addBusinessDetails(name));
+                  router.push(`/send-message/${id}`);
+                }}
+                endIcon={<Edit className="inline-block ml-1" size={17} />}
               />
             </Box>
           )}

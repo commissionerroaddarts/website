@@ -264,3 +264,19 @@ export const removeBusinessImage = async (url: string, businessId: string) => {
     throw error;
   }
 };
+
+export const sendMsgToBusiness = async (
+  businessId: string,
+  data: { firstname: string; email: string; message: string }
+) => {
+  try {
+    const response = await axiosInstance.post(
+      `${API_URL}/contact/${businessId}`,
+      data
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting business media:", error);
+    throw error;
+  }
+};
