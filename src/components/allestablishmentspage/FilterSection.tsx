@@ -13,9 +13,9 @@ interface Props {
   updateQuery: () => void;
   isLoading: boolean;
   isFilteration?: boolean;
-  isSavedVenues: boolean;
-  savedVenuesActive: boolean;
-  setSavedVenuesActive: (arg: boolean) => void;
+  isSavedVenues?: boolean;
+  savedVenuesActive?: boolean;
+  setSavedVenuesActive?: (arg: boolean) => void;
 }
 
 const FilterSection = ({
@@ -102,7 +102,7 @@ const FilterSection = ({
                 startIcon={handleFilterIcon()}
                 onClick={() => setOpenSidebar(true)}
               />
-              {isSavedVenues && (
+              {isSavedVenues && setSavedVenuesActive && (
                 <ThemeButton
                   text={savedVenuesActive ? "All Venues" : "Saved Venues"}
                   onClick={() => setSavedVenuesActive(!savedVenuesActive)}
