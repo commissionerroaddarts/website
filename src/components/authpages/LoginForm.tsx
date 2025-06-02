@@ -44,6 +44,7 @@ const LoginForm = () => {
   const router = useRouter(); // Assuming you're using Next.js router
   const search = useSearchParams(); // Assuming you're using Next.js router
   const businessId = search.get("business"); // Get the business ID from the URL
+  const sendMessageId = search.get("message"); // Get the business ID from the URL
   const page = search.get("page"); // Get the page from the URL
   const isFromBusinessPage = page === "main"; // Check if the page is the main business page
 
@@ -58,7 +59,7 @@ const LoginForm = () => {
   const onSubmit = async (data: LoginFormData) => {
     try {
       const response = await loginUser(data, dispatch);
-
+      console.log(response);
       if (response.error) {
         toast.error(response.error);
         return;
@@ -72,6 +73,8 @@ const LoginForm = () => {
         } else {
           router.back(); // Redirect to the business page
         }
+      } else if (sendMessageId) {
+        router.push(`/send-message/${sendMessageId}`);
       } else {
         router.push("/"); // Uncomment if using Next.js router
       }
@@ -80,8 +83,9 @@ const LoginForm = () => {
     } catch (error: any) {
       console.error(error);
       toast.error(
-        error.response?.data?.error ??
-          error.response?.data?.message ??
+        error.response?.data?.message ??
+          error.response?.data?.error ??
+          error.response?.data ??
           "Login failed. Please try again."
       );
     }

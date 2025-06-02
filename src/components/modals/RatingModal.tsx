@@ -7,7 +7,7 @@ import { Dialog, DialogContent } from "@mui/material";
 import { getBusinessReviews } from "@/services/ratingService";
 import { useEffect, useState } from "react";
 import { BusinessReview, SubmittedUserReview } from "@/types/ratings";
-import CloseIconButton from "../global/CloseIconButton";
+import CloseIconButton from "@/components/global/CloseIconButton";
 
 export default function RatingModal({ id }: { readonly id: string }) {
   const router = useRouter();

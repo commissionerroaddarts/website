@@ -11,6 +11,7 @@ export const loginUser = async (data: LoginFormData, dispatch: AppDispatch) => {
     return response.data; // Return the full response if needed
   } catch (error: any) {
     console.error("Login error:", error);
+    throw error;
   }
 };
 

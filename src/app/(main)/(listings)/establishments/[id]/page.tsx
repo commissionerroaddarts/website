@@ -7,6 +7,7 @@ import EstablishmentLocation from "@/components/establishmentpage/EstablishmentL
 import EstablishmentProfileHeader from "@/components/establishmentpage/EstablishmentProfileHeader";
 import { notFound } from "next/navigation";
 import AmenitiesSection from "@/components/establishmentpage/AmenitiesSection";
+import RecommendedEstablishment from "@/components/establishmentpage/RecommendedEstablishment";
 
 export default async function EstablishmentPage({
   params,
@@ -85,6 +86,10 @@ export default async function EstablishmentPage({
             <EstablishmentLocation business={business} />
           </Grid2>
         )}
+
+        <Grid2 size={{ xs: 12 }}>
+          <RecommendedEstablishment />
+        </Grid2>
       </Grid2>
     </div>
   );

@@ -80,7 +80,7 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
         openConfirm={openConfirm}
         setOpenConfirm={setOpenConfirm}
       />
-      <Card className="!bg-[#2a1e2e] rounded-lg overflow-hidden flex flex-col justify-between h-full">
+      <Card className="!bg-[#2a1e2e] rounded-lg overflow-hidden flex flex-col justify-between h-full md:h-[650px]">
         <div>
           <div
             className="relative h-48"
@@ -147,7 +147,9 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
 
             {/* Restaurant Name */}
             <div className="flex items-center mb-1">
-              <h3 className="text-white font-medium text-2xl">{name}</h3>
+              <h3 className="text-white font-medium text-2xl capitalize">
+                {name}
+              </h3>
             </div>
 
             {userDetails &&
@@ -186,7 +188,7 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
             </div>
 
             {/* Description */}
-            <p className="text-gray text-xs mb-4">{shortDis}</p>
+            <p className="text-gray text-xs mb-4 text-left">{shortDis}</p>
           </div>
         </div>
 
