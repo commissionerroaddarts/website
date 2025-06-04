@@ -176,7 +176,7 @@ export default function AddEstablishment({
   const { userDetails, isLoggedIn } = user;
   const { subscription, permissions, _id } = userDetails || {};
   const { plan } = subscription || {};
-  const [currentStep, setCurrentStep] = useState(2);
+  const [currentStep, setCurrentStep] = useState(1);
   const totalSteps = 6;
   const [isLoading, setIsLoading] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
