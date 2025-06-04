@@ -97,6 +97,7 @@ function BusinessCard({ business }: { readonly business: Business }) {
           boxShadow: 3,
           gap: 1,
           position: "relative",
+          alignItems: "center",
         }}
       >
         <Box
@@ -119,7 +120,7 @@ function BusinessCard({ business }: { readonly business: Business }) {
         {/* Image Section */}
         <CardMedia
           component="img"
-          sx={{ width: 220, height: 300, borderRadius: 2, objectFit: "cover" }}
+          sx={{ width: 300, height: 300, borderRadius: 2, objectFit: "cover" }}
           image={
             media?.logo ??
             media?.images?.[0] ??
@@ -209,15 +210,8 @@ function BusinessCard({ business }: { readonly business: Business }) {
                   <Typography sx={{ color: "#9b59b6", fontWeight: "bold" }}>
                     {price ? price?.category : "No Price Info"}
                   </Typography>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      color: "#ccc",
-                      gap: 1,
-                    }}
-                  >
-                    <Box className="flex ">
+                  <Box className="flex flex-wrap items-center gap-1">
+                    <Box className="flex items-center">
                       <RoomIcon sx={{ fontSize: 16, mr: 0.5 }} />
                       <Typography sx={{ fontSize: 12 }}>
                         {location?.address ??
