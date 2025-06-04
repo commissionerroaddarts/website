@@ -47,6 +47,7 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
   const [openMap, setOpenMap] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [openConfirm, setOpenConfirm] = useState<boolean>(false);
+  const [showFullDesc, setShowFullDesc] = useState<boolean>(false);
 
   if (
     !_id ||
@@ -80,7 +81,7 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
         openConfirm={openConfirm}
         setOpenConfirm={setOpenConfirm}
       />
-      <Card className="!bg-[#2a1e2e] rounded-lg overflow-hidden flex flex-col justify-between h-full md:h-[650px]">
+      <Card className="!bg-[#2a1e2e] rounded-lg overflow-hidden flex flex-col justify-between h-full md:min-h-[400px]">
         <div>
           <div
             className="relative h-48"
@@ -126,7 +127,7 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
             />
           </div>
 
-          <div className="p-4 flex-grow">
+          <div className="p-4 pb-0 flex-grow">
             {/* Tags and Open Status */}
             <div className="flex justify-between items-center mb-4">
               <div className="flex gap-2 flex-wrap">
@@ -147,7 +148,7 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
 
             {/* Restaurant Name */}
             <div className="flex items-center mb-1">
-              <h3 className="text-white font-medium text-2xl capitalize">
+              <h3 className="text-white font-medium text-lg capitalize">
                 {name}
               </h3>
             </div>
@@ -163,7 +164,7 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
             )}
 
             {bordtype && (
-              <div className="flex items-center  gap-1">
+              <div className="flex items-center  gap-1 mt-2">
                 <CircleDot size={17} />
                 <span className="capitalize text-white text-xs  py-1 rounded-full">
                   Board Type: {bordtype}
@@ -180,30 +181,50 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
 
             {/* Location */}
             <div className="flex items-center mb-2">
-              <FaMapMarkerAlt className="h-4 w-4 text-gray mr-2" />
-              <span className="text-gray text-sm">
+              <FaMapMarkerAlt className="size-3 text-gray mr-1" />
+              <span className="text-gray text-xs text-left">
                 {location?.address ??
                   `${location?.city}, ${location?.state}, ${location?.country}`}
               </span>
             </div>
 
-            {/* Description */}
-            <p className="text-gray text-xs mb-4 text-left">{shortDis}</p>
+            <p className="text-gray text-xs mb-4 text-left">
+              {shortDis.length > 100 && !showFullDesc
+                ? `${shortDis.slice(0, 100)}...`
+                : shortDis}
+              {shortDis.length > 100 && (
+                <button
+                  type="button"
+                  className="!text-white cursor-pointer ml-2 underline"
+                  onClick={() => setShowFullDesc((prev) => !prev)}
+                >
+                  {showFullDesc ? "Show Less" : "Show More"}
+                </button>
+              )}
+            </p>
           </div>
         </div>
 
         {/* Buttons */}
-        <div className="p-4 mt-auto">
-          <div className="grid grid-cols-1 gap-2">
+        <div className="p-4 pt-0 mt-auto">
+          <div className="grid  grid-cols-1 md:grid-cols-2 gap-2">
             <Link
               href={{
                 pathname: `/establishments/${_id}`,
               }}
               passHref
             >
-              <ThemeButton text="View More" className="w-full" />
+              <ThemeButton
+                text="View More"
+                className="w-full"
+                fontSize="0.8rem"
+              />
             </Link>
-            <ThemeButton text="Show Map" onClickEvent={handleMapOpen} />
+            <ThemeButton
+              text="Show Map"
+              onClickEvent={handleMapOpen}
+              fontSize="0.8rem"
+            />
           </div>
         </div>
       </Card>
