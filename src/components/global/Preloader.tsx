@@ -4,7 +4,7 @@ import { Box, Fade } from "@mui/material";
 
 interface PreloaderProps {
   duration?: number;
-  children: ReactNode;
+  children?: ReactNode;
 }
 
 const Preloader = ({ duration = 2000, children }: PreloaderProps) => {
