@@ -84,7 +84,7 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
       <Card className="!bg-[#2a1e2e] rounded-lg overflow-hidden flex flex-col justify-between h-full md:min-h-[400px]">
         <div>
           <div
-            className="relative h-48"
+            className="relative h-60"
             style={{
               background:
                 media?.logo &&
@@ -195,7 +195,7 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
               {shortDis.length > 100 && (
                 <button
                   type="button"
-                  className="!text-white cursor-pointer ml-2 underline"
+                  className="!text-white cursor-pointer ml-1 underline"
                   onClick={() => setShowFullDesc((prev) => !prev)}
                 >
                   {showFullDesc ? "Show Less" : "Show More"}

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 import Cropper from "react-easy-crop";
 import Image from "next/image";
@@ -27,6 +27,37 @@ const LogoPreviewCropper: React.FC<LogoPreviewCropperProps> = ({
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const [minZoom, setMinZoom] = useState(1);
+  const cropContainerRef = useRef<HTMLDivElement>(null);
+
+  const calculateMinZoom = (
+    imageWidth: number,
+    imageHeight: number,
+    containerWidth: number,
+    containerHeight: number
+  ) => {
+    const zoomX = containerWidth / imageWidth;
+    const zoomY = containerHeight / imageHeight;
+    return Math.min(zoomX, zoomY); // Use max to ensure full image is visible
+  };
+
+  useEffect(() => {
+    if (!previewUrl) return;
+
+    const image = new window.Image();
+    image.src = previewUrl;
+    image.onload = () => {
+      const containerSize = 250; // match your cropper box
+      const minZoomCalculated = calculateMinZoom(
+        image.width,
+        image.height,
+        containerSize,
+        containerSize
+      );
+      setMinZoom(minZoomCalculated);
+      setZoom(minZoomCalculated); // Set zoom to minimum initially
+    };
+  }, []);
 
   const onCropComplete = useCallback((_: any, croppedAreaPixels: any) => {
     setCroppedAreaPixels(croppedAreaPixels);
@@ -34,7 +65,7 @@ const LogoPreviewCropper: React.FC<LogoPreviewCropperProps> = ({
 
   const handleSave = async () => {
     if (imageSrc && croppedAreaPixels) {
-      setZoom(1);
+      setZoom(minZoom); // Reset zoom to minimum before cropping
       const { blob, fileUrl } = await getCroppedImg(
         imageSrc,
         croppedAreaPixels
@@ -44,7 +75,7 @@ const LogoPreviewCropper: React.FC<LogoPreviewCropperProps> = ({
   };
 
   return (
-    <div className="w-full bg-[#3a2562] rounded-lg p-4 mb-6">
+    <div className="w-full mb-6">
       {/* Header */}
       <div className="flex items-center gap-3 mb-4">
         <div
@@ -55,12 +86,24 @@ const LogoPreviewCropper: React.FC<LogoPreviewCropperProps> = ({
           }}
         >
           {previewUrl && (
-            <Image
-              src={previewUrl}
-              alt="Circular Logo Preview"
-              layout="fill"
-              objectFit="cover"
-            />
+            <>
+              {/* Blurred full image as background */}
+              <img
+                src={previewUrl}
+                alt="Blurred background"
+                className="absolute inset-0 w-full h-full object-cover blur-md scale-110 z-0"
+              />
+
+              {/* Cropper */}
+              <div className="absolute inset-0 z-10">
+                <Image
+                  src={previewUrl}
+                  alt="Circular Logo Preview"
+                  layout="fill"
+                  objectFit="cover"
+                />
+              </div>
+            </>
           )}
         </div>
         <div className="flex-grow">
@@ -84,29 +127,43 @@ const LogoPreviewCropper: React.FC<LogoPreviewCropperProps> = ({
         </button>
       </div>
 
-      {/* Placement Area */}
-      <div className="relative w-full aspect-video bg-gray-400 rounded-lg overflow-hidden">
-        {previewUrl && (
-          <Cropper
-            image={previewUrl}
-            crop={crop}
-            zoom={zoom}
-            aspect={1} // Square or adjust to your frame
-            onCropChange={setCrop}
-            onZoomChange={setZoom}
-            onCropComplete={onCropComplete}
-            cropShape="rect" // or "round" if you want a circular frame
-            showGrid={false}
+      {imageSrc && (
+        <div
+          ref={cropContainerRef}
+          className="relative w-full aspect-square bg-black rounded-lg overflow-hidden"
+        >
+          {/* Blurred full image as background */}
+          <img
+            src={imageSrc}
+            alt="Blurred background"
+            className="absolute inset-0 w-full h-full object-cover blur-md scale-110 z-0"
           />
-        )}
-      </div>
+
+          {/* Cropper */}
+          <div className="absolute inset-0 z-10">
+            <Cropper
+              image={imageSrc}
+              crop={crop}
+              zoom={zoom}
+              minZoom={minZoom}
+              aspect={1}
+              onCropChange={setCrop}
+              onZoomChange={setZoom}
+              onCropComplete={onCropComplete}
+              cropShape="round"
+              restrictPosition={false}
+              showGrid={false}
+            />
+          </div>
+        </div>
+      )}
 
       {/* Zoom Slider */}
       <input
         type="range"
-        min={1}
+        min={minZoom}
         max={3}
-        step={0.1}
+        step={0.01}
         value={zoom}
         onChange={(e) => setZoom(Number(e.target.value))}
         className="mt-4 w-full"

@@ -154,8 +154,8 @@ const LogoUploader = ({
       { type: croppedBlob.type }
     );
     setValue("media.logo", croppedFile);
-    setFile(croppedFile);
-    setImageSrc(croppedFileUrl);
+    // setFile(croppedFile);
+    // setImageSrc(croppedFileUrl);
     setPreviewUrl(croppedFileUrl);
   };
 
