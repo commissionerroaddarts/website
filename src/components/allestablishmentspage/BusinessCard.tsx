@@ -130,6 +130,31 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
                     {loading ? "Deleting" : "Delete"}{" "}
                     <Trash className="inline-block ml-1" size={15} />
                   </button>
+
+                  <div className="flex justify-end items-center">
+                    <IconButton
+                      onClick={handleWishlist}
+                      sx={{
+                        width: "2.5rem",
+                        height: "2.5rem",
+                        background: "#ec6dff",
+                        borderRadius: "50%",
+                        cursor: "pointer",
+                        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                        transition: "background 0.3s, transform 0.3s",
+                        padding: "0.5rem",
+                        "&:hover": {
+                          opacity: "0.9!important",
+                        },
+                      }}
+                    >
+                      <Heart
+                        color="white"
+                        fill={isAlreadyAddedToWishlist ? "white" : "none"}
+                        size={17}
+                      />
+                    </IconButton>
+                  </div>
                 </>
               ) : (
                 <div className="flex justify-end items-center">

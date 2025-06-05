@@ -14,6 +14,8 @@ import useDebounce from "@/hooks/useDebounce";
 import { useAppState } from "@/hooks/useAppState";
 import LoadingIndicator from "@/components/global/LoadingIndicator";
 
+const maxLimit = 12;
+
 export default function MainEstablishment() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -28,7 +30,7 @@ export default function MainEstablishment() {
   const [allBusinesses, setAllBusinesses] = useState<Business[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [limit, setLimit] = useState(12);
+  const [limit, setLimit] = useState(maxLimit);
   const search = searchParams.get("search") ?? null;
   const category = searchParams.get("category") ?? null;
   const bordtype = searchParams.get("boardtype") ?? null;
@@ -37,7 +39,10 @@ export default function MainEstablishment() {
   const zipcode = searchParams.get("zipcode") ?? null;
   const agelimit = searchParams.get("agelimit")?.split(",").map(Number) ?? null;
   const searchPage = parseInt(searchParams.get("page") ?? "1", 10);
-  const searchLimit = parseInt(searchParams.get("limit") ?? "12", 10);
+  const searchLimit = parseInt(
+    searchParams.get("limit") ?? maxLimit.toString(),
+    10
+  );
   const [filterParams, setFilterParams] = useState<FilterValues>({
     search,
     category,
@@ -81,7 +86,7 @@ export default function MainEstablishment() {
     if (searchLimit && !isNaN(searchLimit) && searchLimit > 0) {
       setLimit(searchLimit);
     } else {
-      setLimit(12); // Fallback default
+      setLimit(maxLimit); // Fallback default
     }
   }, []);
 
@@ -105,7 +110,7 @@ export default function MainEstablishment() {
     // Ensure page is always a number
     const validPage = Number.isInteger(page) && page > 0 ? page : 1;
     // Ensure limit is always a number
-    const validLimit = Number.isInteger(limit) && limit > 0 ? limit : 12;
+    const validLimit = Number.isInteger(limit) && limit > 0 ? limit : maxLimit;
     try {
       const { data, totalPages } = await fetchBusinesses(
         validPage,
