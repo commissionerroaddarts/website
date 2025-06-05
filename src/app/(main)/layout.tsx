@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Preloader from "@/components/global/Preloader";
 import { generateMetadata } from "@/utils/metaData";
 import Layout from "@/components/layout";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata = generateMetadata({
   title: "Road Darts",
@@ -25,6 +26,7 @@ export default function RootLayout({
       <body>
         <Preloader duration={3000}>
           <Providers>
+            <SpeedInsights />
             <ToastContainer
               position="top-center"
               autoClose={1500}

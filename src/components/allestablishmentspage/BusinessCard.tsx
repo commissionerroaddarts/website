@@ -25,6 +25,98 @@ interface RestaurantCardProps {
   readonly business: Business;
 }
 
+interface WishlistButtonProps {
+  onClick: () => void;
+  isAlreadyAddedToWishlist: boolean;
+}
+
+interface OwnerActionsProps {
+  _id: string;
+  loading: boolean;
+  handleOpenConfirm: (e: any) => void;
+  handleWishlist: () => void;
+  isAlreadyAddedToWishlist: boolean;
+}
+
+function WishlistButton({
+  onClick,
+  isAlreadyAddedToWishlist,
+}: Readonly<WishlistButtonProps>) {
+  return (
+    <IconButton
+      onClick={onClick}
+      sx={{
+        width: "2.5rem",
+        height: "2.5rem",
+        background: "#ec6dff",
+        borderRadius: "50%",
+        cursor: "pointer",
+        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+        transition: "background 0.3s, transform 0.3s",
+        padding: "0.5rem",
+        "&:hover": {
+          opacity: "0.9!important",
+        },
+      }}
+    >
+      <Heart
+        color="white"
+        fill={isAlreadyAddedToWishlist ? "white" : "none"}
+        size={17}
+      />
+    </IconButton>
+  );
+}
+
+function OwnerActions({
+  _id,
+  loading,
+  handleOpenConfirm,
+  handleWishlist,
+  isAlreadyAddedToWishlist,
+}: Readonly<OwnerActionsProps>) {
+  return (
+    <>
+      <Link
+        href={`/edit-establishment/${_id}`}
+        className="bg-purple-700 text-white text-xs px-2 py-1 rounded flex items-center justify-around"
+      >
+        Edit <Edit className="inline-block ml-1" size={15} />
+      </Link>
+
+      <button
+        onClick={handleOpenConfirm}
+        className="bg-red-500 cursor-pointer text-white text-xs px-2 py-1 rounded  flex items-center justify-around"
+      >
+        {loading ? "Deleting" : "Delete"}{" "}
+        <Trash className="inline-block ml-1" size={15} />
+      </button>
+
+      <div className="flex justify-end items-center">
+        <WishlistButton
+          onClick={handleWishlist}
+          isAlreadyAddedToWishlist={isAlreadyAddedToWishlist}
+        />
+      </div>
+    </>
+  );
+}
+
+function TagsList({ tags }: Readonly<{ tags: string[] }>) {
+  return (
+    <>
+      {tags.map((tag) => (
+        <span
+          key={tag}
+          className="bg-[#3a2a3e] capitalize text-white text-xs px-3 py-1 rounded-full"
+        >
+          {tag}
+        </span>
+      ))}
+    </>
+  );
+}
+
 export default function BusinessCard({ business }: RestaurantCardProps) {
   const {
     _id,
@@ -115,71 +207,19 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
               zIndex={10}
             >
               {isStoreOwner ? (
-                <>
-                  <Link
-                    href={`/edit-establishment/${_id}`}
-                    className="bg-purple-700 text-white text-xs px-2 py-1 rounded flex items-center justify-around"
-                  >
-                    Edit <Edit className="inline-block ml-1" size={15} />
-                  </Link>
-
-                  <button
-                    onClick={handleOpenConfirm}
-                    className="bg-red-500 cursor-pointer text-white text-xs px-2 py-1 rounded  flex items-center justify-around"
-                  >
-                    {loading ? "Deleting" : "Delete"}{" "}
-                    <Trash className="inline-block ml-1" size={15} />
-                  </button>
-
-                  <div className="flex justify-end items-center">
-                    <IconButton
-                      onClick={handleWishlist}
-                      sx={{
-                        width: "2.5rem",
-                        height: "2.5rem",
-                        background: "#ec6dff",
-                        borderRadius: "50%",
-                        cursor: "pointer",
-                        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-                        transition: "background 0.3s, transform 0.3s",
-                        padding: "0.5rem",
-                        "&:hover": {
-                          opacity: "0.9!important",
-                        },
-                      }}
-                    >
-                      <Heart
-                        color="white"
-                        fill={isAlreadyAddedToWishlist ? "white" : "none"}
-                        size={17}
-                      />
-                    </IconButton>
-                  </div>
-                </>
+                <OwnerActions
+                  _id={_id}
+                  loading={loading}
+                  handleOpenConfirm={handleOpenConfirm}
+                  handleWishlist={handleWishlist}
+                  isAlreadyAddedToWishlist={isAlreadyAddedToWishlist}
+                />
               ) : (
                 <div className="flex justify-end items-center">
-                  <IconButton
+                  <WishlistButton
                     onClick={handleWishlist}
-                    sx={{
-                      width: "2.5rem",
-                      height: "2.5rem",
-                      background: "#ec6dff",
-                      borderRadius: "50%",
-                      cursor: "pointer",
-                      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-                      transition: "background 0.3s, transform 0.3s",
-                      padding: "0.5rem",
-                      "&:hover": {
-                        opacity: "0.9!important",
-                      },
-                    }}
-                  >
-                    <Heart
-                      color="white"
-                      fill={isAlreadyAddedToWishlist ? "white" : "none"}
-                      size={17}
-                    />
-                  </IconButton>
+                    isAlreadyAddedToWishlist={isAlreadyAddedToWishlist}
+                  />
                 </div>
               )}
             </Box>
@@ -199,14 +239,7 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
             {/* Tags and Open Status */}
             <div className="flex justify-between items-center mb-4">
               <div className="flex gap-2 flex-wrap">
-                {tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="bg-[#3a2a3e] capitalize text-white text-xs px-3 py-1 rounded-full"
-                  >
-                    {tag}
-                  </span>
-                ))}
+                <TagsList tags={tags} />
               </div>
               <div className="flex items-center">
                 <FaClock className="h-4 w-4 text-primary mr-1" />
