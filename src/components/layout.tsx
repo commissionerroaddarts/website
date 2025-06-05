@@ -145,7 +145,7 @@ export default function Layout({ children }: LayoutProps) {
           <IconsComponent />
         </AnimatePresence>
       )}
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<Preloader />}>
         <EmailVerificationDialogs />
       </Suspense>
       <Box className="flex flex-col justify-between min-h-screen">

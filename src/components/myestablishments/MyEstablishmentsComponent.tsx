@@ -56,7 +56,7 @@ export default function MyEstablishmentsComponent() {
       setSavedVenuesActive(false);
     }
 
-    if (savedVenuesActive && businesses?.length > 0) {
+    if (savedVenuesActive && !loading) {
       const filteredSavedBusinesses = businesses.filter((b) =>
         items.includes(b._id)
       );
@@ -65,7 +65,7 @@ export default function MyEstablishmentsComponent() {
       // Restore all businesses when savedVenuesActive is false
       setBusinesses(allBusinesses);
     }
-  }, [savedVenuesActive, items]);
+  }, [savedVenuesActive, items, loading]);
 
   useEffect(() => {
     if (searchPage && !isNaN(searchPage) && searchPage > 0) {
@@ -83,7 +83,7 @@ export default function MyEstablishmentsComponent() {
 
   useEffect(() => {
     updateQuery();
-  }, [page, limit]);
+  }, [page, limit, savedVenuesActive]);
 
   const getBusinesses = async () => {
     setLoading(true);

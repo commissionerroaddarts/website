@@ -22,9 +22,8 @@ export default function MainEstablishment() {
   const { wishlist } = useAppState();
   const { items } = wishlist;
   const isSavedVenues = items && items.length > 0;
-  const [savedVenuesActive, setSavedVenuesActive] = useState(
-    searchParams.get("savedVenue") === "true"
-  );
+  const saveVenueBool = searchParams.get("savedVenue") === "true";
+  const [savedVenuesActive, setSavedVenuesActive] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [businesses, setBusinesses] = useState<Business[]>([]); // Single object state for all filters
   const [allBusinesses, setAllBusinesses] = useState<Business[]>([]);
@@ -52,6 +51,7 @@ export default function MainEstablishment() {
     zipcode,
     agelimit,
   });
+  const params = new URLSearchParams();
 
   const debouncedSearch = useDebounce(filterParams.search, 500);
   useEffect(() => {
@@ -65,7 +65,7 @@ export default function MainEstablishment() {
       setSavedVenuesActive(false);
     }
 
-    if (savedVenuesActive && businesses?.length > 0) {
+    if (savedVenuesActive && !loading) {
       const filteredSavedBusinesses = businesses.filter((b) =>
         items.includes(b._id)
       );
@@ -74,7 +74,7 @@ export default function MainEstablishment() {
       // Restore all businesses when savedVenuesActive is false
       setBusinesses(allBusinesses);
     }
-  }, [savedVenuesActive, items]);
+  }, [savedVenuesActive, items, businesses, saveVenueBool]);
 
   useEffect(() => {
     if (searchPage && !isNaN(searchPage) && searchPage > 0) {
@@ -132,8 +132,6 @@ export default function MainEstablishment() {
 
   // Update filter params state and query params in the URL
   const updateQuery = () => {
-    const params = new URLSearchParams();
-
     Object.entries(filterParams).forEach(([key, value]) => {
       if (Array.isArray(value)) {
         const validValues = value.filter(
@@ -151,8 +149,12 @@ export default function MainEstablishment() {
         params.set(key, value.toString());
       }
     });
-    params.append("page", page.toString());
-    params.append("limit", limit.toString());
+    if (!params.has("page")) {
+      params.append("page", page.toString());
+    }
+    if (!params.has("limit")) {
+      params.append("limit", limit.toString());
+    }
     router.push(`/establishments?${params.toString()}`);
     getBusinesses();
   };
