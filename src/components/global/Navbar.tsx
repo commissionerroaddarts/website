@@ -49,8 +49,10 @@ function Navbar() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const { user } = useAppState();
+  const { user, wishlist } = useAppState();
   const { userDetails, isLoggedIn } = user || {};
+  const { items } = wishlist || { items: [] };
+  const isSavedVenues = items && items.length > 0;
   const pathname = usePathname();
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -226,6 +228,7 @@ function Navbar() {
                   userDetails={userDetails}
                   logoutHandler={logoutHandler}
                   router={router}
+                  isSavedVenues={isSavedVenues}
                 />
               )}
             </Box>
@@ -240,10 +243,12 @@ export const ProfileLink = ({
   userDetails,
   logoutHandler,
   router,
+  isSavedVenues,
 }: {
   userDetails: User;
   logoutHandler: () => void;
   router: any; // Replace with the correct type for your router
+  isSavedVenues?: boolean;
 }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -280,6 +285,15 @@ export const ProfileLink = ({
             label: "View Your Listings",
             icon: <Building style={{ marginRight: "8px" }} />,
             action: () => router.push("/profile/view-your-listings"),
+          },
+        ]
+      : []),
+    ...(isSavedVenues
+      ? [
+          {
+            label: "View Your Saved Venues",
+            icon: <Building style={{ marginRight: "8px" }} />,
+            action: () => router.push("/establishments?savedVenue=true"),
           },
         ]
       : []),

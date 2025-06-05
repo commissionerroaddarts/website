@@ -117,7 +117,7 @@ const FilterSection = ({
                   />
                 )}
               </div>
-              {setLimit && (
+              {setLimit && !savedVenuesActive && (
                 <ThemeButton
                   text={`Show ${newLimit} venues per page`}
                   onClick={() => {

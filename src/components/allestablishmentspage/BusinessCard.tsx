@@ -12,9 +12,14 @@ import {
   StarRatingWithPopup,
 } from "@/components/global/StarRating";
 import { useAppState } from "@/hooks/useAppState";
-import { CircleDot, Edit, PersonStanding, Trash } from "lucide-react";
-import { Box } from "@mui/material";
+import { CircleDot, Edit, Heart, PersonStanding, Trash } from "lucide-react";
+import { Box, IconButton } from "@mui/material";
 import DeleteListingDialog from "../global/DeleteListingDialog";
+import { useAppDispatch } from "@/store";
+import {
+  addToWishlist,
+  removeFromWishlist,
+} from "@/store/slices/wishlistSlice";
 
 interface RestaurantCardProps {
   readonly business: Business;
@@ -39,15 +44,18 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
     // totalReviews,
   } = business;
 
-  const { user } = useAppState();
+  const { user, wishlist } = useAppState();
   const { userDetails } = user;
   const { role } = userDetails || {};
+  const { items } = wishlist;
+  const isAlreadyAddedToWishlist = items?.includes(_id);
   const isStoreOwner =
     (role === "owner" || role === "admin") && userId === userDetails?._id;
   const [openMap, setOpenMap] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [openConfirm, setOpenConfirm] = useState<boolean>(false);
   const [showFullDesc, setShowFullDesc] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
 
   if (
     !_id ||
@@ -72,6 +80,14 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
     setOpenConfirm(true);
   };
 
+  const handleWishlist = () => {
+    if (isAlreadyAddedToWishlist) {
+      dispatch(removeFromWishlist(_id));
+    } else {
+      dispatch(addToWishlist(_id));
+    }
+  };
+
   return (
     <>
       <DeleteListingDialog
@@ -94,27 +110,54 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
                   : "transparent",
             }}
           >
-            {isStoreOwner && (
-              <Box
-                className="absolute top-2 right-2 flex flex-col gap-2"
-                zIndex={10}
-              >
-                <Link
-                  href={`/edit-establishment/${_id}`}
-                  className="bg-purple-700 text-white text-xs px-2 py-1 rounded flex items-center justify-around"
-                >
-                  Edit <Edit className="inline-block ml-1" size={15} />
-                </Link>
+            <Box
+              className="absolute top-2 right-2 flex flex-col gap-2"
+              zIndex={10}
+            >
+              {isStoreOwner ? (
+                <>
+                  <Link
+                    href={`/edit-establishment/${_id}`}
+                    className="bg-purple-700 text-white text-xs px-2 py-1 rounded flex items-center justify-around"
+                  >
+                    Edit <Edit className="inline-block ml-1" size={15} />
+                  </Link>
 
-                <button
-                  onClick={handleOpenConfirm}
-                  className="bg-red-500 cursor-pointer text-white text-xs px-2 py-1 rounded  flex items-center justify-around"
-                >
-                  {loading ? "Deleting" : "Delete"}{" "}
-                  <Trash className="inline-block ml-1" size={15} />
-                </button>
-              </Box>
-            )}
+                  <button
+                    onClick={handleOpenConfirm}
+                    className="bg-red-500 cursor-pointer text-white text-xs px-2 py-1 rounded  flex items-center justify-around"
+                  >
+                    {loading ? "Deleting" : "Delete"}{" "}
+                    <Trash className="inline-block ml-1" size={15} />
+                  </button>
+                </>
+              ) : (
+                <div className="flex justify-end items-center">
+                  <IconButton
+                    onClick={handleWishlist}
+                    sx={{
+                      width: "2.5rem",
+                      height: "2.5rem",
+                      background: "#ec6dff",
+                      borderRadius: "50%",
+                      cursor: "pointer",
+                      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                      transition: "background 0.3s, transform 0.3s",
+                      padding: "0.5rem",
+                      "&:hover": {
+                        opacity: "0.9!important",
+                      },
+                    }}
+                  >
+                    <Heart
+                      color="white"
+                      fill={isAlreadyAddedToWishlist ? "white" : "none"}
+                      size={17}
+                    />
+                  </IconButton>
+                </div>
+              )}
+            </Box>
             <Image
               src={
                 media?.logo ??

@@ -12,7 +12,7 @@ import { Business, FilterValues } from "@/types/business";
 import { SearchX } from "lucide-react";
 import useDebounce from "@/hooks/useDebounce";
 import { useAppState } from "@/hooks/useAppState";
-import LoadingIndicator from "../global/LoadingIndicator";
+import LoadingIndicator from "@/components/global/LoadingIndicator";
 
 export default function MainEstablishment() {
   const searchParams = useSearchParams();
@@ -20,7 +20,9 @@ export default function MainEstablishment() {
   const { wishlist } = useAppState();
   const { items } = wishlist;
   const isSavedVenues = items && items.length > 0;
-  const [savedVenuesActive, setSavedVenuesActive] = useState(false);
+  const [savedVenuesActive, setSavedVenuesActive] = useState(
+    searchParams.get("savedVenue") === "true"
+  );
   const [loading, setLoading] = useState<boolean>(false);
   const [businesses, setBusinesses] = useState<Business[]>([]); // Single object state for all filters
   const [allBusinesses, setAllBusinesses] = useState<Business[]>([]);
@@ -54,6 +56,10 @@ export default function MainEstablishment() {
   }, [debouncedSearch, filterParams?.category]);
 
   useEffect(() => {
+    if (items.length === 0) {
+      setSavedVenuesActive(false);
+    }
+
     if (savedVenuesActive && businesses?.length > 0) {
       const filteredSavedBusinesses = businesses.filter((b) =>
         items.includes(b._id)
@@ -63,7 +69,7 @@ export default function MainEstablishment() {
       // Restore all businesses when savedVenuesActive is false
       setBusinesses(allBusinesses);
     }
-  }, [savedVenuesActive]);
+  }, [savedVenuesActive, items]);
 
   useEffect(() => {
     if (searchPage && !isNaN(searchPage) && searchPage > 0) {
@@ -170,7 +176,7 @@ export default function MainEstablishment() {
         return <NoBusinessesFound setFilterParams={setFilterParams} />;
       })()}
 
-      {businesses.length > 0 && totalPages > 1 && (
+      {businesses.length > 0 && totalPages > 1 && !savedVenuesActive && (
         <Box display="flex" justifyContent="center" my={4}>
           <Pagination
             count={totalPages}
