@@ -163,7 +163,10 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
     console.error("Some properties are missing in the business object.");
     return null;
   }
-  const handleMapOpen = () => setOpenMap(true);
+  const handleMapOpen = (e: any) => {
+    e.preventDefault();
+    setOpenMap(true);
+  };
   const handleMapClose = () => setOpenMap(false);
 
   const handleOpenConfirm = (e: any) => {
@@ -318,12 +321,14 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
               <ThemeButton
                 text="View More"
                 className="w-full"
+                type="button"
                 fontSize="0.8rem"
               />
             </Link>
             <ThemeButton
               text="Show Map"
-              onClickEvent={handleMapOpen}
+              type="button"
+              onClick={handleMapOpen}
               fontSize="0.8rem"
             />
           </div>
