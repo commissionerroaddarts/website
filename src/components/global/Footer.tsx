@@ -23,12 +23,12 @@ const Footer = () => {
       <Typography variant="h6" sx={{ fontSize: "0.8rem", color: "white" }}>
         Copyright &copy; {new Date().getFullYear()} Road Darts LLC. |{" "}
         <Link
-          href="https://www.google.com/maps/dir/?api=1&destination=14026+Stoney+Gate+PL,+San+Diego,+CA+92128"
+          href="https://www.google.com/maps/dir/?api=1&destination=11835+Carmel+Mountain+Rd,+San+Diego,+CA+92128"
           target="_blank"
           rel="noopener noreferrer"
           style={{ color: "white" }}
         >
-          14026 Stoney Gate PL - San Diego, CA 92128
+          11835 Carmel Mountain Rd San Diego, CA  92128
         </Link>
       </Typography>
 

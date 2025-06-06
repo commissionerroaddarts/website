@@ -288,15 +288,15 @@ export const ProfileLink = ({
           },
         ]
       : []),
-    ...(isSavedVenues
-      ? [
-          {
-            label: "View Your Saved Venues",
-            icon: <Building style={{ marginRight: "8px" }} />,
-            action: () => router.push("/establishments?savedVenue=true"),
-          },
-        ]
-      : []),
+    // ...(isSavedVenues
+    //   ? [
+    //       {
+    //         label: "View Your Saved Venues",
+    //         icon: <Building style={{ marginRight: "8px" }} />,
+    //         action: () => router.push("/establishments?savedVenue=true"),
+    //       },
+    //     ]
+    //   : []),
     {
       label: "Logout",
       icon: <LogoutIcon sx={{ marginRight: "8px" }} />,

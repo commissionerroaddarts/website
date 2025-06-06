@@ -195,7 +195,7 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
       <Card className="!bg-[#2a1e2e] rounded-lg overflow-hidden flex flex-col justify-between h-full md:min-h-[400px]">
         <div>
           <div
-            className="relative h-60"
+            className="relative h-80"
             style={{
               background:
                 media?.logo &&
