@@ -36,22 +36,6 @@ const EstablishmentReview = ({ id }: { id: string }) => {
     return null;
   }
 
-  if (!isLoggedIn) {
-    return (
-      <Box
-        style={{
-          padding: "1rem  0",
-          borderRadius: "1rem",
-          fontSize: "1.5rem",
-        }}
-      >
-        <Link href={`/login?business=${id}&page=main`} passHref>
-          Please login to leave a review
-        </Link>
-      </Box>
-    );
-  }
-
   return (
     <Box
       style={{
@@ -62,13 +46,27 @@ const EstablishmentReview = ({ id }: { id: string }) => {
           "linear-gradient(152.76deg, #3F0F50 21.4%, #5D1178 54.49%, #200C27 85.73%)",
       }}
     >
-      <ReviewForm
-        id={id}
-        selectedRating={0}
-        submittedReview={submittedReview}
-        establishmentName={reviews[0]?.business?.name ?? "The Establishment"}
-        fetchReviews={fetchReviews}
-      />
+      {isLoggedIn ? (
+        <ReviewForm
+          id={id}
+          selectedRating={0}
+          submittedReview={submittedReview}
+          establishmentName={reviews[0]?.business?.name ?? "The Establishment"}
+          fetchReviews={fetchReviews}
+        />
+      ) : (
+        <Box
+          style={{
+            padding: "1rem  0",
+            borderRadius: "1rem",
+            fontSize: "1.5rem",
+          }}
+        >
+          <Link href={`/login?business=${id}&page=main`} passHref>
+            Please login to leave a review
+          </Link>
+        </Box>
+      )}
       {reviews.length > 0 && (
         <PastReviews
           reviews={reviews}

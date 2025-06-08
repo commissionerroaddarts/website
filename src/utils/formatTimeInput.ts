@@ -32,7 +32,7 @@ const formatDuration = (minutes: number) => {
   const hrs = Math.floor(dur.hours ?? 0);
   const mins = Math.round(dur.minutes ?? 0);
 
-  let parts = [];
+  const parts = [];
   if (hrs > 0) parts.push(`${hrs} hr${hrs !== 1 ? "s" : ""}`);
   if (mins > 0) parts.push(`${mins} min${mins !== 1 ? "s" : ""}`);
   return parts.join(" ");
