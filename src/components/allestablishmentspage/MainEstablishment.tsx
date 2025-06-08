@@ -160,7 +160,9 @@ export default function MainEstablishment() {
   };
   return (
     <Box sx={{ maxWidth: "90%", margin: "0 auto" }}>
-      <MapSection businesses={businesses} isLoading={loading} />
+      {businesses.length > 0 && !loading && (
+        <MapSection businesses={businesses} isLoading={loading} />
+      )}
       <FilterSection
         isLoading={loading}
         filters={filterParams}
@@ -177,10 +179,12 @@ export default function MainEstablishment() {
         if (loading) {
           return <LoadingIndicator />;
         }
-        if (businesses.length > 0) {
+        if (businesses.length > 0 && !loading) {
           return <BusinessGrid businesses={businesses} isLoading={loading} />;
         }
-        return <NoBusinessesFound setFilterParams={setFilterParams} />;
+        if (businesses.length === 0 && !loading) {
+          return <NoBusinessesFound setFilterParams={setFilterParams} />;
+        }
       })()}
 
       {businesses.length > 0 && totalPages > 1 && !savedVenuesActive && (

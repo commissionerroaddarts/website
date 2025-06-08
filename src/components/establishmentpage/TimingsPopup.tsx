@@ -34,16 +34,16 @@ const TimingsPopup: React.FC<TimingsPopupProps> = ({ timings }) => {
   // Get today's day (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
   const today = new Date().getDay();
   const days = [
+    {
+      label: "Sunday",
+      value: "sun",
+    },
     { label: "Monday", value: "mon" },
     { label: "Tuesday", value: "tue" },
     { label: "Wednesday", value: "wed" },
     { label: "Thursday", value: "thu" },
     { label: "Friday", value: "fri" },
     { label: "Saturday", value: "sat" },
-    {
-      label: "Sunday",
-      value: "sun",
-    },
   ];
   const todayKey = days.filter((day) => day.value === days[today].value)[0]
     .value;
@@ -55,7 +55,6 @@ const TimingsPopup: React.FC<TimingsPopupProps> = ({ timings }) => {
 
     const openTime = parseTimeToMinutes(timings[day]?.open);
     const closeTime = parseTimeToMinutes(timings[day]?.close);
-
     // Handle overnight shifts (close time is before open time)
     if (closeTime < openTime) {
       return currentTime >= openTime || currentTime <= closeTime
@@ -79,7 +78,12 @@ const TimingsPopup: React.FC<TimingsPopupProps> = ({ timings }) => {
           alignItems="center"
         >
           <Clock color="white" size={25} />
-          <span>Today: {checkOpenStatus(todayKey)}</span>
+          <span>
+            Today: {checkOpenStatus(todayKey)}
+            {timings[todayKey]?.open === "closed"
+              ? " (Closed)"
+              : ` (${timings[todayKey]?.open} - ${timings[todayKey]?.close})`}
+          </span>
         </Box>
         <Box
           sx={{
