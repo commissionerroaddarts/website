@@ -1,3 +1,5 @@
+import { DateTime, Duration } from "luxon";
+
 export function formatTimeInput(value: string) {
   // Remove any non-digits
   const digits = value.replace(/\D/g, "");
@@ -22,3 +24,47 @@ export function formatTimeInput(value: string) {
 
   return `${formattedHours}:${formattedMinutes} ${ampm}`;
 }
+
+const formatDuration = (minutes: number) => {
+  const dur = Duration.fromObject({ minutes })
+    .shiftTo("hours", "minutes")
+    .toObject();
+  const hrs = Math.floor(dur.hours ?? 0);
+  const mins = Math.round(dur.minutes ?? 0);
+
+  let parts = [];
+  if (hrs > 0) parts.push(`${hrs} hr${hrs !== 1 ? "s" : ""}`);
+  if (mins > 0) parts.push(`${mins} min${mins !== 1 ? "s" : ""}`);
+  return parts.join(" ");
+};
+
+export const getBusinessStatus = (open: string, close: string) => {
+  const now = DateTime.local();
+  let openTime = DateTime.fromFormat(open, "hh:mm a");
+  let closeTime = DateTime.fromFormat(close, "hh:mm a");
+
+  // Handle overnight shift (e.g., 6PM - 2AM)
+  if (closeTime < openTime) {
+    closeTime = closeTime.plus({ days: 1 }); // overnight: close tomorrow or if already opened
+  }
+
+  // Also align openTime to tomorrow if now is past both open and close
+  if (now > closeTime && now > openTime) {
+    openTime = openTime.plus({ days: 1 });
+    closeTime = closeTime.plus({ days: 1 });
+  }
+
+  if (now >= openTime && now <= closeTime) {
+    const minutesLeft = Math.round(closeTime.diff(now, "minutes").minutes);
+    return {
+      status: "Open",
+      message: `Closes in ${formatDuration(minutesLeft)}`,
+    };
+  } else {
+    const minutesUntilOpen = Math.round(openTime.diff(now, "minutes").minutes);
+    return {
+      status: "Closed",
+      message: `Opens in ${formatDuration(minutesUntilOpen)}`,
+    };
+  }
+};
