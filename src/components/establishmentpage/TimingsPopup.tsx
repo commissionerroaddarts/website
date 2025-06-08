@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Dialog, DialogContent, Box } from "@mui/material";
 import { Clock } from "lucide-react";
 import CloseIconButton from "@/components/global/CloseIconButton";
+import { DateTime } from "luxon";
 
 // Helper to convert "12:37 PM" to minutes since midnight
 interface Timings {
@@ -15,18 +16,6 @@ interface Timings {
 interface TimingsPopupProps {
   timings: Timings;
 }
-
-const parseTimeToMinutes = (time: string): number => {
-  if (!time) return 0;
-  const [hours, minutes] = time
-    .split(/[:\s]/)
-    .filter(Boolean)
-    .map((v) => parseInt(v, 10));
-  const isPM = time.toLowerCase().includes("pm");
-  const adjustedHours =
-    isPM && hours !== 12 ? hours + 12 : hours === 12 ? 0 : hours;
-  return adjustedHours * 60 + minutes;
-};
 
 const TimingsPopup: React.FC<TimingsPopupProps> = ({ timings }) => {
   const [open, setOpen] = useState(false);
@@ -47,24 +36,67 @@ const TimingsPopup: React.FC<TimingsPopupProps> = ({ timings }) => {
   ];
   const todayKey = days.filter((day) => day.value === days[today].value)[0]
     .value;
+  const parseTimeToMinutes = (timeStr?: string): number => {
+    if (!timeStr) return -1;
 
-  // Function to check open/close status
-  const checkOpenStatus = (day: string): string => {
-    const now = new Date();
-    const currentTime = now.getHours() * 60 + now.getMinutes(); // Current time in minutes
+    const [time, modifier] = timeStr.split(" ");
+    let [hours, minutes] = time.split(":").map(Number);
 
-    const openTime = parseTimeToMinutes(timings[day]?.open);
-    const closeTime = parseTimeToMinutes(timings[day]?.close);
-    // Handle overnight shifts (close time is before open time)
+    if (modifier === "PM" && hours < 12) hours += 12;
+    if (modifier === "AM" && hours === 12) hours = 0;
+
+    return hours * 60 + minutes;
+  };
+
+  const checkOpenStatus = (): boolean => {
+    const now = DateTime.local();
+    const openTime = DateTime.fromFormat(timings[todayKey]?.open, "hh:mm a");
+    let closeTime = DateTime.fromFormat(timings[todayKey]?.close, "hh:mm a");
+
+    // Overnight shift
     if (closeTime < openTime) {
-      return currentTime >= openTime || currentTime <= closeTime
-        ? "Open"
-        : "Closed";
-    } else {
-      return currentTime >= openTime && currentTime <= closeTime
-        ? "Open"
-        : "Closed";
+      closeTime = closeTime.plus({ days: 1 });
     }
+
+    return now >= openTime && now <= closeTime ? "Open" : "Closed";
+  };
+
+  const isBusinessOpen = (timings: any): string => {
+    const now = new Date();
+    const currentDay = now
+      .toLocaleDateString("en-US", { weekday: "short" })
+      .toLowerCase(); // e.g., "sun"
+    const prevDate = new Date(now);
+    prevDate.setDate(now.getDate() - 1);
+    const prevDay = prevDate
+      .toLocaleDateString("en-US", { weekday: "short" })
+      .toLowerCase();
+
+    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+    const todayOpen = parseTimeToMinutes(timings[currentDay]?.open);
+    const todayClose = parseTimeToMinutes(timings[currentDay]?.close);
+    const prevOpen = parseTimeToMinutes(timings[prevDay]?.open);
+    const prevClose = parseTimeToMinutes(timings[prevDay]?.close);
+
+    const isOpenToday =
+      todayOpen !== -1 &&
+      todayClose !== -1 &&
+      // Overnight shift (e.g., 6 PM – 2 AM)
+      ((todayClose < todayOpen &&
+        (currentMinutes >= todayOpen || currentMinutes <= todayClose)) ||
+        // Normal shift
+        (todayClose >= todayOpen &&
+          currentMinutes >= todayOpen &&
+          currentMinutes <= todayClose));
+
+    const isOpenFromYesterday =
+      prevOpen !== -1 &&
+      prevClose !== -1 &&
+      prevClose < prevOpen &&
+      currentMinutes <= prevClose;
+
+    return isOpenToday || isOpenFromYesterday ? "Open" : "Closed";
   };
 
   return (
@@ -79,7 +111,7 @@ const TimingsPopup: React.FC<TimingsPopupProps> = ({ timings }) => {
         >
           <Clock color="white" size={25} />
           <span>
-            Today: {checkOpenStatus(todayKey)}
+            Today: {checkOpenStatus()}
             {timings[todayKey]?.open === "closed"
               ? " (Closed)"
               : ` (${timings[todayKey]?.open} - ${timings[todayKey]?.close})`}
