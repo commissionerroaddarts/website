@@ -67,7 +67,7 @@ const EstablishmentReview = ({ id }: { id: string }) => {
           </Link>
         </Box>
       )}
-      {reviews.length > 0 && (
+      {reviews && reviews.length > 0 && (
         <PastReviews
           reviews={reviews}
           averageRating={averageRating}
