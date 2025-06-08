@@ -30,7 +30,6 @@ export default function MainEstablishment() {
     zipcode: userZipcode,
     address: userAddress,
   } = userLocation;
-  console.log({ userCity, userCountry, userZipcode, userAddress });
   const isSavedVenues = items && items.length > 0;
   const saveVenueBool = searchParams.get("savedVenue") === "true";
   const [savedVenuesActive, setSavedVenuesActive] = useState(false);

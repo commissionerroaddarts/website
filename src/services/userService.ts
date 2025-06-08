@@ -77,7 +77,6 @@ export const getUserLocation = (): Promise<{ lat: number; lng: number }> =>
     }
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        console.log(position.coords);
         resolve({
           lat: position.coords.latitude,
           lng: position.coords.longitude,

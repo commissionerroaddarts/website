@@ -59,7 +59,7 @@ const LoginForm = () => {
   const onSubmit = async (data: LoginFormData) => {
     try {
       const response = await loginUser(data, dispatch);
-      console.log(response);
+
       if (response.error) {
         toast.error(response.error);
         return;
