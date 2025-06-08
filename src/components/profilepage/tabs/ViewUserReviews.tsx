@@ -219,7 +219,7 @@ function ReviewCard({
           </Stack>
           <ReviewActions
             reviewId={review?._id}
-            businessId={review?.business?._id}
+            slug={review?.business?.slug ?? review?.business?._id}
             fetchUserReviews={fetchUserReviews}
           />
         </CardContent>
@@ -230,11 +230,11 @@ function ReviewCard({
 
 const ReviewActions = ({
   reviewId,
-  businessId,
+  slug,
   fetchUserReviews,
 }: {
   reviewId: string;
-  businessId: string;
+  slug: string;
   fetchUserReviews: () => void;
 }) => {
   const [loading, setLoading] = useState(false);
@@ -261,7 +261,7 @@ const ReviewActions = ({
 
   return (
     <Stack direction="row" spacing={1}>
-      <Link href={`/rate/${businessId}`} passHref>
+      <Link href={`/rate/${slug}`} passHref>
         <ThemeButton icon={<Edit fontSize="small" />} text={"Edit"} />
       </Link>
       <ThemeButton

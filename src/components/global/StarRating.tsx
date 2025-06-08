@@ -1,3 +1,4 @@
+"use client";
 import { useAppState } from "@/hooks/useAppState";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -34,10 +35,10 @@ export const StarRating = ({
 };
 
 export const StarRatingWithPopup = ({
-  id,
+  slug,
   averageRating,
 }: {
-  id: string | number;
+  slug: string;
   averageRating: number;
 }) => {
   const { user } = useAppState();
@@ -49,9 +50,9 @@ export const StarRatingWithPopup = ({
 
   const handleStarClick = (star: number) => {
     if (!isLoggedIn) {
-      router.push(`/login?business=${id}`);
+      router.push(`/login?business=${slug}`);
     } else {
-      router.push(`/rate/${id}?rating=${star}`);
+      router.push(`/rate/${slug}?rating=${star}`);
     }
   };
 

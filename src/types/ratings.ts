@@ -44,6 +44,7 @@ export interface BusinessReview {
   };
   business: {
     _id: string;
+    slug?: string;
     name: string;
     media?: {
       logo: "";

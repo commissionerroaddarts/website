@@ -9,7 +9,13 @@ import { useEffect, useState } from "react";
 import { BusinessReview, SubmittedUserReview } from "@/types/ratings";
 import CloseIconButton from "@/components/global/CloseIconButton";
 
-export default function RatingModal({ id }: { readonly id: string }) {
+export default function RatingModal({
+  id,
+  name,
+}: {
+  readonly id: string;
+  readonly name: string;
+}) {
   const router = useRouter();
   const search = useSearchParams();
   const rating = search.get("rating") ?? "1"; // Use the ID from the URL or default to "1"
@@ -67,7 +73,7 @@ export default function RatingModal({ id }: { readonly id: string }) {
           id={id}
           selectedRating={parseInt(rating)}
           submittedReview={submittedReview}
-          establishmentName={reviews[0]?.business?.name ?? "The Establishment"}
+          establishmentName={name}
         />
         {reviews.length > 0 && (
           <PastReviews

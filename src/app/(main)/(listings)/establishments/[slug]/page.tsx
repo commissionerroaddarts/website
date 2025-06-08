@@ -12,11 +12,11 @@ import RecommendedEstablishment from "@/components/establishmentpage/Recommended
 export default async function EstablishmentPage({
   params,
 }: {
-  readonly params: Promise<{ id: string }>;
+  readonly params: Promise<{ slug: string }>;
 }) {
-  const { id } = await params;
+  const { slug } = await params;
 
-  const res = await fetch(`${baseUrl}/businesses/${id}`, {
+  const res = await fetch(`${baseUrl}/businesses/${slug}`, {
     cache: "no-store",
   });
 
@@ -47,6 +47,7 @@ export default async function EstablishmentPage({
         <EstablishmentProfileHeader
           id={business._id}
           businessUserId={business.userId}
+          slug={business.slug}
           media={{
             logo: business.media?.logo,
             images: business.media?.images ?? [],
@@ -78,7 +79,7 @@ export default async function EstablishmentPage({
               <EstablishmentFAQ faqs={business.faqs} />
             )}
 
-            <EstablishmentReview id={business._id} />
+            <EstablishmentReview id={business._id} slug={business.slug} />
           </Box>
         </Grid2>
         {business.location && (

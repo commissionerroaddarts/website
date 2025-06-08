@@ -39,6 +39,7 @@ interface GalleryProps {
     cover?: string;
   };
   readonly bordtype?: string;
+  readonly slug?: string;
 }
 
 const schema = yup.object().shape({
@@ -52,6 +53,7 @@ export default function EstablishmentProfileHeader({
   tagline,
   media,
   bordtype,
+  slug,
 }: GalleryProps) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -258,7 +260,7 @@ export default function EstablishmentProfileHeader({
         <div className="absolute -bottom-20  right-0 p-4 gap-2 hidden md:flex">
           {isStoreOwner ? (
             <Box className="flex gap-2">
-              <Link href={`/edit-establishment/${id}`}>
+              <Link href={`/edit-establishment/${slug}`}>
                 <ThemeButton
                   text="Edit Details"
                   endIcon={<Edit className="inline-block ml-1" size={15} />}
@@ -292,7 +294,7 @@ export default function EstablishmentProfileHeader({
                 text="Send a Message"
                 onClick={() => {
                   dispatch(addBusinessDetails(name));
-                  router.push(`/send-message/${id}`);
+                  router.push(`/send-message/${slug ?? id}`);
                 }}
                 endIcon={<Edit className="inline-block ml-1" size={17} />}
               />

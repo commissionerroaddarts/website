@@ -35,6 +35,7 @@ function BusinessCard({ business }: { readonly business: Business }) {
     price,
     location,
     averageRating,
+    slug,
     userId: userBusinessId,
     promotion,
     bordtype,
@@ -152,7 +153,7 @@ function BusinessCard({ business }: { readonly business: Business }) {
                   {userBusinessId === userId && (
                     <>
                       <Link
-                        href={`/edit-establishment/${_id}`}
+                        href={`/edit-establishment/${slug}`}
                         className="bg-purple-700 text-white text-[0.7rem] px-4 py-2 rounded-full flex items-center justify-around"
                       >
                         Edit <Edit className="inline-block ml-1" size={17} />
@@ -201,7 +202,7 @@ function BusinessCard({ business }: { readonly business: Business }) {
                     <StarRating rating={averageRating ?? 0} size="size-5" />
                   ) : (
                     <StarRatingWithPopup
-                      id={_id}
+                      slug={slug ?? ""}
                       averageRating={averageRating ?? 0}
                     />
                   )}
@@ -233,7 +234,7 @@ function BusinessCard({ business }: { readonly business: Business }) {
               >
                 <Box className="flex gap-2">
                   <Link
-                    href={`/establishments/${business?._id}`}
+                    href={`/establishments/${business?.slug}`}
                     passHref
                     prefetch
                   >

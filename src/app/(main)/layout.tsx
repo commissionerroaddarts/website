@@ -5,6 +5,8 @@ import "react-toastify/dist/ReactToastify.css";
 import Preloader from "@/components/global/Preloader";
 import { generateMetadata } from "@/utils/metaData";
 import Layout from "@/components/layout";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import Script from "next/script";
 
 export const metadata = generateMetadata({
   title: "Road Darts",
@@ -22,9 +24,32 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <meta charSet="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="icon" href="/images/logos/favicon.ico" />
+        <title>Road Darts</title>
+
+        {/* ✅ External GA script */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-HQ7L9CY3N3"
+          strategy="afterInteractive"
+        />
+
+        {/* ✅ Inline GA config script */}
+        <Script id="gtag-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-HQ7L9CY3N3');
+          `}
+        </Script>
+      </head>
       <body>
         <Preloader duration={3000}>
           <Providers>
+            <SpeedInsights />
             <ToastContainer
               position="top-center"
               autoClose={1500}

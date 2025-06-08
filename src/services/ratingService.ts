@@ -62,14 +62,14 @@ export const updateReview = async (
 };
 
 export const getBusinessReviews = async (
-  id: string,
+  slug: string,
   params: string,
   pageNum: number = 1,
   limit: number = 3
 ): Promise<ReviewApiResponse> => {
   try {
     const response = await axiosInstance.get(
-      `/reviews?business=${id}&ssort=${params}&page=${pageNum}&limit=${limit}`
+      `/reviews?business=${slug}&ssort=${params}&page=${pageNum}&limit=${limit}`
     );
     return response.data;
   } catch (error: any) {

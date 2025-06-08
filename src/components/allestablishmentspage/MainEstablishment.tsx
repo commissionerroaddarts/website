@@ -3,7 +3,7 @@
 
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Box } from "@mui/material";
+import { Box, Pagination, Typography } from "@mui/material";
 import MapSection from "./MapSection";
 import FilterSection from "./FilterSection";
 import BusinessGrid from "./EstablishmentPageGrid";
@@ -12,18 +12,34 @@ import { Business, FilterValues } from "@/types/business";
 import { SearchX } from "lucide-react";
 import useDebounce from "@/hooks/useDebounce";
 import { useAppState } from "@/hooks/useAppState";
-import LoadingIndicator from "../global/LoadingIndicator";
+import LoadingIndicator from "@/components/global/LoadingIndicator";
+import Preloader from "../global/Preloader";
+
+const maxLimit = 12;
 
 export default function MainEstablishment() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { wishlist } = useAppState();
+  const { wishlist, userLocation } = useAppState();
   const { items } = wishlist;
+  const {
+    lat,
+    lng,
+    city: userCity,
+    country: userCountry,
+    zipcode: userZipcode,
+    address: userAddress,
+  } = userLocation;
+  console.log({ userCity, userCountry, userZipcode, userAddress });
   const isSavedVenues = items && items.length > 0;
+  const saveVenueBool = searchParams.get("savedVenue") === "true";
   const [savedVenuesActive, setSavedVenuesActive] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [businesses, setBusinesses] = useState<Business[]>([]); // Single object state for all filters
   const [allBusinesses, setAllBusinesses] = useState<Business[]>([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [limit, setLimit] = useState(maxLimit);
   const search = searchParams.get("search") ?? null;
   const category = searchParams.get("category") ?? null;
   const bordtype = searchParams.get("boardtype") ?? null;
@@ -31,7 +47,11 @@ export default function MainEstablishment() {
   const state = searchParams.get("state") ?? null;
   const zipcode = searchParams.get("zipcode") ?? null;
   const agelimit = searchParams.get("agelimit")?.split(",").map(Number) ?? null;
-
+  const searchPage = parseInt(searchParams.get("page") ?? "1", 10);
+  const searchLimit = parseInt(
+    searchParams.get("limit") ?? maxLimit.toString(),
+    10
+  );
   const [filterParams, setFilterParams] = useState<FilterValues>({
     search,
     category,
@@ -41,15 +61,21 @@ export default function MainEstablishment() {
     zipcode,
     agelimit,
   });
+  const params = new URLSearchParams();
 
   const debouncedSearch = useDebounce(filterParams.search, 500);
   useEffect(() => {
+    setPage(1); // Reset page
     setFilterParams((prev) => ({ ...prev, search: debouncedSearch }));
     getBusinesses();
   }, [debouncedSearch, filterParams?.category]);
 
   useEffect(() => {
-    if (savedVenuesActive && businesses?.length > 0) {
+    if (items.length === 0) {
+      setSavedVenuesActive(false);
+    }
+
+    if (savedVenuesActive && !loading) {
       const filteredSavedBusinesses = businesses.filter((b) =>
         items.includes(b._id)
       );
@@ -58,7 +84,27 @@ export default function MainEstablishment() {
       // Restore all businesses when savedVenuesActive is false
       setBusinesses(allBusinesses);
     }
-  }, [savedVenuesActive]);
+  }, [savedVenuesActive, items, businesses, saveVenueBool]);
+
+  useEffect(() => {
+    if (searchPage && !isNaN(searchPage) && searchPage > 0) {
+      setPage(searchPage);
+    } else {
+      setPage(1); // Fallback default
+    }
+
+    if (searchLimit && !isNaN(searchLimit) && searchLimit > 0) {
+      setLimit(searchLimit);
+    } else {
+      setLimit(maxLimit); // Fallback default
+    }
+  }, []);
+
+  useEffect(() => {
+    if (lat && lng && page && limit) {
+      updateQuery();
+    }
+  }, [page, limit, lat, lng]);
 
   const getBusinesses = async () => {
     setLoading(true);
@@ -74,10 +120,28 @@ export default function MainEstablishment() {
       })
     );
 
+    // ✅ Inject lat/lng if available
+    if (lat && lng) {
+      validFilterParams.lat = lat;
+      validFilterParams.lng = lng;
+      validFilterParams.radius = 500; // Optional: add a default radius in km or mi
+    }
+    // Ensure page is always a number
+    const validPage = Number.isInteger(page) && page > 0 ? page : 1;
+    // Ensure limit is always a number
+    const validLimit = Number.isInteger(limit) && limit > 0 ? limit : maxLimit;
     try {
-      const { data } = await fetchBusinesses(1, 10, validFilterParams);
+      const { data, totalPages } = await fetchBusinesses(
+        validPage,
+        validLimit,
+        validFilterParams
+      );
       setAllBusinesses(data);
       setBusinesses(data);
+      setTotalPages(totalPages);
+
+      // 👇 Scroll to top after setting businesses
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (error) {
       console.error("Failed to fetch businesses:", error);
     } finally {
@@ -87,7 +151,6 @@ export default function MainEstablishment() {
 
   // Update filter params state and query params in the URL
   const updateQuery = () => {
-    const params = new URLSearchParams();
     Object.entries(filterParams).forEach(([key, value]) => {
       if (Array.isArray(value)) {
         const validValues = value.filter(
@@ -105,12 +168,28 @@ export default function MainEstablishment() {
         params.set(key, value.toString());
       }
     });
+    if (!params.has("page")) {
+      params.append("page", page.toString());
+    }
+    if (!params.has("limit")) {
+      params.append("limit", limit.toString());
+    }
+
     router.push(`/establishments?${params.toString()}`);
     getBusinesses();
   };
 
+  if (!lat && !lng) {
+    return <Preloader />;
+  }
+
   return (
     <Box sx={{ maxWidth: "90%", margin: "0 auto" }}>
+      <Box>
+        <Typography variant="h5">
+          Establishments near {userCity}, {userCountry}
+        </Typography>
+      </Box>
       <MapSection businesses={businesses} isLoading={loading} />
       <FilterSection
         isLoading={loading}
@@ -120,6 +199,9 @@ export default function MainEstablishment() {
         isSavedVenues={isSavedVenues}
         setSavedVenuesActive={setSavedVenuesActive}
         savedVenuesActive={savedVenuesActive}
+        setPage={setPage}
+        setLimit={setLimit}
+        limit={limit}
       />
       {(() => {
         if (loading) {
@@ -130,6 +212,19 @@ export default function MainEstablishment() {
         }
         return <NoBusinessesFound setFilterParams={setFilterParams} />;
       })()}
+
+      {businesses.length > 0 && totalPages > 1 && !savedVenuesActive && (
+        <Box display="flex" justifyContent="center" my={4}>
+          <Pagination
+            count={totalPages}
+            page={page}
+            onChange={(_, value) => {
+              setPage(value);
+            }}
+            color="primary"
+          />
+        </Box>
+      )}
     </Box>
   );
 }

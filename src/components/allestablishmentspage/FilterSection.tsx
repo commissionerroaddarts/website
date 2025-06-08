@@ -16,6 +16,10 @@ interface Props {
   isSavedVenues?: boolean;
   savedVenuesActive?: boolean;
   setSavedVenuesActive?: (arg: boolean) => void;
+  setLimit?: (limit: number) => void;
+  maxLimit?: number;
+  limit?: number;
+  setPage?: (page: number) => void;
 }
 
 const FilterSection = ({
@@ -27,7 +31,12 @@ const FilterSection = ({
   isSavedVenues,
   setSavedVenuesActive,
   savedVenuesActive,
+  setLimit = () => {}, // Default to a no-op function if not provided
+  maxLimit = 12,
+  limit,
+  setPage = () => {}, // Default to a no-op function if not provided
 }: Props) => {
+  const newLimit = limit === maxLimit ? 24 : maxLimit;
   const [openSidebar, setOpenSidebar] = useState(false);
   const closeSidebar = () => {
     setOpenSidebar(false);
@@ -71,7 +80,7 @@ const FilterSection = ({
 
   return (
     <div className="bg-[#3a2a3e] bg-opacity-50 rounded-lg p-4 mb-8 container mx-auto">
-      <div className="flex flex-col md:flex-row gap-4">
+      <div className="grid grid-cols-1 gap-4">
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -94,29 +103,41 @@ const FilterSection = ({
           </div>
           <ThemeButton text="Search" type="submit" />
         </form>
-        {isFilteration && (
-          <>
-            <div className="flex flex-col md:flex-row gap-4 md:min-w-[28%]">
+        <div className="flex flex-col md:flex-row gap-4 justify-between items-center">
+          <div className="flex flex-col md:flex-row gap-4">
+            {isFilteration && (
               <ThemeButton
                 text="Filter"
                 startIcon={handleFilterIcon()}
                 onClick={() => setOpenSidebar(true)}
               />
-              {isSavedVenues && setSavedVenuesActive && (
-                <ThemeButton
-                  text={savedVenuesActive ? "All Venues" : "Saved Venues"}
-                  onClick={() => setSavedVenuesActive(!savedVenuesActive)}
-                />
-              )}
-            </div>
-            <FilterSidebar
-              filters={filters}
-              setFilters={setFilters}
-              open={openSidebar}
-              onClose={closeSidebar}
-              updateQuery={updateQuery}
+            )}
+            {isSavedVenues && setSavedVenuesActive && (
+              <ThemeButton
+                text={savedVenuesActive ? "All Venues" : "Saved Venues"}
+                onClick={() => setSavedVenuesActive(!savedVenuesActive)}
+              />
+            )}
+          </div>
+
+          {setLimit && !savedVenuesActive && (
+            <ThemeButton
+              text={`Show ${newLimit} venues per page`}
+              onClick={() => {
+                setLimit(newLimit);
+                setPage(1); // Reset to first page when changing limit
+              }}
             />
-          </>
+          )}
+        </div>
+        {isFilteration && (
+          <FilterSidebar
+            filters={filters}
+            setFilters={setFilters}
+            open={openSidebar}
+            onClose={closeSidebar}
+            updateQuery={updateQuery}
+          />
         )}
       </div>
     </div>

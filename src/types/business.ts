@@ -85,6 +85,7 @@ export interface Business {
   phone?: string;
   website?: string;
   timings?: Timings;
+  slug?: string; // Slug for SEO-friendly URLs
   socials?: Socials;
   faqs?: FAQ[];
   price?: Price;
@@ -136,4 +137,7 @@ export interface FilterValues {
   state?: string | null;
   zipcode?: string | null;
   agelimit?: number[] | null;
+  lat?: number;
+  lng?: number;
+  radius?: number;
 }

@@ -8,7 +8,7 @@ import ReviewForm from "./ReviewForm";
 import { useAppState } from "@/hooks/useAppState";
 import Link from "next/link";
 
-const EstablishmentReview = ({ id }: { id: string }) => {
+const EstablishmentReview = ({ id, slug }: { id: string; slug: string }) => {
   const { user } = useAppState();
   const { isLoggedIn, userDetails } = user;
   const [reviews, setReviews] = useState<BusinessReview[]>([]);
@@ -45,7 +45,7 @@ const EstablishmentReview = ({ id }: { id: string }) => {
           fontSize: "1.5rem",
         }}
       >
-        <Link href={`/login?business=${id}&page=main`} passHref>
+        <Link href={`/login?business=${slug}&page=main`} passHref>
           Please login to leave a review
         </Link>
       </Box>
