@@ -6,6 +6,7 @@ import CustomInput from "@/components/global/CustomInput";
 import FilterSidebar from "./FilterSidebar";
 import { FilterValues } from "@/types/business";
 import { Close } from "@mui/icons-material";
+import { useRouter } from "next/navigation";
 
 interface Props {
   filters: FilterValues;
@@ -37,7 +38,13 @@ const FilterSection = ({
   setPage = () => {}, // Default to a no-op function if not provided
 }: Props) => {
   const newLimit = limit === maxLimit ? 24 : maxLimit;
+  const hasFilters = Object.values(filters).some(
+    (filter) => filter !== "" && filter !== null && filter !== undefined
+  );
+  console.log({ filters });
   const [openSidebar, setOpenSidebar] = useState(false);
+  const router = useRouter();
+
   const closeSidebar = () => {
     setOpenSidebar(false);
   };
@@ -67,15 +74,33 @@ const FilterSection = ({
       return <Search color="white" />;
     }
   };
-
   const handleFilterIcon = () => {
-    if (
-      Object.values(filters).every((filter) => filter !== "" && filter !== null)
-    ) {
+    if (hasFilters) {
       return <FunnelX color="white" />;
     } else {
       return <Filter color="white" />;
     }
+  };
+
+  const handleRemoveFilters = () => {
+    setFilters({
+      category: null,
+      bordtype: null,
+      city: null,
+      state: null,
+      zipcode: null,
+      agelimit: null,
+    });
+
+    const url = new URL(window.location.href);
+    url.searchParams.delete("category");
+    url.searchParams.delete("boardtype");
+    url.searchParams.delete("city");
+    url.searchParams.delete("state");
+    url.searchParams.delete("zipcode");
+    url.searchParams.delete("agelimit");
+
+    router.push("/establishments");
   };
 
   return (
@@ -104,13 +129,22 @@ const FilterSection = ({
           <ThemeButton text="Search" type="submit" />
         </form>
         <div className="flex flex-col md:flex-row gap-4 justify-between items-center">
-          <div className="flex flex-col md:flex-row gap-4">
+          <div className="flex flex-col md:flex-row gap-4 flex-grow">
             {isFilteration && (
-              <ThemeButton
-                text="Filter"
-                startIcon={handleFilterIcon()}
-                onClick={() => setOpenSidebar(true)}
-              />
+              <>
+                <ThemeButton
+                  text="Filter"
+                  startIcon={handleFilterIcon()}
+                  onClick={() => setOpenSidebar(true)}
+                />
+                {hasFilters && (
+                  <ThemeButton
+                    text="Clear Filters"
+                    onClick={handleRemoveFilters}
+                    backgroundColor="red"
+                  />
+                )}
+              </>
             )}
             {isSavedVenues && setSavedVenuesActive && (
               <ThemeButton

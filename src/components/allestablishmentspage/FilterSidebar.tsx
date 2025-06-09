@@ -1,16 +1,17 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React from "react";
 import { Box, Drawer, Slider } from "@mui/material";
 import { motion } from "framer-motion";
 import ThemeButton from "@/components/buttons/ThemeButton";
 import SelectSearchDropDown from "@/components/global/SelectSearchDropDown";
 import CustomInput from "@/components/global/CustomInput";
 import { FilterValues } from "@/types/business";
-import { cities_states } from "@/utils/cities_states"; // Assume this is a JSON file with all US cities
 import { boardTypeOptions, categoryOptions } from "@/utils/dropdowns";
 import { useRouter } from "next/navigation";
 import CloseIconButton from "@/components/global/CloseIconButton";
+import { CityDropdownFilter } from "../global/CityDropdownFilter";
+import { StatesDropdownFilter } from "../global/StatesDropdownFilter";
 
 interface SidebarProps {
   open: boolean;
@@ -27,8 +28,6 @@ const FilterSidebar: React.FC<SidebarProps> = ({
   setFilters,
   updateQuery,
 }) => {
-  const [visibleCities, setVisibleCities] = useState(10);
-  const [visibleStates, setVisibleStates] = useState(10);
   const router = useRouter();
 
   const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,56 +36,6 @@ const FilterSidebar: React.FC<SidebarProps> = ({
       ...filters,
       [name as keyof FilterValues]: value,
     });
-  };
-
-  const cityOptions = useMemo(() => {
-    return cities_states.slice(0, visibleCities).map((cs) => ({
-      label: cs.city + ", " + cs.state,
-      value: cs.city,
-    }));
-  }, [visibleCities]);
-
-  const stateOptions = useMemo(() => {
-    return cities_states.slice(0, visibleStates).map((cs) => ({
-      label: cs.state,
-      value: cs.state,
-    }));
-  }, []);
-
-  const handleScrollCities = (e: React.UIEvent<HTMLDivElement>) => {
-    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
-    if (scrollTop + clientHeight >= scrollHeight - 10) {
-      setVisibleCities((prev) => Math.min(prev + 10, cities_states.length));
-    }
-  };
-
-  const handleScrollStates = (e: React.UIEvent<HTMLDivElement>) => {
-    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
-    if (scrollTop + clientHeight >= scrollHeight - 10) {
-      setVisibleStates((prev) => Math.min(prev + 10, cities_states.length));
-    }
-  };
-  const handleRemoveFilters = () => {
-    setFilters({
-      category: null,
-      bordtype: null,
-      city: null,
-      state: null,
-      zipcode: null,
-      agelimit: null,
-    });
-
-    const url = new URL(window.location.href);
-    url.searchParams.delete("category");
-    url.searchParams.delete("boardtype");
-    url.searchParams.delete("city");
-    url.searchParams.delete("state");
-    url.searchParams.delete("zipcode");
-    url.searchParams.delete("agelimit");
-
-    onClose();
-
-    router.push("/establishments");
   };
 
   return (
@@ -154,25 +103,17 @@ const FilterSidebar: React.FC<SidebarProps> = ({
 
         {/* City */}
         <Box mb={3}>
-          <SelectSearchDropDown
-            label="City"
-            name="city"
-            onScroll={handleScrollCities}
-            options={cityOptions}
-            value={filters.city ?? ""}
-            onChange={handleFilterChange}
+          <CityDropdownFilter
+            handleChange={handleFilterChange}
+            value={filters?.city ?? ""}
           />
         </Box>
 
         {/* State */}
         <Box mb={3}>
-          <SelectSearchDropDown
-            label="State"
-            name="state"
-            onScroll={handleScrollStates}
-            options={stateOptions}
-            value={filters.state ?? ""}
-            onChange={handleFilterChange}
+          <StatesDropdownFilter
+            handleChange={handleFilterChange}
+            value={filters?.state ?? ""}
           />
         </Box>
 
@@ -198,18 +139,6 @@ const FilterSidebar: React.FC<SidebarProps> = ({
               }}
             />
           </Box>
-
-          {/* Remove Filters Button */}
-          {Object.values(filters).some((filter) => filter !== "") && (
-            <Box mt={2}>
-              <ThemeButton
-                text="Clear Filters"
-                onClick={handleRemoveFilters}
-                backgroundColor="red"
-                className="w-full"
-              />
-            </Box>
-          )}
         </div>
       </motion.form>
     </Drawer>

@@ -13,6 +13,7 @@ import { useForm, Controller } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { boardTypeOptions } from "@/utils/dropdowns";
+import { CityDropdownFilter } from "../global/CityDropdownFilter";
 
 const schema = yup
   .object({
@@ -169,15 +170,10 @@ const SearchComponent: React.FC = () => {
           <Controller
             name="city"
             control={control}
-            render={({ field, fieldState }) => (
-              <SelectSearchDropDown
-                options={cityOptions}
-                onScroll={handleScroll}
-                label="City"
+            render={({ field }) => (
+              <CityDropdownFilter
+                handleChange={(e) => setValue("city", e.target.value)}
                 value={field.value ?? ""}
-                error={!!fieldState.error}
-                helperText={fieldState.error?.message}
-                onChange={(e) => setValue("city", e.target.value)}
               />
             )}
           />

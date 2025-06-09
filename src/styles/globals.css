@@ -162,6 +162,9 @@ body::-webkit-scrollbar-thumb {
 .gm-style .gm-style-iw-tc::after {
   background: rebeccapurple;
 }
+.gm-style-iw-d {
+  overflow-x: hidden !important;
+}
 
 /* Style the dropdown container */
 .pac-container {

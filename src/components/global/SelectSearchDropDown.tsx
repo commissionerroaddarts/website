@@ -14,7 +14,12 @@ interface Props {
   label: string;
   value: string | number;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onScroll?: (e: React.UIEvent<HTMLDivElement>) => void;
+  onScroll?: React.UIEventHandler<HTMLUListElement>;
+  onInputChange?: (
+    event: React.SyntheticEvent<Element, Event>,
+    value: string,
+    reason: string
+  ) => void;
   name?: string;
   error?: boolean;
   helperText?: string;
@@ -75,6 +80,7 @@ const SelectSearchDropDown = ({
   name,
   error,
   helperText,
+  onInputChange,
   ...rest
 }: Props) => {
   return (
@@ -83,8 +89,12 @@ const SelectSearchDropDown = ({
         disablePortal
         id="combo-box-demo"
         options={options}
-        sx={{ width: "100%", "::placeholder": { color: "white" } }}
-        onScroll={onScroll}
+        sx={{ width: "100%" }}
+        slotProps={{
+          listbox: {
+            onScroll,
+          },
+        }}
         value={options.find((option) => option.value === value) ?? null}
         onChange={(event, newValue) => {
           if (newValue) {
@@ -96,28 +106,38 @@ const SelectSearchDropDown = ({
             } as React.ChangeEvent<HTMLInputElement>);
           }
         }}
+        onInputChange={(e, value, reason) => {
+          console.log("Local input change", value, reason);
+          onInputChange?.(e, value, reason); // call parent if available
+        }}
+        getOptionLabel={(option) => option.label}
         renderInput={(params) => (
           <TextField
+            {...params}
             name={name}
             variant="outlined"
-            value={value}
-            {...rest}
             error={error}
             sx={{
               background: "#160C1866",
-              color: "white",
               borderRadius: "100px",
               width: "100%",
               "& .MuiOutlinedInput-notchedOutline": { border: "none" },
               "& .MuiInputLabel-root": { color: "white" },
-              "& .MuiInputBase-input": { color: "white", width: "100%" },
-              "& .MuiInputBase-input::placeholder": { fontFamily: "Lexend" },
+              "& .MuiInputBase-input": {
+                color: "white",
+                width: "100%",
+                fontFamily: "Lexend",
+              },
+              "& .MuiInputBase-input::placeholder": {
+                color: "rgba(255, 255, 255, 0.5)",
+                fontFamily: "Lexend",
+              },
             }}
-            {...params}
             label={label}
           />
         )}
       />
+
       {helperText && (
         <p
           style={{

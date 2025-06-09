@@ -69,7 +69,7 @@ export const getBusinessReviews = async (
 ): Promise<ReviewApiResponse> => {
   try {
     const response = await axiosInstance.get(
-      `/reviews?business=${id}&ssort=${params}&page=${pageNum}&limit=${limit}`
+      `/reviews?business=${id}&sort=${params}&page=${pageNum}&limit=${limit}`
     );
     return response.data;
   } catch (error: any) {
