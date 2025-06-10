@@ -41,7 +41,6 @@ const FilterSection = ({
   const hasFilters = Object.values(filters).some(
     (filter) => filter !== "" && filter !== null && filter !== undefined
   );
-  console.log({ filters });
   const [openSidebar, setOpenSidebar] = useState(false);
   const router = useRouter();
 

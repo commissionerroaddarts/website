@@ -88,7 +88,7 @@ export default async function EstablishmentPage({
         )}
 
         <Grid2 size={{ xs: 12 }}>
-          <RecommendedEstablishment />
+          <RecommendedEstablishment id={id} />
         </Grid2>
       </Grid2>
     </div>

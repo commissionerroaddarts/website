@@ -5,12 +5,24 @@ import BusinessCard from "@/components/allestablishmentspage/BusinessCard";
 import useFetchBusinesses from "@/hooks/useFetchBusinesses";
 import { Business } from "@/types/business";
 import LoadingIndicator from "@/components/global/LoadingIndicator";
+import { useEffect, useState } from "react";
 
-const RecommendedEstablishment = () => {
-  const { businesses, status } = useFetchBusinesses(1, 6); // 2-sec intentional loading
+const RecommendedEstablishment = ({ id }: { id: string }) => {
+  const [businesses, setBusinesses] = useState<Business[]>([]);
+  const { businesses: allBusinesses, status } = useFetchBusinesses(1, 6); // 2-sec intentional loading
+  useEffect(() => {
+    if (status !== "succeeded" || !id || allBusinesses?.data?.length === 0)
+      return;
+
+    // Filter out the current business by ID
+    const filtered = allBusinesses?.data?.filter(
+      (business) => business._id !== id
+    );
+    setBusinesses(filtered ?? []);
+  }, [id, allBusinesses, status]);
+
   if (status === "loading") return <LoadingIndicator />;
-
-  if (!businesses) return null;
+  if (!businesses || businesses.length === 0) return null;
 
   const sliderSettings = {
     dots: true,
@@ -47,7 +59,7 @@ const RecommendedEstablishment = () => {
         Recommended Establishments
       </Typography>
       <Slider {...sliderSettings}>
-        {businesses?.data.map((business: Business) => (
+        {businesses?.map((business: Business) => (
           <BusinessCard key={business?._id} business={business} />
         ))}
       </Slider>
