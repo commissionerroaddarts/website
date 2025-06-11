@@ -107,7 +107,12 @@ export default function MainEstablishment() {
     if (page && limit) {
       updateQuery();
     }
-  }, [page, limit, filterParams?.sort]);
+  }, [page, limit]);
+
+  useEffect(() => {
+    setPage(1);
+    updateQuery();
+  }, [filterParams?.sort]);
 
   const getBusinesses = async () => {
     setLoading(true);
