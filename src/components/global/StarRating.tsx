@@ -90,11 +90,11 @@ export const StarRatingWithPopup = ({
           ))}
         </div>
         {averageRating > 0 ? (
-          <span className="text-gray text-xs ml-2">
-            {averageRating?.toFixed(1)} Rated Throwing Conditions
+          <span className="text-gray text-xs ml-1">
+            ({averageRating?.toFixed(1)}) Rated Throwing Conditions
           </span>
         ) : (
-          <span className="text-gray text-[10px] ml-2">
+          <span className="text-gray text-[10px] ml-1">
             Star ratings reflect throwing conditions
           </span>
         )}
