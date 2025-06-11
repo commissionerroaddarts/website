@@ -139,5 +139,5 @@ export interface FilterValues {
   agelimit?: number[] | null;
   lat?: number;
   lng?: number;
-  radius?: number;
+  sort?: string;
 }

@@ -39,9 +39,6 @@ export default function MainEstablishment() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [limit, setLimit] = useState(maxLimit);
-  const [nearbyBusinesses, setNearbyBusinesses] = useState<boolean>(
-    lat && lng ? true : false
-  );
   const search = searchParams.get("search") ?? null;
   const category = searchParams.get("category") ?? null;
   const bordtype = searchParams.get("boardtype") ?? null;
@@ -54,6 +51,7 @@ export default function MainEstablishment() {
     searchParams.get("limit") ?? maxLimit.toString(),
     10
   );
+  const sort = searchParams.get("sort") ?? "nearest";
   const [filterParams, setFilterParams] = useState<FilterValues>({
     search,
     category,
@@ -62,6 +60,9 @@ export default function MainEstablishment() {
     state,
     zipcode,
     agelimit,
+    lat: lat ?? undefined,
+    lng: lng ?? undefined,
+    sort,
   });
   const params = new URLSearchParams();
 
@@ -70,7 +71,7 @@ export default function MainEstablishment() {
     setPage(1); // Reset page
     setFilterParams((prev) => ({ ...prev, search: debouncedSearch }));
     getBusinesses();
-  }, [debouncedSearch, filterParams?.category]);
+  }, [debouncedSearch]);
 
   useEffect(() => {
     if (items.length === 0) {
@@ -103,24 +104,14 @@ export default function MainEstablishment() {
   }, []);
 
   useEffect(() => {
-    if (lat && lng) {
-      setNearbyBusinesses(true);
-    }
     if (page && limit) {
       updateQuery();
     }
-  }, [page, limit, lat, lng]);
-
-  useEffect(() => {
-    updateQuery();
-  }, [nearbyBusinesses]);
+  }, [page, limit, filterParams?.sort]);
 
   const getBusinesses = async () => {
     setLoading(true);
 
-    const hasFilterParams = Object.values(filterParams).some(
-      (value) => value !== null && value !== undefined && value !== ""
-    );
     // Create a cleaned version of filterParams
     const validFilterParams = Object.fromEntries(
       Object.entries(filterParams).filter(([_, value]) => {
@@ -134,10 +125,13 @@ export default function MainEstablishment() {
     );
 
     // ✅ Inject lat/lng if available
-    if (nearbyBusinesses && !hasFilterParams) {
+    if (validFilterParams?.sort === "nearest") {
       validFilterParams.lat = lat;
       validFilterParams.lng = lng;
-      validFilterParams.radius = 1000; // Optional: add a default radius in km or mi
+      delete validFilterParams.sort;
+    } else {
+      delete validFilterParams.lat;
+      delete validFilterParams.lng;
     }
     // Ensure page is always a number
     const validPage = Number.isInteger(page) && page > 0 ? page : 1;
@@ -171,6 +165,8 @@ export default function MainEstablishment() {
       params.append("limit", limit.toString());
     }
     Object.entries(filterParams).forEach(([key, value]) => {
+      // Exclude lat, lng, and radius from query params
+      if (["lat", "lng"].includes(key)) return;
       if (Array.isArray(value)) {
         const validValues = value.filter(
           (v) => v !== null && v !== undefined && v !== ""
@@ -211,8 +207,6 @@ export default function MainEstablishment() {
         userCity={userCity ?? null}
         userCountry={userCountry ?? null}
         businessCount={businesses.length}
-        nearbyBusinesses={nearbyBusinesses}
-        setNearbyBusinesses={setNearbyBusinesses}
       />
       {(() => {
         if (loading) {

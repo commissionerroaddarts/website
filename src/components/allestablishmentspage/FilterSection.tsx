@@ -7,7 +7,8 @@ import FilterSidebar from "./FilterSidebar";
 import { FilterValues } from "@/types/business";
 import { Close } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
-import { Box, Switch, Typography } from "@mui/material";
+import { Box, MenuItem, Select, Switch, Typography } from "@mui/material";
+import SelectSearchDropDown from "../global/SelectSearchDropDown";
 
 interface Props {
   filters: FilterValues;
@@ -25,8 +26,6 @@ interface Props {
   userCity?: string | null;
   userCountry?: string | null;
   businessCount?: number; // Optional prop for business count
-  nearbyBusinesses?: boolean;
-  setNearbyBusinesses?: (value: boolean) => void;
 }
 
 const FilterSection = ({
@@ -45,12 +44,14 @@ const FilterSection = ({
   userCity,
   userCountry,
   businessCount = 0, // Optional prop for business count
-  nearbyBusinesses = false,
-  setNearbyBusinesses = () => {}, // Default to a no-op function if not provided
 }: Props) => {
   const newLimit = limit === maxLimit ? 24 : maxLimit;
-  const hasFilters = Object.values(filters).some(
-    (filter) => filter !== "" && filter !== null && filter !== undefined
+  const hasFilters = Object.entries(filters).some(
+    ([key, value]) =>
+      !["lat", "lng", "sort", "page", "limit"].includes(key) &&
+      value !== "" &&
+      value !== null &&
+      value !== undefined
   );
   const [openSidebar, setOpenSidebar] = useState(false);
   const router = useRouter();
@@ -113,33 +114,43 @@ const FilterSection = ({
     router.push("/establishments");
   };
 
+  const sortOptions = [
+    {
+      label: "Nearest",
+      value: "nearest",
+    },
+    {
+      label: "Top Rated",
+      value: "rating_desc",
+    },
+    {
+      label: "Most Reviewed",
+      value: "reviews_desc",
+    },
+  ];
+
+  const userAddress =
+    userCity && userCountry
+      ? `Establishments near ${userCity}, ${userCountry}`
+      : null;
+
   return (
     <div className="bg-[#3a2a3e] bg-opacity-50 rounded-lg p-4 mb-8 container mx-auto">
       <div className="grid grid-cols-1 gap-4">
-        {userCity && userCountry && !hasFilters && (
-          <Box className="flex items-center justify-between">
-            <Typography variant="h5" p={1}>
-              {nearbyBusinesses
-                ? `Establishments near ${userCity}, ${userCountry}`
-                : `All Establishments`}
-            </Typography>
+        <Box className="flex items-center justify-between flex-wrap">
+          <Typography variant="h5" p={1}>
+            {filters.sort === "nearest" ? userAddress : `All Establishments`}
+          </Typography>
+          <div className="flex max-md:w-full md:min-w-[20%]">
+            <SelectSearchDropDown
+              options={sortOptions}
+              label="Sort By"
+              value={filters.sort || ""}
+              onChange={(e) => setFilters({ ...filters, sort: e.target.value })}
+            />
+          </div>
+        </Box>
 
-            <div className="flex items-center">
-              <Typography variant="body2" color="textSecondary">
-                Show Nearby Businesses Only
-              </Typography>
-              <Switch
-                checked={nearbyBusinesses}
-                onChange={() => setNearbyBusinesses(!nearbyBusinesses)}
-                className="ml-2"
-                color="primary"
-                slotProps={{
-                  input: { "aria-label": "Toggle nearby businesses" },
-                }}
-              />
-            </div>
-          </Box>
-        )}
         <form
           onSubmit={(e) => {
             e.preventDefault();
