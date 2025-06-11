@@ -128,7 +128,6 @@ export default function MainEstablishment() {
     if (validFilterParams?.sort === "nearest") {
       validFilterParams.lat = lat;
       validFilterParams.lng = lng;
-      delete validFilterParams.sort;
     } else {
       delete validFilterParams.lat;
       delete validFilterParams.lng;
