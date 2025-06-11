@@ -127,7 +127,7 @@ export default function MainEstablishment() {
     if (lat && lng && !hasFilterParams) {
       validFilterParams.lat = lat;
       validFilterParams.lng = lng;
-      validFilterParams.radius = 500; // Optional: add a default radius in km or mi
+      validFilterParams.radius = 1000; // Optional: add a default radius in km or mi
     }
     // Ensure page is always a number
     const validPage = Number.isInteger(page) && page > 0 ? page : 1;
