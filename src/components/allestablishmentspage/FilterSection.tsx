@@ -7,6 +7,7 @@ import FilterSidebar from "./FilterSidebar";
 import { FilterValues } from "@/types/business";
 import { Close } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
+import { Typography } from "@mui/material";
 
 interface Props {
   filters: FilterValues;
@@ -21,6 +22,8 @@ interface Props {
   maxLimit?: number;
   limit?: number;
   setPage?: (page: number) => void;
+  userCity?: string | null;
+  userCountry?: string | null;
 }
 
 const FilterSection = ({
@@ -36,6 +39,8 @@ const FilterSection = ({
   maxLimit = 12,
   limit,
   setPage = () => {}, // Default to a no-op function if not provided
+  userCity,
+  userCountry,
 }: Props) => {
   const newLimit = limit === maxLimit ? 24 : maxLimit;
   const hasFilters = Object.values(filters).some(
@@ -105,6 +110,11 @@ const FilterSection = ({
   return (
     <div className="bg-[#3a2a3e] bg-opacity-50 rounded-lg p-4 mb-8 container mx-auto">
       <div className="grid grid-cols-1 gap-4">
+        {userCity && userCountry && !hasFilters && (
+          <Typography variant="h5">
+            Establishments near {userCity}, {userCountry}
+          </Typography>
+        )}
         <form
           onSubmit={(e) => {
             e.preventDefault();

@@ -220,7 +220,7 @@ export default function ReviewForm({
   const renderRatingCategories = () => {
     const categories = [
       { key: "boardCondition", label: "Board Condition" },
-      { key: "throwingLaneConditions", label: "Throwing Lane Conditions" },
+      { key: "throwingLaneConditions", label: "Toe Line (Oche) Conditions" },
       { key: "lightingConditions", label: "Lighting Conditions" },
       { key: "spaceAllocated", label: "Space Allocated" },
       { key: "gamingAmbience", label: "Gaming Ambience" },

@@ -17,6 +17,7 @@ import ScrollToTop from "@/components/global/ScrollToTop";
 import { useMediaQuery } from "@mui/system";
 import EmailVerificationDialogs from "./homepage/EmailVerificationDialogs";
 import Preloader from "./global/Preloader";
+import useFetchLocation from "@/hooks/useFetchUserLocation";
 
 interface LayoutProps {
   readonly children: ReactNode;
@@ -110,6 +111,11 @@ export default function Layout({ children }: LayoutProps) {
   const duration = 3500; // Duration in milliseconds (3 seconds)
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [loading, setLoading] = useState(false);
+  const fetchLocation = useFetchLocation();
+
+  useEffect(() => {
+    fetchLocation();
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => {

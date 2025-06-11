@@ -6,11 +6,11 @@ import React from "react";
 export default async function EditAEstablishment({
   params,
 }: {
-  readonly params: Promise<{ id: string }>;
+  readonly params: Promise<{ slug: string }>;
 }) {
-  const { id } = await params;
+  const { slug } = await params;
   const fetchBusiness = async () => {
-    const res = await fetch(`${baseUrl}/businesses/${id}`);
+    const res = await fetch(`${baseUrl}/businesses/${slug}`);
     const data = await res.json();
     return data;
   };

@@ -31,7 +31,7 @@ interface WishlistButtonProps {
 }
 
 interface OwnerActionsProps {
-  _id: string;
+  slug: string;
   loading: boolean;
   handleOpenConfirm: (e: any) => void;
   handleWishlist: () => void;
@@ -69,7 +69,7 @@ function WishlistButton({
 }
 
 function OwnerActions({
-  _id,
+  slug,
   loading,
   handleOpenConfirm,
   handleWishlist,
@@ -78,7 +78,7 @@ function OwnerActions({
   return (
     <>
       <Link
-        href={`/edit-establishment/${_id}`}
+        href={`/edit-establishment/${slug}`}
         className="bg-purple-700 text-white text-xs px-2 py-1 rounded flex items-center justify-around"
       >
         Edit <Edit className="inline-block ml-1" size={15} />
@@ -133,6 +133,7 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
     userId,
     bordtype,
     agelimit,
+    slug,
     // totalReviews,
   } = business;
 
@@ -211,7 +212,7 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
             >
               {isStoreOwner ? (
                 <OwnerActions
-                  _id={_id}
+                  slug={slug ?? _id ?? ""}
                   loading={loading}
                   handleOpenConfirm={handleOpenConfirm}
                   handleWishlist={handleWishlist}
@@ -262,7 +263,7 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
               <StarRating rating={averageRating ?? 0} size="size-5" />
             ) : (
               <StarRatingWithPopup
-                id={_id}
+                slug={slug ?? ""}
                 averageRating={averageRating ?? 0}
               />
             )}
@@ -314,7 +315,7 @@ export default function BusinessCard({ business }: RestaurantCardProps) {
           <div className="grid  grid-cols-1 md:grid-cols-2 gap-2">
             <Link
               href={{
-                pathname: `/establishments/${_id}`,
+                pathname: `/establishments/${slug ?? _id}`,
               }}
               passHref
             >

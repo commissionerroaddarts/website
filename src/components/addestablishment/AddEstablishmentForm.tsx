@@ -251,7 +251,7 @@ export default function AddEstablishment({
         }
 
         methods.reset();
-        router.push(`/establishments/${business?._id ?? response.data._id}`);
+        router.push(`/establishments/${business?.slug ?? response.data.slug}`);
       }
     } catch (error) {
       console.error("Submission error:", error);

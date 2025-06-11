@@ -43,7 +43,7 @@ const LoginForm = () => {
   const dispatch = useAppDispatch();
   const router = useRouter(); // Assuming you're using Next.js router
   const search = useSearchParams(); // Assuming you're using Next.js router
-  const businessId = search.get("business"); // Get the business ID from the URL
+  const businessSlug = search.get("business"); // Get the business ID from the URL
   const sendMessageId = search.get("message"); // Get the business ID from the URL
   const page = search.get("page"); // Get the page from the URL
   const isFromBusinessPage = page === "main"; // Check if the page is the main business page
@@ -59,7 +59,7 @@ const LoginForm = () => {
   const onSubmit = async (data: LoginFormData) => {
     try {
       const response = await loginUser(data, dispatch);
-      console.log(response);
+
       if (response.error) {
         toast.error(response.error);
         return;
@@ -67,9 +67,9 @@ const LoginForm = () => {
 
       if (selectedPlan) {
         router.push("/checkout"); // Call the checkout service
-      } else if (businessId) {
+      } else if (businessSlug) {
         if (isFromBusinessPage) {
-          router.push(`/establishments/${businessId}`); // Redirect to the business page
+          router.push(`/establishments/${businessSlug}`); // Redirect to the business page
         } else {
           router.back(); // Redirect to the business page
         }
@@ -201,7 +201,9 @@ const LoginForm = () => {
           <Typography variant="body2" align="center">
             Don't have an account?{" "}
             <Link
-              href={businessId ? `/signup?business=${businessId}` : "/signup"}
+              href={
+                businessSlug ? `/signup?business=${businessSlug}` : "/signup"
+              }
               style={{ fontWeight: "bold" }}
               passHref
               prefetch

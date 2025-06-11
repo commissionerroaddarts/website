@@ -3,7 +3,7 @@
 
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Box, Pagination } from "@mui/material";
+import { Box, Pagination, Typography } from "@mui/material";
 import MapSection from "./MapSection";
 import FilterSection from "./FilterSection";
 import BusinessGrid from "./EstablishmentPageGrid";
@@ -13,14 +13,23 @@ import { SearchX } from "lucide-react";
 import useDebounce from "@/hooks/useDebounce";
 import { useAppState } from "@/hooks/useAppState";
 import LoadingIndicator from "@/components/global/LoadingIndicator";
+import Preloader from "../global/Preloader";
 
 const maxLimit = 12;
 
 export default function MainEstablishment() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { wishlist } = useAppState();
+  const { wishlist, userLocation } = useAppState();
   const { items } = wishlist;
+  const {
+    lat,
+    lng,
+    city: userCity,
+    country: userCountry,
+    zipcode: userZipcode,
+    address: userAddress,
+  } = userLocation;
   const isSavedVenues = items && items.length > 0;
   const saveVenueBool = searchParams.get("savedVenue") === "true";
   const [savedVenuesActive, setSavedVenuesActive] = useState(false);
@@ -91,11 +100,17 @@ export default function MainEstablishment() {
   }, []);
 
   useEffect(() => {
-    updateQuery();
-  }, [page, limit]);
+    if (lat && lng && page && limit) {
+      updateQuery();
+    }
+  }, [page, limit, lat, lng]);
 
   const getBusinesses = async () => {
     setLoading(true);
+
+    const hasFilterParams = Object.values(filterParams).some(
+      (value) => value !== null && value !== undefined && value !== ""
+    );
     // Create a cleaned version of filterParams
     const validFilterParams = Object.fromEntries(
       Object.entries(filterParams).filter(([_, value]) => {
@@ -107,6 +122,13 @@ export default function MainEstablishment() {
         );
       })
     );
+
+    // ✅ Inject lat/lng if available
+    if (lat && lng && !hasFilterParams) {
+      validFilterParams.lat = lat;
+      validFilterParams.lng = lng;
+      validFilterParams.radius = 500; // Optional: add a default radius in km or mi
+    }
     // Ensure page is always a number
     const validPage = Number.isInteger(page) && page > 0 ? page : 1;
     // Ensure limit is always a number
@@ -155,12 +177,18 @@ export default function MainEstablishment() {
     if (!params.has("limit")) {
       params.append("limit", limit.toString());
     }
+
     router.push(`/establishments?${params.toString()}`);
     getBusinesses();
   };
+
+  if (!lat && !lng) {
+    return <Preloader />;
+  }
+
   return (
     <Box sx={{ maxWidth: "90%", margin: "0 auto" }}>
-      {businesses.length > 0 && !loading && (
+      {businesses?.length > 0 && !loading && (
         <MapSection businesses={businesses} isLoading={loading} />
       )}
       <FilterSection
@@ -174,6 +202,8 @@ export default function MainEstablishment() {
         setPage={setPage}
         setLimit={setLimit}
         limit={limit}
+        userCity={userCity ?? null}
+        userCountry={userCountry ?? null}
       />
       {(() => {
         if (loading) {

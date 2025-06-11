@@ -5,6 +5,7 @@ import businessReducer from "./slices/businessSlice";
 import userReducer from "./slices/userSlice";
 import inquiryReducer from "./slices/inquirySlice";
 import wishlistReducer from "./slices/wishlistSlice";
+import userLocationReducer from "./slices/locationSlice";
 import { persistStore } from "redux-persist";
 
 // Combine reducers
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   user: userReducer,
   inquiry: inquiryReducer,
   wishlist: wishlistReducer,
+  userLocation: userLocationReducer,
 });
 
 export const store = configureStore({
