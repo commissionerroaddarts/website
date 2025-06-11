@@ -24,6 +24,7 @@ interface Props {
   setPage?: (page: number) => void;
   userCity?: string | null;
   userCountry?: string | null;
+  businessCount?: number; // Optional prop for business count
 }
 
 const FilterSection = ({
@@ -41,6 +42,7 @@ const FilterSection = ({
   setPage = () => {}, // Default to a no-op function if not provided
   userCity,
   userCountry,
+  businessCount = 0, // Optional prop for business count
 }: Props) => {
   const newLimit = limit === maxLimit ? 24 : maxLimit;
   const hasFilters = Object.values(filters).some(
@@ -163,7 +165,7 @@ const FilterSection = ({
             )}
           </div>
 
-          {setLimit && !savedVenuesActive && (
+          {setLimit && !savedVenuesActive && businessCount > 12 && (
             <ThemeButton
               text={`Show ${newLimit} venues per page`}
               onClick={() => {

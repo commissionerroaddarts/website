@@ -204,6 +204,7 @@ export default function MainEstablishment() {
         limit={limit}
         userCity={userCity ?? null}
         userCountry={userCountry ?? null}
+        businessCount={businesses.length}
       />
       {(() => {
         if (loading) {
