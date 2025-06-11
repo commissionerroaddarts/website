@@ -39,6 +39,9 @@ export default function MainEstablishment() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [limit, setLimit] = useState(maxLimit);
+  const [nearbyBusinesses, setNearbyBusinesses] = useState<boolean>(
+    lat && lng ? true : false
+  );
   const search = searchParams.get("search") ?? null;
   const category = searchParams.get("category") ?? null;
   const bordtype = searchParams.get("boardtype") ?? null;
@@ -100,10 +103,17 @@ export default function MainEstablishment() {
   }, []);
 
   useEffect(() => {
-    if (lat && lng && page && limit) {
+    if (lat && lng) {
+      setNearbyBusinesses(true);
+    }
+    if (page && limit) {
       updateQuery();
     }
   }, [page, limit, lat, lng]);
+
+  useEffect(() => {
+    updateQuery();
+  }, [nearbyBusinesses]);
 
   const getBusinesses = async () => {
     setLoading(true);
@@ -124,7 +134,7 @@ export default function MainEstablishment() {
     );
 
     // ✅ Inject lat/lng if available
-    if (lat && lng && !hasFilterParams) {
+    if (nearbyBusinesses && !hasFilterParams) {
       validFilterParams.lat = lat;
       validFilterParams.lng = lng;
       validFilterParams.radius = 1000; // Optional: add a default radius in km or mi
@@ -154,6 +164,12 @@ export default function MainEstablishment() {
 
   // Update filter params state and query params in the URL
   const updateQuery = () => {
+    if (!params.has("page")) {
+      params.append("page", page.toString());
+    }
+    if (!params.has("limit")) {
+      params.append("limit", limit.toString());
+    }
     Object.entries(filterParams).forEach(([key, value]) => {
       if (Array.isArray(value)) {
         const validValues = value.filter(
@@ -171,20 +187,10 @@ export default function MainEstablishment() {
         params.set(key, value.toString());
       }
     });
-    if (!params.has("page")) {
-      params.append("page", page.toString());
-    }
-    if (!params.has("limit")) {
-      params.append("limit", limit.toString());
-    }
 
     router.push(`/establishments?${params.toString()}`);
     getBusinesses();
   };
-
-  if (!lat && !lng) {
-    return <Preloader />;
-  }
 
   return (
     <Box sx={{ maxWidth: "90%", margin: "0 auto" }}>
@@ -205,6 +211,8 @@ export default function MainEstablishment() {
         userCity={userCity ?? null}
         userCountry={userCountry ?? null}
         businessCount={businesses.length}
+        nearbyBusinesses={nearbyBusinesses}
+        setNearbyBusinesses={setNearbyBusinesses}
       />
       {(() => {
         if (loading) {

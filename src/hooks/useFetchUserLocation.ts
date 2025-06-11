@@ -34,6 +34,7 @@ const useFetchLocation = (): (() => Promise<void>) => {
           DEFAULT_US_LOCATION.lat,
           DEFAULT_US_LOCATION.lng
         );
+
         dispatch(setLocationDetails(defaultLocationDetails));
       } else {
         // User is in the US – set actual location

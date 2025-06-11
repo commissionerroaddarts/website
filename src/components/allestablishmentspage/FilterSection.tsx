@@ -7,7 +7,7 @@ import FilterSidebar from "./FilterSidebar";
 import { FilterValues } from "@/types/business";
 import { Close } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
-import { Typography } from "@mui/material";
+import { Box, Switch, Typography } from "@mui/material";
 
 interface Props {
   filters: FilterValues;
@@ -25,6 +25,8 @@ interface Props {
   userCity?: string | null;
   userCountry?: string | null;
   businessCount?: number; // Optional prop for business count
+  nearbyBusinesses?: boolean;
+  setNearbyBusinesses?: (value: boolean) => void;
 }
 
 const FilterSection = ({
@@ -43,6 +45,8 @@ const FilterSection = ({
   userCity,
   userCountry,
   businessCount = 0, // Optional prop for business count
+  nearbyBusinesses = false,
+  setNearbyBusinesses = () => {}, // Default to a no-op function if not provided
 }: Props) => {
   const newLimit = limit === maxLimit ? 24 : maxLimit;
   const hasFilters = Object.values(filters).some(
@@ -113,9 +117,28 @@ const FilterSection = ({
     <div className="bg-[#3a2a3e] bg-opacity-50 rounded-lg p-4 mb-8 container mx-auto">
       <div className="grid grid-cols-1 gap-4">
         {userCity && userCountry && !hasFilters && (
-          <Typography variant="h5" p={1}>
-            Establishments near {userCity}, {userCountry}
-          </Typography>
+          <Box className="flex items-center justify-between">
+            <Typography variant="h5" p={1}>
+              {nearbyBusinesses
+                ? `Establishments near ${userCity}, ${userCountry}`
+                : `All Establishments`}
+            </Typography>
+
+            <div className="flex items-center">
+              <Typography variant="body2" color="textSecondary">
+                Show Nearby Businesses Only
+              </Typography>
+              <Switch
+                checked={nearbyBusinesses}
+                onChange={() => setNearbyBusinesses(!nearbyBusinesses)}
+                className="ml-2"
+                color="primary"
+                slotProps={{
+                  input: { "aria-label": "Toggle nearby businesses" },
+                }}
+              />
+            </div>
+          </Box>
         )}
         <form
           onSubmit={(e) => {
