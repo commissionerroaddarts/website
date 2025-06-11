@@ -111,7 +111,7 @@ const FilterSection = ({
     <div className="bg-[#3a2a3e] bg-opacity-50 rounded-lg p-4 mb-8 container mx-auto">
       <div className="grid grid-cols-1 gap-4">
         {userCity && userCountry && !hasFilters && (
-          <Typography variant="h5">
+          <Typography variant="h5" p={1}>
             Establishments near {userCity}, {userCountry}
           </Typography>
         )}
