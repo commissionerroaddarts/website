@@ -100,8 +100,8 @@ function HomeBanner() {
               gutterBottom
               sx={{ position: "relative", fontWeight: 200 }}
             >
-              Discover the best dart venues, tournaments, and tips to improve
-              your game.
+              Discover top dart venues, connect with the community, host or join
+              leagues and tournaments—even find a game while you're on the road.
             </Typography>
           </motion.div>
         </Box>
