@@ -4,14 +4,20 @@ import { fetchBusiness } from "@/store/slices/businessSlice"; // Adjust path if 
 import { useAppState } from "./useAppState";
 import { useAppDispatch } from "@/store";
 
-const useFetchBusinesses = (page = 1, limit = 3) => {
+const useFetchBusinesses = (
+  page = 1,
+  limit = 3,
+  lat?: number,
+  lng?: number,
+  sort?: string
+) => {
   const dispatch = useAppDispatch();
   const { business } = useAppState();
   const { businesses, status, error } = business; // Destructure from business slice
 
   const fetchData = useCallback(() => {
-    dispatch(fetchBusiness({ page, limit }));
-  }, [dispatch, page, limit]);
+    dispatch(fetchBusiness({ page, limit, lat, lng, sort }));
+  }, [dispatch, page, limit, lat, lng, sort]);
 
   useEffect(() => {
     fetchData();

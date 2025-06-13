@@ -19,11 +19,23 @@ const initialState: BusinessState = {
 export const fetchBusiness = createAsyncThunk(
   "Business/fetchBusiness",
   async (
-    { page, limit }: { page: number; limit: number },
+    {
+      page,
+      limit,
+      lat,
+      lng,
+      sort,
+    }: {
+      page: number;
+      limit: number;
+      lat?: number;
+      lng?: number;
+      sort?: string;
+    },
     { rejectWithValue }
   ) => {
     try {
-      const data = await fetchBusinesses(page, limit);
+      const data = await fetchBusinesses(page, limit, { lat, lng, sort });
       return data;
     } catch (error) {
       return rejectWithValue(error);

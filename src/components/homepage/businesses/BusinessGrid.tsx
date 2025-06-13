@@ -13,11 +13,21 @@ import Link from "next/link";
 import { Business } from "@/types/business";
 import { useMediaQuery } from "@mui/system";
 import theme from "@/theme/theme";
+import { useAppState } from "@/hooks/useAppState";
 
 const BusinessGrid = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const { userLocation } = useAppState();
+  const { lat, lng } = userLocation;
+  // Determine the number of businesses to fetch based on screen size
   const businessCount = isMobile ? 4 : 3; // Adjust based on screen size
-  const { businesses, status } = useFetchBusinesses(1, businessCount); // 2-sec intentional loading
+  const { businesses, status } = useFetchBusinesses(
+    1,
+    businessCount,
+    lat ?? undefined,
+    lng ?? undefined,
+    "nearest"
+  ); // 2-sec intentional loading
   if (status === "loading") return <BusinessSkeleton count={3} />;
 
   if (!businesses) return null;

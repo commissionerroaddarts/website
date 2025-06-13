@@ -239,14 +239,18 @@ function BusinessCard({ business }: { readonly business: Business }) {
                     prefetch
                   >
                     {" "}
-                    <ThemeButton text="View More" />
+                    <ThemeButton text="View More" fontSize="0.8rem" />
                   </Link>
                   <Link
                     href={`tel:${phone}`}
                     passHref
                     onClick={(e) => e.stopPropagation()}
                   >
-                    <ThemeButton text="Call Us Now" backgroundColor="#5A2A84" />
+                    <ThemeButton
+                      text="Call Us Now"
+                      backgroundColor="#5A2A84"
+                      fontSize="0.8rem"
+                    />
                   </Link>
                 </Box>
               </Box>
