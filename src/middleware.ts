@@ -1,22 +1,11 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-export async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
-  console.log(request.headers.get("cookie"));
-  const authPages = ["/login", "/signup"];
-  const protectedRoutes = ["/profile", "/dashboard", "/settings"];
+const AUTH_PAGES = ["/login", "/signup"];
+const PROTECTED_ROUTES = ["/profile", "/dashboard", "/settings"];
+const PLAN_REQUIRED_ROUTES = ["/add-establishment", "/edit-establishment"];
 
-  const isAuthPage = authPages.some((route) => pathname.startsWith(route));
-  const isProtectedRoute = protectedRoutes.some((route) =>
-    pathname.startsWith(route)
-  );
-
-  let isAuthenticated = false;
-  let user: any = null;
-  let permissions: any = null;
-  let subscription: any = null;
-
+async function verifyToken(request: NextRequest) {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/auth/verify-token`,
@@ -29,77 +18,90 @@ export async function middleware(request: NextRequest) {
       }
     );
 
-    const result = await response.json();
+    if (!response.ok) return null;
 
-    if (response.ok && result.user) {
-      isAuthenticated = true;
-      user = result.user;
-      permissions = result.permissions;
-      subscription = result.subscription;
-    }
+    const { user, permissions, subscription } = await response.json();
+    return { user, permissions, subscription };
   } catch (err) {
-    console.error("Error verifying token:", err);
+    console.error("Token verification failed:", err);
+    return null;
   }
+}
 
-  if (
-    (pathname.startsWith("/add-establishment") ||
-      pathname.startsWith("/edit-establishment")) &&
-    (!isAuthenticated || !subscription)
-  ) {
-    return NextResponse.redirect(new URL("/plans", request.url));
-  }
-  // Handle access to /edit-establishment/[slug]
-  if (
-    pathname.startsWith("/edit-establishment/") &&
-    isAuthenticated &&
-    subscription
-  ) {
-    const slug = pathname.split("/edit-establishment/")[1];
-
-    try {
-      const bizRes = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/businesses/check-edit-business/${slug}`,
-        {
-          method: "GET",
-          headers: {
-            cookie: request.headers.get("cookie") || "",
-          },
-          credentials: "include",
-        }
-      );
-      const { success } = await bizRes.json();
-      if (!success) {
-        return NextResponse.redirect(new URL("/unauthorized", request.url));
+async function isAuthorizedToEditBusiness(slug: string, request: NextRequest) {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/businesses/check-edit-business/${slug}`,
+      {
+        method: "GET",
+        headers: {
+          cookie: request.headers.get("cookie") || "",
+        },
+        credentials: "include",
       }
-    } catch (err) {
-      console.error("Business check failed:", err);
-      return NextResponse.redirect(new URL("/unauthorized", request.url));
-    }
-  }
+    );
 
-  // ✅ Handle redirects
+    const result = await response.json();
+    return result?.success === true;
+  } catch (err) {
+    console.error("Edit business authorization failed:", err);
+    return false;
+  }
+}
+
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  const isAuthPage = AUTH_PAGES.some((route) => pathname.startsWith(route));
+  const isProtectedRoute = PROTECTED_ROUTES.some((route) =>
+    pathname.startsWith(route)
+  );
+  const isPlanRoute = PLAN_REQUIRED_ROUTES.some((route) =>
+    pathname.startsWith(route)
+  );
+
+  const tokenData = await verifyToken(request);
+  const isAuthenticated = !!tokenData?.user;
+
+  // Redirect logged-in users away from auth pages
   if (isAuthPage && isAuthenticated) {
     return NextResponse.redirect(new URL("/profile", request.url));
   }
 
+  // Redirect non-authenticated users from protected routes
   if (isProtectedRoute && !isAuthenticated) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  // ✅ Add custom headers if authenticated
+  // Restrict add/edit-establishment if not subscribed
+  if (isPlanRoute) {
+    if (!isAuthenticated || !tokenData?.subscription) {
+      return NextResponse.redirect(new URL("/plans", request.url));
+    }
+
+    // Check ownership for edit-establishment/[slug]
+    if (pathname.startsWith("/edit-establishment/")) {
+      const slug = pathname.split("/edit-establishment/")[1];
+      const authorized = await isAuthorizedToEditBusiness(slug, request);
+
+      if (!authorized) {
+        return NextResponse.redirect(new URL("/unauthorized", request.url));
+      }
+    }
+  }
+
+  // Add user headers for authenticated requests
   if (isAuthenticated) {
     const requestHeaders = new Headers(request.headers);
-    requestHeaders.set("x-user-id", user._id);
-    requestHeaders.set("x-user-plan", subscription?.plan ?? "");
+    requestHeaders.set("x-user-id", tokenData.user._id);
+    requestHeaders.set("x-user-plan", tokenData.subscription?.plan ?? "");
     requestHeaders.set(
       "x-user-maxListings",
-      String(permissions?.maxListings ?? 0)
+      String(tokenData.permissions?.maxListings ?? 0)
     );
 
     return NextResponse.next({
-      request: {
-        headers: requestHeaders,
-      },
+      request: { headers: requestHeaders },
     });
   }
 
