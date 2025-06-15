@@ -55,25 +55,19 @@ const LoginForm = () => {
         return;
       }
 
-      // Wait briefly for the cookie to be set properly (browser + httpOnly token propagation)
-      await new Promise((resolve) => setTimeout(resolve, 300)); // 300ms delay is usually enough
-
-      // Refresh router to ensure token is used in middleware/server
-      router.refresh();
-
-      // Redirect user based on conditional logic
+      // ✅ Redirect user based on conditional logic using window
       if (selectedPlan) {
-        router.push("/checkout");
+        window.location.href = "/checkout";
       } else if (businessSlug) {
         if (isFromBusinessPage) {
-          router.push(`/establishments/${businessSlug}`);
+          window.location.href = `/establishments/${businessSlug}`;
         } else {
-          router.back();
+          window.history.back(); // goes back to the previous page
         }
       } else if (sendMessageId) {
-        router.push(`/send-message/${sendMessageId}`);
+        window.location.href = `/send-message/${sendMessageId}`;
       } else {
-        router.push("/"); // fallback
+        window.location.href = "/"; // fallback
       }
     } catch (error: any) {
       console.error(error);
