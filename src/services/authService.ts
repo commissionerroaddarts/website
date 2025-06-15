@@ -18,9 +18,14 @@ export const loginUser = async (data: LoginFormData, dispatch: AppDispatch) => {
 export const getUserDetails = async (dispatch: AppDispatch) => {
   try {
     const response = await axiosInstance.get("/auth/me");
-    const userDetails = response.data.data.user; // Assuming the user details are in `response.data.user`
-    const subscription = response.data.data?.subscription; // Assuming the subscription details are in `response.data.subscription`
-    const permissions = response.data.data?.permissions; // Assuming the permissions details are in `response.data.permissions`
+    const data = response.data.data; // Assuming the user details are in `response.data.user`
+    const userDetails = data?.user; // Assuming the user details are in `response.data.user`
+    const subscription = data?.subscription; // Assuming the subscription details are in `response.data.subscription`
+    const permissions = data?.permissions; // Assuming the permissions details are in `response.data.permissions`
+    const canAdd = data?.canAdd; // Assuming the canAdd flag is in `response.data.canAdd`
+    const businessCount = data?.businessCount; // Assuming the businessCount is in `response.data.businessCount`
+    userDetails["canAdd"] = canAdd; // Add canAdd flag to userDetails
+    userDetails["businessCount"] = businessCount; // Add businessCount to userDetails
     if (subscription) {
       userDetails["subscription"] = subscription; // Add subscription details to userDetails
     }

@@ -9,13 +9,9 @@ import Step3Form from "./Steps/Step3Form";
 import Step2Form from "./Steps/Step2Form";
 import Step5Form from "./Steps/Step5Form";
 import Step6Form from "./Steps/Step6Form";
-import {
-  fetchBusinesses,
-  insertBusiness,
-  updateBusiness,
-} from "@/services/businessService";
+import { insertBusiness, updateBusiness } from "@/services/businessService";
 import { toast } from "react-toastify";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useAppState } from "@/hooks/useAppState";
 import Confetti from "react-confetti"; // 🎉 install it via `npm i react-confetti
 import { Business } from "@/types/business";
@@ -173,59 +169,19 @@ export default function AddEstablishment({
 
   const router = useRouter();
   const { user } = useAppState();
-  const { userDetails, isLoggedIn } = user;
-  const { subscription, permissions, _id } = userDetails || {};
-  const { plan } = subscription || {};
+  const { userDetails } = user;
+  const { canAdd, businessCount, permissions } = userDetails || {};
+  const { maxListings } = permissions || {};
   const [currentStep, setCurrentStep] = useState(1);
   const totalSteps = 6;
   const [isLoading, setIsLoading] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const [closedDays, setClosedDays] = useState<Record<string, boolean>>({});
   const [isOpen, setIsOpen] = useState(false);
-  const [maxListings, setMaxListings] = useState(0);
-  const [businessCount, setBusinessCount] = useState(0);
-
-  const isUserLoggedIn =
-    isLoggedIn &&
-    userDetails?._id &&
-    userDetails?.subscription &&
-    userDetails?.permissions;
-  const isUserBusinessOwner =
-    isUserLoggedIn && business && business.userId === userDetails?._id;
 
   useEffect(() => {
-    if (!isUserLoggedIn) {
-      redirect("/plans");
-    }
-  }, [isUserLoggedIn]);
-
-  useEffect(() => {
-    const evaluatePlanAccess = async () => {
-      if (!_id || !plan || !permissions || isEdit) return;
-
-      try {
-        const { data } = await fetchBusinesses(1, 10, {}, _id);
-        if (!data) return;
-
-        const businessCount = data?.length;
-        const maxListings = permissions.maxListings;
-        setBusinessCount(businessCount);
-        setMaxListings(maxListings);
-
-        if (businessCount >= maxListings) {
-          setIsOpen(true);
-        }
-      } catch (err) {
-        console.error("Failed to evaluate plan access:", err);
-      }
-    };
-
-    evaluatePlanAccess();
-  }, [_id, plan, permissions]);
-
-  if (!isUserBusinessOwner && isEdit) {
-    return <div>You are not authorized to edit this business</div>;
-  }
+    if (!canAdd) setIsOpen(true);
+  }, [canAdd]);
 
   // Helper: Handle final submission
   const submitForm = async (values: any) => {
@@ -292,9 +248,8 @@ export default function AddEstablishment({
     <FormProvider {...methods}>
       <UpgradePlan
         isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        maxListings={maxListings}
-        businessCount={businessCount}
+        maxListings={maxListings ?? 0}
+        businessCount={businessCount ?? 0}
       />
       <Dialog
         maxWidth="md"

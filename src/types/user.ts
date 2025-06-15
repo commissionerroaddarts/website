@@ -7,6 +7,8 @@ export interface Address {
 
 export interface User {
   _id: string;
+  canAdd?: boolean; // Optional field to indicate if the user can add listings
+  businessCount?: number; // Optional field to track the number of businesses owned by the user
   firstname: string;
   lastname: string;
   profileImg?: string;

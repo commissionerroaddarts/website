@@ -3,7 +3,6 @@ import { useState, ReactNode, useEffect } from "react";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import theme from "@/theme/theme";
-import { useRouter } from "next/navigation"; // Correct hook
 import { getUserDetails } from "@/services/authService";
 import { useAppDispatch } from "@/store";
 import { useAppState } from "@/hooks/useAppState";
@@ -23,8 +22,6 @@ export default function AdminDashboardLayout({ children }: LayoutProps) {
   const { user } = useAppState();
   const { isLoggedIn, userDetails } = user;
   const [loading, setLoading] = useState(false);
-  const isUserLoggedIn = isLoggedIn && userDetails?._id !== undefined;
-  const router = useRouter(); // Use the correct hook to get the router
 
   useEffect(() => {
     const fetchUserDetails = async () => {

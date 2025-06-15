@@ -9,19 +9,15 @@ import SelectSearchDropDown from "../global/SelectSearchDropDown";
 import { useAppState } from "@/hooks/useAppState";
 import { toast } from "react-toastify";
 import { redirect, useRouter } from "next/navigation";
-import { clearPlan } from "@/store/slices/planSlice";
-import { useAppDispatch } from "@/store";
 
 type BillingCycle = "monthly" | "yearly";
 
 export default function UpgradePlan({
   isOpen,
-  setIsOpen,
   maxListings,
   businessCount,
 }: {
   readonly isOpen: boolean;
-  readonly setIsOpen: (value: boolean) => void;
   readonly maxListings: number;
   readonly businessCount: number;
 }) {
@@ -33,7 +29,6 @@ export default function UpgradePlan({
   const stripeSubscriptionId = userDetails?.stripeSubscriptionId;
   const subscriptionPlanName = userDetails?.subscription?.plan;
   const router = useRouter();
-  const dispatch = useAppDispatch();
 
   useEffect(() => {
     const fetchPlans = async () => {

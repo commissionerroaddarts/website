@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Box,
   Typography,
@@ -56,9 +56,8 @@ const schema = yup.object().shape({
 });
 
 const SignupForm = () => {
-  const { user, plan } = useAppState(); // Assuming you have a custom hook to get user state
+  const { plan } = useAppState(); // Assuming you have a custom hook to get user state
   const { selectedPlan, email } = plan; // Assuming you have a custom hook to get user state
-  const { isLoggedIn, userDetails } = user; // Assuming you have a custom hook to get user state
 
   const getCheckoutEmail = () => {
     if (email) {
@@ -88,13 +87,6 @@ const SignupForm = () => {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
   const dispatch = useAppDispatch();
-  const isUserLoggedIn = isLoggedIn && userDetails?._id !== undefined;
-
-  useEffect(() => {
-    if (isUserLoggedIn) {
-      router.push("/profile");
-    }
-  }, [isUserLoggedIn]);
 
   // ✅ Form Submission Handler
   const onSubmit = async (data: SignupFormData) => {
