@@ -46,8 +46,6 @@ const LoginForm = () => {
   const sendMessageId = search.get("message"); // Get the business ID from the URL
   const page = search.get("page"); // Get the page from the URL
   const isFromBusinessPage = page === "main"; // Check if the page is the main business page
-
-  // ✅ Form Submission Handler
   const onSubmit = async (data: LoginFormData) => {
     try {
       const response = await loginUser(data, dispatch);
@@ -57,21 +55,26 @@ const LoginForm = () => {
         return;
       }
 
+      // Wait briefly for the cookie to be set properly (browser + httpOnly token propagation)
+      await new Promise((resolve) => setTimeout(resolve, 300)); // 300ms delay is usually enough
+
+      // Refresh router to ensure token is used in middleware/server
+      router.refresh();
+
+      // Redirect user based on conditional logic
       if (selectedPlan) {
-        router.push("/checkout"); // Call the checkout service
+        router.push("/checkout");
       } else if (businessSlug) {
         if (isFromBusinessPage) {
-          router.push(`/establishments/${businessSlug}`); // Redirect to the business page
+          router.push(`/establishments/${businessSlug}`);
         } else {
-          router.back(); // Redirect to the business page
+          router.back();
         }
       } else if (sendMessageId) {
         router.push(`/send-message/${sendMessageId}`);
       } else {
-        router.push("/"); // Uncomment if using Next.js router
+        router.push("/"); // fallback
       }
-
-      // Handle post-login actions here (e.g., redirect, store token)
     } catch (error: any) {
       console.error(error);
       toast.error(
