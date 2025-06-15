@@ -69,7 +69,6 @@ export async function middleware(request: NextRequest) {
       );
       const { success } = await bizRes.json();
       if (!success) {
-        // User is not authorized to edit this business
         return NextResponse.redirect(new URL("/unauthorized", request.url));
       }
     } catch (err) {
