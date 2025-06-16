@@ -1,6 +1,5 @@
 import ThemeButton from "@/components/buttons/ThemeButton";
 import { Box, Typography } from "@mui/material";
-import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 

@@ -38,7 +38,7 @@ export default function Step1Form({
   const { control, setValue, watch, clearErrors } = useFormContext(); // Notice: useFormContext instead of useForm!
   const noAgeLimit = watch("noAgeLimit");
   return (
-    <Box>
+    <Box className="step-1">
       <Typography variant="h5" textAlign="center" gutterBottom mb={2}>
         Basic Information
       </Typography>

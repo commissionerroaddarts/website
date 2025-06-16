@@ -3,7 +3,7 @@
 
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Box, Pagination, Typography } from "@mui/material";
+import { Box, Pagination } from "@mui/material";
 import MapSection from "./MapSection";
 import FilterSection from "./FilterSection";
 import BusinessGrid from "./EstablishmentPageGrid";
@@ -13,7 +13,6 @@ import { SearchX } from "lucide-react";
 import useDebounce from "@/hooks/useDebounce";
 import { useAppState } from "@/hooks/useAppState";
 import LoadingIndicator from "@/components/global/LoadingIndicator";
-import Preloader from "../global/Preloader";
 
 const maxLimit = 12;
 
@@ -22,14 +21,7 @@ export default function MainEstablishment() {
   const router = useRouter();
   const { wishlist, userLocation } = useAppState();
   const { items } = wishlist;
-  const {
-    lat,
-    lng,
-    city: userCity,
-    country: userCountry,
-    zipcode: userZipcode,
-    address: userAddress,
-  } = userLocation;
+  const { lat, lng, city: userCity, country: userCountry } = userLocation;
   const isSavedVenues = items && items.length > 0;
   const saveVenueBool = searchParams.get("savedVenue") === "true";
   const [savedVenuesActive, setSavedVenuesActive] = useState(false);

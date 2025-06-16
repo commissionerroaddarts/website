@@ -107,19 +107,24 @@ export interface Business {
   updatedAt?: Date;
 }
 
-export interface Amenities {
-  wheelchairAccessible: boolean;
-  validatedParking: boolean;
-  smokingOutsideOnly: boolean;
-  outdoorSeating: boolean;
-  heatedOutdoorSeating: boolean;
-  bikeParking: boolean;
-  acceptsCreditCards: boolean;
-  freeWiFi: boolean;
-  tv: boolean;
-  happyHourSpecials: boolean;
-  coveredOutdoorSeating: boolean;
-}
+export type Amenities = {
+  wheelchairAccessible?: boolean;
+  outdoorSeating?: boolean;
+  heatedPatio?: boolean;
+  outdoorSmoking?: boolean;
+  acceptsCreditCards?: boolean;
+  petFriendly?: boolean;
+  freeWiFi?: boolean;
+  tvOnSite?: boolean;
+  happyHourSpecials?: boolean;
+  reservationsAccepted?: boolean;
+  privateEventSpace?: boolean;
+  bikeParking?: boolean;
+  validatedParking?: boolean;
+  billiards?: boolean;
+  cornhole?: boolean;
+  other?: string[]; // 👈 array of custom strings
+};
 
 export interface ApiResponse {
   data: Business[];

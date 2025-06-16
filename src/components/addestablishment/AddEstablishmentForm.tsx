@@ -19,6 +19,7 @@ import UpgradePlan from "@/components/modals/UpgradePlan";
 import { Dialog, DialogContent, Typography } from "@mui/material";
 import { stepSchemas } from "@/yupSchemas/mainBusinessSchema";
 import { getNextStep, validateStep } from "@/utils/addEstablishmentHelpers";
+// import Joyride, { Step } from "react-joyride";
 
 const LOCAL_STORAGE_KEY = "addEstablishmentFormData";
 
@@ -29,6 +30,37 @@ export default function AddEstablishment({
   readonly business?: Readonly<Business>;
   readonly isEdit?: boolean;
 }) {
+  // const [run, setRun] = useState(true); // control tour start/stop
+  // const [steps, setSteps] = useState<Step[]>([
+  //   {
+  //     target: ".step-1", // Add this className to Step1Form content
+  //     content: "Enter your business name and details here.",
+  //   },
+  //   {
+  //     target: ".step-2",
+  //     content: "Provide your contact and location details.",
+  //   },
+  //   {
+  //     target: ".step-3",
+  //     content: "Set up your business timings here.",
+  //   },
+  //   {
+  //     target: ".step-4",
+  //     content: "Add your social links and media here.",
+  //   },
+  // ]);
+  const router = useRouter();
+  const { user } = useAppState();
+  const { userDetails } = user;
+  const { canAdd, businessCount, permissions } = userDetails || {};
+  const { maxListings } = permissions || {};
+  const [currentStep, setCurrentStep] = useState(1);
+  const totalSteps = 6;
+  const [isLoading, setIsLoading] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [closedDays, setClosedDays] = useState<Record<string, boolean>>({});
+  const [isOpen, setIsOpen] = useState(false);
+
   const saveToStorage = (data: any) => {
     if (typeof window !== "undefined" && window.localStorage) {
       // Remove or serialize File/Blob objects before saving
@@ -167,23 +199,39 @@ export default function AddEstablishment({
     };
   }, [isDirty]);
 
-  const router = useRouter();
-  const { user } = useAppState();
-  const { userDetails } = user;
-  const { canAdd, businessCount, permissions } = userDetails || {};
-  const { maxListings } = permissions || {};
-  const [currentStep, setCurrentStep] = useState(1);
-  const totalSteps = 6;
-  const [isLoading, setIsLoading] = useState(false);
-  const [showConfetti, setShowConfetti] = useState(false);
-  const [closedDays, setClosedDays] = useState<Record<string, boolean>>({});
-  const [isOpen, setIsOpen] = useState(false);
-
   useEffect(() => {
     if (!canAdd) setIsOpen(true);
   }, [canAdd]);
 
+  // useEffect(() => {
+  //   const stepTargets: Record<number, string> = {
+  //     1: "step-1",
+  //     2: "step-2",
+  //     3: "step-3",
+  //     4: "step-4",
+  //   };
+
+  //   const stepContent: Record<number, string> = {
+  //     1: "Enter your business name and tagline.",
+  //     2: "Fill out your location and contact info.",
+  //     3: "Configure your timings for each day.",
+  //     4: "Add your media and social links.",
+  //   };
+
+  //   const newStep = {
+  //     target: `.${stepTargets[currentStep]}`,
+  //     content: stepContent[currentStep],
+  //   };
+
+  //   setSteps([newStep]);
+  // }, [currentStep]);
+
+  // useEffect(() => {
+  //   if (steps.length > 0) setRun(true);
+  // }, [steps]);
+
   // Helper: Handle final submission
+
   const submitForm = async (values: any) => {
     setIsLoading(true);
     try {
@@ -246,6 +294,35 @@ export default function AddEstablishment({
 
   return (
     <FormProvider {...methods}>
+      {/* <Joyride
+        steps={steps}
+        run={run}
+        continuous
+        showProgress
+        showSkipButton
+        styles={{
+          options: {
+            arrowColor: "#6D3880",
+            backgroundColor: "#200C27",
+            overlayColor: "rgba(0, 0, 0, 0.6)",
+            primaryColor: "#FFD700", // Button highlight
+            textColor: "#fff",
+            zIndex: 10000,
+          },
+          tooltipContainer: {
+            textAlign: "left",
+          },
+          buttonClose: {
+            color: "#FFD700",
+          },
+        }}
+        callback={(data) => {
+          if (data.status === "finished" || data.status === "skipped") {
+            setRun(false);
+          }
+        }}
+      /> */}
+
       <UpgradePlan
         isOpen={isOpen}
         maxListings={maxListings ?? 0}
