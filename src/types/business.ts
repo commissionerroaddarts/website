@@ -108,6 +108,7 @@ export interface Business {
 }
 
 export type Amenities = {
+  _id?: string;
   wheelchairAccessible?: boolean;
   outdoorSeating?: boolean;
   heatedPatio?: boolean;

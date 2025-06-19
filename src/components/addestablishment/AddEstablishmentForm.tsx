@@ -156,7 +156,11 @@ export default function AddEstablishment({
               close: business?.timings?.sun?.close ?? "",
             },
           },
-          amenities: business?.amenities ?? undefined,
+          amenities: (() => {
+            const { _id, ...rest } = business?.amenities ?? {};
+            return rest;
+          })(),
+
           media: {
             logo: business?.media?.logo ?? undefined,
             images: business?.media?.images || [],
