@@ -70,6 +70,26 @@ export const updateUserProfileImage = async (
   }
 };
 
+// userService.ts
+export const getApproxLocationFromIP = async (): Promise<{
+  lat: number;
+  lng: number;
+}> => {
+  try {
+    const res = await fetch(
+      `https://ipinfo.io/json?token=${process.env.NEXT_PUBLIC_IPINFO_API_KEY}`
+    ); // Replace with your token
+    const data = await res.json(); // e.g., { loc: "37.7749,-122.4194", ... }
+
+    if (!data.loc) throw new Error("Location not found from IP");
+
+    const [lat, lng] = data.loc.split(",");
+    return { lat: parseFloat(lat), lng: parseFloat(lng) };
+  } catch (error) {
+    throw new Error("IP location fetch failed");
+  }
+};
+
 export const getUserLocation = (): Promise<{ lat: number; lng: number }> =>
   new Promise((resolve, reject) => {
     if (!navigator.geolocation) {

@@ -1,5 +1,9 @@
 import { useAppDispatch } from "@/store";
-import { getLocationDetails, getUserLocation } from "@/services/userService";
+import {
+  getLocationDetails,
+  getUserLocation,
+  getApproxLocationFromIP,
+} from "@/services/userService";
 import {
   setLocation,
   setLoading,
@@ -19,29 +23,40 @@ const useFetchLocation = (): (() => Promise<void>) => {
     dispatch(setLoading());
 
     try {
-      const coords = await getUserLocation();
+      let coords;
+
+      try {
+        coords = await getUserLocation(); // try browser geolocation
+      } catch (geoError: any) {
+        console.warn(
+          "Geolocation denied, falling back to IP:",
+          geoError.message
+        );
+        coords = await getApproxLocationFromIP(); // fallback to IP-based
+      }
+
       const locationDetails: any = await getLocationDetails(
         coords.lat,
         coords.lng
       );
+      const countryCode =
+        locationDetails?.address?.country_code?.toUpperCase() ??
+        locationDetails?.country;
+      console.log({ countryCode });
 
-      const countryCode = locationDetails?.address?.country_code?.toUpperCase();
-
-      if (countryCode !== "US") {
-        // User is outside the US – set default location
+      if (countryCode !== "US" && countryCode !== "United States") {
         dispatch(setLocation(DEFAULT_US_LOCATION));
         const defaultLocationDetails = await getLocationDetails(
           DEFAULT_US_LOCATION.lat,
           DEFAULT_US_LOCATION.lng
         );
-
         dispatch(setLocationDetails(defaultLocationDetails));
       } else {
-        // User is in the US – set actual location
         dispatch(setLocation(coords));
         dispatch(setLocationDetails(locationDetails));
       }
     } catch (error: any) {
+      console.error(error);
       dispatch(setError(error?.message ?? "Unknown error"));
     }
   };

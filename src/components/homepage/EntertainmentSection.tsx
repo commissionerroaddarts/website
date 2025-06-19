@@ -67,7 +67,7 @@ const EntertainmentSection = () => {
         variant="h4"
         sx={{ color: "white", fontWeight: "bold", mb: 4 }}
       >
-        Latest Events
+        Upcoming Events
       </Typography>
       <Slider {...sliderSettings}>
         {events.map((event) => (
