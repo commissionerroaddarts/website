@@ -22,6 +22,7 @@ import Link from "next/link";
 import { useAppDispatch } from "@/store";
 import { useSearchParams } from "next/navigation";
 import { useAppState } from "@/hooks/useAppState";
+import { baseUrl } from "@/constants/baseUrl";
 
 // ✅ Validation Schema
 const schema = yup.object().shape({
@@ -81,7 +82,7 @@ const LoginForm = () => {
 
   const handleGoogleLogin = () => {
     // Handle Google login here
-    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
+    window.location.href = `${baseUrl}/auth/google`;
   };
 
   return (

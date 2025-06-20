@@ -24,6 +24,7 @@ import { useAppState } from "@/hooks/useAppState";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useAppDispatch } from "@/store";
 import { phoneSchema } from "@/yupSchemas/phoneSchema";
+import { baseUrl } from "@/constants/baseUrl";
 
 // ✅ Validation Schema
 const schema = yup.object().shape({
@@ -277,7 +278,7 @@ const SignupForm = () => {
                 startIcon={<Google sx={{ color: "black" }} />}
                 onClick={() => {
                   // Handle Google login here
-                  window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
+                  window.location.href = `${baseUrl}/auth/google`;
                 }}
                 sx={{
                   backgroundColor: "white",

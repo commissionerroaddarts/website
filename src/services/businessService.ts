@@ -280,3 +280,16 @@ export const sendMsgToBusiness = async (
     throw error;
   }
 };
+
+// check business name availability
+export const checkBusinessNameAvailability = async (businessName: string) => {
+  try {
+    const response = await axiosInstance.post(`${API_URL}/check-name`, {
+      name: businessName,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error checking business name availability:", error);
+    throw error;
+  }
+};

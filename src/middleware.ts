@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { baseUrl } from "./constants/baseUrl";
 
 const AUTH_PAGES = ["/login", "/signup"];
 const PROTECTED_ROUTES = ["/profile", "/dashboard", "/settings"];
@@ -7,16 +8,13 @@ const PLAN_REQUIRED_ROUTES = ["/add-establishment", "/edit-establishment"];
 
 async function verifyToken(request: NextRequest) {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/auth/verify-token`,
-      {
-        method: "GET",
-        headers: {
-          cookie: request.headers.get("cookie") || "",
-        },
-        credentials: "include",
-      }
-    );
+    const response = await fetch(`${baseUrl}/auth/verify-token`, {
+      method: "GET",
+      headers: {
+        cookie: request.headers.get("cookie") ?? "",
+      },
+      credentials: "include",
+    });
 
     if (!response.ok) return null;
 
@@ -31,11 +29,11 @@ async function verifyToken(request: NextRequest) {
 async function isAuthorizedToEditBusiness(slug: string, request: NextRequest) {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/businesses/check-edit-business/${slug}`,
+      `${baseUrl}/businesses/check-edit-business/${slug}`,
       {
         method: "GET",
         headers: {
-          cookie: request.headers.get("cookie") || "",
+          cookie: request.headers.get("cookie") ?? "",
         },
         credentials: "include",
       }

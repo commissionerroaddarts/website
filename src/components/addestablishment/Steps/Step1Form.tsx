@@ -12,14 +12,18 @@ import {
   Typography,
 } from "@mui/material";
 import ThemeButton from "@/components/buttons/ThemeButton";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import LogoUploaderPopup from "../MediaUploader/LogoUploaderPopup";
 import { Plus, Upload, X } from "lucide-react";
 import SelectSearchDropDown from "@/components/global/SelectSearchDropDown";
 import { boardTypeOptions, categoryOptions } from "@/utils/dropdowns";
 import ImagesUploaderPopup from "../MediaUploader/ImagesUploader";
 import BannerImagePopup from "../MediaUploader/BannerImageUploader";
-import { removeBusinessImage } from "@/services/businessService";
+import {
+  checkBusinessNameAvailability,
+  removeBusinessImage,
+} from "@/services/businessService";
+import { debouncePromise } from "@/utils/debouncePromise";
 
 const priceCategories = [
   { label: "Budget ($)", value: "$" },
@@ -37,6 +41,12 @@ export default function Step1Form({
 }) {
   const { control, setValue, watch, clearErrors } = useFormContext(); // Notice: useFormContext instead of useForm!
   const noAgeLimit = watch("noAgeLimit");
+  const cache = new Map<string, boolean>(); // ✅ cache to prevent duplicate requests
+
+  const debouncedCheckName = useRef(
+    debouncePromise(checkBusinessNameAvailability, 500)
+  ).current;
+
   return (
     <Box className="step-1">
       <Typography variant="h5" textAlign="center" gutterBottom mb={2}>
@@ -54,6 +64,30 @@ export default function Step1Form({
           <Controller
             name="name"
             control={control}
+            rules={{
+              validate: async (value) => {
+                if (!value) return "Business name is required";
+
+                // ✅ Check cache first
+                if (cache.has(value)) {
+                  return cache.get(value)
+                    ? true
+                    : "Business name is already taken.";
+                }
+
+                // ✅ Debounced request
+                const response = await debouncedCheckName(value);
+
+                // ✅ Store in cache
+                cache.set(value, response?.success);
+
+                if (!response.success) {
+                  return "Business name is already taken.";
+                }
+
+                return true;
+              },
+            }}
             render={({ field, fieldState }) => (
               <CustomInput
                 {...field}

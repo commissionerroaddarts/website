@@ -12,9 +12,15 @@ import { useAppState } from "@/hooks/useAppState";
 import { useAppDispatch } from "@/store";
 import { setEmail, setPromoCode } from "@/store/slices/planSlice";
 
+const isProduction = process.env.NEXT_PUBLIC_ENV === "production";
+
 const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? ""
+  isProduction
+    ? process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? ""
+    : process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_TEST_KEY ?? ""
 );
+
+console.log(isProduction, stripePromise);
 
 export default function CheckoutFormWrapper() {
   const { plan, user } = useAppState(); // Assuming you have a custom hook to get user state
@@ -54,9 +60,6 @@ export default function CheckoutFormWrapper() {
 
       if (clientSecret) {
         if (data?.promoCode !== "") {
-          if (typeof window !== "undefined") {
-            localStorage.removeItem("checkoutEmail");
-          }
           setShowConfetti(true);
           setTimeout(() => setShowConfetti(false), 5000);
         }

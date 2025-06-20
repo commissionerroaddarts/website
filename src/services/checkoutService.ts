@@ -1,16 +1,11 @@
 import axiosInstance from "@/utils/axiosInstance";
-import { loadStripe } from "@stripe/stripe-js";
 
-// Load your Stripe public key
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? ""
-);
 export const checkoutService = async (preDetails: {
   promoCode: string;
   email: string;
   priceId: string;
   plan: string;
-}) => {
+}): Promise<string | undefined> => {
   try {
     const response = await axiosInstance.post(
       "/subscription/checkout",
