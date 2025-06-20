@@ -57,7 +57,7 @@ export default function MainEstablishment() {
     sort,
   });
   const params = new URLSearchParams();
-
+  //
   const debouncedSearch = useDebounce(filterParams.search, 500);
   useEffect(() => {
     setPage(1); // Reset page
