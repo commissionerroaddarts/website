@@ -49,10 +49,8 @@ function Navbar() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const { user, wishlist } = useAppState();
+  const { user } = useAppState();
   const { userDetails, isLoggedIn } = user || {};
-  const { items } = wishlist || { items: [] };
-  const isSavedVenues = items && items.length > 0;
   const pathname = usePathname();
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -228,7 +226,6 @@ function Navbar() {
                   userDetails={userDetails}
                   logoutHandler={logoutHandler}
                   router={router}
-                  isSavedVenues={isSavedVenues}
                 />
               )}
             </Box>
@@ -243,17 +240,18 @@ export const ProfileLink = ({
   userDetails,
   logoutHandler,
   router,
-  isSavedVenues,
+  isAdmin = false,
 }: {
   userDetails: User;
   logoutHandler: () => void;
   router: any; // Replace with the correct type for your router
-  isSavedVenues?: boolean;
+  isAdmin?: boolean;
 }) => {
+  const isAdminRole = isAdmin || userDetails.role === "admin";
+  const prefixUrl = isAdminRole ? "/dashboard/" : "/";
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const isStoreOwner =
-    userDetails.role === "admin" || userDetails.role === "owner";
+  const isStoreOwner = userDetails.role === "owner";
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -272,13 +270,24 @@ export const ProfileLink = ({
     {
       label: "View Profile",
       icon: <AccountCircleIcon sx={{ marginRight: "8px" }} />,
-      action: () => router.push("/profile"),
+      action: () => router.push(`${prefixUrl}profile`),
     },
-    {
-      label: "View Your Reviews",
-      icon: <RateReviewIcon sx={{ marginRight: "8px" }} />,
-      action: () => router.push("/profile/my-reviews"),
-    },
+    ...(isAdmin
+      ? [
+          {
+            label: "Admin Dashboard",
+            icon: <AccountCircleIcon sx={{ marginRight: "8px" }} />,
+            action: () => router.push("/dashboard"),
+          },
+        ]
+      : [
+          {
+            label: "View Your Reviews",
+            icon: <RateReviewIcon sx={{ marginRight: "8px" }} />,
+            action: () => router.push("/profile/my-reviews"),
+          },
+        ]),
+
     ...(isStoreOwner
       ? [
           {
@@ -288,15 +297,6 @@ export const ProfileLink = ({
           },
         ]
       : []),
-    // ...(isSavedVenues
-    //   ? [
-    //       {
-    //         label: "View Your Saved Venues",
-    //         icon: <Building style={{ marginRight: "8px" }} />,
-    //         action: () => router.push("/establishments?savedVenue=true"),
-    //       },
-    //     ]
-    //   : []),
     {
       label: "Logout",
       icon: <LogoutIcon sx={{ marginRight: "8px" }} />,

@@ -104,6 +104,7 @@ const icons = [
 export default function Layout({ children }: LayoutProps) {
   const pathname = usePathname(); // Get the current path
   const isHomePage = pathname === "/";
+  const isDashboardPage = pathname.includes("/dashboard");
   const dispatch = useAppDispatch(); // Get the dispatch function from Redux store
   const [isVisible, setIsVisible] = useState(false);
   const { user } = useAppState();
@@ -155,7 +156,7 @@ export default function Layout({ children }: LayoutProps) {
         <EmailVerificationDialogs />
       </Suspense>
       <Box className="flex flex-col justify-between min-h-screen">
-        {!isHomePage && <Navbar />}
+        {!isHomePage && !isDashboardPage && <Navbar />}
         <main>{children}</main>
         <Footer />
       </Box>

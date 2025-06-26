@@ -50,6 +50,24 @@ export const getUserRatings = async (
   }
 };
 
+export const getAllUserRatings = async (
+  filters: FilterValues = {},
+  page = 1,
+  limit = 10
+) => {
+  try {
+    const response = await axiosInstance.get(
+      `/reviews?page=${page}&limit=${limit}`,
+      {
+        params: filters,
+      }
+    );
+    return response.data; // Expected { message: "Ratings fetched successfully!", ratings: [...] }
+  } catch (error: any) {
+    throw error;
+  }
+};
+
 export const updateUserProfileImage = async (
   formData: FormData
 ): Promise<PostReviewResponse> => {
@@ -86,6 +104,7 @@ export const getApproxLocationFromIP = async (): Promise<{
     const [lat, lng] = data.loc.split(",");
     return { lat: parseFloat(lat), lng: parseFloat(lng) };
   } catch (error) {
+    console.error("Error fetching IP location:", error);
     throw new Error("IP location fetch failed");
   }
 };
@@ -163,5 +182,30 @@ export const getLocationDetails = async (
   } catch (error) {
     console.error("Error fetching location details:", error);
     return { city: null, country: null, zipcode: null, address: null };
+  }
+};
+
+export const fetchUsers = async (
+  page: number = 1,
+  limit: number = 10,
+  filterParams: Record<string, any> = {}
+): Promise<{
+  data: User[];
+  totalPages: number;
+}> => {
+  try {
+    const response = await axiosInstance.get<{
+      data: User[];
+      totalPages: number;
+    }>("/users", {
+      params: {
+        page,
+        limit,
+        ...filterParams,
+      },
+    });
+    return response.data; // Expected { data: [...], totalPages: number }
+  } catch (error: any) {
+    throw error;
   }
 };

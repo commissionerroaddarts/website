@@ -7,7 +7,7 @@ import FilterSidebar from "./FilterSidebar";
 import { FilterValues } from "@/types/business";
 import { Close } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
-import { Box, MenuItem, Select, Switch, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import SelectSearchDropDown from "../global/SelectSearchDropDown";
 
 interface Props {
@@ -136,7 +136,7 @@ const FilterSection = ({
 
   return (
     <div className="bg-[#3a2a3e] bg-opacity-50 rounded-lg p-4 mb-8 container mx-auto">
-      <div className="grid grid-cols-1 gap-4">
+      <div className={`grid grid-cols-1 ${isFilteration ? "gap-4" : "gap-0"}`}>
         {isFilteration && (
           <Box className="flex items-center justify-between flex-wrap">
             <Typography variant="h5" p={1}>
@@ -146,7 +146,7 @@ const FilterSection = ({
               <SelectSearchDropDown
                 options={sortOptions}
                 label="Sort By"
-                value={filters.sort || ""}
+                value={filters.sort ?? ""}
                 onChange={(e) =>
                   setFilters({ ...filters, sort: e.target.value })
                 }

@@ -62,7 +62,11 @@ input::placeholder,
 legend,
 fieldset,
 div,
-label {
+label,
+table,
+tr,
+th,
+td {
   color: var(--foreground);
   font-family: "Lexend", sans-serif !important; /* Apply Lexend font */
 }
@@ -331,4 +335,18 @@ body::-webkit-scrollbar-thumb {
   position: absolute;
   bottom: 0 !important;
   background-color: black !important;
+}
+.analytics-snapshot h1,
+.analytics-snapshot h2,
+.analytics-snapshot h3,
+.analytics-snapshot h4,
+.analytics-snapshot h5,
+.analytics-snapshot h6,
+.analytics-snapshot p,
+.analytics-snapshot span,
+.analytics-snapshot table,
+.analytics-snapshot th,
+.analytics-snapshot td,
+.analytics-snapshot tr {
+  color: var(--background) !important;
 }

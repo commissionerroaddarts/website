@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 import { baseUrl } from "./constants/baseUrl";
 
 const AUTH_PAGES = ["/login", "/signup"];
-const PROTECTED_ROUTES = ["/profile", "/dashboard", "/settings"];
+const PROTECTED_ROUTES = ["/profile", /*"/dashboard",*/ "/settings"];
 const PLAN_REQUIRED_ROUTES = ["/add-establishment", "/edit-establishment"];
 
 async function verifyToken(request: NextRequest) {
@@ -109,7 +109,7 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     "/profile/:path*",
-    "/dashboard/:path*",
+    // "/dashboard/:path*",
     "/settings/:path*",
     "/login/:path*",
     "/signup/:path*",

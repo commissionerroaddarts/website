@@ -9,9 +9,8 @@ import { useAppState } from "@/hooks/useAppState";
 import { Box } from "@mui/material";
 import ScrollToTop from "@/components/global/ScrollToTop";
 import Preloader from "@/components/global/Preloader";
-import AdminHeader from "@/components/dashboard/AdminHeader";
-import Footer from "@/components/global/Footer";
-import AdminSidebar from "@/components/dashboard/AdminSidebar";
+import AdminHeader from "@/components/dashboard/(main)/AdminHeader";
+import AdminSidebar from "@/components/dashboard/(main)/AdminSidebar";
 
 interface LayoutProps {
   readonly children: ReactNode;
@@ -47,19 +46,21 @@ export default function AdminDashboardLayout({ children }: LayoutProps) {
       <CssBaseline />
       <Box className="flex flex-col justify-between min-h-screen ">
         <AdminHeader userDetails={userDetails!} />
-        <div className="flex gap-5 m-5">
-          <AdminSidebar activeItem="establishment" />
+        <div className="flex gap-5 mx-5 my-2 ">
+          <AdminSidebar />
           <main
             className="flex-1 p-6 min-h-screen rounded-lg"
             style={{
-              background:
-                "linear-gradient(141.69deg, #462253 2.85%, #381A43 31.47%, #50275E 35.95%, #200C27 63.45%, #50275E 98.41%)",
+              background: "rgba(255, 255, 255, 0.15)",
+              backdropFilter: "blur(12px)",
+              WebkitBackdropFilter: "blur(12px)",
+              border: "1px solid rgba(255, 255, 255, 0.18)",
+              boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)",
             }}
           >
             {children}
           </main>
         </div>
-        <Footer />
       </Box>
       <ScrollToTop /> {/* ← Add this here */}
     </ThemeProvider>

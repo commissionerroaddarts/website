@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Box, Card, CardContent, Chip, Grid2, Typography } from "@mui/material";
+import { Box, Card, CardContent, Grid2, Typography } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ThemeButton from "@/components/buttons/ThemeButton";
 import ThemeOutlineButton from "@/components/buttons/ThemeOutlineButton";
@@ -72,7 +72,7 @@ const PlanCard = ({ plan }: PlanCardProps) => {
   const { userDetails } = user; // Check if user is logged in
   const { subscription } = userDetails || {};
   const [isAlreadySubscribed, setIsAlreadySubscribed] = useState(false);
-  const [billingCycle, setBillingCycle] = useState<BillingCycle>("yearly");
+  const [billingCycle, setBillingCycle] = useState<BillingCycle>("monthly");
 
   useEffect(() => {
     if (subscription?.status?.toLowerCase() === "active") {

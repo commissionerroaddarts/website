@@ -14,9 +14,12 @@ import { Business } from "@/types/business";
 import { useMediaQuery } from "@mui/system";
 import theme from "@/theme/theme";
 import { useAppState } from "@/hooks/useAppState";
+import { usePathname } from "next/navigation";
 
 const BusinessGrid = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
+  const pathname = usePathname();
   const { userLocation } = useAppState();
   const { lat, lng } = userLocation;
   // Determine the number of businesses to fetch based on screen size
@@ -34,9 +37,11 @@ const BusinessGrid = () => {
 
   return (
     <Box className="flex flex-col items-center mb-5">
-      <Typography variant="h4" gutterBottom className="text-center">
-        Explore Our Businesses
-      </Typography>
+      {pathname !== "/dashboard" && (
+        <Typography variant="h4" gutterBottom className="text-center">
+          Explore Our Businesses
+        </Typography>
+      )}
       <Grid2 container spacing={4} sx={{ mt: 2, justifyContent: "center" }}>
         {businesses?.data.map((business: Business) => (
           <Grid2 key={business?._id} width={"100%"}>

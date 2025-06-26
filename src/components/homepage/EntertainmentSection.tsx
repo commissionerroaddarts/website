@@ -6,35 +6,31 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { useState } from "react";
 
 const events = [
   {
     id: 1,
-    imageUrl: "/images/events/e1.png",
-    category: "Arts & Entertainment",
-    title: "California Dream Art Gallery",
-    location: "Los Angeles, California, United States",
-    discount: "50 - 90",
+    imageUrl: "/images/events/e1.png", // make sure to place this image in the correct folder
+    title: "Team Dart 2026 (NDA)",
+    location: "Westgate Las Vegas Resort & Casino, Las Vegas",
+    date: "May 7–13, 2026",
+    description:
+      "Premier soft-tip darts event with singles, doubles, mixed, and team formats. Includes Pink Ladies tournament and referee certification. Open to NDA-sanctioned players.",
   },
   {
     id: 2,
-    imageUrl: "/images/events/e2.png",
-    category: "Arts & Entertainment",
-    title: "California Dream Art Gallery",
-    location: "Los Angeles, California, United States",
-    discount: "50 - 90",
-  },
-  {
-    id: 3,
-    imageUrl: "/images/events/e3.png",
-    category: "Arts & Entertainment",
-    title: "California Dream Art Gallery",
-    location: "Los Angeles, California, United States",
-    discount: "50 - 90",
+    imageUrl: "/images/events/e2.png", // make sure to place this image in the correct folder
+    title: "Las Vegas Open 2026",
+    location: "Tuscany Suites and Casino, Las Vegas",
+    date: "January 16–18, 2026",
+    description:
+      "A WDF Gold-ranked steel-tip darts tournament by ADO. Running since 1978, it hosts top international players in men’s and women’s singles competitions.",
   },
 ];
 
 const EntertainmentSection = () => {
+  const [showFullDesc, setShowFullDesc] = useState(false);
   const sliderSettings = {
     dots: true,
     infinite: true,
@@ -79,8 +75,6 @@ const EntertainmentSection = () => {
               borderRadius: 3,
               overflow: "hidden",
               boxShadow: 3,
-              transition: "transform 0.2s",
-              "&:hover": { transform: "scale(1.03)" },
             }}
           >
             {/* Image and Discount Badge */}
@@ -94,7 +88,7 @@ const EntertainmentSection = () => {
                 style={{ width: "100%", height: "250px", objectFit: "cover" }}
               />
               <Chip
-                label={event.discount}
+                label={event.date}
                 sx={{
                   position: "absolute",
                   top: 10,
@@ -111,15 +105,6 @@ const EntertainmentSection = () => {
 
             {/* Details */}
             <Box sx={{ p: 2, color: "white", textAlign: "left" }}>
-              <Chip
-                label={event.category}
-                sx={{
-                  backgroundColor: "#45354f",
-                  color: "white",
-                  fontSize: "0.75rem",
-                  marginBottom: "8px",
-                }}
-              />
               <Typography
                 variant="h6"
                 sx={{
@@ -130,12 +115,37 @@ const EntertainmentSection = () => {
               >
                 {event.title}
               </Typography>
+              <Typography
+                variant="h6"
+                sx={{
+                  fontWeight: "bold",
+                  mt: 1,
+                  mb: 1,
+                  fontSize: "0.7rem",
+                }}
+              >
+                {event.description.length > 100 && !showFullDesc ? (
+                  <>{event.description.slice(0, 100)}...</>
+                ) : (
+                  <>{event.description}</>
+                )}
+                {event.description.length > 100 && (
+                  <button
+                    type="button"
+                    className="!text-white cursor-pointer ml-1 underline"
+                    onClick={() => setShowFullDesc((prev) => !prev)}
+                  >
+                    {showFullDesc ? "Show Less" : "Show More"}
+                  </button>
+                )}
+              </Typography>
+
               <Box
                 sx={{
                   display: "flex",
                   alignItems: "center",
                   color: "#bdbdbd",
-                  fontSize: "0.875rem",
+                  fontSize: "0.7rem",
                 }}
               >
                 <LocationOnIcon sx={{ fontSize: "1rem", mr: 0.5 }} />

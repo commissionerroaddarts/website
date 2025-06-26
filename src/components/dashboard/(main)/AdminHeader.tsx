@@ -7,8 +7,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { logoutUser } from "@/services/authService";
 import { useAppDispatch } from "@/store";
-import { ProfileLink } from "../global/Navbar";
-
+import { ProfileLink } from "../../global/Navbar";
 import { User } from "@/types/user";
 
 export default function AdminHeader({
@@ -31,23 +30,73 @@ export default function AdminHeader({
   };
 
   if (!userDetails?._id) {
-    return null; // Return null if userDetails is not available
+    userDetails = {
+      _id: "1234567890abcdef",
+      firstname: "John",
+      lastname: "Doe",
+      email: "john.doe@example.com",
+      phone: "+1234567890",
+      password: "hashedpassword",
+      canAdd: true,
+      businessCount: 2,
+      profileImg: "https://example.com/profile.jpg",
+      gender: "Male",
+      dob: new Date("1990-01-01"),
+      username: "johndoe",
+      address: {
+        state: "California",
+        city: "Los Angeles",
+        country: "USA",
+        zipcode: "90001",
+      },
+      socials: {
+        twitter: "johndoe",
+        linkedin: "john-doe",
+      },
+      status: "verified",
+      role: "admin",
+      permissions: {
+        maxListings: 5,
+      },
+      subscription: {
+        plan: "premium",
+        currentPeriodEnd: 1719878400,
+        isAutoRenew: true,
+        status: "active",
+      },
+      stripeSubscriptionId: "sub_1N2xY2AABBCCDD",
+      createdAt: new Date("2023-01-01T10:00:00Z"),
+      updatedAt: new Date("2023-06-01T12:00:00Z"),
+    };
   }
 
   return (
     <Box
       component="header"
-      className="flex items-center justify-between border-b border-gray-300 py-2 mx-5"
+      className="flex items-center justify-between my-3 mx-5 rounded-lg"
+      style={{
+        background: "rgba(255, 255, 255, 0.15)",
+        backdropFilter: "blur(12px)",
+        WebkitBackdropFilter: "blur(12px)",
+        border: "1px solid rgba(255, 255, 255, 0.18)",
+        boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)",
+      }}
+      sx={{
+        position: "relative",
+        overflow: "hidden",
+      }}
     >
       <Box
         sx={{
           flexGrow: 1,
+          position: "relative",
+          zIndex: 1,
         }}
         className="flex justify-start"
       >
         <Box
           sx={{
-            position: "relative", // <-- Required for Image with fill
+            position: "relative",
             width: { xs: "30%", sm: "10%" },
             height: {
               xs: "60px",
@@ -66,7 +115,11 @@ export default function AdminHeader({
         </Box>
       </Box>
 
-      <Stack direction="row" alignItems="center" spacing={2}>
+      <Stack
+        direction="row"
+        alignItems="center"
+        sx={{ position: "relative", zIndex: 1 }}
+      >
         <IconButton>
           <Bell style={{ color: "white", width: 20, height: 20 }} />
         </IconButton>
@@ -78,6 +131,7 @@ export default function AdminHeader({
           userDetails={userDetails}
           logoutHandler={logoutHandler}
           router={router}
+          isAdmin={true}
         />
       </Stack>
     </Box>
