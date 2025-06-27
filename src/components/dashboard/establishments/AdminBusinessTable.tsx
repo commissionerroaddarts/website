@@ -23,6 +23,7 @@ import {
 } from "@/services/businessService";
 import { toast } from "react-toastify";
 import BulkUpdateDialog from "./BulkUpdateDialog";
+import BulkDeleteDialog from "./BulkDeleteDialog";
 
 interface Props {
   businesses: Business[];
@@ -34,6 +35,8 @@ const AdminBusinessTable = ({ businesses, isLoading }: Props) => {
   const [openConfirm, setOpenConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
   const [id, setId] = useState<string>("");
+  const [openDialog, setOpenDialog] = useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [selectedBusinesses, setSelectedBusinesses] = useState<string[]>([]);
   const allSelected =
     businesses.length > 0 && selectedBusinesses.length === businesses.length;
@@ -48,8 +51,6 @@ const AdminBusinessTable = ({ businesses, isLoading }: Props) => {
     setId(id);
     setOpenConfirm(true);
   };
-
-  const [openDialog, setOpenDialog] = useState(false);
 
   const handleBulkApply = async (payload: { id: string; data: any }[]) => {
     try {
@@ -80,6 +81,12 @@ const AdminBusinessTable = ({ businesses, isLoading }: Props) => {
         onSubmit={handleBulkApply}
       />
 
+      <BulkDeleteDialog
+        open={openDeleteDialog}
+        onClose={() => setOpenDeleteDialog(false)}
+        selectedBusinesses={selectedBusinessObjects}
+      />
+
       <DeleteListingDialog
         _id={id}
         loading={loading}
@@ -88,7 +95,10 @@ const AdminBusinessTable = ({ businesses, isLoading }: Props) => {
         setOpenConfirm={setOpenConfirm}
       />
       {selectedBusinesses.length > 0 && (
-        <ActionBar setOpenDialog={setOpenDialog} onDelete={handleDelete} />
+        <ActionBar
+          setOpenDialog={setOpenDialog}
+          onDelete={() => setOpenDeleteDialog(true)}
+        />
       )}
       <Table>
         <TableHead>

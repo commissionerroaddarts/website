@@ -28,6 +28,7 @@ export default function RootLayout({
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="icon" href="/images/logos/favicon.ico" />
+        <link rel="manifest" href="/manifest.json" />
         <title>Road Darts</title>
 
         {/* ✅ External GA script */}

@@ -6,45 +6,36 @@ import {
   DialogContent,
   DialogActions,
   Typography,
-  FormControl,
-  InputLabel,
   List,
   ListItem,
   Chip,
 } from "@mui/material";
 import { Business } from "@/types/business";
-import { useState } from "react";
-import SelectSearchDropDown from "@/components/global/SelectSearchDropDown";
 import ThemeButton from "@/components/buttons/ThemeButton";
+import { toast } from "react-toastify";
+import { bulkDeleteBusinesses } from "@/services/businessService";
 
 interface Props {
   open: boolean;
   onClose: () => void;
   selectedBusinesses: Business[];
-  onSubmit: (payload: { id: string; data: any }[]) => void;
 }
 
-const BulkUpdateDialog = ({
-  open,
-  onClose,
-  selectedBusinesses,
-  onSubmit,
-}: Props) => {
-  const [status, setStatus] = useState("");
-  const [validationStatus, setValidationStatus] = useState("");
-
-  const handleApply = () => {
-    const payload = selectedBusinesses.map((b) => ({
-      id: b._id,
-      data: {
-        ...(status && { status }),
-        ...(validationStatus && { validation: { status: validationStatus } }),
-      },
-    }));
-    onSubmit(payload);
-    setStatus("");
-    setValidationStatus("");
-    onClose();
+const BulkDeleteDialog = ({ open, onClose, selectedBusinesses }: Props) => {
+  const handleApply = async () => {
+    try {
+      const selectedBusinessIds = selectedBusinesses.map((b) => b._id);
+      const response = await bulkDeleteBusinesses(selectedBusinessIds);
+      if (response.success) {
+        toast.success("Businesses deleted successfully");
+        onClose();
+      } else {
+        toast.error("Failed to delete businesses");
+      }
+    } catch (error) {
+      console.error("Error deleting businesses:", error);
+      toast.error("An error occurred while deleting businesses");
+    }
   };
 
   return (
@@ -68,7 +59,7 @@ const BulkUpdateDialog = ({
         },
       }}
     >
-      <DialogTitle className="bg-[#3e1349]">Bulk Update Businesses</DialogTitle>
+      <DialogTitle className="bg-[#3e1349]">Bulk Delete Businesses</DialogTitle>
       <DialogContent dividers className="bg-[#3a2a3e]">
         <Typography variant="subtitle1" gutterBottom>
           Selected Businesses:
@@ -90,34 +81,6 @@ const BulkUpdateDialog = ({
             </ListItem>
           ))}
         </List>
-
-        <FormControl fullWidth sx={{ mt: 2 }}>
-          <InputLabel>Status</InputLabel>
-          <SelectSearchDropDown
-            label="Status"
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-            options={[
-              { label: "Active", value: "active" },
-              { label: "Inactive", value: "inactive" },
-              { label: "Pending", value: "pending" },
-            ]}
-          />
-        </FormControl>
-
-        <FormControl fullWidth sx={{ mt: 2 }}>
-          <InputLabel>Validation Status</InputLabel>
-          <SelectSearchDropDown
-            label="Validation Status"
-            value={validationStatus}
-            onChange={(e) => setValidationStatus(e.target.value)}
-            options={[
-              { label: "Approved", value: "approved" },
-              { label: "Rejected", value: "rejected" },
-              { label: "Pending", value: "pending" },
-            ]}
-          />
-        </FormControl>
       </DialogContent>
 
       <DialogActions className="bg-[#3e1349]">
@@ -129,7 +92,7 @@ const BulkUpdateDialog = ({
         />
         <ThemeButton
           onClick={handleApply}
-          text=" Apply Changes"
+          text="Delete Selected Businesses"
           fontSize="0.8rem"
         />
       </DialogActions>
@@ -137,4 +100,4 @@ const BulkUpdateDialog = ({
   );
 };
 
-export default BulkUpdateDialog;
+export default BulkDeleteDialog;
