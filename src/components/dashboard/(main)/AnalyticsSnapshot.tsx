@@ -115,6 +115,7 @@ export default function AnalyticsSnapshot() {
                 },
               ],
             }}
+            width={"100%"}
             options={{
               responsive: true,
               plugins: { legend: { display: true } },
@@ -164,7 +165,7 @@ export default function AnalyticsSnapshot() {
   );
 }
 
-function KpiCard({ title, value }: { title: string; value: any }) {
+function KpiCard({ title, value }: Readonly<{ title: string; value: any }>) {
   return (
     <div className="bg-white text-purple-900 rounded p-4 shadow text-center">
       <h3 className="text-md font-medium mb-1">{title}</h3>
@@ -176,14 +177,14 @@ function KpiCard({ title, value }: { title: string; value: any }) {
 function ChartCard({
   title,
   children,
-}: {
+}: Readonly<{
   title: string;
   children: React.ReactNode;
-}) {
+}>) {
   return (
     <div className="bg-white text-purple-900 rounded p-4 shadow">
       <h3 className="text-md font-semibold mb-2">{title}</h3>
-      <div className="h-[300px]">{children}</div>
+      <div className="h-[300px] w-full">{children}</div>
     </div>
   );
 }

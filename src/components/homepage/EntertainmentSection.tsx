@@ -27,10 +27,28 @@ const events = [
     description:
       "A WDF Gold-ranked steel-tip darts tournament by ADO. Running since 1978, it hosts top international players in men’s and women’s singles competitions.",
   },
+  {
+    id: 3,
+    imageUrl: "/images/events/e3.png", // make sure to place this image in the correct folder
+    title: "Royal Hawaiian Invitational – San Diego 2025",
+    date: "Saturday, August 23, 2025",
+    location: "Fleet Reserve 70, San Diego, California",
+    description:
+      "Get ready to bring your best game to the Royal Hawaiian Invitational, a one-day darts event packed with action, competition, and island flair.\nFeaturing:\n\n🌴 Mixed Triples\n🌴 Mixed Doubles\n🌴 Mixed Singles",
+  },
 ];
 
 const EntertainmentSection = () => {
-  const [showFullDesc, setShowFullDesc] = useState(false);
+  const [expandedEvents, setExpandedEvents] = useState<{
+    [key: number]: boolean;
+  }>({});
+  const toggleDescription = (id: number) => {
+    setExpandedEvents((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
+
   const sliderSettings = {
     dots: true,
     infinite: true,
@@ -75,6 +93,10 @@ const EntertainmentSection = () => {
               borderRadius: 3,
               overflow: "hidden",
               boxShadow: 3,
+              minHeight: "450px",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
             }}
           >
             {/* Image and Discount Badge */}
@@ -124,7 +146,7 @@ const EntertainmentSection = () => {
                   fontSize: "0.7rem",
                 }}
               >
-                {event.description.length > 100 && !showFullDesc ? (
+                {event.description.length > 100 && !expandedEvents[event.id] ? (
                   <>{event.description.slice(0, 100)}...</>
                 ) : (
                   <>{event.description}</>
@@ -133,9 +155,9 @@ const EntertainmentSection = () => {
                   <button
                     type="button"
                     className="!text-white cursor-pointer ml-1 underline"
-                    onClick={() => setShowFullDesc((prev) => !prev)}
+                    onClick={() => toggleDescription(event.id)}
                   >
-                    {showFullDesc ? "Show Less" : "Show More"}
+                    {expandedEvents[event.id] ? "Show Less" : "Show More"}
                   </button>
                 )}
               </Typography>

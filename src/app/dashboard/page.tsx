@@ -1,13 +1,7 @@
-import React, { Suspense } from "react";
-import DashboardEstablishment from "@/components/dashboard/establishments/DashboardEstablishments";
-import LoadingIndicator from "@/components/global/LoadingIndicator";
+import AnalyticsSnapshot from "@/components/dashboard/(main)/AnalyticsSnapshot";
 
 const DashboardHome = () => {
-  return (
-    <Suspense fallback={<LoadingIndicator />}>
-      <DashboardEstablishment />
-    </Suspense>
-  );
+  return <AnalyticsSnapshot />;
 };
 
 export default DashboardHome;

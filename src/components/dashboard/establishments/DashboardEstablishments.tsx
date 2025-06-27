@@ -10,7 +10,6 @@ import { SearchX } from "lucide-react";
 import useDebounce from "@/hooks/useDebounce";
 import { useAppState } from "@/hooks/useAppState";
 import LoadingIndicator from "@/components/global/LoadingIndicator";
-// import MapSection from "@/components/allestablishmentspage/MapSection";
 import FilterSection from "@/components/allestablishmentspage/FilterSection";
 import AdminBusinessTable from "./AdminBusinessTable";
 
@@ -180,15 +179,12 @@ export default function DashboardEstablishment() {
       }
     });
 
-    router.push(`/dashboard?${params.toString()}`);
+    router.push(`/dashboard/establishments?${params.toString()}`);
     getBusinesses();
   };
 
   return (
     <Box>
-      {/* {businesses?.length > 0 && !loading && (
-        <MapSection businesses={businesses} isLoading={loading} />
-      )} */}
       <FilterSection
         isLoading={loading}
         filters={filterParams}
@@ -204,6 +200,7 @@ export default function DashboardEstablishment() {
         userCountry={userCountry ?? null}
         businessCount={businesses.length}
       />
+
       {(() => {
         if (loading) {
           return <LoadingIndicator />;

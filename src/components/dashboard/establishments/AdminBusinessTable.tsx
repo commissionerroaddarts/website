@@ -11,10 +11,18 @@ import {
   IconButton,
 } from "@mui/material";
 import { Business } from "@/types/business";
-import { Edit, Delete } from "lucide-react";
+import { Edit, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import DeleteListingDialog from "@/components/global/DeleteListingDialog";
+
+import { ActionBar } from "@/components/dashboard/establishments/ActionBar";
+import {
+  bulkDeleteBusinesses,
+  bulkUpdateBusinesses,
+} from "@/services/businessService";
+import { toast } from "react-toastify";
+import BulkUpdateDialog from "./BulkUpdateDialog";
 
 interface Props {
   businesses: Business[];
@@ -23,21 +31,55 @@ interface Props {
 
 const AdminBusinessTable = ({ businesses, isLoading }: Props) => {
   const router = useRouter();
-
   const [openConfirm, setOpenConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
   const [id, setId] = useState<string>("");
+  const [selectedBusinesses, setSelectedBusinesses] = useState<string[]>([]);
+  const allSelected =
+    businesses.length > 0 && selectedBusinesses.length === businesses.length;
+  // filtered list of selected business objects
+  const selectedBusinessObjects = businesses.filter((b) =>
+    selectedBusinesses.includes(b._id)
+  );
+
   const handleOpenConfirm = (e: any, id: string) => {
     e.preventDefault();
     e.stopPropagation();
     setId(id);
     setOpenConfirm(true);
   };
+
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const handleBulkApply = async (payload: { id: string; data: any }[]) => {
+    try {
+      await bulkUpdateBusinesses(payload);
+      toast.success("Businesses updated");
+      setSelectedBusinesses([]);
+      router.refresh();
+    } catch (err) {
+      console.error("Failed to update businesses:", err);
+      toast.error("Failed to update businesses");
+    }
+  };
+
+  const handleDelete = async () => {
+    await bulkDeleteBusinesses(selectedBusinesses);
+    setSelectedBusinesses([]);
+  };
+
   return (
     <TableContainer
       component={Paper}
       className="bg-[#2b0450] text-white shadow-lg rounded-lg"
     >
+      <BulkUpdateDialog
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
+        selectedBusinesses={selectedBusinessObjects}
+        onSubmit={handleBulkApply}
+      />
+
       <DeleteListingDialog
         _id={id}
         loading={loading}
@@ -45,9 +87,26 @@ const AdminBusinessTable = ({ businesses, isLoading }: Props) => {
         openConfirm={openConfirm}
         setOpenConfirm={setOpenConfirm}
       />
+      {selectedBusinesses.length > 0 && (
+        <ActionBar setOpenDialog={setOpenDialog} onDelete={handleDelete} />
+      )}
       <Table>
         <TableHead>
           <TableRow className="bg-[#8224E3] text-white">
+            <TableCell padding="checkbox">
+              <input
+                type="checkbox"
+                checked={allSelected}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    setSelectedBusinesses(businesses.map((b) => b._id));
+                  } else {
+                    setSelectedBusinesses([]);
+                  }
+                }}
+              />
+            </TableCell>
+
             <TableCell className="text-white">Business Name</TableCell>
             <TableCell className="text-white">Category</TableCell>
             <TableCell className="text-white">Address</TableCell>
@@ -58,54 +117,93 @@ const AdminBusinessTable = ({ businesses, isLoading }: Props) => {
         </TableHead>
 
         <TableBody>
-          {isLoading
-            ? Array.from({ length: 6 }).map((_, index) => (
-                <TableRow key={index}>
-                  <TableCell colSpan={5}>
-                    <Skeleton variant="rectangular" height={40} />
-                  </TableCell>
-                </TableRow>
-              ))
-            : businesses.map((business) => (
-                <TableRow
-                  key={business._id}
-                  className="bg-[#3a2a3e] text-white"
-                >
-                  <TableCell>{business.name}</TableCell>
-                  <TableCell>{business.category ?? "N/A"}</TableCell>
-                  <TableCell>
-                    {business.location?.address ?? "Unknown"}
-                  </TableCell>
-                  <TableCell>{business.status ?? "Pending"}</TableCell>
-                  <TableCell>
-                    {business.validation?.status ?? "Pending"}
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex gap-2">
-                      <IconButton
-                        size="small"
-                        color="primary"
-                        onClick={() =>
-                          router.push(`/edit-establishment/${business.slug}`)
-                        }
-                      >
-                        <Edit size={18} />
-                      </IconButton>
-                      <IconButton
-                        size="small"
-                        color="error"
-                        onClick={(e) => handleOpenConfirm(e, business._id)}
-                      >
-                        <Delete size={18} />
-                      </IconButton>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
+          {isLoading ? (
+            <BusinessTableRowsLoading />
+          ) : (
+            <BusinessTableRows
+              businesses={businesses}
+              handleOpenConfirm={handleOpenConfirm}
+              selectedBusinesses={selectedBusinesses}
+              setSelectedBusinesses={setSelectedBusinesses}
+            />
+          )}
         </TableBody>
       </Table>
     </TableContainer>
   );
+};
+
+const BusinessTableRowsLoading = () =>
+  Array.from({ length: 6 }).map((_, _index) => {
+    const uniqueKey = `skeleton-row-${Math.random().toString(36)}`;
+    return (
+      <TableRow key={uniqueKey}>
+        <TableCell colSpan={5}>
+          <Skeleton variant="rectangular" height={40} />
+        </TableCell>
+      </TableRow>
+    );
+  });
+
+const BusinessTableRows = ({
+  businesses,
+  handleOpenConfirm,
+  selectedBusinesses,
+  setSelectedBusinesses,
+}: {
+  businesses: Business[];
+  handleOpenConfirm: (e: any, id: string) => void;
+  selectedBusinesses: string[];
+  setSelectedBusinesses: React.Dispatch<React.SetStateAction<string[]>>;
+}) => {
+  const router = useRouter();
+  const handleCheckboxChange = (id: string) => {
+    setSelectedBusinesses((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
+  return businesses.map((business) => {
+    const isSelected = selectedBusinesses.includes(business._id);
+    const combinedAddress = `${business.location?.state}, ${business.location?.city}, ${business.location?.zipcode}, ${business.location?.country}`;
+    const address = business.location?.address ?? combinedAddress ?? "Unknown";
+    return (
+      <TableRow key={business._id} className="bg-[#3a2a3e] text-white">
+        <TableCell padding="checkbox">
+          <input
+            type="checkbox"
+            checked={isSelected}
+            onChange={() => handleCheckboxChange(business._id)}
+          />
+        </TableCell>
+        <TableCell>{business.name}</TableCell>
+        <TableCell>{business.category ?? "N/A"}</TableCell>
+        <TableCell>{address}</TableCell>
+        <TableCell>{business.status ?? "Pending"}</TableCell>
+        <TableCell>{business.validation?.status ?? "Pending"}</TableCell>
+        <TableCell>
+          <div className="flex gap-2">
+            <IconButton
+              size="small"
+              color="primary"
+              onClick={() =>
+                router.push(`/edit-establishment/${business.slug}`)
+              }
+            >
+              <Edit size={18} />
+            </IconButton>
+            <IconButton
+              size="small"
+              color="error"
+              onClick={(e) => handleOpenConfirm(e, business._id)}
+            >
+              <Trash size={18} />
+            </IconButton>
+          </div>
+        </TableCell>
+      </TableRow>
+    );
+  });
 };
 
 export default AdminBusinessTable;

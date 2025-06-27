@@ -4,6 +4,12 @@ import Link from "next/link";
 export default function AdminSidebar() {
   const menuItems = [
     {
+      id: "dashboard",
+      label: "Dashboard",
+      icon: "",
+      href: "/dashboard",
+    },
+    {
       id: "establishment",
       label: "Establishment Management",
       icon: "",
@@ -14,12 +20,6 @@ export default function AdminSidebar() {
       label: "Review Moderation",
       icon: "",
       href: "/dashboard/reviews",
-    },
-    {
-      id: "advertisement",
-      label: "Advertisement Management",
-      icon: "",
-      href: "/dashboard/advertisements",
     },
     {
       id: "user",

@@ -293,3 +293,34 @@ export const checkBusinessNameAvailability = async (businessName: string) => {
     throw error;
   }
 };
+
+// bulk update businesses
+export const bulkUpdateBusinesses = async (
+  updates: { id: string; data: Partial<Business> }[]
+) => {
+  try {
+    const response = await axiosInstance.patch(`${API_URL}/update-businesses`, {
+      updates,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error bulk updating businesses:", error);
+    throw error;
+  }
+};
+
+// bulk delete businesses
+export const bulkDeleteBusinesses = async (businessIds: string[]) => {
+  try {
+    const response = await axiosInstance.delete(
+      `${API_URL}/delete-businesses`,
+      {
+        data: { ids: businessIds },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error bulk deleting businesses:", error);
+    throw error;
+  }
+};
