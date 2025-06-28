@@ -120,6 +120,26 @@ const FilterSection = ({
       value: "nearest",
     },
     {
+      label: "Name (A-Z)",
+      value: "name",
+    },
+    {
+      label: "Name (Z-A)",
+      value: "name_desc",
+    },
+    {
+      label: "Created At (Newest)",
+      value: "createdAt_desc",
+    },
+    {
+      label: "Created At (Oldest)",
+      value: "createdAt_asc",
+    },
+    {
+      label: "Recommended",
+      value: "recommended_desc",
+    },
+    {
       label: "Top Rated",
       value: "rating_desc",
     },

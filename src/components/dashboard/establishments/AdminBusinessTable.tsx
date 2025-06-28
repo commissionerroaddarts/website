@@ -9,18 +9,15 @@ import {
   Paper,
   Skeleton,
   IconButton,
+  Tooltip,
 } from "@mui/material";
-import { Business } from "@/types/business";
-import { Edit, Trash } from "lucide-react";
+import { Business, FilterValues } from "@/types/business";
+import { ArrowDown, ArrowUp, Edit, Eye, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import DeleteListingDialog from "@/components/global/DeleteListingDialog";
-
 import { ActionBar } from "@/components/dashboard/establishments/ActionBar";
-import {
-  bulkDeleteBusinesses,
-  bulkUpdateBusinesses,
-} from "@/services/businessService";
+import { bulkUpdateBusinesses } from "@/services/businessService";
 import { toast } from "react-toastify";
 import BulkUpdateDialog from "./BulkUpdateDialog";
 import BulkDeleteDialog from "./BulkDeleteDialog";
@@ -28,9 +25,16 @@ import BulkDeleteDialog from "./BulkDeleteDialog";
 interface Props {
   businesses: Business[];
   isLoading: boolean;
+  filterParams: FilterValues;
+  setFilterParams: React.Dispatch<React.SetStateAction<FilterValues>>;
 }
 
-const AdminBusinessTable = ({ businesses, isLoading }: Props) => {
+const AdminBusinessTable = ({
+  businesses,
+  isLoading,
+  filterParams,
+  setFilterParams,
+}: Props) => {
   const router = useRouter();
   const [openConfirm, setOpenConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -62,11 +66,6 @@ const AdminBusinessTable = ({ businesses, isLoading }: Props) => {
       console.error("Failed to update businesses:", err);
       toast.error("Failed to update businesses");
     }
-  };
-
-  const handleDelete = async () => {
-    await bulkDeleteBusinesses(selectedBusinesses);
-    setSelectedBusinesses([]);
   };
 
   return (
@@ -104,20 +103,46 @@ const AdminBusinessTable = ({ businesses, isLoading }: Props) => {
         <TableHead>
           <TableRow className="bg-[#8224E3] text-white">
             <TableCell padding="checkbox">
-              <input
-                type="checkbox"
-                checked={allSelected}
-                onChange={(e) => {
-                  if (e.target.checked) {
-                    setSelectedBusinesses(businesses.map((b) => b._id));
-                  } else {
-                    setSelectedBusinesses([]);
-                  }
-                }}
-              />
+              <Tooltip
+                title="Select all businesses to update their status all at once"
+                arrow
+              >
+                <input
+                  type="checkbox"
+                  checked={allSelected}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setSelectedBusinesses(businesses.map((b) => b._id));
+                    } else {
+                      setSelectedBusinesses([]);
+                    }
+                  }}
+                  className="cursor-pointer"
+                />
+              </Tooltip>
             </TableCell>
 
-            <TableCell className="text-white">Business Name</TableCell>
+            <TableCell className="text-white">
+              Business Name
+              <Tooltip title="Click to sort by business name (A-Z)" arrow>
+                <IconButton
+                  size="small"
+                  color="primary"
+                  onClick={() => {
+                    setFilterParams((prev) => ({
+                      ...prev,
+                      sort: prev.sort === "name" ? "nearest" : "name",
+                    }));
+                  }}
+                >
+                  {filterParams.sort === "name" ? (
+                    <ArrowUp size={18} color="white" />
+                  ) : (
+                    <ArrowDown size={18} color="white" />
+                  )}
+                </IconButton>
+              </Tooltip>
+            </TableCell>
             <TableCell className="text-white">Category</TableCell>
             <TableCell className="text-white">Address</TableCell>
             <TableCell className="text-white">Status</TableCell>
@@ -180,11 +205,17 @@ const BusinessTableRows = ({
     return (
       <TableRow key={business._id} className="bg-[#3a2a3e] text-white">
         <TableCell padding="checkbox">
-          <input
-            type="checkbox"
-            checked={isSelected}
-            onChange={() => handleCheckboxChange(business._id)}
-          />
+          <Tooltip
+            title={`Select ${business.name} to update it's status`}
+            arrow
+          >
+            <input
+              type="checkbox"
+              checked={isSelected}
+              onChange={() => handleCheckboxChange(business._id)}
+              className="cursor-pointer "
+            />
+          </Tooltip>
         </TableCell>
         <TableCell>{business.name}</TableCell>
         <TableCell>{business.category ?? "N/A"}</TableCell>
@@ -192,23 +223,37 @@ const BusinessTableRows = ({
         <TableCell>{business.status ?? "Pending"}</TableCell>
         <TableCell>{business.validation?.status ?? "Pending"}</TableCell>
         <TableCell>
-          <div className="flex gap-2">
-            <IconButton
-              size="small"
-              color="primary"
-              onClick={() =>
-                router.push(`/edit-establishment/${business.slug}`)
-              }
-            >
-              <Edit size={18} />
-            </IconButton>
-            <IconButton
-              size="small"
-              color="error"
-              onClick={(e) => handleOpenConfirm(e, business._id)}
-            >
-              <Trash size={18} />
-            </IconButton>
+          <div className="flex gap-1">
+            {/* view establishment icon button */}
+            <Tooltip title="View Establishment" arrow>
+              <IconButton
+                size="small"
+                color="primary"
+                onClick={() => router.push(`/establishment/${business.slug}`)}
+              >
+                <Eye size={18} color="white" />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Edit Establishment" arrow>
+              <IconButton
+                size="small"
+                color="primary"
+                onClick={() =>
+                  router.push(`/edit-establishment/${business.slug}`)
+                }
+              >
+                <Edit size={18} color="white" />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Delete Establishment" arrow>
+              <IconButton
+                size="small"
+                color="error"
+                onClick={(e) => handleOpenConfirm(e, business._id)}
+              >
+                <Trash size={18} color="white" />
+              </IconButton>
+            </Tooltip>
           </div>
         </TableCell>
       </TableRow>

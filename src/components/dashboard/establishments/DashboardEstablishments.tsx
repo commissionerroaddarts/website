@@ -207,7 +207,12 @@ export default function DashboardEstablishment() {
         }
         if (businesses.length > 0 && !loading) {
           return (
-            <AdminBusinessTable businesses={businesses} isLoading={loading} />
+            <AdminBusinessTable
+              businesses={businesses}
+              isLoading={loading}
+              filterParams={filterParams}
+              setFilterParams={setFilterParams}
+            />
           );
         }
         if (businesses.length === 0 && !loading) {

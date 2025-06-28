@@ -32,9 +32,8 @@ export default function AdminSidebar() {
   // Get the current route to determine the active menu item
   const currentPath =
     typeof window !== "undefined" ? window.location.pathname : "";
-  const activeItem = menuItems.find((item) =>
-    currentPath.startsWith(item.href)
-  )?.id;
+
+  const activeItem = menuItems.find((item) => currentPath === item.href)?.id;
 
   return (
     <aside
